@@ -96,7 +96,7 @@ create table COMMANDER(
     quantiteC int not null,
     prix float not null,
     dateCommande date,
-    facture varchar(4000)
+    facture varchar(4000),
     primary key(idCommande)
 );
 
@@ -131,8 +131,8 @@ create table ETAT (
 );
 
 create table ETAT_COMMANDE (
-    idSuivi int not null references SUIVI_COMMANDE(idSuivi),
-    idEtat int not null references ETAT(idEtat),
+    idSuivi int  references SUIVI_COMMANDE(idSuivi),
+    idEtat int  references ETAT(idEtat),
     primary key(idSuivi)
 );
 
@@ -170,14 +170,25 @@ insert into date_peremption (idMat, date_peremption) values
 insert into fds (idDfs,nomFds) values 
     (1,'Fiche de données de sécurité du becher');
 
-insert into commander (idCommande, idMat, idUt, quantiteC, prix, dateCommande) values 
-    (1, 1, 1, 10, 100, '2023-10-23');
+insert into commander (idCommande, idMat, idUt, quantiteC, prix, dateCommande,facture) values 
+    (1, 1, 1, 10, 100, '2023-10-23', 'facture_123456789.pdf');
 
 insert into fournisseur (idFournisseur,nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur)
 values (1,'Leroy Merlin', '123 rue de la Paix, 75008 Paris', 'contact@leroymerlin.fr', '01 42 56 78 90');
 
-insert into suivi_commande (idCommande, dateCommande, localisation, numColis, facture)
-values (1, '2023-10-23', 'En cours de livraison', 123456789, 'facture_123456789.pdf');
+insert into prix_materiel (idMat, idFournisseur, prix) values 
+    (1, 1, 10);
 
-insert into etat_commande (idCommande, idEtat, nomEtat)
-values (1, 1, 'En cours');
+insert into suivi_commande (idSuivi,idCommande, localisation, numColis)
+values (1,1,'Orléans', 123456789);
+
+insert into etat(idEtat, nomEtat) 
+values (1, 'En prepatation'),
+       (2, 'En cours de livraison'),
+       (3, 'Livree');
+
+insert into etat_commande (idSuivi, idEtat)
+values (1, 1);
+
+insert into risque (idRisque, idDfs, nomRisque, pictogramme) 
+values (1, 1, 'Risque de coupure', 'https://th.bing.com/th/id/R.a05094b9f26eb64def392d54b291bea0?rik=3jSRK00M7%2fDYuQ&pid=ImgRaw&r=0')
