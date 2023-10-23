@@ -1,6 +1,5 @@
 import sqlalchemy  
-import loginSQL as log # importe les paramètres de connexion à la BD
-import requette as req # importe les fonctions de requêtes
+from .loginSQL import *  # importe les paramètres de connexion à la BD
 import pymysql
 
 pymysql.install_as_MySQLdb()
@@ -18,10 +17,10 @@ def ouvrir_connexion():
     résultat: l'objet qui gère le connection MySQL si tout s'est bien passé
     """
     try:
-        login=log.getLogin()
-        passwd=log.getPasswd()
-        serveur=log.getServeur()
-        bd=log.getBd()
+        login=getLogin()
+        passwd=getPasswd()
+        serveur=getServeur()
+        bd=getBd()
         #creation de l'objet gérant les interactions avec le serveur de BD
         engine=sqlalchemy.create_engine('mysql+mysqldb://'+login+':'+passwd+'@'+serveur+'/'+bd)
         #creation de la connexion

@@ -1,7 +1,7 @@
 #from .app import db
 from flask_login import UserMixin
 from .app import login_manager
-from .requette import connexion_utilisateur, get_nom_whith_email
+from .requette import *
 
 # class User(db.Model, UserMixin):
 #     username = db.Column(db.String(50), primary_key=True)
@@ -11,8 +11,9 @@ from .requette import connexion_utilisateur, get_nom_whith_email
 #         return self.username
 
 @login_manager.user_loader
-def load_user(username):
-    return User.query.get(username)
+def load_user(email):
+    cnx = get_cnx()
+    return get_nom_whith_email(cnx, email)
 
 # def user_in_bd(username):
 #     return User.query.filter_by(username=username).first()

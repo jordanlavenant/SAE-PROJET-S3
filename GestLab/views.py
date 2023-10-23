@@ -7,7 +7,7 @@ from wtforms import StringField, HiddenField, FileField, SubmitField
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
-from .requette import connexion_utilisateur, get_nom_whith_email, get_cnx
+from .requette import *
 
 cnx = get_cnx()
 

@@ -1,6 +1,6 @@
 from sqlalchemy import text
-import connexionPythonSQL
-cnx= connexionPythonSQL.ouvrir_connexion()
+from .connexionPythonSQL import * 
+cnx = ouvrir_connexion()
 
 def get_cnx():
     return cnx
