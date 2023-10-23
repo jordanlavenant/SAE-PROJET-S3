@@ -3,11 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static',filename='base.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&family=Hind+Siliguri:wght@300;400;500;600&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    {% block styles %}
+    <!-- css -->
+    {% endblock %}
     <title>{{ title }}</title>
 </head>
 <body>
     <header class="header">
-        <h1>{{ title }}</h1>
+        <nav class="nav">
+            <a href="{{ url_for('base') }}"><img src="../static/images/logo-GestLab.png" alt="logo GestLab"></a>
+            <ul>
+                <li><a href="#">Accueil</a></li>
+                <li><a href="#">Laboratoire</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <h1 class="title">GestLab <br> Votre chemin vers la facilité</h1>
     </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer class="footer">
+        <div class="footer-haut">
+            <img class="logo-academie" src="../static/images/Logo_Academie-Orleans-Tours.png" alt="logo lycée François Villon">
+            
+        </div>
+        <div class="footer-bas">
+            <p>© 2023 - GestLab - Tous droits réservés</p>
+        </div>
+    </footer>
+    {% block scripts %}
+        <!-- Optional JavaScript -->
+    {% endblock %}
 </body>
 </html>

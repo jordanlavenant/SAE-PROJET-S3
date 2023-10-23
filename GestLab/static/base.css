@@ -1,0 +1,81 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Hind Siliguri', sans-serif;
+}
+
+ul {
+    list-style-type: none;
+}
+
+/* barre de navigation */
+
+.nav {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center; 
+    background-color: #59b2ea;
+    padding: 0 10px;
+}
+
+.nav ul {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.nav li {
+    padding: 0 10px;
+}
+
+.nav ul a {
+    text-decoration: none;
+    color: black;
+    border-bottom: 2px solid transparent;
+    font-size: 20px;;
+}
+
+.nav ul a:hover {
+    color: white;
+    border-bottom: 2px solid white;
+    transition: 0.2s;
+}
+
+.active {
+    color: white;
+}
+
+.nav img {
+    height: 100px;
+}
+
+/* titre */
+
+.title {
+    text-align: center;
+    font-size: 40px;
+    margin: 20px 0;
+    font-weight: 300;
+}
+
+/* footer */
+
+.footer-haut {
+    background-color: rgb(123, 111, 232);
+}
+
+.footer-bas {
+    background-color: rgb(59, 59, 59);
+}
+
+.footer-bas p {
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.logo-academie {
+    max-width: 200px;
+    margin: 0 10px;
+}
