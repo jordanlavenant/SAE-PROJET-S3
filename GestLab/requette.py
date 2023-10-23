@@ -11,6 +11,12 @@ def afficher_table(cnx, table):
     for row in result:
         print(row)
 
+def get_password_with_email(cnx, email):
+    result = cnx.execute(text("select mdp from UTILISATEUR where email = '" + email + "';"))
+    for row in result:
+        print(row[0])
+        return row[0]
+
 
 # afficher_table(cnx, "STOCK")
 

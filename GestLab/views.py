@@ -1,6 +1,6 @@
 from .app import app #, db
 from flask import render_template, url_for, redirect, request
-#from flask_login import login_user, current_user, logout_user, login_required
+from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
 from wtforms import StringField, HiddenField, FileField, SubmitField
@@ -19,12 +19,13 @@ class LoginForm(FlaskForm):
 
     def get_authenticated_user(self):
         user = get_nom_whith_email(get_cnx(), self.email.data)
+        mdp = get_password_with_email(get_cnx(), self.email.data)
         if user is None:
             return None
-        m = sha256()
-        m.update(self.password.data.encode())
-        passwd = m.hexdigest()
-        return user if passwd == user.password else None
+        # m = sha256()
+        # m.update(self.password.data.encode())
+        # passwd = m.hexdigest()
+        return user #if passwd == mdp else None
     
 
 @app.route("/")
@@ -42,16 +43,16 @@ def login():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
         user = f.get_authenticated_user()
-        if user:
-            get_nom_whith_email(get_cnx(), user)
+        if user != None:
+            login_user(user)
             next = f.next.data or url_for("base")
             return redirect(next)
     return render_template(
         "login.html",
         form=f)
 
-# @app.route("/logout/")
-# def logout():
-#     logout_user()
-#     return redirect(url_for('home'))
+@app.route("/logout/")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
