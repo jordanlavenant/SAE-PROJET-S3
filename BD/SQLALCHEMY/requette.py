@@ -1,5 +1,6 @@
 from sqlalchemy import text
-
+import connexionPythonSQL
+cnx= connexionPythonSQL.ouvrir_connexion()
 
 #. Ecrire une fonction pour obtenir le plus grand num´ero utilis´e pour identifier un article
 def maxNumArticle(cnx):
