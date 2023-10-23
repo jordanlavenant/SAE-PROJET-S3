@@ -108,6 +108,15 @@ def get_materiaux(cnx):
 
 # get_materiaux(cnx)
 
+
+def get_password_with_email(cnx, email):
+    result = cnx.execute(text("select mdp from UTILISATEUR where email = '" + email + "';"))
+    for row in result:
+        print(row[0])
+        return row[0]
+
+get_password_with_email(cnx, "testG")
+
 def ajout_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
     
     try:
@@ -193,8 +202,17 @@ def update_prenom_utilisateur(cnx, email, new_prenom):
 
 # update_prenom_utilisateur(cnx, "newDupont@gmail.com", "newPierre")
 
+# def get_alerte(cnx):
+#     try:
+#         result = cnx.execute(text("SELECT M.idMat, M.nomMat, DP.date_peremption, CURDATE() AS date_actuelle FROM MATERIAUX M INNER JOIN DATE_PEREMPTION DP ON M.idMat = DP.idMat WHERE DP.date_peremption <= DATE_ADD(CURDATE(), INTERVAL 5 DAY);"))
+#         print("qsdqsd")
+#         for row in result:
+#             print(row)
+#     except:
+#         print("erreur d'affichage des alertes")
+#         raise
 
-
+# get_alerte(cnx)
 # def ajouterEntrepot(cnx, entrepot):
 #     """
 #     paramètres:
