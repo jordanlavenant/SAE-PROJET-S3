@@ -136,11 +136,22 @@ create table ETAT_COMMANDE (
     primary key(idSuivi)
 );
 
+create table MATERIAUX_RECHERCHE(
+    nomMatRech varchar(50),
+    primary key(nomMatRech)
+);
+
+create table ALERTES (
+    idAlerte int not null,
+    idMat int references DATE_PEREMPTION(idMat),
+    quantite int not null,
+    primary key(idAlerte)
+);
 
 
 insert into statut (idSt, nomSt) values 
     (1,'Proffesseur'),
-    (2,'Utilisateur'),
+    (2,'Administrateur'),
     (3,'Gestionnaire'),
     (4,'Gestionnaire/Proffesseur');
 
@@ -192,3 +203,67 @@ values (1, 1);
 
 insert into risque (idRisque, idDfs, nomRisque, pictogramme) 
 values (1, 1, 'Risque de coupure', 'https://th.bing.com/th/id/R.a05094b9f26eb64def392d54b291bea0?rik=3jSRK00M7%2fDYuQ&pid=ImgRaw&r=0')
+
+-- Inserts pour la table MATERIAUX_RECHERCHE
+INSERT INTO MATERIAUX_RECHERCHE (nomMatRech) 
+VALUES  ('Tubes à essai'),
+        ('Tubes à essai à fond plat'),
+        ('Tubes à essai à fond rond'),
+        ('Tubes à essai à col large'),
+        ('Fioles coniques'),
+        ('Fioles Erlenmeyer'),
+        ('Béchers'),
+        ('Béchers Griffin'),
+        ('Pipettes graduées'),
+        ('Pipettes volumétriques'),
+        ('Pipettes Pasteur'),
+        ('Burettes'),
+        ('Cylindres gradués'),
+        ('Boîtes de Pétri'),
+        ('Capsules de pesée'),
+        ('Éprouvettes'),
+        ('Flacons compte-gouttes'),
+        ('Fioles à vide'),
+        ('Fioles à col large'),
+        ('Fioles à col long'),
+        ('Fioles de réaction'),
+        ('Ballons de réaction'),
+        ('Réacteurs à pression'),
+        ('Réacteurs à micro-ondes'),
+        ('Cuvettes de spectrophotomètre'),
+        ('Cuvettes de fluorimètre'),
+        ('Cuvettes de polarimètre'),
+        ('Cuvettes de conductimètre'),
+        ('Cuvettes de viscosimètre'),
+        ('Filtres Buchner'),
+        ('Entonnoirs'),
+        ('Colonnes de chromatographie'),
+        ('Ampoules à décanter'),
+        ('Thermomètres de laboratoire'),
+        ("Deshydrateurs d'air"),
+        ('Mortiers et pilons'),
+        ('Plaques de Petri'),
+        ('Bains-marie'),
+        ('Autoclaves'),
+        ('Agitateurs magnétiques'),
+        ('Agitateurs à hélice'),
+        ('Agitateurs vortex'),
+        ('Agitateurs à plaques chauffantes'),
+        ('Agitateurs à ultrasons'),
+        ('Réfrigérants à condenseur'),
+        ('Réfrigérants à colonne'),
+        ('Réfrigérants à serpentin'),
+        ('Colonnes de fractionnement'),
+        ('Support universel'),
+        ('Pinces, supports et trépieds'),
+        ('Pinces de fixation'),
+        ('Bouchons en caoutchouc'),
+        ('Bouchons en liège'),
+        ('Récipients pour stockage'),
+        ('Seringues'),
+        ('Flacons laveurs'),
+        ('Tubes capillaires'),
+        ('Tubes Nessler'),
+        ('Tubes de centrifugation'),
+        ('Boîtes cryogéniques'),
+        ('Flacons de stockage');

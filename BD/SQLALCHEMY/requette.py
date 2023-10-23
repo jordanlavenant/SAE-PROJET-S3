@@ -9,7 +9,7 @@ def afficher_table(cnx, table):
         print(row)
 
 
-afficher_table(cnx, "STOCK")
+# afficher_table(cnx, "STOCK")
 
 def get_last_id(cnx , table, id):
     try:
@@ -32,7 +32,7 @@ def get_nom_materiel_with_id(cnx, id):
         print("erreur de l'id")
         raise
 
-get_nom_materiel_with_id(cnx, 3)
+# get_nom_materiel_with_id(cnx, 3)
 
 def get_nom_dom_cat_materiel_with_id(cnx, id):
     try:
@@ -92,6 +92,106 @@ def connexion_utilisateur(cnx, email,mot_de_passe):
 
 # print(connexion_utilisateur(cnx, "DUPONT@gmail.com", "azerty"))
 
+
+def get_nom_whith_email(cnx, email):
+    result = cnx.execute(text("select nom from UTILISATEUR where email = '" + email + "';"))
+    for row in result:
+        print(row[0])
+        return row[0]
+    
+#get_nom_whith_email(cnx, "DUPONT@gmail.com")
+
+def get_materiaux(cnx):
+    result = cnx.execute(text("select * from MATERIAUX_RECHERCHE;"))
+    for row in result:
+        print(row[0])
+
+# get_materiaux(cnx)
+
+def ajout_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
+    
+    try:
+        last_id = int(get_last_id(cnx, "UTILISATEUR", "idUt")) + 1
+        cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
+        cnx.commit()
+        print("utilisateur ajouté")
+    except:
+        print("erreur d'ajout de l'utilisateur")
+        raise
+
+# ajout_proffesseur(cnx, "blandeau", "erwan", "test@gmail.com", "erwanB")
+
+
+def ajout_gestionnaire(cnx, nom, prenom, email, mdp, idSt = 3):
+        
+        try:
+            last_id = int(get_last_id(cnx, "UTILISATEUR", "idUt")) + 1
+            cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
+            cnx.commit()
+            print("utilisateur ajouté")
+        except:
+            print("erreur d'ajout de l'utilisateur")
+            raise
+
+# ajout_gestionnaire(cnx, "blandeauG", "erwang", "testG", "erwanBG")
+
+
+def update_email_utilisateur(cnx, new_email, nom, mdp):
+    try:
+        cnx.execute(text("update UTILISATEUR set email = '" + new_email + "' where nom = '" + nom + "' and mdp = '" + mdp + "';"))
+        cnx.commit()
+        print("email mis a jour")
+    except:
+        print("erreur de mise a jour de l'email")
+        raise
+
+# update_email_utilisateur(cnx,"newErwan@gmail.com", "blandeau" ,"erwanB")
+
+
+def modification_droit_utilisateur(cnx, id, idSt):
+    try:
+        cnx.execute(text("update UTILISATEUR set idSt = '" + str(idSt) + "' where idUt = '" + id + "';"))
+        cnx.commit()
+        print("droit mis a jour")
+    except:
+        print("erreur de mise a jour du droit")
+        raise
+
+# modification_droit_utilisateur(cnx, "testG", 2)
+
+
+def update_mdp_utilisateur(cnx, email, new_mdp):
+    try:
+        cnx.execute(text("update UTILISATEUR set mdp = '" + new_mdp + "' where email = '" + email + "';"))
+        cnx.commit()
+        print("mdp mis a jour")
+    except:
+        print("erreur de mise a jour du mdp")
+        raise
+
+# update_mdp_utilisateur(cnx, "newDupont@gmail.com", "newMdp")
+
+def update_nom_utilisateur(cnx, email, new_nom):
+    try:
+        cnx.execute(text("update UTILISATEUR set nom = '" + new_nom + "' where email = '" + email + "';"))
+        cnx.commit()
+        print("nom mis a jour")
+    except:
+        print("erreur de mise a jour du nom")
+        raise
+
+# update_nom_utilisateur(cnx, "newDupont@gmail.com", "newDupont")
+
+def update_prenom_utilisateur(cnx, email, new_prenom):
+    try:
+        cnx.execute(text("update UTILISATEUR set prenom = '" + new_prenom + "' where email = '" + email + "';"))
+        cnx.commit()
+        print("prenom mis a jour")
+    except:
+        print("erreur de mise a jour du prenom")
+        raise
+
+# update_prenom_utilisateur(cnx, "newDupont@gmail.com", "newPierre")
 
 
 

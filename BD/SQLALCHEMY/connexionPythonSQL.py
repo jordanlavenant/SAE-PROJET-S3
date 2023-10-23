@@ -2,7 +2,6 @@ import sqlalchemy
 from sqlalchemy import text, create_engine
 import loginSQL as log
 import pymysql
-
 pymysql.install_as_MySQLdb()
 
 def ouvrir_connexion():
