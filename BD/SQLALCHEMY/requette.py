@@ -4,12 +4,12 @@ cnx= connexionPythonSQL.ouvrir_connexion()
 
 def afficher_table(cnx, table):
 
-    result = cnx.execute(text("select * from " + table + " natural join STATUT;"))
+    result = cnx.execute(text("select * from " + table + " natural join MATERIAUX;"))
     for row in result:
         print(row)
 
 
-# afficher_table(cnx, "STOCK")
+afficher_table(cnx, "STOCK")
 
 def get_last_id(cnx , table, id):
     try:
@@ -19,6 +19,7 @@ def get_last_id(cnx , table, id):
         return result
     except:
         print("erreur du nom de l'id ou du nom de la table")
+        raise
 
 # get_last_id(cnx, "STOCK", "idMat")
 
@@ -29,6 +30,7 @@ def get_nom_materiel_with_id(cnx, id):
         print(result[1])
     except:
         print("erreur de l'id")
+        raise
 
 get_nom_materiel_with_id(cnx, 3)
 
@@ -39,6 +41,7 @@ def get_nom_dom_cat_materiel_with_id(cnx, id):
         print("domaine : " + result[4], " | categorie : ",result[5])
     except:
         print("erreur de l'id")
+        raise
 
 # get_nom_dom_cat_materiel_with_id(cnx, 1)
 
@@ -51,6 +54,7 @@ def ajoute_materiel(cnx, nom, idDom, idCat):
         print("materiel ajouté")
     except:
         print("erreur d'ajout du materiel")
+        raise
 
 def ajout_quantite(cnx, idMat, quantite):
     try:
@@ -65,6 +69,7 @@ def ajout_quantite(cnx, idMat, quantite):
             print("quantite ajouté")
         except:
             print("erreur d'ajout de la quantité")
+            raise
 
 # ajout_quantite(cnx, 3, 50)
 
@@ -77,6 +82,7 @@ def ajout_fournisseur(cnx, nom, adresse,mail, tel):
         print("fournisseur ajouté")
     except:
         print("erreur d'ajout du fournisseur")
+        raise
 
 def connexion_utilisateur(cnx, email,mot_de_passe):
     result = cnx.execute(text("select * from UTILISATEUR where email = '" + email + "' and mdp = '" + mot_de_passe + "';"))
@@ -85,6 +91,7 @@ def connexion_utilisateur(cnx, email,mot_de_passe):
     return False
 
 # print(connexion_utilisateur(cnx, "DUPONT@gmail.com", "azerty"))
+
 
 
 
