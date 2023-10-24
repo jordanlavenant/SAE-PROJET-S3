@@ -1,5 +1,5 @@
 from .app import app #, db
-from flask import render_template, url_for, redirect, request
+from flask import render_template, url_for, redirect, request, session
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
@@ -44,7 +44,9 @@ def login():
     elif f.validate_on_submit():
         user = f.get_authenticated_user()
         if user != None:
-            login_user(user)
+            #login_user(user)
+            session['utilisateur'] = user
+            print("login : "+str(session['utilisateur']))
             next = f.next.data or url_for("base")
             return redirect(next)
     return render_template(
@@ -53,6 +55,7 @@ def login():
 
 @app.route("/logout/")
 def logout():
-    logout_user()
-    return redirect(url_for('home'))
+    #logout_user()
+    session.pop('utilisateur', None)
+    return redirect(url_for('base'))
 

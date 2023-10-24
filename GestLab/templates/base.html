@@ -20,12 +20,11 @@
                 <li><a href="#">Accueil</a></li>
                 <li><a href="#">Commander</a></li>
                 <li><a href="#">Gerer les profils</a></li>
-                {% if current_user.is_authenticated %}
-                    <li><a>{{ current_user.username }}</a></li>
-                    <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out" title="Logout">Logout</span></a></li>
-                {% endif %}
-                {% if not current_user.is_authenticated %}
-                    <li><a href="{{ url_for('login') }}">connexion</a></li>
+                {% if 'utilisateur' in session %}
+                    <li><a>{{ session['utilisateur'] }}</a></li>
+                    <li><a class="profil" href="{{ url_for('login') }}"><img src="../static/images/compte.png" alt="logo compte"></a></li>
+                {% else %}
+                    <li><a class="profil" href="{{ url_for('login') }}"><img src="../static/images/compte.png" alt="logo compte"></a></li>
                 {% endif %}
             </ul>
         </nav>

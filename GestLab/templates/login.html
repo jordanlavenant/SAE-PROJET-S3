@@ -4,6 +4,11 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='login.css') }}">
 {% endblock %}
 {% block content %}
+{% if 'utilisateur' in session %}
+    <p>Vous êtes déjà connecté.</p>
+    <a href="{{ url_for('logout') }}">Se déconnecter</a>
+    <p><a href="{{ url_for('base') }}">Retour à l'accueil</a></p>
+{% else %}
 <form class="form-horizontal" role="form" method="POST" action ="{{ url_for ('login') }}">
     {{ form.hidden_tag() }}
     <div class="form-group">
@@ -20,4 +25,5 @@
         </div>
     </div>
 </form>
+{% endif %}
 {% endblock %}

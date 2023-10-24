@@ -45,8 +45,26 @@ ul {
     color: white;
 }
 
-.nav img {
+.nav a img {
     height: 100px;
+}
+
+.nav img:hover {
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+.profil {
+    border: 0;
+}
+
+.profil:hover {
+    border: 0;
+}
+
+.profil img {
+    max-width: 50px;
+    max-height: 50px;
 }
 
 /* footer */
