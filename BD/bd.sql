@@ -13,8 +13,8 @@ DROP TABLE IF EXISTS MATERIEL;
 DROP TABLE IF EXISTS RISQUES;
 DROP TABLE IF EXISTS FDS;
 DROP TABLE IF EXISTS RISQUE;
-DROP TABLE IF EXISTS DOMAINE;
 DROP TABLE IF EXISTS CATEGORIE;
+DROP TABLE IF EXISTS DOMAINE;
 DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
 DROP TABLE IF EXISTS RECHERCHEMATERIELS;
@@ -42,19 +42,19 @@ create table UTILISATEUR(
     primary key(idUtilisateur)
 );
 
-
-create table CATEGORIE(
-    idCategorie int not null auto_increment,
-    nomCategorie varchar(50) not null,
-    unique(nomCategorie),
-    primary key(idCategorie)
-);
-
 create table DOMAINE(
     idDomaine int not null auto_increment,
     nomDomaine varchar(50) not null,
     unique(nomDomaine),
     primary key(idDomaine)
+);
+
+create table CATEGORIE(
+    idCategorie int not null auto_increment,
+    idDomaine int not null references DOMAINE,
+    nomCategorie varchar(50) not null,
+    unique(nomCategorie),
+    primary key(idCategorie)
 );
 
 create table RISQUE(
@@ -78,9 +78,8 @@ create table RISQUES(
 
 create table MATERIEL(
     idMateriel int not null auto_increment,
-    idDomaine int not null references DOMAINE,
     idCategorie int not null references CATEGORIE,
-    idFDS int not null references FDS,
+    idFDS int references FDS,
     nomMateriel varchar(50) not null,
     primary key (idMateriel)
 );
@@ -120,12 +119,14 @@ create table MATERIELFOURNISSEUR(
 create table DEMANDE(
     idDemande int not null auto_increment,
     idUtilisateur int not null references UTILISATEUR,
+    prixTotalDemande float not null,
     primary key(idDemande)
 );
 
 create table AJOUTERMATERIEL(
     idDemande int not null references DEMANDE,
     idMateriel int not null references MATERIEL,
+    idFournisseur int not null references FOURNISSEUR,
     quantite int not null,
     primary key(idDemande, idMateriel)
 );
@@ -140,7 +141,6 @@ create table BONCOMMANDE(
     idBonCommande int not null auto_increment,
     idDemande int not null references DEMANDE,
     idEtat int not null references ETATCOMMANDE,
-    prixTotalCommande float not null,
     dateCommande datetime not null,
     primary key(idBonCommande)
 );
@@ -185,17 +185,18 @@ INSERT INTO UTILISATEUR (idStatut, nom, prenom, email, motDePasse) VALUES
 (2, 'Jane', 'Smith', 'jane.smith@example.com', 'motdepasse2'),
 (3, 'Alice', 'Johnson', 'alice.johnson@example.com', 'motdepasse3');
 
-INSERT INTO CATEGORIE (idCategorie, nomCategorie) VALUES
-(1, 'Électronique'),
-(2, 'Chimie'),
-(3, 'Biologie'),
-(4, 'Informatique');
-
 INSERT INTO DOMAINE (idDomaine, nomDomaine) VALUES
-(1, 'Informatique'),
-(2, 'Médecine'),
-(3, 'Chimie'),
-(4, 'Biologie');
+(1, 'Physique'),
+(2, 'Chimie');
+
+INSERT INTO CATEGORIE (idCategorie, idDomaine, nomCategorie) VALUES
+(1, 1, 'Matériel électrique'),
+(2, 2, 'Produits chimiques'),
+(3, 1, 'Appareillage'),
+(4, 2, 'Matériel de laboratoire'),
+(5, 2, 'Accessoires associés au matériel de laboratoire'),
+(6, 1, 'Médias'),
+(7, 2, 'Verrerie');
 
 INSERT INTO RISQUE (idRisque, nomRisque, pictogramme) VALUES
 (1, 'Toxicité', 'toxic.png'),
@@ -212,10 +213,22 @@ INSERT INTO RISQUES (idFDS, idRisque) VALUES
 (2, 2),
 (3, 3);
 
-INSERT INTO MATERIEL (idMateriel, idDomaine, idCategorie, idFDS, nomMateriel) VALUES
-(1, 1, 1, 1, 'Ordinateur'),
-(2, 2, 3, 2, 'Réactif chimique'),
-(3, 4, 4, 3, 'Microscope');
+
+INSERT INTO MATERIEL VALUES
+(1, 1, 1,'Disjoncteur électrique'),
+(2, 2, 1, 'Acide sulfurique'),
+(3, 3, null, 'Oscilloscope'),
+(4, 4, null, 'Érlenmeyer en verre'),
+(5, 5, null, 'Pipette graduée'),
+(6, 6, null, "DVD éducatif sur l'électricité"),
+(7, 7, null, 'Becher en verre'),
+(8, 1, null, 'Multimètre numérique'),
+(9, 2, 2, 'Hydroxyde de sodium (Soude caustique)'),
+(10, 3, null, 'Générateur de signaux'),
+(11, 4, null, 'Burette en verre'),
+(12, 5, null, 'Pipette Pasteur en plastique'),
+(13, 6, null, 'CD-ROM de simulation de réactions chimiques'),
+(14, 7, null, 'Pissette en verre');
 
 INSERT INTO DATEPEREMPTION (idMateriel, datePeremption) VALUES
 (2, '2023-12-31'),
@@ -234,27 +247,31 @@ INSERT INTO FOURNISSEUR (nomFournisseur, adresseFournisseur, mailFournisseur, te
 INSERT INTO MATERIELFOURNISSEUR (idMateriel, idFournisseur, prixMateriel, stockFournisseur) VALUES
 (1, 1, 800.0, 100),
 (2, 2, 50.0, 200),
-(3, 3, 1200.0, 20);
+(3, 3, 1200.0, 20),
+(4, 3, 900.0, 50),
+(5, 1, 60.0, 150),
+(6, 2, 1300.0, 30)
+;
 
-INSERT INTO DEMANDE (idDemande, idUtilisateur) VALUES
-(1, 1),
-(2, 2),
-(3, 3);
+INSERT INTO DEMANDE (idDemande, idUtilisateur, prixTotalDemande) VALUES
+(1, 1, 1000.0),
+(2, 2, 500.0),
+(3, 3, 2400.0);
 
-INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES
-(1, 1, 10),
-(2, 2, 5),
-(3, 3, 2);
+INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, idFournisseur, quantite) VALUES
+(1, 1, 1, 10),
+(2, 2, 2, 5),
+(3, 3, 3, 2);
 
 INSERT INTO ETATCOMMANDE (idEtat, nomEtat) VALUES
 (1, 'En attente'),
 (2, 'En cours'),
 (3, 'Terminée');
 
-INSERT INTO BONCOMMANDE (idBonCommande, idDemande, idEtat, prixTotalCommande, dateCommande) VALUES
-(1, 1, 1, 1000.0, '2023-10-15 10:00:00'),
-(2, 2, 2, 500.0, '2023-10-16 11:30:00'),
-(3, 3, 3, 2400.0, '2023-10-17 14:15:00');
+INSERT INTO BONCOMMANDE (idBonCommande, idDemande, idEtat, dateCommande) VALUES
+(1, 1, 1, '2023-10-15 10:00:00'),
+(2, 2, 2,'2023-10-16 11:30:00'),
+(3, 3, 3, '2023-10-17 14:15:00');
 
 INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
 (1, 'Entrepôt A', 12345),
