@@ -60,9 +60,57 @@ class ChangerMailForm(FlaskForm):
 def base():
     return render_template(
     "home.html",
-    title="GestLab"
+    title="votre chemin vers la facilité"
     )
 
+@app.route("/commander/")
+def commander():
+    return render_template(
+    "commander.html",
+    title="Commander"
+    )
+
+@app.route("/alertes/")
+def alertes():
+    return render_template(
+    "alertes.html",
+    title="Alertes"
+    )
+
+@app.route("/utilisateurs/")
+def utilisateurs():
+    return render_template(
+    "utilisateurs.html",
+    title="Utilisateurs"
+    )
+
+@app.route("/demandes/")
+def demandes():
+    return render_template(
+    "demandes.html",
+    title="Demandes"
+    )
+
+@app.route("/inventaire/")
+def inventaire():
+    return render_template(
+    "inventaire.html",
+    title="Inventaire"
+    )
+
+@app.route("/demander/")
+def demander():
+    return render_template(
+    "demander.html",
+    title="Demander"
+    )
+
+@app.route("/commentaire/")
+def commentaire():
+    return render_template(
+    "commentaire.html",
+    title="Envoyer un Commentaire"
+    )
 
 @app.route("/login/", methods=("GET","POST",))
 def login():
@@ -81,6 +129,7 @@ def login():
             return redirect(next)
     return render_template(
         "login.html",
+        title="Profil",
         form=f,
         fromChangerMDP=changerMDP,
         fromChangerMail=changerMail)

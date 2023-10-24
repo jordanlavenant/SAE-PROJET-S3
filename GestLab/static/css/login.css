@@ -11,8 +11,8 @@
     margin-bottom: 5em;
     width: 400px;
     padding: 40px;
-    background: rgba(0,0,0,.5);
-    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    background: #009af0;
+    box-shadow: 0 15px 25px #384274;
     border-radius: 10px;
     }
 
@@ -102,8 +102,8 @@
   margin-bottom: 5em;
   width: 400px;
   padding: 40px;
-  background: rgba(0,0,0,.5);
-  box-shadow: 0 15px 25px rgba(0,0,0,.6);
+  background: #009af0;
+  box-shadow: 0 15px 25px #384274;
   border-radius: 10px;
 }
 
@@ -128,8 +128,8 @@
   margin-bottom: 5em;
   width: 400px;
   padding: 40px;
-  background: rgba(0,0,0,.5);
-  box-shadow: 0 15px 25px rgba(0,0,0,.6);
+  background: #009af0;
+  box-shadow: 0 15px 25px #384274;
   border-radius: 10px;
 }
 

@@ -8,6 +8,34 @@ ul {
     list-style-type: none;
 }
 
+header {
+    position: relative;
+    margin-bottom: 5.5em;
+}
+
+/* titre */
+
+.title {
+    position: absolute;
+    color: #fff;
+    padding: 20px 70px;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1; /* Pour chevaucher le nav */
+    text-align: center;
+    font-size: 30px;
+    font-weight: 300;
+    background-color: #384274;
+    border-radius: 40px;
+}
+
+
+.title span {
+    font-size: 50px;
+}
+
+
 /* barre de navigation */
 
 .nav {
@@ -15,7 +43,7 @@ ul {
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center; 
-    background-color: #59b2ea;
+    background-color: #009AF0;
     padding: 0 10px;
 }
 
@@ -31,13 +59,12 @@ ul {
 
 .nav ul a {
     text-decoration: none;
-    color: black;
+    color: #fff;
     border-bottom: 2px solid transparent;
-    font-size: 20px;;
+    font-size: 20px;
 }
 
 .nav ul a:hover {
-    color: white;
     border-bottom: 2px solid white;
     transition: 0.2s;
 }
@@ -48,6 +75,7 @@ ul {
 
 .nav a img {
     height: 100px;
+    transition: .5s;
 }
 
 .nav img:hover {
