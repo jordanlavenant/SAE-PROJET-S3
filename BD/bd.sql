@@ -181,9 +181,9 @@ INSERT INTO STATUT (idStatut, nomStatut, consultation, reservation, commander, c
 (3, 'Gestionnaire', true, false, true, true, true);
 
 INSERT INTO UTILISATEUR (idStatut, nom, prenom, email, motDePasse) VALUES
-(1, 'John', 'Doe', 'john.doe@example.com', 'motdepasse1'),
-(2, 'Jane', 'Smith', 'jane.smith@example.com', 'motdepasse2'),
-(3, 'Alice', 'Johnson', 'alice.johnson@example.com', 'motdepasse3');
+(1, 'Doe', 'John', 'john.doe@example.com', 'motdepasse1'),
+(2, 'Smith', 'Jane', 'jane.smith@example.com', 'motdepasse2'),
+(3, 'Johnson', 'Alice', 'alice.johnson@example.com', 'motdepasse3');
 
 INSERT INTO CATEGORIE (idCategorie, nomCategorie) VALUES
 (1, 'Électronique'),
