@@ -44,28 +44,28 @@ create table UTILISATEUR(
 
 
 create table CATEGORIE(
-    idCategorie int not null,
+    idCategorie int not null auto_increment,
     nomCategorie varchar(50) not null,
     unique(nomCategorie),
     primary key(idCategorie)
 );
 
 create table DOMAINE(
-    idDomaine int not null,
+    idDomaine int not null auto_increment,
     nomDomaine varchar(50) not null,
     unique(nomDomaine),
     primary key(idDomaine)
 );
 
 create table RISQUE(
-    idRisque int not null,
+    idRisque int not null auto_increment,
     nomRisque varchar(50) not null,
     pictogramme varchar(2000),
     primary key(idRisque)
 );
 
 create table FDS(
-    idFDS int not null,
+    idFDS int not null auto_increment,
     nomFDS varchar(50) not null,
     primary key(idFDS)
 );
@@ -77,7 +77,7 @@ create table RISQUES(
 );
 
 create table MATERIEL(
-    idMateriel int not null,
+    idMateriel int not null auto_increment,
     idDomaine int not null references DOMAINE,
     idCategorie int not null references CATEGORIE,
     idFDS int not null references FDS,
@@ -92,7 +92,7 @@ create table DATEPEREMPTION(
 );
 
 create table STOCKLABORATOIRE(
-    idStock int not null,
+    idStock int not null auto_increment,
     idMateriel int not null references MATERIEL,
     quantiteLaboratoire int,
     primary key(idStock)
@@ -118,7 +118,7 @@ create table MATERIELFOURNISSEUR(
 );
 
 create table DEMANDE(
-    idDemande int not null,
+    idDemande int not null auto_increment,
     idUtilisateur int not null references UTILISATEUR,
     primary key(idDemande)
 );
@@ -131,13 +131,13 @@ create table AJOUTERMATERIEL(
 );
 
 create table ETATCOMMANDE(
-    idEtat int not null,
+    idEtat int not null auto_increment,
     nomEtat varchar(50) not null,
     primary key(idEtat)
 );
 
 create table BONCOMMANDE(
-    idBonCommande int not null,
+    idBonCommande int not null auto_increment,
     idDemande int not null references DEMANDE,
     idEtat int not null references ETATCOMMANDE,
     prixTotalCommande float not null,

@@ -13,5 +13,8 @@
 ## Tâches réalisées : 
 
 
-- BD Réaliser le 23
-- creation des fonction
+- BD Réaliser le (23)
+- creation des fonction (23/24)
+- création fonction pour hash les mots de passe (24)
+- creation de procedure et trigger
+
