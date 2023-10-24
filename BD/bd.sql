@@ -1,112 +1,80 @@
-drop table ETAT_COMMANDE;
-drop table ETAT;
-drop table PRIX_MATERIEL;
-drop table SUIVI_COMMANDE;
-drop table FOURNISSEUR;
-drop table COMMANDER;
-drop table RISQUE;
-drop table FDS;
-drop table DATE_PEREMPTION;
-drop table STOCK;
-drop table MATERIAUX;
-drop table DOMAINE;
-drop table CATEGORIE;
-drop table RESERVATION;
-drop table UTILISATEUR;
-drop table STATUT;
-
-create table DROITS(
-    consultation boolean,
-    reservation boolean,
-    commander boolean,
-    creation_utilisateur boolean,
-    modifier_utilisateur boolean,
-
-)
-
 create table STATUT(
-    idSt int not null,
-    nomSt varchar(50),
-    primary key(idSt)
+    idStatut int not null,
+    nomStatut varchar(50) not null,
+    consultation boolean not null,
+    reservation boolean not null,
+    commander boolean not null,
+    creationUilisateur boolean not null,
+    modificationUtilisateur boolean not null,
+    primary key(idStatut)
 );
 
 
 create table UTILISATEUR(
-    idUt int not null auto_increment,
-    nom varchar(50),
-    prenom varchar(50),
-    email varchar(50),
-    mdp varchar(100),
-    idSt int references STATUT(idSt),
-    unique(email),
-    primary key(idUt)
-);
-
-create table RESERVATION(
-    idReser int not null,
-    date_debut date,
-    date_fin date,
-    quantiteR int not null,
-    primary key(idReser)
+    idUtilisateur int not null auto_increment,
+    idStatut int  not null references STATUT,
+    nom varchar(50) not null,
+    prenom varchar(50) not null,
+    email varchar(50) not null,
+    motDePasse varchar(100) not null,
+    primary key(idUtilisateur)
 );
 
 
 create table CATEGORIE(
-    idCat int not null,
-    nomCat varchar(50),
-    primary key(idCat)
+    idCategorie int not null,
+    nomCategorie varchar(50) not null,
+    unique(nomCategorie),
+    primary key(idCategorie)
 );
 
 create table DOMAINE(
-    idDom int not null,
-    nomDom varchar(50),
-    primary key(idDom)
-);
-
-create table MATERIAUX(
-    idMat int not null,
-    nomMat varchar(50),
-    idDom int references DOMAINE(idDom),
-    idCat int references CATEGORIE(idCat),
-    primary key (idMat)
-);
-
-create table STOCK(
-    idMat int not null references MATERIAUX(idMat),
-    quantite int not null,
-    primary key(idMat)
-);
-
-create table DATE_PEREMPTION(
-    idMat int not null references MATERIAUX(idMat),
-    date_peremption date ,
-    primary key(idMat)
-);
-
-create table FDS(
-    idDfs int not null,
-    nomFds varchar(50),
-    primary key(idDfs)
+    idDomaine int not null,
+    nomDomaine varchar(50) not null,
+    unique(nomDomaine),
+    primary key(idDomaine)
 );
 
 create table RISQUE(
     idRisque int not null,
-    idDfs int not null references FDS(idDfs),
-    nomRisque varchar(50),
+    nomRisque varchar(50) not null,
     pictogramme varchar(2000),
     primary key(idRisque)
 );
 
+create table FDS(
+    idFDS int not null,
+    nomFDS varchar(50) not null,
+    primary key(idFDS)
+);
 
-create table COMMANDER(
-    idCommande int not null,
-    idMat int references MATERIAUX(idMat),
-    idUt int references UTILISATEUR(idUt),
-    quantiteC int not null,
-    prix float not null,
-    dateCommande date,
-    facture varchar(4000),
-    primary key(idCommande)
+create table RISQUES(
+    idFDS int not null references FDS,
+    idRisque varchar(50) not null references RISQUE,
+    primary key(idFDS, idRisque)
+);
+
+create table MATERIEL(
+    idMateriel int not null,
+    idDomaine int not null references DOMAINE,
+    idCategorie int not null references CATEGORIE,
+    idFDS int not null references FDS,
+    idFournisseur int not null references FOURNISSEUR,
+    nomMateriel varchar(50) not null,
+    primary key (idMateriel)
+);
+
+create table DATEPEREMPTION(
+    idMateriel int not null references MATERIEL,
+    datePeremption date not null,
+    primary key(idMateriel, datePeremption)
+);
+
+create table STOCKLABORATOIRE(
+    idStock int not null,
+    idMateriel int not null references MATERIEL,
+    quantiteLaboratoire int,
+    primary key(idStock)
 );
 
 create table FOURNISSEUR(
@@ -114,49 +82,75 @@ create table FOURNISSEUR(
     nomFournisseur varchar(50),
     adresseFournisseur varchar(50),
     mailFournisseur varchar(50),
-    telFournisseur varchar(50),
-    unique(mailFournisseur, telFournisseur, nomFournisseur, adresseFournisseur),
-
+    telFournisseur varchar(10),
+    unique(mailFournisseur), 
+    unique(telFournisseur),
     primary key(idFournisseur)
 );
 
-create table SUIVI_COMMANDE(
-    idSuivi int not null,
-    idCommande int references COMMANDER(idCommande),
-    localisation varchar(50),
-    numColis int not null,
-    primary key(idSuivi)
+create table MATERIELFOURNISSEUR(
+    idMateriel int not null references MATERIEL,
+    idFournisseur int not null references FOURNISSEUR,
+    prixMateriel double not null,
+    stockFournisseur int not null,
+    primary key(idMateriel, idFournisseur)
 );
 
-create table PRIX_MATERIEL(
-    idMat int not null references MATERIAUX(idMat),
-    idFournisseur int not null references FOURNISSEUR(idFournisseur),
-    prix float,
-    primary key(idMat,idFournisseur)
+create table DEMANDE(
+    idDemande int not null,
+    idUtilisateur int not null references UTILISATEUR,
+    primary key(idDemande)
 );
 
-create table ETAT (
-    idEtat int not null,
-    nomEtat varchar(50),
-    primary key(idEtat)
-);
-
-create table ETAT_COMMANDE (
-    idSuivi int  references SUIVI_COMMANDE(idSuivi),
-    idEtat int  references ETAT(idEtat),
-    primary key(idSuivi)
-);
-
-create table MATERIAUX_RECHERCHE(
-    nomMatRech varchar(50),
-    primary key(nomMatRech)
-);
-
-create table ALERTES (
-    idAlerte int not null,
-    idMat int references DATE_PEREMPTION(idMat),
+create table AJOUTERMATERIEL(
+    idDemande int not null references DEMANDE,
+    idMateriel int not null references MATERIEL,
     quantite int not null,
-    primary key(idAlerte)
+    primary key(idDemande, idMateriel)
+);
+
+create table ETATCOMMANDE(
+    idEtat int not null,
+    nomEtat varchar(50) not null,
+    primary key(idEtat)
+)
+
+create table BONCOMMANDE(
+    idBonCommande int not null,
+    idDemande int not null references DEMANDE,
+    idEtat int not null references ETATCOMMANDE,
+    prixTotalCommande float not null,
+    dateCommande datetime not null,
+    primary key(idBonCommande)
+);
+
+create table SUIVICOMMANDE(
+    idBonCommande int references BONCOMMANDE,
+    localisation varchar(50) not null,
+    numColis int not null,
+    primary key(idBonCommande, localisation)
+);
+
+create table RECHERCHEMATERIELS(
+    materielRecherche varchar(50),
+    primary key(materielRecherche)
+);
+
+create table ENVOIFOURNISSEUR(
+    idBonCommande int not null references BONCOMMANDE,
+    idFournisseur int not null references FOURNISSEUR,
+    facture varchar(50) not null,
+    primary key(idBonCommande, idFournisseur)
+);
+
+create table ARCHIVECOMMANDE(
+    numColis int not null,
+    idFournisseur int not null,
+    nomFournisseur varchar(50) not null,
+    adresseFournisseur varchar(50) not null,
+    mailFournisseur varchar(50) not null,
+    telFournisseur varchar(10) not null,
+    facture varchar(50) not null,
 );
 
 
