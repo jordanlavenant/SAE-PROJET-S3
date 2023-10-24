@@ -15,6 +15,14 @@ drop table RESERVATION;
 drop table UTILISATEUR;
 drop table STATUT;
 
+create table DROITS(
+    consultation boolean,
+    reservation boolean,
+    commander boolean,
+    creation_utilisateur boolean,
+    modifier_utilisateur boolean,
+
+)
 
 create table STATUT(
     idSt int not null,
@@ -24,13 +32,14 @@ create table STATUT(
 
 
 create table UTILISATEUR(
-    idUt int not null,
+    idUt int not null auto_increment,
     nom varchar(50),
     prenom varchar(50),
     email varchar(50),
-    mdp varchar(50),
+    mdp varchar(100),
     idSt int references STATUT(idSt),
-    primary key(idUt, idSt)
+    unique(email),
+    primary key(idUt)
 );
 
 create table RESERVATION(
@@ -101,11 +110,13 @@ create table COMMANDER(
 );
 
 create table FOURNISSEUR(
-    idFournisseur int not null,
+    idFournisseur int not null auto_increment,
     nomFournisseur varchar(50),
     adresseFournisseur varchar(50),
     mailFournisseur varchar(50),
     telFournisseur varchar(50),
+    unique(mailFournisseur, telFournisseur, nomFournisseur, adresseFournisseur),
+
     primary key(idFournisseur)
 );
 
@@ -149,62 +160,61 @@ create table ALERTES (
 );
 
 
-insert into statut (idSt, nomSt) values 
-    (1,'Proffesseur'),
+insert into STATUT (idSt, nomSt) values 
+    (1,'Professeur'),
     (2,'Administrateur'),
     (3,'Gestionnaire'),
-    (4,'Gestionnaire/Proffesseur');
+    (4,'Laborantin');
 
 
-insert into utilisateur (idUt, nom, prenom, email, mdp, idSt) values 
+insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values 
     (1,'Jean', 'Dupont', 'jean.dupont@example.com', 'azerty', 1),
     (2,'Pierre', 'Dupont', 'dupont@gmail.com', "azerty" , 2);
 
-insert into reservation (idReser,date_debut, date_fin, quantiteR) values 
+insert into RESERVATION (idReser,date_debut, date_fin, quantiteR) values 
     (1,'2023-10-23', '2023-10-25', 10);
 
-insert into categorie (idCat,nomCat) values 
+insert into CATEGORIE (idCat,nomCat) values 
     (1,'Matériaux de laboratoire');
 
-insert into domaine (idDom,nomDom) values 
+insert into DOMAINE (idDom,nomDom) values 
     (1,'Verre');
 
-insert into materiaux (idMat, nomMat, idDom, idCat) values 
+insert into MATERIAUX (idMat, nomMat, idDom, idCat) values 
     (1,'becher', 1, 1);
 
-insert into stock (idMat, quantite) values 
+insert into STOCK (idMat, quantite) values 
     (1, 100);
 
-insert into date_peremption (idMat, date_peremption) values
+insert into DATE_PEREMPTION (idMat, date_peremption) values
     (1, '2024-10-23');
 
-insert into fds (idDfs,nomFds) values 
+insert into FDS (idDfs,nomFds) values 
     (1,'Fiche de données de sécurité du becher');
 
-insert into commander (idCommande, idMat, idUt, quantiteC, prix, dateCommande,facture) values 
+insert into COMMANDER (idCommande, idMat, idUt, quantiteC, prix, dateCommande,facture) values 
     (1, 1, 1, 10, 100, '2023-10-23', 'facture_123456789.pdf');
 
-insert into fournisseur (idFournisseur,nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur)
+insert into FOURNISSEUR (idFournisseur,nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur)
 values (1,'Leroy Merlin', '123 rue de la Paix, 75008 Paris', 'contact@leroymerlin.fr', '01 42 56 78 90');
 
-insert into prix_materiel (idMat, idFournisseur, prix) values 
+insert into PRIX_MATERIEL (idMat, idFournisseur, prix) values 
     (1, 1, 10);
 
-insert into suivi_commande (idSuivi,idCommande, localisation, numColis)
+insert into SUIVI_COMMANDE (idSuivi,idCommande, localisation, numColis)
 values (1,1,'Orléans', 123456789);
 
-insert into etat(idEtat, nomEtat) 
+insert into ETAT(idEtat, nomEtat) 
 values (1, 'En prepatation'),
        (2, 'En cours de livraison'),
        (3, 'Livree');
 
-insert into etat_commande (idSuivi, idEtat)
+insert into ETAT_COMMANDE (idSuivi, idEtat)
 values (1, 1);
 
-insert into risque (idRisque, idDfs, nomRisque, pictogramme) 
+insert into RISQUE (idRisque, idDfs, nomRisque, pictogramme) 
 values (1, 1, 'Risque de coupure', 'https://th.bing.com/th/id/R.a05094b9f26eb64def392d54b291bea0?rik=3jSRK00M7%2fDYuQ&pid=ImgRaw&r=0')
 
--- Inserts pour la table MATERIAUX_RECHERCHE
 INSERT INTO MATERIAUX_RECHERCHE (nomMatRech) 
 VALUES  ('Tubes à essai'),
         ('Tubes à essai à fond plat'),

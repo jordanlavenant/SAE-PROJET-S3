@@ -1,40 +1,53 @@
-from .connexionPythonSQL import get_cnx
+import connexionPythonSQL as conn
 import requette_get as req_get
+import requette_annexe as req_annexe
 from sqlalchemy import text
+from hashlib import sha256
 
-cnx = get_cnx()
+
+cnx = conn.get_cnx()
 
 def ajout_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
     
     try:
         last_id = int(req_get.get_last_id(cnx, "UTILISATEUR", "idUt")) + 1
-        cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
-        cnx.commit()
-        print("utilisateur ajouté")
+        try:
+            cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
+            cnx.commit()
+            print("utilisateur ajouté")
+        except:
+            print("erreur d'ajout de l'utilisateur")
+            raise
     except:
         print("erreur d'ajout de l'utilisateur")
         raise
 
 # ajout_proffesseur(cnx, "lucidor", "leo", "leo@", "leo")
 
-def ajout_administrateur(cnx, nom, prenom, email, mdp, idSt = 2):
+def ajout_administrateur(cnx, nom, prenom, email, idSt = 2):
     
     try:
-        last_id = int(req_get.get_last_id(cnx, "UTILISATEUR", "idUt")) + 1
-        cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
+        mdpRandom = req_annexe.generer_mot_de_passe()
+        # envoyer mail avec mdpRandom
+        print(mdpRandom)
+        mdphash = req_annexe.hasher_mdp(mdpRandom)
+        cnx.execute(text("insert into UTILISATEUR (nom, prenom, email, mdp, idSt) values ('" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "', '" + str(idSt) + "');"))
         cnx.commit()
         print("utilisateur ajouté")
     except:
         print("erreur d'ajout de l'utilisateur")
         raise
 
-# ajout_proffesseur(cnx, "admin", "admin", "admin@", "admin")
+ajout_administrateur(cnx, "admin", "admin", "admin@testhash2")
 
-def ajout_gestionnaire(cnx, nom, prenom, email, mdp, idSt = 3):
+def ajout_gestionnaire(cnx, nom, prenom, email, idSt = 3):
         
         try:
-            last_id = int(req_get.get_last_id(cnx, "UTILISATEUR", "idUt")) + 1
-            cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
+            mdpRandom = req_annexe.generer_mot_de_passe()
+            # envoyer mail avec mdpRandom
+            print(mdpRandom)
+            mdphash = req_annexe.hasher_mdp(mdpRandom)
+            cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" +  nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "', '" + str(idSt) + "');"))
             cnx.commit()
             print("utilisateur ajouté")
         except:
@@ -42,13 +55,12 @@ def ajout_gestionnaire(cnx, nom, prenom, email, mdp, idSt = 3):
             raise
 
 
-# ajout_gestionnaire(cnx, "blandeauG", "erwang", "testG", "erwanBG")
+# ajout_gestionnaire(cnx, "leo", "leo", "leo@", "leo")
 
 
 def ajout_fournisseur(cnx, nom, adresse,mail, tel):
     try:
-        last_id = int(req_get.get_last_id(cnx, "FOURNISSEUR", "idFournisseur")) + 1
-        cnx.execute(text("insert into FOURNISSEUR (idFournisseur, nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur) values (" + str(last_id) + ", '" + nom + "', '" + adresse + "', '"  + mail + "', '"+ tel + "');"))
+        cnx.execute(text("insert into FOURNISSEUR (idFournisseur, nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur) values (" +  nom + "', '" + adresse + "', '"  + mail + "', '"+ tel + "');"))
         cnx.commit()
         print("fournisseur ajouté")
     except:

@@ -2,7 +2,7 @@
 login = "blandeau"
 passwd = "Loulou34230."
 serveur= "mysql-blandeau.alwaysdata.net"
-bd = "blandeau_gestlab"
+bd = "blandeau_gestlabbd1"
 
 def getLogin():
     return login

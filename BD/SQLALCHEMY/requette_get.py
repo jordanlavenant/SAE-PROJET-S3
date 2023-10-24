@@ -61,11 +61,13 @@ def get_materiaux(cnx):
 
 # get_materiaux(cnx)
 
-def get_id_materiel_with_email(cnx, email):
+def get_id_ut_with_email(cnx, email):
     result = cnx.execute(text("select idUt from UTILISATEUR where email = '" + email + "';"))
     for row in result:
         print(row[0])
         return row[0]
+
+# get_id_ut_with_email(cnx, "leo@")
 
 def get_password_with_email(cnx, email):
     result = cnx.execute(text("select mdp from UTILISATEUR where email = '" + email + "';"))
@@ -73,7 +75,7 @@ def get_password_with_email(cnx, email):
         print(row[0])
         return row[0]
 
-get_password_with_email(cnx, "testG")
+# get_password_with_email(cnx, "testG")
 
 def add_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
     
@@ -86,7 +88,7 @@ def add_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
         print("erreur d'ajout de l'utilisateur")
         raise
 
-get_id_materiel_with_email(cnx, "leo@")
+# get_id_materiel_with_email(cnx, "leo@")
 
 
 
