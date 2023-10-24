@@ -1,34 +1,25 @@
 from sqlalchemy import text
 import connexionPythonSQL as conn
+import requette_annexe as req_annexe
 
 cnx = conn.get_cnx()
 
 def afficher_table(cnx, table):
 
-    result = cnx.execute(text("select * from " + table + " natural join MATERIAUX;"))
+    result = cnx.execute(text("select * from " + table + " natural join MATERIEL;"))
     for row in result:
         print(row)
 
 
-# afficher_table(cnx, "STOCK")
+# afficher_table(cnx, "STOCKLABORATOIRE")
 
-def get_last_id(cnx , table, id):
-    try:
-        result = cnx.execute(text("select max("+ id +") from " + table + ";"))
-        result = result.first()[0]
-        print(result)
-        return result
-    except:
-        print("erreur du nom de l'id ou du nom de la table")
-        raise
-
-# get_last_id(cnx, "STOCK", "idMat")
 
 def get_nom_materiel_with_id(cnx, id):
     try:
-        result = cnx.execute(text("select * from MATERIAUX where idMat = " + str(id) + ";"))
+        result = cnx.execute(text("select * from MATERIEL where idMateriel = " + str(id) + ";"))
         result = result.first()
-        print(result[1])
+        print(result[4])
+        return result[4]
     except:
         print("erreur de l'id")
         raise
@@ -37,9 +28,10 @@ def get_nom_materiel_with_id(cnx, id):
 
 def get_nom_dom_cat_materiel_with_id(cnx, id):
     try:
-        result = cnx.execute(text("select * from MATERIAUX natural join DOMAINE natural join CATEGORIE where idMat = " + str(id) + ";"))
+        result = cnx.execute(text("select * from MATERIEL natural join DOMAINE natural join CATEGORIE where idMateriel = " + str(id) + ";"))
         result = result.first()
         print("domaine : " + result[4], " | categorie : ",result[5])
+        return (result[4], result[5])
     except:
         print("erreur de l'id")
         raise
@@ -52,51 +44,38 @@ def get_nom_whith_email(cnx, email):
         print(row[0])
         return row[0]
     
-#get_nom_whith_email(cnx, "DUPONT@gmail.com")
+# get_nom_whith_email(cnx, "alice.johnson@example.com")
 
-def get_materiaux(cnx):
-    result = cnx.execute(text("select * from MATERIAUX_RECHERCHE;"))
+def get_materiel(cnx):
+    result = cnx.execute(text("select * from RECHERCHEMATERIELS;"))
     for row in result:
         print(row[0])
 
-# get_materiaux(cnx)
+# get_materiel(cnx)
 
 def get_id_ut_with_email(cnx, email):
-    result = cnx.execute(text("select idUt from UTILISATEUR where email = '" + email + "';"))
+    result = cnx.execute(text("select idUtilisateur from UTILISATEUR where email = '" + email + "';"))
     for row in result:
         print(row[0])
         return row[0]
 
 # get_id_ut_with_email(cnx, "leo@")
 
-def get_password_with_email(cnx, email):
-    result = cnx.execute(text("select mdp from UTILISATEUR where email = '" + email + "';"))
+def get_password_hashed_with_email(cnx, email):
+    result = cnx.execute(text("select motDePasse from UTILISATEUR where email = '" + email + "';"))
     for row in result:
         print(row[0])
         return row[0]
 
-# get_password_with_email(cnx, "testG")
-
-def add_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
-    
-    try:
-        last_id = int(get_last_id(cnx, "UTILISATEUR", "idUt")) + 1
-        cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
-        cnx.commit()
-        print("utilisateur ajouté")
-    except:
-        print("erreur d'ajout de l'utilisateur")
-        raise
-
-# get_id_materiel_with_email(cnx, "leo@")
+# get_password_hashed_with_email(cnx, "leo@")
 
 def get_statut_weth_email(cnx, email):
-    result = cnx.execute(text("select nomSt from UTILISATEUR natural join STATUT where email = '" + email + "';"))
+    result = cnx.execute(text("select nomStatut from UTILISATEUR natural join STATUT where email = '" + email + "';"))
     for row in result:
         print(row[0])
         return row[0]
     
-# get_statut_weth_email(cnx, "admin@testhash2")
+get_statut_weth_email(cnx, "admin@testhash2")
 
 
 def get_nom_and_statut_with_email(cnx, email):
@@ -105,10 +84,10 @@ def get_nom_and_statut_with_email(cnx, email):
         print(row[0], row[1])
         return (row[0], row[1])
 
-get_nom_and_statut_with_email(cnx, "admin@testhash2")
+# get_nom_and_statut_with_email(cnx, "admin@testhash2")
 # def get_alerte(cnx):
 #     try:
-#         result = cnx.execute(text("SELECT M.idMat, M.nomMat, DP.date_peremption, CURDATE() AS date_actuelle FROM MATERIAUX M INNER JOIN DATE_PEREMPTION DP ON M.idMat = DP.idMat WHERE DP.date_peremption <= DATE_ADD(CURDATE(), INTERVAL 5 DAY);"))
+#         result = cnx.execute(text("SELECT M.idMateriel, M.nomMat, DP.date_peremption, CURDATE() AS date_actuelle FROM MATERIEL M INNER JOIN DATE_PEREMPTION DP ON M.idMateriel = DP.idMateriel WHERE DP.date_peremption <= DATE_ADD(CURDATE(), INTERVAL 5 DAY);"))
 #         print("qsdqsd")
 #         for row in result:
 #             print(row)
