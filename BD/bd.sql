@@ -180,7 +180,7 @@ INSERT INTO STATUT (idStatut, nomStatut, consultation, reservation, commander, c
 (2, 'Professeur/Laborantin', true, true, false, true, true),
 (3, 'Gestionnaire', true, false, true, true, true);
 
-INSERT INTO UTILISATEUR (idStatut, nom, prenom, email, motDePasse) VALUES
+INSERT INTO UTILISATEUR (idStatut, nom, prenom, email, motDePasse) VALUES 
 (1, 'John', 'Doe', 'john.doe@example.com', 'motdepasse1'),
 (2, 'Jane', 'Smith', 'jane.smith@example.com', 'motdepasse2'),
 (3, 'Alice', 'Johnson', 'alice.johnson@example.com', 'motdepasse3');
