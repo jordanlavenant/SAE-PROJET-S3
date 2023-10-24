@@ -75,7 +75,7 @@ def get_password_with_email(cnx, email):
 
 get_password_with_email(cnx, "testG")
 
-def ajout_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
+def add_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
     
     try:
         last_id = int(get_last_id(cnx, "UTILISATEUR", "idUt")) + 1

@@ -29,16 +29,16 @@ def update_droit_utilisateur(cnx, id, idSt):
 # update_droit_utilisateur(cnx, "testG", 2)
 
 
-def update_mdp_utilisateur(cnx, email, new_mdp):
+def update_mdp_utilisateur(cnx, email,mdp, new_mdp):
     try:
-        cnx.execute(text("update UTILISATEUR set mdp = '" + new_mdp + "' where email = '" + email + "';"))
+        cnx.execute(text(" update UTILISATEUR set mdp = '" + new_mdp + "' where email = '" + email + "' and mdp = '" + mdp + "'"))
         cnx.commit()
         print("mdp mis a jour")
     except:
         print("erreur de mise a jour du mdp")
         raise
 
-# update_mdp_utilisateur(cnx, "newDupont@gmail.com", "newMdp")
+# update_mdp_utilisateur(cnx, "newErwan@gmail.com", "erwanB","newMdp")
 
 def update_nom_utilisateur(cnx, email, new_nom):
     try:
