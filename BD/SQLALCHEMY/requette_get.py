@@ -67,6 +67,25 @@ def get_id_materiel_with_email(cnx, email):
         print(row[0])
         return row[0]
 
+def get_password_with_email(cnx, email):
+    result = cnx.execute(text("select mdp from UTILISATEUR where email = '" + email + "';"))
+    for row in result:
+        print(row[0])
+        return row[0]
+
+get_password_with_email(cnx, "testG")
+
+def ajout_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
+    
+    try:
+        last_id = int(get_last_id(cnx, "UTILISATEUR", "idUt")) + 1
+        cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
+        cnx.commit()
+        print("utilisateur ajouté")
+    except:
+        print("erreur d'ajout de l'utilisateur")
+        raise
+
 get_id_materiel_with_email(cnx, "leo@")
 
 
@@ -74,8 +93,17 @@ get_id_materiel_with_email(cnx, "leo@")
 
 # supprimer_utilisateur(cnx, 6)
 
+# def get_alerte(cnx):
+#     try:
+#         result = cnx.execute(text("SELECT M.idMat, M.nomMat, DP.date_peremption, CURDATE() AS date_actuelle FROM MATERIAUX M INNER JOIN DATE_PEREMPTION DP ON M.idMat = DP.idMat WHERE DP.date_peremption <= DATE_ADD(CURDATE(), INTERVAL 5 DAY);"))
+#         print("qsdqsd")
+#         for row in result:
+#             print(row)
+#     except:
+#         print("erreur d'affichage des alertes")
+#         raise
 
-
+# get_alerte(cnx)
 # def ajouterEntrepot(cnx, entrepot):
 #     """
 #     paramètres:
