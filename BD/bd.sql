@@ -71,7 +71,7 @@ create table FDS(
 
 create table RISQUES(
     idFDS int not null references FDS,
-    idRisque varchar(50) not null references RISQUE,
+    idRisque int not null references RISQUE,
     primary key(idFDS, idRisque)
 );
 
@@ -80,7 +80,6 @@ create table MATERIEL(
     idDomaine int not null references DOMAINE,
     idCategorie int not null references CATEGORIE,
     idFDS int not null references FDS,
-    idFournisseur int not null references FOURNISSEUR,
     nomMateriel varchar(50) not null,
     primary key (idMateriel)
 );
@@ -134,7 +133,7 @@ create table ETATCOMMANDE(
     idEtat int not null,
     nomEtat varchar(50) not null,
     primary key(idEtat)
-)
+);
 
 create table BONCOMMANDE(
     idBonCommande int not null,
@@ -212,10 +211,10 @@ INSERT INTO RISQUES (idFDS, idRisque) VALUES
 (2, 2),
 (3, 3);
 
-INSERT INTO MATERIEL (idMateriel, idDomaine, idCategorie, idFDS, idFournisseur, nomMateriel) VALUES
-(1, 1, 1, 1, 1, 'Ordinateur'),
-(2, 2, 3, 2, 2, 'Réactif chimique'),
-(3, 4, 4, 3, 3, 'Microscope');
+INSERT INTO MATERIEL (idMateriel, idDomaine, idCategorie, idFDS, nomMateriel) VALUES
+(1, 1, 1, 1, 'Ordinateur'),
+(2, 2, 3, 2, 'Réactif chimique'),
+(3, 4, 4, 3, 'Microscope');
 
 INSERT INTO DATEPEREMPTION (idMateriel, datePeremption) VALUES
 (2, '2023-12-31'),
