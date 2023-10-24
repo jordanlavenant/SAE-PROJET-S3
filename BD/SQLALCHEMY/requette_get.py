@@ -90,11 +90,22 @@ def add_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
 
 # get_id_materiel_with_email(cnx, "leo@")
 
+def get_statut_weth_email(cnx, email):
+    result = cnx.execute(text("select nomSt from UTILISATEUR natural join STATUT where email = '" + email + "';"))
+    for row in result:
+        print(row[0])
+        return row[0]
+    
+# get_statut_weth_email(cnx, "admin@testhash2")
 
 
+def get_nom_and_statut_with_email(cnx, email):
+    result = cnx.execute(text("select nom, idSt from UTILISATEUR where email = '" + email + "';"))
+    for row in result:
+        print(row[0], row[1])
+        return (row[0], row[1])
 
-# supprimer_utilisateur(cnx, 6)
-
+get_nom_and_statut_with_email(cnx, "admin@testhash2")
 # def get_alerte(cnx):
 #     try:
 #         result = cnx.execute(text("SELECT M.idMat, M.nomMat, DP.date_peremption, CURDATE() AS date_actuelle FROM MATERIAUX M INNER JOIN DATE_PEREMPTION DP ON M.idMat = DP.idMat WHERE DP.date_peremption <= DATE_ADD(CURDATE(), INTERVAL 5 DAY);"))

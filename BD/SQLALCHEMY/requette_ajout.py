@@ -38,7 +38,7 @@ def ajout_administrateur(cnx, nom, prenom, email, idSt = 2):
         print("erreur d'ajout de l'utilisateur")
         raise
 
-ajout_administrateur(cnx, "admin", "admin", "admin@testhash2")
+# ajout_administrateur(cnx, "admin", "admin", "admin@testhash2")
 
 def ajout_gestionnaire(cnx, nom, prenom, email, idSt = 3):
         
@@ -47,7 +47,7 @@ def ajout_gestionnaire(cnx, nom, prenom, email, idSt = 3):
             # envoyer mail avec mdpRandom
             print(mdpRandom)
             mdphash = req_annexe.hasher_mdp(mdpRandom)
-            cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" +  nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "', '" + str(idSt) + "');"))
+            cnx.execute(text("insert into UTILISATEUR (nom, prenom, email, mdp, idSt) values ('" +  nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "', '" + str(idSt) + "');"))
             cnx.commit()
             print("utilisateur ajouté")
         except:
@@ -55,7 +55,7 @@ def ajout_gestionnaire(cnx, nom, prenom, email, idSt = 3):
             raise
 
 
-# ajout_gestionnaire(cnx, "leo", "leo", "leo@", "leo")
+ajout_gestionnaire(cnx, "leo", "leo", "leo@kd")
 
 
 def ajout_fournisseur(cnx, nom, adresse,mail, tel):
