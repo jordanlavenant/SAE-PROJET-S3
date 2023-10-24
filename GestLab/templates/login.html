@@ -6,24 +6,46 @@
 {% block content %}
 {% if 'utilisateur' in session %}
     <p>Vous êtes déjà connecté.</p>
-    <a href="{{ url_for('logout') }}">Se déconnecter</a>
-    <p><a href="{{ url_for('base') }}">Retour à l'accueil</a></p>
+    <a id="seDeco" href="{{ url_for('logout') }}">Se déconnecter</a>
+    <button id="btn-changer-mdp">Changer le mot de passe</button>
+    <p id="lien-accueil"><a href="{{ url_for('base') }}">Retour à l'accueil</a></p>
+    <div id="changerMDP-container">
+      <div id="changerMDP-box">
+        <h2 class="element">Changer le mot de passe</h2>
+        <form class="form-changerMDP" role="form" method="POST" action ="{{ url_for('changerMDP') }}">
+          {{ form.hidden_tag() }}
+          <div class="user-box">
+            <div>{{ form.password(size=50, class_="form-control element", placeholder="Ancien Password") }}</div>
+          </div>
+          <div class="user-box">
+            <div>{{ form.password(size=50, class_="form-control element", placeholder="Nouveau Password") }}</div>
+          </div>
+          <div class="valid-container">
+            <input type="submit" value="Changer le mot de passe" class="element">
+          </div>
+        </form>
+      </div>
+    </div>
 {% else %}
-<form class="form-horizontal" role="form" method="POST" action ="{{ url_for ('login') }}">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        <label for="email">{{ form.email.label }}</label>
-        <div>{{ form.email(size=50, class_="form-control", placeholder="Username") }}</div>
+<div id="login-container">
+    <div id="login-box">
+        <h2 class="element">Connexion</h2>
+        <form class="form-horizontal" role="form" method="POST" action ="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}
+          <div class="user-box">
+            {{ form.email(size=50, class_="form-control element", placeholder="Email") }}
+          </div>
+          <div class="user-box">
+            <div>{{ form.password(size=50, class_="form-control element", placeholder="Password") }}</div>
+          </div>
+          <div class="valid-container">
+            <input type="submit" value="Se Connecter" class="element">
+          </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label for="password">{{ form.password.label }}</label>
-        <div>{{ form.password(size=50, class_="form-control", placeholder="Password") }}</div>
-    </div>
-    <div class="form-group">
-        <div>
-            <button type="submit">Sign in</button>
-        </div>
-    </div>
-</form>
+</div>
 {% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='./js/login.js') }}"></script>
 {% endblock %}

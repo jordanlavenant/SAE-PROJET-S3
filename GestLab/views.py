@@ -18,14 +18,16 @@ class LoginForm(FlaskForm):
     next = HiddenField()
 
     def get_authenticated_user(self):
-        user = get_nom_whith_email(get_cnx(), self.email.data)
+        user = get_nom_and_statut_with_email(get_cnx(), self.email.data)
         mdp = get_password_with_email(get_cnx(), self.email.data)
         if user is None:
             return None
         # m = sha256()
-        # m.update(self.password.data.encode())
+        # m.update(self.password.data.encode('utf-8'))
         # passwd = m.hexdigest()
-        return user #if passwd == mdp else None
+        passwd = hasher_mdp(self.password.data)
+        print(str(mdp)+" == "+str(passwd))
+        return user if passwd == mdp else None
     
 
 @app.route("/")
@@ -59,3 +61,9 @@ def logout():
     session.pop('utilisateur', None)
     return redirect(url_for('base'))
 
+@app.route("/changerMDP/")
+def changerMDP():
+    return render_template(
+    "changerMDP.html",
+    title="GestLab"
+    )

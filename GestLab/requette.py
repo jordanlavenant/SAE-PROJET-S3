@@ -1,5 +1,6 @@
 from sqlalchemy import text
 from .connexionPythonSQL import * 
+from hashlib import sha256
 cnx = ouvrir_connexion()
 
 def get_cnx():
@@ -200,3 +201,13 @@ def update_prenom_utilisateur(cnx, email, new_prenom):
         print("erreur de mise a jour du prenom")
         raise
 
+def hasher_mdp(mdp):
+    m = sha256()
+    m.update(mdp.encode("utf-8"))
+    return m.hexdigest()
+
+def get_nom_and_statut_and_email(cnx, email):
+    result = cnx.execute(text("select nom, idSt from UTILISATEUR where email = '" + email + "';"))
+    for row in result:
+        print(row[0], row[1])
+        return (row[0], row[1], email)

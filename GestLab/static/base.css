@@ -22,6 +22,7 @@ ul {
 .nav ul {
     display: flex;
     flex-wrap: nowrap;
+    align-items: center;
 }
 
 .nav li {
@@ -55,16 +56,17 @@ ul {
 }
 
 .profil {
-    border: 0;
+    border: 0 !important;
 }
 
 .profil:hover {
-    border: 0;
+    border: 0 !important;
 }
 
 .profil img {
     max-width: 50px;
     max-height: 50px;
+    padding-top: 8px;
 }
 
 /* footer */

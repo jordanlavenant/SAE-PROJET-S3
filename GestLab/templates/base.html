@@ -17,11 +17,15 @@
         <nav class="nav">
             <a href="{{ url_for('base') }}"><img src="../static/images/logo-GestLab.png" alt="logo GestLab"></a>
             <ul>
-                <li><a href="#">Accueil</a></li>
+                <li><a href="{{ url_for('base') }}">Accueil</a></li>
+                {% if 'utilisateur' in session %}
+                {% if session['utilisateur'][1] == 2 %}
                 <li><a href="#">Commander</a></li>
+                {% endif %}
+                {% endif %}
                 <li><a href="#">Gerer les profils</a></li>
                 {% if 'utilisateur' in session %}
-                    <li><a>{{ session['utilisateur'] }}</a></li>
+                    <li><a>{{ session['utilisateur'][0] }}</a></li>
                     <li><a class="profil" href="{{ url_for('login') }}"><img src="../static/images/compte.png" alt="logo compte"></a></li>
                 {% else %}
                     <li><a class="profil" href="{{ url_for('login') }}"><img src="../static/images/compte.png" alt="logo compte"></a></li>
