@@ -11,3 +11,7 @@
 - LAVENANT Jordan
 
 ## Tâches réalisées : 
+
+
+- BD Réaliser le 23
+- creation des fonction
