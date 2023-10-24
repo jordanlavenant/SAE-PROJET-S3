@@ -55,7 +55,7 @@ def ajout_gestionnaire(cnx, nom, prenom, email, idStatut = 3):
             raise
 
 
-# ajout_gestionnaire(cnx, "leo", "leo", "leo@")
+ajout_gestionnaire(cnx, "colin", "colin", "colin@")
 
 def add_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
     
@@ -111,3 +111,15 @@ def ajout_quantite(cnx, idMat, quantite):
             raise
 
 # ajout_quantite(cnx, 3, 50)
+
+
+
+
+def delete_utilisateur(cnx, idUt):
+    try:
+        cnx.execute(text( "delete from UTILISATEUR where idUtilisateur = '" + str(idUt) + " ';"))
+        cnx.commit()
+        print("utilisateur supprimé")
+    except:
+        print("erreur de suppression de l'utilisateur")
+        raise
