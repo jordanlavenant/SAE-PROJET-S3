@@ -1,112 +1,101 @@
-drop table ETAT_COMMANDE;
-drop table ETAT;
-drop table PRIX_MATERIEL;
-drop table SUIVI_COMMANDE;
-drop table FOURNISSEUR;
-drop table COMMANDER;
-drop table RISQUE;
-drop table FDS;
-drop table DATE_PEREMPTION;
-drop table STOCK;
-drop table MATERIAUX;
-drop table DOMAINE;
-drop table CATEGORIE;
-drop table RESERVATION;
-drop table UTILISATEUR;
-drop table STATUT;
-
-create table DROITS(
-    consultation boolean,
-    reservation boolean,
-    commander boolean,
-    creation_utilisateur boolean,
-    modifier_utilisateur boolean,
-
-)
+DROP TABLE IF EXISTS ENVOIFOURNISSEUR;
+DROP TABLE IF EXISTS RECHERCHEMATERIELS;
+DROP TABLE IF EXISTS SUIVICOMMANDE;
+DROP TABLE IF EXISTS BONCOMMANDE;
+DROP TABLE IF EXISTS ETATCOMMANDE;
+DROP TABLE IF EXISTS AJOUTERMATERIEL;
+DROP TABLE IF EXISTS DEMANDE;
+DROP TABLE IF EXISTS MATERIELFOURNISSEUR;
+DROP TABLE IF EXISTS FOURNISSEUR;
+DROP TABLE IF EXISTS STOCKLABORATOIRE;
+DROP TABLE IF EXISTS DATEPEREMPTION;
+DROP TABLE IF EXISTS MATERIEL;
+DROP TABLE IF EXISTS RISQUES;
+DROP TABLE IF EXISTS FDS;
+DROP TABLE IF EXISTS RISQUE;
+DROP TABLE IF EXISTS DOMAINE;
+DROP TABLE IF EXISTS CATEGORIE;
+DROP TABLE IF EXISTS UTILISATEUR;
+DROP TABLE IF EXISTS STATUT;
+DROP TABLE IF EXISTS RECHERCHEMATERIELS;
+DROP TABLE IF EXISTS ARCHIVECOMMANDE;
 
 create table STATUT(
-    idSt int not null,
-    nomSt varchar(50),
-    primary key(idSt)
+    idStatut int not null,
+    nomStatut varchar(50) not null,
+    consultation boolean not null,
+    reservation boolean not null,
+    commander boolean not null,
+    creationUilisateur boolean not null,
+    modificationUtilisateur boolean not null,
+    primary key(idStatut)
 );
 
 
 create table UTILISATEUR(
-    idUt int not null auto_increment,
-    nom varchar(50),
-    prenom varchar(50),
-    email varchar(50),
-    mdp varchar(100),
-    idSt int references STATUT(idSt),
-    unique(email),
-    primary key(idUt)
-);
-
-create table RESERVATION(
-    idReser int not null,
-    date_debut date,
-    date_fin date,
-    quantiteR int not null,
-    primary key(idReser)
+    idUtilisateur int not null auto_increment,
+    idStatut int  not null references STATUT,
+    nom varchar(50) not null,
+    prenom varchar(50) not null,
+    email varchar(50) not null,
+    motDePasse varchar(100) not null,
+    primary key(idUtilisateur)
 );
 
 
 create table CATEGORIE(
-    idCat int not null,
-    nomCat varchar(50),
-    primary key(idCat)
+    idCategorie int not null,
+    nomCategorie varchar(50) not null,
+    unique(nomCategorie),
+    primary key(idCategorie)
 );
 
 create table DOMAINE(
-    idDom int not null,
-    nomDom varchar(50),
-    primary key(idDom)
-);
-
-create table MATERIAUX(
-    idMat int not null,
-    nomMat varchar(50),
-    idDom int references DOMAINE(idDom),
-    idCat int references CATEGORIE(idCat),
-    primary key (idMat)
-);
-
-create table STOCK(
-    idMat int not null references MATERIAUX(idMat),
-    quantite int not null,
-    primary key(idMat)
-);
-
-create table DATE_PEREMPTION(
-    idMat int not null references MATERIAUX(idMat),
-    date_peremption date ,
-    primary key(idMat)
-);
-
-create table FDS(
-    idDfs int not null,
-    nomFds varchar(50),
-    primary key(idDfs)
+    idDomaine int not null,
+    nomDomaine varchar(50) not null,
+    unique(nomDomaine),
+    primary key(idDomaine)
 );
 
 create table RISQUE(
     idRisque int not null,
-    idDfs int not null references FDS(idDfs),
-    nomRisque varchar(50),
+    nomRisque varchar(50) not null,
     pictogramme varchar(2000),
     primary key(idRisque)
 );
 
+create table FDS(
+    idFDS int not null,
+    nomFDS varchar(50) not null,
+    primary key(idFDS)
+);
 
-create table COMMANDER(
-    idCommande int not null,
-    idMat int references MATERIAUX(idMat),
-    idUt int references UTILISATEUR(idUt),
-    quantiteC int not null,
-    prix float not null,
-    dateCommande date,
-    facture varchar(4000),
-    primary key(idCommande)
+create table RISQUES(
+    idFDS int not null references FDS,
+    idRisque int not null references RISQUE,
+    primary key(idFDS, idRisque)
+);
+
+create table MATERIEL(
+    idMateriel int not null,
+    idDomaine int not null references DOMAINE,
+    idCategorie int not null references CATEGORIE,
+    idFDS int not null references FDS,
+    nomMateriel varchar(50) not null,
+    primary key (idMateriel)
+);
+
+create table DATEPEREMPTION(
+    idMateriel int not null references MATERIEL,
+    datePeremption date not null,
+    primary key(idMateriel, datePeremption)
+);
+
+create table STOCKLABORATOIRE(
+    idStock int not null,
+    idMateriel int not null references MATERIEL,
+    quantiteLaboratoire int,
+    primary key(idStock)
 );
 
 create table FOURNISSEUR(
@@ -114,108 +103,174 @@ create table FOURNISSEUR(
     nomFournisseur varchar(50),
     adresseFournisseur varchar(50),
     mailFournisseur varchar(50),
-    telFournisseur varchar(50),
-    unique(mailFournisseur, telFournisseur, nomFournisseur, adresseFournisseur),
-
+    telFournisseur varchar(10),
+    unique(mailFournisseur), 
+    unique(telFournisseur),
     primary key(idFournisseur)
 );
 
-create table SUIVI_COMMANDE(
-    idSuivi int not null,
-    idCommande int references COMMANDER(idCommande),
-    localisation varchar(50),
-    numColis int not null,
-    primary key(idSuivi)
+create table MATERIELFOURNISSEUR(
+    idMateriel int not null references MATERIEL,
+    idFournisseur int not null references FOURNISSEUR,
+    prixMateriel double not null,
+    stockFournisseur int not null,
+    primary key(idMateriel, idFournisseur)
 );
 
-create table PRIX_MATERIEL(
-    idMat int not null references MATERIAUX(idMat),
-    idFournisseur int not null references FOURNISSEUR(idFournisseur),
-    prix float,
-    primary key(idMat,idFournisseur)
+create table DEMANDE(
+    idDemande int not null,
+    idUtilisateur int not null references UTILISATEUR,
+    primary key(idDemande)
 );
 
-create table ETAT (
+create table AJOUTERMATERIEL(
+    idDemande int not null references DEMANDE,
+    idMateriel int not null references MATERIEL,
+    quantite int not null,
+    primary key(idDemande, idMateriel)
+);
+
+create table ETATCOMMANDE(
     idEtat int not null,
-    nomEtat varchar(50),
+    nomEtat varchar(50) not null,
     primary key(idEtat)
 );
 
-create table ETAT_COMMANDE (
-    idSuivi int  references SUIVI_COMMANDE(idSuivi),
-    idEtat int  references ETAT(idEtat),
-    primary key(idSuivi)
+create table BONCOMMANDE(
+    idBonCommande int not null,
+    idDemande int not null references DEMANDE,
+    idEtat int not null references ETATCOMMANDE,
+    prixTotalCommande float not null,
+    dateCommande datetime not null,
+    primary key(idBonCommande)
 );
 
-create table MATERIAUX_RECHERCHE(
-    nomMatRech varchar(50),
-    primary key(nomMatRech)
+create table SUIVICOMMANDE(
+    idBonCommande int references BONCOMMANDE,
+    localisation varchar(50) not null,
+    numColis int not null,
+    primary key(idBonCommande, numColis)
 );
 
-create table ALERTES (
-    idAlerte int not null,
-    idMat int references DATE_PEREMPTION(idMat),
-    quantite int not null,
-    primary key(idAlerte)
+create table RECHERCHEMATERIELS(
+    materielRecherche varchar(50),
+    primary key(materielRecherche)
 );
 
+create table ENVOIFOURNISSEUR(
+    idBonCommande int not null references BONCOMMANDE,
+    idFournisseur int not null references FOURNISSEUR,
+    facture varchar(50) not null,
+    primary key(idBonCommande, idFournisseur)
+);
 
-insert into STATUT (idSt, nomSt) values 
-    (1,'Professeur'),
-    (2,'Administrateur'),
-    (3,'Gestionnaire'),
-    (4,'Laborantin');
+create table ARCHIVECOMMANDE(
+    numColis int not null,
+    idFournisseur int not null,
+    nomFournisseur varchar(50) not null,
+    adresseFournisseur varchar(50) not null,
+    mailFournisseur varchar(50) not null,
+    telFournisseur varchar(10) not null,
+    facture varchar(50) not null,
+    primary key(numColis)
+);
 
+INSERT INTO STATUT (idStatut, nomStatut, consultation, reservation, commander, creationUilisateur, modificationUtilisateur) VALUES
+(1, 'Administrateur', true, true, true, true, true),
+(2, 'Professeur/Laborantin', true, true, false, true, true),
+(3, 'Gestionnaire', true, false, true, true, true);
 
-insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values 
-    (1,'Jean', 'Dupont', 'jean.dupont@example.com', 'azerty', 1),
-    (2,'Pierre', 'Dupont', 'dupont@gmail.com', "azerty" , 2);
+INSERT INTO UTILISATEUR (idStatut, nom, prenom, email, motDePasse) VALUES
+(1, 'John', 'Doe', 'john.doe@example.com', 'motdepasse1'),
+(2, 'Jane', 'Smith', 'jane.smith@example.com', 'motdepasse2'),
+(3, 'Alice', 'Johnson', 'alice.johnson@example.com', 'motdepasse3');
 
-insert into RESERVATION (idReser,date_debut, date_fin, quantiteR) values 
-    (1,'2023-10-23', '2023-10-25', 10);
+INSERT INTO CATEGORIE (idCategorie, nomCategorie) VALUES
+(1, 'Électronique'),
+(2, 'Chimie'),
+(3, 'Biologie'),
+(4, 'Informatique');
 
-insert into CATEGORIE (idCat,nomCat) values 
-    (1,'Matériaux de laboratoire');
+INSERT INTO DOMAINE (idDomaine, nomDomaine) VALUES
+(1, 'Informatique'),
+(2, 'Médecine'),
+(3, 'Chimie'),
+(4, 'Biologie');
 
-insert into DOMAINE (idDom,nomDom) values 
-    (1,'Verre');
+INSERT INTO RISQUE (idRisque, nomRisque, pictogramme) VALUES
+(1, 'Toxicité', 'toxic.png'),
+(2, 'Feu', 'fire.png'),
+(3, 'Radiation', 'radiation.png');
 
-insert into MATERIAUX (idMat, nomMat, idDom, idCat) values 
-    (1,'becher', 1, 1);
+INSERT INTO FDS (idFDS, nomFDS) VALUES
+(1, 'FDS-001'),
+(2, 'FDS-002'),
+(3, 'FDS-003');
 
-insert into STOCK (idMat, quantite) values 
-    (1, 100);
+INSERT INTO RISQUES (idFDS, idRisque) VALUES
+(1, 1),
+(2, 2),
+(3, 3);
 
-insert into DATE_PEREMPTION (idMat, date_peremption) values
-    (1, '2024-10-23');
+INSERT INTO MATERIEL (idMateriel, idDomaine, idCategorie, idFDS, nomMateriel) VALUES
+(1, 1, 1, 1, 'Ordinateur'),
+(2, 2, 3, 2, 'Réactif chimique'),
+(3, 4, 4, 3, 'Microscope');
 
-insert into FDS (idDfs,nomFds) values 
-    (1,'Fiche de données de sécurité du becher');
+INSERT INTO DATEPEREMPTION (idMateriel, datePeremption) VALUES
+(2, '2023-12-31'),
+(3, '2024-06-30');
 
-insert into COMMANDER (idCommande, idMat, idUt, quantiteC, prix, dateCommande,facture) values 
-    (1, 1, 1, 10, 100, '2023-10-23', 'facture_123456789.pdf');
+INSERT INTO STOCKLABORATOIRE (idStock, idMateriel, quantiteLaboratoire) VALUES
+(1, 1, 50),
+(2, 2, 100),
+(3, 3, 10);
 
-insert into FOURNISSEUR (idFournisseur,nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur)
-values (1,'Leroy Merlin', '123 rue de la Paix, 75008 Paris', 'contact@leroymerlin.fr', '01 42 56 78 90');
+INSERT INTO FOURNISSEUR (nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur) VALUES
+('Fournisseur A', '123 Rue Fournisseur', 'fournisseur.a@example.com', '1234567890'),
+('Fournisseur B', '456 Rue Fournisseur', 'fournisseur.b@example.com', '9876543210'),
+('Fournisseur C', '789 Rue Fournisseur', 'fournisseur.c@example.com', '5555555555');
 
-insert into PRIX_MATERIEL (idMat, idFournisseur, prix) values 
-    (1, 1, 10);
+INSERT INTO MATERIELFOURNISSEUR (idMateriel, idFournisseur, prixMateriel, stockFournisseur) VALUES
+(1, 1, 800.0, 100),
+(2, 2, 50.0, 200),
+(3, 3, 1200.0, 20);
 
-insert into SUIVI_COMMANDE (idSuivi,idCommande, localisation, numColis)
-values (1,1,'Orléans', 123456789);
+INSERT INTO DEMANDE (idDemande, idUtilisateur) VALUES
+(1, 1),
+(2, 2),
+(3, 3);
 
-insert into ETAT(idEtat, nomEtat) 
-values (1, 'En prepatation'),
-       (2, 'En cours de livraison'),
-       (3, 'Livree');
+INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES
+(1, 1, 10),
+(2, 2, 5),
+(3, 3, 2);
 
-insert into ETAT_COMMANDE (idSuivi, idEtat)
-values (1, 1);
+INSERT INTO ETATCOMMANDE (idEtat, nomEtat) VALUES
+(1, 'En attente'),
+(2, 'En cours'),
+(3, 'Terminée');
 
-insert into RISQUE (idRisque, idDfs, nomRisque, pictogramme) 
-values (1, 1, 'Risque de coupure', 'https://th.bing.com/th/id/R.a05094b9f26eb64def392d54b291bea0?rik=3jSRK00M7%2fDYuQ&pid=ImgRaw&r=0')
+INSERT INTO BONCOMMANDE (idBonCommande, idDemande, idEtat, prixTotalCommande, dateCommande) VALUES
+(1, 1, 1, 1000.0, '2023-10-15 10:00:00'),
+(2, 2, 2, 500.0, '2023-10-16 11:30:00'),
+(3, 3, 3, 2400.0, '2023-10-17 14:15:00');
 
-INSERT INTO MATERIAUX_RECHERCHE (nomMatRech) 
+INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
+(1, 'Entrepôt A', 12345),
+(2, 'Entrepôt B', 54321),
+(3, 'Entrepôt C', 98765);
+
+INSERT INTO RECHERCHEMATERIELS (materielRecherche) VALUES
+('Microscope'),
+('Réactif chimique');
+
+INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
+(1, 1, 'Facture-001.pdf'),
+(2, 2, 'Facture-002.pdf'),
+(3, 3, 'Facture-003.pdf');
+
+INSERT INTO RECHERCHEMATERIELS(materielRecherche) 
 VALUES  ('Tubes à essai'),
         ('Tubes à essai à fond plat'),
         ('Tubes à essai à fond rond'),
