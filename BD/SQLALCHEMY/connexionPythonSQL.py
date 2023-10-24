@@ -1,5 +1,4 @@
-import sqlalchemy
-from sqlalchemy import text, create_engine
+from sqlalchemy import create_engine
 import loginSQL as log
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -17,4 +16,11 @@ def ouvrir_connexion():
         print(err)
         raise err
     print("connexion réussie")
+    return cnx
+
+
+
+cnx = ouvrir_connexion()
+
+def get_cnx():
     return cnx
