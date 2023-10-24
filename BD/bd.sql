@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS CATEGORIE;
 DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
 DROP TABLE IF EXISTS RECHERCHEMATERIELS;
+DROP TABLE IF EXISTS ARCHIVECOMMANDE;
 
 create table STATUT(
     idStatut int not null,
@@ -269,7 +270,7 @@ INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
 (2, 2, 'Facture-002.pdf'),
 (3, 3, 'Facture-003.pdf');
 
-INSERT INTO RECHERCHEMATERIELS (nomMatRech) 
+INSERT INTO RECHERCHEMATERIELS(materielRecherche) 
 VALUES  ('Tubes à essai'),
         ('Tubes à essai à fond plat'),
         ('Tubes à essai à fond rond'),
