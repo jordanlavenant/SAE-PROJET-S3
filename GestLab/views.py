@@ -18,7 +18,7 @@ class LoginForm(FlaskForm):
     next = HiddenField()
 
     def get_authenticated_user(self):
-        user = get_nom_and_statut_with_email(get_cnx(), self.email.data)
+        user = get_nom_and_statut_and_email(get_cnx(), self.email.data)
         mdp = get_password_with_email(get_cnx(), self.email.data)
         if user is None:
             return None
@@ -28,6 +28,32 @@ class LoginForm(FlaskForm):
         passwd = hasher_mdp(self.password.data)
         print(str(mdp)+" == "+str(passwd))
         return user if passwd == mdp else None
+
+class ChangerMDPForm(FlaskForm):
+    ancienMDP = PasswordField('ancienMDP', validators=[DataRequired()])
+    nouveauMDP = PasswordField('nouveauMDP', validators=[DataRequired()])
+    confirmerMDP = PasswordField('confirmerMDP', validators=[DataRequired()])
+    next = HiddenField()
+
+    def get_full_mdp(self):
+        ancienMDP = self.ancienMDP.data
+        nouveauMDP = self.nouveauMDP.data
+        confirmerMDP = self.confirmerMDP.data
+        return (ancienMDP, nouveauMDP, confirmerMDP)
+
+class ChangerMailForm(FlaskForm):
+    ancienMail = StringField('ancienMail', validators=[DataRequired()])
+    nouveauMail = StringField('nouveauMail', validators=[DataRequired()])
+    confirmerMail = StringField('confirmerMail', validators=[DataRequired()])
+    mdp = PasswordField('mdp', validators=[DataRequired()])
+    next = HiddenField()
+
+    def get_full_mail(self):
+        ancienMail = self.ancienMail.data
+        nouveauMail = self.nouveauMail.data
+        confirmerMail = self.confirmerMail.data
+        mdp = self.mdp.data
+        return (ancienMail, nouveauMail, confirmerMail, mdp)
     
 
 @app.route("/")
@@ -41,6 +67,8 @@ def base():
 @app.route("/login/", methods=("GET","POST",))
 def login():
     f = LoginForm ()
+    changerMDP = ChangerMDPForm()
+    changerMail = ChangerMailForm()
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
@@ -53,7 +81,9 @@ def login():
             return redirect(next)
     return render_template(
         "login.html",
-        form=f)
+        form=f,
+        fromChangerMDP=changerMDP,
+        fromChangerMail=changerMail)
 
 @app.route("/logout/")
 def logout():
@@ -61,9 +91,39 @@ def logout():
     session.pop('utilisateur', None)
     return redirect(url_for('base'))
 
-@app.route("/changerMDP/")
+@app.route("/changerMDP/", methods=("GET","POST",))
 def changerMDP():
+    f = ChangerMDPForm()
+    if f.validate_on_submit():
+        ancienMDP, nouveauMDP, confirmerMDP = f.get_full_mdp()
+        if ancienMDP != None and nouveauMDP != None and confirmerMDP != None:
+            if nouveauMDP == confirmerMDP:
+                res = update_mdp_utilisateur(get_cnx(), session['utilisateur'][2], ancienMDP, nouveauMDP)
+                if res:
+                    session.pop('utilisateur', None)
+                    return redirect(url_for('login'))
+                else:
+                    print("erreur de changement de mdp")
+                    return redirect(url_for('login'))
     return render_template(
-    "changerMDP.html",
-    title="GestLab"
-    )
+        "login.html",
+        fromChangerMDP=f)
+
+@app.route("/changerMail/", methods=("GET","POST",))
+def changerMail():
+    f = ChangerMailForm()
+    if f.validate_on_submit():
+        ancienMail, nouveauMail, confirmerMail, mdp = f.get_full_mail()
+        if ancienMail != None and nouveauMail != None and confirmerMail != None and mdp != None:
+            if nouveauMail == confirmerMail and ancienMail == session['utilisateur'][2]:
+                res = update_email_utilisateur(get_cnx(), nouveauMail, session['utilisateur'][0], mdp)
+                print(nouveauMail, session['utilisateur'][0], mdp)
+                if res:
+                    session.pop('utilisateur', None)
+                    return redirect(url_for('login'))
+                else:
+                    print("erreur de changement de mail")
+                    return redirect(url_for('login'))
+    return render_template(
+        "login.html",
+        fromChangerMail=f)

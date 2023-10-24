@@ -13,7 +13,7 @@ def afficher_table(cnx, table):
         print(row)
 
 def get_password_with_email(cnx, email):
-    result = cnx.execute(text("select mdp from UTILISATEUR where email = '" + email + "';"))
+    result = cnx.execute(text("select motDePasse from UTILISATEUR where email = '" + email + "';"))
     for row in result:
         print(row[0])
         return row[0]
@@ -148,12 +148,14 @@ def ajout_gestionnaire(cnx, nom, prenom, email, mdp, idSt = 3):
 
 def update_email_utilisateur(cnx, new_email, nom, mdp):
     try:
-        cnx.execute(text("update UTILISATEUR set email = '" + new_email + "' where nom = '" + nom + "' and mdp = '" + mdp + "';"))
+        mdp_hash = hasher_mdp(mdp)
+        cnx.execute(text("update UTILISATEUR set email = '" + new_email + "' where nom = '" + nom + "' and motDePasse = '" + mdp_hash + "';"))
         cnx.commit()
         print("email mis a jour")
+        return True
     except:
         print("erreur de mise a jour de l'email")
-        raise
+        return False
 
 # update_email_utilisateur(cnx,"newErwan@gmail.com", "blandeau" ,"erwanB")
 
@@ -170,14 +172,28 @@ def modification_droit_utilisateur(cnx, id, idSt):
 # modification_droit_utilisateur(cnx, "testG", 2)
 
 
-def update_mdp_utilisateur(cnx, email, new_mdp):
+def update_mdp_utilisateur(cnx, email,mdp, new_mdp):
     try:
-        cnx.execute(text("update UTILISATEUR set mdp = '" + new_mdp + "' where email = '" + email + "';"))
-        cnx.commit()
-        print("mdp mis a jour")
+        init_mdp = hasher_mdp(mdp)
+        new_mdp_hash = hasher_mdp(new_mdp)
+        mdp_get = get_password_hashed_with_email(cnx, email)
+        if mdp_get != init_mdp:
+            print("mdp incorrect")
+            return False
+        else:
+            cnx.execute(text(" update UTILISATEUR set motDePasse = '" + new_mdp_hash + "' where email = '" + email + "' and motDePasse = '" + init_mdp + "'"))
+            cnx.commit()
+            print("mdp mis a jour")
+            return True
     except:
         print("erreur de mise a jour du mdp")
-        raise
+        return None
+        
+def get_password_hashed_with_email(cnx, email):
+    result = cnx.execute(text("select motDePasse from UTILISATEUR where email = '" + email + "';"))
+    for row in result:
+        print(row[0])
+        return row[0]
 
 # update_mdp_utilisateur(cnx, "newDupont@gmail.com", "newMdp")
 
@@ -207,7 +223,7 @@ def hasher_mdp(mdp):
     return m.hexdigest()
 
 def get_nom_and_statut_and_email(cnx, email):
-    result = cnx.execute(text("select nom, idSt from UTILISATEUR where email = '" + email + "';"))
+    result = cnx.execute(text("select nom, idStatut from UTILISATEUR where email = '" + email + "';"))
     for row in result:
         print(row[0], row[1])
         return (row[0], row[1], email)

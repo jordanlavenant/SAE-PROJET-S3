@@ -19,7 +19,7 @@
             <ul>
                 <li><a href="{{ url_for('base') }}">Accueil</a></li>
                 {% if 'utilisateur' in session %}
-                {% if session['utilisateur'][1] == 2 %}
+                {% if session['utilisateur'][1] == 1 %}
                 <li><a href="#">Commander</a></li>
                 {% endif %}
                 {% endif %}
