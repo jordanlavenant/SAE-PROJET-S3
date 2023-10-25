@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from requette import ouvrir_connexion
+from .connexionPythonSQL import * 
 from hashlib import sha256
 from datetime import datetime, timedelta
 cnx = ouvrir_connexion()
@@ -228,6 +228,7 @@ def get_nom_and_statut_and_email(cnx, email):
     for row in result:
         print(row[0], row[1])
         return (row[0], row[1], email)
+
 
 def get_nb_alert(cnx):
     try:

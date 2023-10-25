@@ -7,9 +7,10 @@ from wtforms import StringField, HiddenField, FileField, SubmitField
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
-from requette import *
+from .requette import *
+from .connexionPythonSQL import *
 
-cnx = connexionPythonSQL.get_cnx()
+cnx = get_cnx()
 
 
 class LoginForm(FlaskForm):
@@ -18,8 +19,8 @@ class LoginForm(FlaskForm):
     next = HiddenField()
 
     def get_authenticated_user(self):
-        user = requette_get.get_nom_and_statut_and_email(cnx, self.email.data)
-        mdp = requette_get.get_password_with_email(cnx, self.email.data)
+        user = get_nom_and_statut_and_email(cnx, self.email.data)
+        mdp = get_password_with_email(cnx, self.email.data)
         if user is None:
             return None
         # m = sha256()
@@ -166,7 +167,7 @@ def changerMDP():
         ancienMDP, nouveauMDP, confirmerMDP = f.get_full_mdp()
         if ancienMDP != None and nouveauMDP != None and confirmerMDP != None:
             if nouveauMDP == confirmerMDP:
-                res = requette_update.update_mdp_utilisateur(cnx, session['utilisateur'][2], ancienMDP, nouveauMDP)
+                res = update_mdp_utilisateur(cnx, session['utilisateur'][2], ancienMDP, nouveauMDP)
                 if res:
                     session.pop('utilisateur', None)
                     return redirect(url_for('login'))
@@ -184,7 +185,7 @@ def changerMail():
         ancienMail, nouveauMail, confirmerMail, mdp = f.get_full_mail()
         if ancienMail != None and nouveauMail != None and confirmerMail != None and mdp != None:
             if nouveauMail == confirmerMail and ancienMail == session['utilisateur'][2]:
-                res = requette_update.update_email_utilisateur(cnx, nouveauMail, session['utilisateur'][0], mdp)
+                res = update_email_utilisateur(cnx, nouveauMail, session['utilisateur'][0], mdp)
                 print(nouveauMail, session['utilisateur'][0], mdp)
                 if res:
                     session.pop('utilisateur', None)
