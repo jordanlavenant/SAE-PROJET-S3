@@ -30,3 +30,4 @@ def ouvrir_connexion():
         raise err
     print("connexion réussie")
     return cnx
+

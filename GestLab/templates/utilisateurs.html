@@ -4,4 +4,16 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/utilisateurs.css') }}">
 {% endblock %}
 {% block content %}
+<div class="container-main">
+    <a href="{{ url_for('consulter_utilisateur') }}">
+        <section class="carte-lien">
+            <h2>CONSULTER LES UTILISATEURS</h2>
+        </section>
+    </a>
+    <a href="{{ url_for('ajouter_utilisateur') }}">
+        <section class="carte-lien">
+            <h2>AJOUTER UN COMPTE</h2>
+        </section>
+    </a>
+</div>
 {% endblock %}

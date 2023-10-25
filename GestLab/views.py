@@ -8,6 +8,7 @@ from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
 from .requette import *
+from .connexionPythonSQL import *
 
 
 cnx = get_cnx()
@@ -19,8 +20,8 @@ class LoginForm(FlaskForm):
     next = HiddenField()
 
     def get_authenticated_user(self):
-        user = get_nom_and_statut_and_email(get_cnx(), self.email.data)
-        mdp = get_password_with_email(get_cnx(), self.email.data)
+        user = get_nom_and_statut_and_email(cnx, self.email.data)
+        mdp = get_password_with_email(cnx, self.email.data)
         if user is None:
             return None
         # m = sha256()
@@ -55,7 +56,7 @@ class ChangerMailForm(FlaskForm):
         confirmerMail = self.confirmerMail.data
         mdp = self.mdp.data
         return (ancienMail, nouveauMail, confirmerMail, mdp)
-
+      
 class RechercherFrom(FlaskForm):
     value = StringField('value', validators=[DataRequired()])
 
@@ -65,8 +66,12 @@ class RechercherFrom(FlaskForm):
 
 @app.route("/")
 def base():
+    nb_alertes = get_nb_alert(cnx)
+    nb_demandes = get_nb_demande(cnx)
     return render_template(
     "home.html",
+    alertes=str(nb_alertes),
+    demandes=str(nb_demandes),
     title="votre chemin vers la facilité"
     )
 
@@ -89,6 +94,20 @@ def utilisateurs():
     return render_template(
     "utilisateurs.html",
     title="Utilisateurs"
+    )
+
+@app.route("/ajouter-utilisateur/")
+def ajouter_utilisateur():
+    return render_template(
+    "ajouterUtilisateur.html",
+    title="Ajouter un Utilisateur"
+    )
+
+@app.route("/consulter-utilisateur/")
+def consulter_utilisateur():
+    return render_template(
+    "consulterUtilisateur.html",
+    title="Consulter les Utilisateurs"
     )
 
 @app.route("/demandes/")
@@ -164,7 +183,7 @@ def changerMDP():
         ancienMDP, nouveauMDP, confirmerMDP = f.get_full_mdp()
         if ancienMDP != None and nouveauMDP != None and confirmerMDP != None:
             if nouveauMDP == confirmerMDP:
-                res = update_mdp_utilisateur(get_cnx(), session['utilisateur'][2], ancienMDP, nouveauMDP)
+                res = update_mdp_utilisateur(cnx, session['utilisateur'][2], ancienMDP, nouveauMDP)
                 if res:
                     session.pop('utilisateur', None)
                     return redirect(url_for('login'))
@@ -182,7 +201,7 @@ def changerMail():
         ancienMail, nouveauMail, confirmerMail, mdp = f.get_full_mail()
         if ancienMail != None and nouveauMail != None and confirmerMail != None and mdp != None:
             if nouveauMail == confirmerMail and ancienMail == session['utilisateur'][2]:
-                res = update_email_utilisateur(get_cnx(), nouveauMail, session['utilisateur'][0], mdp)
+                res = update_email_utilisateur(cnx, nouveauMail, session['utilisateur'][0], mdp)
                 print(nouveauMail, session['utilisateur'][0], mdp)
                 if res:
                     session.pop('utilisateur', None)
