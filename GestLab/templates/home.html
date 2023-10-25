@@ -13,18 +13,13 @@
         <section class="section-alertes">
             <img src="../static/images/attention-rouge.png" alt="logo alertes">
             <p>{{ alertes }} Alertes</p>
-            <a href="#">Consulter les alertes ></a>
-        </section>
-        <section class="section-demandes">
-            <img src="../static/images/attention-orange.png" alt="logo demandes">
-            <p>{{ demandes }} Demandes</p>
-            <a href="#">Consulter les demandes ></a>
+            <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
         </section>
 
         <!-- sous titre -->
         <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
 
-        <a href="#">
+        <a href="{{ url_for('alertes') }}">
             <section class="carte-lien">
                 <h2>ALERTES</h2>
                 <p>quantité</p>
@@ -32,7 +27,7 @@
                 <p>péremptions</p>
             </section>
         </a>
-        <a href="#">
+        <a href="{{ url_for('utilisateurs') }}">
             <section class="carte-lien">
                 <h2>UTILISATEUR</h2>
                 <p>ajouter un compte</p>
@@ -47,7 +42,7 @@
         <!-- sous titre -->
         <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
 
-        <a href="#">
+        <a href="{{ url_for('demander') }}">
             <section class="carte-lien">
                 <h2>DEMANDER</h2>
                 <p>produits</p>
@@ -58,13 +53,13 @@
                 <p>...</p>
             </section>
         </a>
-        <a href="#">
+        <a href="{{ url_for('inventaire') }}">
             <section class="carte-lien">
                 <h2>INVENTAIRE</h2>
                 <p>consulter</p>
             </section>
         </a>
-        <a href="#">
+        <a href="{{ url_for('commentaire') }}">
             <section class="carte-lien">
                 <h2>ENVOYER UN COMMENTAIRE</h2>
                 <p>aux gestionnaires</p>
@@ -78,18 +73,18 @@
         <section class="section-alertes">
             <img src="../static/images/attention-rouge.png" alt="logo alertes">
             <p>{{ alertes }} Alertes</p>
-            <a href="#">Consulter les alertes ></a>
+            <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
         </section>
         <section class="section-demandes">
             <img src="../static/images/attention-orange.png" alt="logo demandes">
             <p>{{ demandes }} Demandes</p>
-            <a href="#">Consulter les demandes ></a>
+            <a href="{{ url_for('demandes') }}">Consulter les demandes ></a>
         </section>
 
         <!-- sous titre -->
         <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
 
-        <a href="#">
+        <a href="{{ url_for('commander') }}">
             <section class="carte-lien">
                 <h2>COMMANDER</h2>
                 <p>produits</p>
@@ -100,7 +95,7 @@
                 <p>...</p>
             </section>
         </a>
-        <a href="#">
+        <a href="{{ url_for('alertes') }}">
             <section class="carte-lien">
                 <h2>ALERTES</h2>
                 <p>quantité</p>
@@ -108,13 +103,13 @@
                 <p>péremptions</p>
             </section>
         </a>
-        <a href="#">
+        <a href="{{ url_for('inventaire') }}">
             <section class="carte-lien">
                 <h2>INVENTAIRE</h2>
                 <p>consulter</p>
             </section>
         </a>
-        <a href="#">
+        <a href="{{ url_for('demandes') }}">
             <section class="carte-lien">
                 <h2>DEMANDES</h2>
                 <p>commandes</p>
