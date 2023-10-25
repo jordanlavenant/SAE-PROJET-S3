@@ -54,12 +54,17 @@ class ChangerMailForm(FlaskForm):
         confirmerMail = self.confirmerMail.data
         mdp = self.mdp.data
         return (ancienMail, nouveauMail, confirmerMail, mdp)
+
     
 
 @app.route("/")
 def base():
+    nb_alertes = get_nb_alert(cnx)
+    nb_demandes = get_nb_demande(cnx)
     return render_template(
     "home.html",
+    alertes=str(nb_alertes),
+    demandes=str(nb_demandes),
     title="votre chemin vers la facilité"
     )
 
@@ -82,6 +87,20 @@ def utilisateurs():
     return render_template(
     "utilisateurs.html",
     title="Utilisateurs"
+    )
+
+@app.route("/ajouter-utilisateur/")
+def ajouter_utilisateur():
+    return render_template(
+    "ajouterUtilisateur.html",
+    title="Ajouter un Utilisateur"
+    )
+
+@app.route("/consulter-utilisateur/")
+def consulter_utilisateur():
+    return render_template(
+    "consulterUtilisateur.html",
+    title="Consulter les Utilisateurs"
     )
 
 @app.route("/demandes/")
