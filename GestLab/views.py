@@ -3,7 +3,7 @@ from flask import render_template, url_for, redirect, request, session
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, FileField, SubmitField, TextAreaField
+from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
@@ -64,6 +64,22 @@ class RechercherFrom(FlaskForm):
         value = self.value.data
         return value
 
+class AjouterUtilisateurForm(FlaskForm):
+    nom = StringField('nom', validators=[DataRequired()])
+    prenom = StringField('prenom', validators=[DataRequired()])
+    email = StringField('email', validators=[DataRequired()])
+    choices = [('professeur', 'Professeur'), ('gestionnaire', 'Gestionnaire')]
+    statut = SelectField('ComboBox', choices=choices)
+    next = HiddenField()
+
+    def get_full_user(self):
+        nom = self.nom.data
+        prenom = self.prenom.data
+        email = self.email.data
+        statut = self.statut.data
+        return (nom, prenom, email, statut)
+
+
 @app.route("/")
 def base():
     nb_alertes = get_nb_alert(cnx)
@@ -98,9 +114,11 @@ def utilisateurs():
 
 @app.route("/ajouter-utilisateur/")
 def ajouter_utilisateur():
+    f = AjouterUtilisateurForm()
     return render_template(
     "ajouterUtilisateur.html",
-    title="Ajouter un Utilisateur"
+    title="Ajouter un Utilisateur",
+    AjouterUtilisateurForm=f
     )
 
 @app.route("/consulter-utilisateur/")
@@ -212,3 +230,27 @@ def changerMail():
     return render_template(
         "login.html",
         fromChangerMail=f)
+
+@app.route("/ajouterUtilisateur/", methods=("GET","POST",))
+def ajouterUtilisateur():
+    f = AjouterUtilisateurForm()
+    if f.validate_on_submit():
+        nom, prenom, email, statut = f.get_full_user()
+        if nom != None and prenom != None and email != None and statut != None:
+            if statut == "professeur":
+                res = ajout_professeur(cnx, nom, prenom, email)
+                if res:
+                    return redirect(url_for('utilisateurs'))
+                else:
+                    print("erreur d'insertion d'utilisateur")
+                    return redirect(url_for('utilisateurs'))
+            elif statut == "gestionnaire":
+                res = ajout_gestionnaire(cnx, nom, prenom, email)
+                if res:
+                    return redirect(url_for('utilisateurs'))
+                else:
+                    print("erreur d'insertion d'utilisateur")
+                    return redirect(url_for('utilisateurs'))
+    return render_template(
+        "ajouterUtilisateur.html",
+        fromAjouterUtilisateur=f)

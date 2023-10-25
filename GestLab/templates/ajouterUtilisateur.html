@@ -4,5 +4,26 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/ajouterUtilisateur.css') }}">
 {% endblock %}
 {% block content %}
-
+<div id="ajouterUtilisateur-container">
+    <div id="ajouterUtilisateur-box">
+        <form class="form-ajoutUtilisateur" role="form" method="POST" action ="{{ url_for('ajouterUtilisateur') }}">
+            {{ AjouterUtilisateurForm.hidden_tag() }}
+            <div class="user-box">
+                <div>{{ AjouterUtilisateurForm.nom(size=50, class_="form-control element", placeholder="Nom") }}</div>
+            </div>
+            <div class="user-box">
+                <div>{{ AjouterUtilisateurForm.prenom(size=50, class_="form-control element", placeholder="Prenom") }}</div>
+            </div>
+            <div class="user-box">
+                <div>{{ AjouterUtilisateurForm.email(size=50, class_="form-control element", placeholder="Email") }}</div>
+            </div>
+            <div class="user-box">
+                <div>{{ AjouterUtilisateurForm.statut(size=0, class_="comboBox") }}</div>
+            </div>
+            <div class="valid-container">
+                <input type="submit" value="Ajouter l'utilisateur" class="element">
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
