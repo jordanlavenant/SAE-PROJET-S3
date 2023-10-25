@@ -497,3 +497,4 @@ INSERT IGNORE INTO RECHERCHEMATERIELS (materielRecherche) VALUES
 ("Plasmas (dans certaines expériences de physique nucléaire et de fusion)"),
 ("Diélectriques (utilisés dans la polarisation électrique)"),
 ("Milieux de diffusion (pour la diffusion de la lumière)");
+
