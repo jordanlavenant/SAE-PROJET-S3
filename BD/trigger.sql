@@ -33,19 +33,30 @@ delimiter ;
 
 
 delimiter |
-create or replace TRIGGER insereSommeCommande before insert on AJOUTERMATERIEL for each row
+create or replace TRIGGER insereSommeCommande after insert on AJOUTERMATERIEL for each row
 begin
-    declare sommeActuelle float;
     declare mes varchar(255);
+    declare idM int ;
+    declare idF int ;
+    declare qte int ;
+    declare sommePrix float default 0;
+    declare prixIndividuel float;
+    declare fini boolean default false ;
 
-    SELECT recupereSommeActuelle(new.idDemande) INTO sommeActuelle;
-    SELECT SUM()
+    declare produits cursor for 
+        SELECT idMateriel, idFournisseur, quantite FROM AJOUTERMATERIEL WHERE idDemande = new.idDemande;
+        
+    declare continue handler for not found set fini = true ;
+    open produits ;
+    while not fini do
+        fetch produits into idM, idF, qte ;
+        if not fini then
+            SELECT recuperePrixMateriel(idM, idF, qte) into prixIndividuel ;
+            SET sommePrix = sommePrix + prixIndividuel ;
+        end if ;
+    end while ;
+    close produits ;
 
-
-    SELECT COUNT(*) INTO compteur from UTILISATEUR WHERE email = new.email;
-    if compteur > 0 then
-        set mes = concat("L'email ", new.email, " est déjà utilisé.");
-        signal SQLSTATE '45000' set MESSAGE_TEXT = mes;
-    end if;
+    UPDATE DEMANDE SET prixTotalDemande = sommePrix WHERE idDemande = new.idDemande ;
 end |
 delimiter ;
