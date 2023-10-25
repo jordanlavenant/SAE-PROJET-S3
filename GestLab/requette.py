@@ -227,3 +227,12 @@ def get_nom_and_statut_and_email(cnx, email):
     for row in result:
         print(row[0], row[1])
         return (row[0], row[1], email)
+
+def get_user_with_statut(cnx, nomStatut):
+    liste = []
+    result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where nomStatut = '" + str(nomStatut) + "';"))
+    for row in result:
+        print(row[0],row[2],row[3])
+        liste.append((row[0],row[2],row[3]))
+    return liste
+# get_user_with_statut(cnx, "Administrateur")

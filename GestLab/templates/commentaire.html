@@ -4,4 +4,19 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/commentaire.css') }}">
 {% endblock %}
 {% block content %}
+<div class="comment-container">
+    <div class="destinataire">
+        <p>A :</p>
+        <select name="dest" id="dest-select">
+            <option value="">(aucun)</option>
+            {% for user in users %}
+                <option value="{{ user[0] }}">{{ user[1] }} {{ user[2] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <textarea name="comment-container" id="comment-wrapper" cols="30" rows="10"></textarea>
+    <div class="btn-container">
+        <button id="btn-send">Envoyer le commentaire ></button>
+    </div>
+</div>
 {% endblock %}

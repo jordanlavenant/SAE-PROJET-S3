@@ -109,6 +109,7 @@ def demander():
 def commentaire():
     return render_template(
     "commentaire.html",
+    users= get_user_with_statut(get_cnx(), "Gestionnaire"),
     title="Envoyer un Commentaire"
     )
 

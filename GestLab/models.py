@@ -8,4 +8,3 @@ def load_user(email):
     cnx = get_cnx()
     return get_nom_whith_email(cnx, email)
 
-
