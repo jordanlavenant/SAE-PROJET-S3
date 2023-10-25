@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from .connexionPythonSQL import * 
+from requette import ouvrir_connexion
 from hashlib import sha256
 from datetime import datetime, timedelta
 cnx = ouvrir_connexion()
