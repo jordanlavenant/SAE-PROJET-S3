@@ -14,4 +14,5 @@ login_manager.login_view = "login"
 #     return os.path.normpath (os.path.join(os.path.dirname( __file__ ),p))
 
 # app. config['SQLALCHEMY_DATABASE_URI'] = ('sqlite:///'+mkpath('../myapp.db'))
-# db = SQLAlchemy(app)
+
+# db = SQLAlchemy(app) 
