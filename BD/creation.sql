@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS MATERIELFOURNISSEUR;
 DROP TABLE IF EXISTS FOURNISSEUR;
 DROP TABLE IF EXISTS STOCKLABORATOIRE;
 DROP TABLE IF EXISTS DATEPEREMPTION;
+DROP TABLE IF EXISTS CATEGORIESMATERIEL ;
 DROP TABLE IF EXISTS MATERIEL;
 DROP TABLE IF EXISTS RISQUES;
 DROP TABLE IF EXISTS FDS;
@@ -81,10 +82,15 @@ create table RISQUES(
 
 create table MATERIEL(
     idMateriel int not null auto_increment,
-    idCategorie int not null references CATEGORIE,
     idFDS int references FDS,
     nomMateriel varchar(50) not null,
     primary key (idMateriel)
+);
+
+create table CATEGORIESMATERIEL(
+    idMateriel int not null references MATERIEL,
+    idCategorie int not null references CATEGORIE,
+    primary key(idMateriel, idCategorie)
 );
 
 create table DATEPEREMPTION(

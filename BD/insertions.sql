@@ -38,21 +38,37 @@ INSERT INTO RISQUES (idFDS, idRisque) VALUES
 (2, 2),
 (3, 3);
 
-INSERT INTO MATERIEL (idMateriel, idCategorie, idFDS, nomMateriel) VALUES
-(1, 1, 1,'Disjoncteur électrique'),
-(2, 2, 1, 'Acide sulfurique'),
-(3, 3, null, 'Oscilloscope'),
-(4, 4, null, 'Érlenmeyer en verre'),
-(5, 5, null, 'Pipette graduée'),
-(6, 6, null, "DVD éducatif sur l'électricité"),
-(7, 7, null, 'Becher en verre'),
-(8, 1, null, 'Multimètre numérique'),
-(9, 2, 2, 'Hydroxyde de sodium (Soude caustique)'),
-(10, 3, null, 'Générateur de signaux'),
-(11, 4, null, 'Burette en verre'),
-(12, 5, null, 'Pipette Pasteur en plastique'),
-(13, 6, null, 'CD-ROM de simulation de réactions chimiques'),
-(14, 7, null, 'Pissette en verre');
+INSERT INTO MATERIEL (idMateriel, idFDS, nomMateriel) VALUES
+(1, 1,'Disjoncteur électrique'),
+(2, 1, 'Acide sulfurique'),
+(3, null, 'Oscilloscope'),
+(4, null, 'Érlenmeyer en verre'),
+(5, null, 'Pipette graduée'),
+(6, null, "DVD éducatif sur l'électricité"),
+(7, null, 'Becher en verre'),
+(8, null, 'Multimètre numérique'),
+(9, 2, 'Hydroxyde de sodium (Soude caustique)'),
+(10, null, 'Générateur de signaux'),
+(11, null, 'Burette en verre'),
+(12, null, 'Pipette Pasteur en plastique'),
+(13, null, 'CD-ROM de simulation de réactions chimiques'),
+(14, null, 'Pissette en verre');
+
+INSERT INTO CATEGORIESMATERIEL (idMateriel, idCategorie) VALUES
+(1, 1),
+(8, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(9, 2),
+(10, 3),
+(11, 4),
+(12, 5),
+(13, 6),
+(14, 7);
 
 INSERT INTO DATEPEREMPTION (idMateriel, datePeremption) VALUES
 (2, '2023-12-31'),
@@ -81,9 +97,9 @@ INSERT INTO DEMANDE (idDemande, idUtilisateur, prixTotalDemande) VALUES
 (2, 2, 0);
 
 INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, idFournisseur, quantite) VALUES
-    (1, 1, 1, 10),
-    (1, 2, 2, 5),
-    (2, 3, 3, 2);
+(1, 1, 1, 10),
+(1, 2, 2, 5),
+(2, 3, 3, 2);
 
 INSERT INTO ETATCOMMANDE (idEtat, nomEtat) VALUES
 (1, 'En attente'),
