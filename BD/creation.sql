@@ -84,6 +84,7 @@ create table MATERIEL(
     idMateriel int not null auto_increment,
     idFDS int references FDS,
     nomMateriel varchar(50) not null,
+    unique(nomMateriel),
     primary key (idMateriel)
 );
 
@@ -102,7 +103,7 @@ create table DATEPEREMPTION(
 create table STOCKLABORATOIRE(
     idStock int not null auto_increment,
     idMateriel int not null references MATERIEL,
-    quantiteLaboratoire int,
+    quantiteLaboratoire int default 0 ,
     primary key(idStock)
 );
 
