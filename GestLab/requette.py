@@ -229,17 +229,35 @@ def get_nom_and_statut_and_email(cnx, email):
         print(row[0], row[1])
         return (row[0], row[1], email)
 
-
 def get_nb_alert(cnx):
     try:
         # Calculer la date qui est 1 mois à partir de maintenant
-        one_month_ago = datetime.now() - timedelta(days=30)
-        one_month_ago_str = one_month_ago.strftime('%Y-%m-%d')
+        today = datetime.now()
+        ten_days_from_now = datetime.now() + timedelta(days=10)
         # Exécuter la requête SQL
-        result = cnx.execute(text("SELECT COUNT(*) FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + one_month_ago_str + "';"))
+        result = cnx.execute(
+            text(
+                "SELECT COUNT(*) FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
         count = result.first()[0]
         print(count)
         return count
+    except Exception as e:
+        print("Erreur lors de la récupération du nombre d'alertes :", str(e))
+        raise
+
+def get_info_materiel_alert(cnx):
+    try:
+        # Calculer la date qui est 1 mois à partir de maintenant
+        today = datetime.now()
+        ten_days_from_now = datetime.now() + timedelta(days=10)
+        # Exécuter la requête SQL
+        result = cnx.execute(
+            text(
+                "SELECT nomMateriel FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
+        liste_nom = []
+        for row in result:
+            liste_nom.append(row[0])
+        return liste_nom
     except Exception as e:
         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
         raise
@@ -253,3 +271,5 @@ def get_nb_demande(cnx):
     except Exception as e:
         print("Erreur lors de la récupération du nombre de demandes :", str(e))
         raise
+
+
