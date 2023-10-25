@@ -1,0 +1,25 @@
+main{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+main > section {
+    border-radius: 1em;
+    width: 50%;
+    border: solid;
+}
+main > section > div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.texte_rouge{
+    color: red;
+    padding-left: 1em;
+}
+
+.texte_bleu {
+    color: blue;
+    padding-right: 1em;
+}

@@ -1,8 +1,8 @@
 
-login = "blandeau"
-passwd = "Loulou34230."
-serveur= "mysql-blandeau.alwaysdata.net"
-bd = "blandeau_gestlabbd2"
+login = "pilet"
+passwd = "pilet"
+serveur= "servinfo-maria"
+bd = "DBpilet"
 
 def getLogin():
     return login

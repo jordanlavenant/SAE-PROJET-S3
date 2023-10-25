@@ -4,4 +4,11 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/alertes.css') }}">
 {% endblock %}
 {% block content %}
+    <section>
+        <p class="texte_rouge">⚠︎ {{alertes}} Alertes</p>
+        <div>
+            <p class="texte_rouge">Alerte de péremption:</p>
+            <p class="texte_bleu">{{nom_materiels}} - <a href="">Consulter l'état > </a></p>
+        </div>
+    </section>
 {% endblock %}

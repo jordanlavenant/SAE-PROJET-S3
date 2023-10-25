@@ -72,8 +72,12 @@ def commander():
 
 @app.route("/alertes/")
 def alertes():
+    nb_alertes = get_nb_alert(cnx)
+    nom_materiel = get_info_materiel_alert(cnx)
     return render_template(
     "alertes.html",
+    alertes = str(nb_alertes),
+    nom_materiels = nom_materiel,
     title="Alertes"
     )
 

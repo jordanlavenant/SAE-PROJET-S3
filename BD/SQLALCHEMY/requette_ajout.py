@@ -55,7 +55,7 @@ def ajout_gestionnaire(cnx, nom, prenom, email, idStatut = 3):
             raise
 
 
-# ajout_gestionnaire(cnx, "colin", "colin", "colin@")
+ajout_gestionnaire(cnx, "colin", "colin", "colin@")
 
 def add_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
     
