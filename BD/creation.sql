@@ -64,7 +64,7 @@ create table CATEGORIE(
 create table RISQUE(
     idRisque int not null auto_increment,
     nomRisque varchar(50) not null,
-    pictogramme varchar(2000),
+    pictogramme mediumblob,
     primary key(idRisque)
 );
 
@@ -162,7 +162,7 @@ create table SUIVICOMMANDE(
 );
 
 create table RECHERCHEMATERIELS(
-    materielRecherche varchar(50),
+    materielRecherche varchar(200),
     primary key(materielRecherche)
 );
 

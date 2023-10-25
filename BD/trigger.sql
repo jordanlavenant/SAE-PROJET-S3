@@ -60,3 +60,35 @@ begin
     UPDATE DEMANDE SET prixTotalDemande = sommePrix WHERE idDemande = new.idDemande ;
 end |
 delimiter ;
+
+
+delimiter |
+create or replace FUNCTION demandesEnAttente() returns varchar(255)
+begin
+    declare id int ;
+    declare listeDemandes varchar(255) default '';
+    declare fini boolean default false ;
+
+    declare idDemandes cursor for 
+        SELECT DEMANDE.idDemande FROM DEMANDE JOIN BONCOMMANDE ON DEMANDE.idDemande = BONCOMMANDE.idDemande WHERE BONCOMMANDE.idEtat = 1 ;
+
+    declare continue handler for not found set fini = true ;
+    open idDemandes ;
+    while not fini do
+        fetch idDemandes into id ;
+        if not fini then 
+            if listeDemandes = '' then 
+                SET listeDemandes = id ;
+            else 
+                SET listeDemandes = concat(listeDemandes, ", ", id) ;
+            end if ;
+        end if ;
+    end while ;
+    close idDemandes ;
+
+    return listeDemandes ;
+end |
+delimiter ;
+
+SELECT demandesEnAttente() ;
+
