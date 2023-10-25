@@ -58,8 +58,12 @@ class ChangerMailForm(FlaskForm):
 
 @app.route("/")
 def base():
+    nb_alertes = get_nb_alert(cnx)
+    nb_demandes = get_nb_demande(cnx)
     return render_template(
     "home.html",
+    alertes=str(nb_alertes),
+    demandes=str(nb_demandes),
     title="votre chemin vers la facilité"
     )
 

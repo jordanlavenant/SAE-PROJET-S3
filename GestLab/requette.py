@@ -1,6 +1,7 @@
 from sqlalchemy import text
 from .connexionPythonSQL import * 
 from hashlib import sha256
+from datetime import datetime, timedelta
 cnx = ouvrir_connexion()
 
 def get_cnx():
@@ -227,3 +228,27 @@ def get_nom_and_statut_and_email(cnx, email):
     for row in result:
         print(row[0], row[1])
         return (row[0], row[1], email)
+
+def get_nb_alert(cnx):
+    try:
+        # Calculer la date qui est 1 mois à partir de maintenant
+        one_month_ago = datetime.now() - timedelta(days=30)
+        one_month_ago_str = one_month_ago.strftime('%Y-%m-%d')
+        # Exécuter la requête SQL
+        result = cnx.execute(text("SELECT COUNT(*) FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + one_month_ago_str + "';"))
+        count = result.first()[0]
+        print(count)
+        return count
+    except Exception as e:
+        print("Erreur lors de la récupération du nombre d'alertes :", str(e))
+        raise
+
+def get_nb_demande(cnx):
+    try:
+        result = cnx.execute(text("SELECT count(*) FROM DEMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ETATCOMMANDE WHERE nomEtat = 'En attente';"))
+        count = result.first()[0]
+        print(count)
+        return count
+    except Exception as e:
+        print("Erreur lors de la récupération du nombre de demandes :", str(e))
+        raise
