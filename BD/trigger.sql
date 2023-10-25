@@ -74,6 +74,87 @@ end |
 delimiter ;
 
 
+
+delimiter |
+CREATE OR REPLACE function recupereStockLabo(idM int) returns int
+BEGIN
+declare stock float;
+SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM ;
+return stock;
+end |
+delimiter ;
+
+
+delimiter |
+create or replace TRIGGER modificationStockLaboInsert after insert on BONCOMMANDE for each row
+BEGIN
+    declare idM int ;
+    declare qte int ;
+    declare prixIndividuel float;
+    declare fini boolean default false ;
+    declare etat int ;
+    declare stock int ;
+       
+    declare produits cursor for 
+        SELECT idMateriel, quantite FROM AJOUTERMATERIEL WHERE idDemande = new.idDemande;
+
+    declare continue handler for not found set fini = true ;
+
+    SELECT idEtat INTO etat FROM BONCOMMANDE WHERE idBonCommande = new.idBonCommande ;
+
+    if etat = 3 then 
+        open produits ;
+        while not fini do
+            fetch produits into idM, qte ;
+            if not fini then
+                SELECT recupereStockLabo(idM) into stock ;
+                if stock is null then
+                    INSERT INTO STOCKLABORATOIRE VALUES (idM, qte) ;
+                else 
+                    UPDATE STOCKLABORATOIRE set quantiteLaboratoire = stock + qte WHERE idMateriel = idM ;
+                end if ;
+            end if ;
+        end while ;
+        close produits ;
+    end if;
+end |
+delimiter ;
+
+delimiter |
+create or replace TRIGGER modificationStockLaboUpdate after update on BONCOMMANDE for each row
+BEGIN
+    declare idM int ;
+    declare qte int ;
+    declare prixIndividuel float;
+    declare fini boolean default false ;
+    declare etat int ;
+    declare stock int ;
+       
+    declare produits cursor for 
+        SELECT idMateriel, quantite FROM AJOUTERMATERIEL WHERE idDemande = new.idDemande;
+
+    declare continue handler for not found set fini = true ;
+
+    SELECT idEtat INTO etat FROM BONCOMMANDE WHERE idBonCommande = new.idBonCommande ;
+
+    if etat = 3 then 
+        open produits ;
+        while not fini do
+            fetch produits into idM, qte ;
+            if not fini then
+                SELECT recupereStockLabo(idM) into stock ;
+                if stock is null then
+                    INSERT INTO STOCKLABORATOIRE VALUES (idM, qte) ;
+                else 
+                    UPDATE STOCKLABORATOIRE set quantiteLaboratoire = stock + qte WHERE idMateriel = idM ;
+                end if ;
+            end if ;
+        end while ;
+        close produits ;
+    end if;
+end |
+delimiter ;
+
 delimiter |
 create or replace TRIGGER insereSommeCommandeInsert after insert on AJOUTERMATERIEL for each row
 begin

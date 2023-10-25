@@ -84,6 +84,7 @@ create table MATERIEL(
     idMateriel int not null auto_increment,
     idFDS int references FDS,
     nomMateriel varchar(50) not null,
+    unique(nomMateriel),
     primary key (idMateriel)
 );
 
