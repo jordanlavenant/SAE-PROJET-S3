@@ -238,6 +238,35 @@ def get_nom_and_statut_and_email(cnx, email):
         print(row[0], row[1])
         return (row[0], row[1], email)
 
+
+def get_user_with_statut(cnx, nomStatut):
+    liste = []
+    result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where nomStatut = '" + str(nomStatut) + "';"))
+    for row in result:
+        print(row[0],row[2],row[3])
+        liste.append((row[0],row[2],row[3]))
+    return liste
+
+def get_all_information_to_Materiel(cnx, nomcat=None):
+    my_list = []
+    if nomcat is None:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
+        for row in result:
+            my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
+    else:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS where nomCategorie = '" + nomcat + "';"))
+        for row in result:
+            my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
+    print(my_list)
+    return my_list
+
+def get_categories(cnx):
+    liste = []
+    result = cnx.execute(text("select * from CATEGORIE;"))
+    for row in result:
+        liste.append((row[0],row[1]))
+    return liste
+
 def get_nb_alert(cnx):
     try:
         # Calculer la date qui est 1 mois à partir de maintenant
@@ -280,5 +309,4 @@ def get_nb_demande(cnx):
     except Exception as e:
         print("Erreur lors de la récupération du nombre de demandes :", str(e))
         raise
-
-
+        
