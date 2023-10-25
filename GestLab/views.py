@@ -115,7 +115,8 @@ def etat(id):
     return render_template(
     "etat.html",
     id=id,
-    title="Etat"
+    title="Etat",
+    item_properties=get_all_information_to_Materiel_with_id(cnx, id)
     )
 
 @app.route("/utilisateurs/")

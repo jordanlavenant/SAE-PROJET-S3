@@ -13,7 +13,7 @@ def get_cnx():
 
 def afficher_table(cnx, table):
 
-    result = cnx.execute(text("select * from " + table + " natural join MATERIAUX;"))
+    result = cnx.execute(text("select * from " + table + " natural join MATERIEL;"))
     for row in result:
         print(row)
 
@@ -36,22 +36,20 @@ def get_last_id(cnx , table, id):
         print("erreur du nom de l'id ou du nom de la table")
         raise
 
-# get_last_id(cnx, "STOCK", "idMat")
+# get_last_id(cnx, "STOCK", "idMateriel")
 
 def get_nom_materiel_with_id(cnx, id):
     try:
-        result = cnx.execute(text("select * from MATERIAUX where idMat = " + str(id) + ";"))
+        result = cnx.execute(text("select * from MATERIEL where idMateriel = " + str(id) + ";"))
         result = result.first()
-        print(result[1])
+        return result
     except:
         print("erreur de l'id")
         raise
 
-# get_nom_materiel_with_id(cnx, 3)
-
 def get_nom_dom_cat_materiel_with_id(cnx, id):
     try:
-        result = cnx.execute(text("select * from MATERIAUX natural join DOMAINE natural join CATEGORIE where idMat = " + str(id) + ";"))
+        result = cnx.execute(text("select * from MATERIEL natural join DOMAINE natural join CATEGORIE where idMateriel = " + str(id) + ";"))
         result = result.first()
         print("domaine : " + result[4], " | categorie : ",result[5])
     except:
@@ -60,26 +58,25 @@ def get_nom_dom_cat_materiel_with_id(cnx, id):
 
 # get_nom_dom_cat_materiel_with_id(cnx, 1)
 
-
 def ajoute_materiel(cnx, nom, idDom, idCat):
     try:
-        last_id = int(get_last_id(cnx, "MATERIAUX", "idMat")) + 1
-        cnx.execute(text("insert into MATERIAUX (idMat,nomMat, idDom, idCat) values (" + str(last_id) + ", '" + nom + "', " + str(idDom) + ", " + str(idCat) + ");"))
+        last_id = int(get_last_id(cnx, "MATERIEL", "idMateriel")) + 1
+        cnx.execute(text("insert into MATERIEL (idMateriel,nomMat, idDom, idCat) values (" + str(last_id) + ", '" + nom + "', " + str(idDom) + ", " + str(idCat) + ");"))
         cnx.commit()
         print("materiel ajouté")
     except:
         print("erreur d'ajout du materiel")
         raise
 
-def ajout_quantite(cnx, idMat, quantite):
+def ajout_quantite(cnx, idMateriel, quantite):
     try:
-        cnx.execute(text("insert into STOCK (idMat, quantite) values (" + str(idMat) + ", " + str(quantite) + ");"))
+        cnx.execute(text("insert into STOCK (idMateriel, quantite) values (" + str(idMateriel) + ", " + str(quantite) + ");"))
         cnx.commit()
         print("quantite ajouté dans un nouveau stock")
     except:
         print("id deja utiliser")
         try:
-            cnx.execute(text("update STOCK set quantite = quantite + " + str(quantite) + " where idMat = " + str(idMat) +";"))
+            cnx.execute(text("update STOCK set quantite = quantite + " + str(quantite) + " where idMateriel = " + str(idMateriel) +";"))
             cnx.commit()
             print("quantite ajouté")
         except:
@@ -116,12 +113,12 @@ def get_nom_whith_email(cnx, email):
     
 #get_nom_whith_email(cnx, "DUPONT@gmail.com")
 
-def get_materiaux(cnx):
-    result = cnx.execute(text("select * from MATERIAUX_RECHERCHE;"))
+def get_MATERIEL(cnx):
+    result = cnx.execute(text("select * from MATERIEL_RECHERCHE;"))
     for row in result:
         print(row[0])
 
-# get_materiaux(cnx)
+# get_MATERIEL(cnx)
 
 
 def update_email_utilisateur(cnx, new_email, nom, mdp):
@@ -361,3 +358,13 @@ def hasher_mdp(mdp):
     m.update(mdp.encode("utf-8"))
     return m.hexdigest()
 
+def get_all_information_to_Materiel_with_id(cnx, id):
+    try:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS where idMateriel = " + str(id) + ";"))
+        for row in result:
+            return row
+    except:
+        print("erreur de l'id")
+        raise
+
+print(get_all_information_to_Materiel_with_id(cnx, 3))

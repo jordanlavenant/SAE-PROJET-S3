@@ -1,8 +1,29 @@
 {% extends 'base.html' %}
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static',filename='./css/commander.css') }}">
+<link rel="stylesheet" href="{{ url_for('static',filename='./css/etat.css') }}">
 {% endblock %}
 {% block content %}
-{{ id }}
+<div class="state-container">
+    <div class="item-card">
+        <img id="img-item" src="https://media.discordapp.net/attachments/1164230107720843284/1165215612138696794/Screenshot_20231021_110702_Gallery.jpg?width=397&height=452" alt="{{ id }}">
+        <div class="item-properties">
+            <h2>{{ item_properties[1] }}</h2>
+            <div class="quantite-container">
+                <p class="quantite-label">Quantité : </p>
+                <p class="quantite">{{ item_properties[6] }}</p>
+            </div>
+            <div class="categorie-container">
+                <p class="categorie-label">Catégorie : </p>
+                <p class="quantite">{{ item_properties[3] }}</p>
+            </div>
+            <div class="domaine-container">
+                <p class="quantite-label">Domaine : </p>
+                <p class="quantite">{{ item_properties[5] }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="item-info"></div>
+</div>
 {% endblock %}

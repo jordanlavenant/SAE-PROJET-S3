@@ -1,0 +1,51 @@
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.state-container {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    margin: 10vh 10vw 20vh 10vw;
+}
+
+.item-card {
+    flex-basis: 20%;
+    background-color: #384274;
+    padding: 0;
+}
+
+#img-item {
+    object-fit: cover;
+    max-width: 450px;
+    aspect-ratio: 1/1;
+}
+
+.item-properties {
+    padding: 5%;
+}
+
+.item-properties > h2 {
+    font-size: 30px;
+    margin: 0;
+    color: white;
+}
+
+.quantite-container, .categorie-container, .domaine-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: white;
+    font-size: 30px;
+    /* padding: 1% 5% 1% 10%; */
+}
+
+.item-info {
+    flex-basis: 80%;
+}
+
+
+
+
+
