@@ -68,7 +68,7 @@ INSERT INTO CATEGORIESMATERIEL (idMateriel, idCategorie) VALUES
 (13, 6),
 (14, 7);
 
-INSERT INTO MATERIELUNIQUE (idMaterielUnique, utilisable) VALUES
+INSERT INTO MATERIELUNIQUE (idMateriel, idMaterielUnique, utilisable) VALUES
 (1, true),
 (2, true),
 (3, true),
