@@ -1,9 +1,5 @@
 from sqlalchemy import text
-import connexionPythonSQL as conn
 from datetime import date, datetime, timedelta
-import requette_annexe as req_annexe
-
-cnx = conn.get_cnx()
 
 def afficher_table(cnx, table):
 

@@ -1,11 +1,11 @@
-import connexionPythonSQL as conn
+from requette import get_cnx
 import requette_get as req_get
 import requette_annexe as req_annexe
 from sqlalchemy import text
 from hashlib import sha256
 
 
-cnx = conn.get_cnx()
+cnx = get_cnx()
 
 def ajout_proffesseur(cnx, nom, prenom, email, mdp, idStatut = 1):
     

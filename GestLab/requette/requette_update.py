@@ -1,11 +1,7 @@
 
-import connexionPythonSQL as conn
 import requette_annexe as req_annexe
 import requette_get as req_get
 from sqlalchemy import text
-
-cnx = conn.get_cnx()
-
 
 def update_email_utilisateur(cnx, new_email, nom, mdp):
     try:
