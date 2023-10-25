@@ -1,9 +1,10 @@
 import random
 import string
 from sqlalchemy import text
-from .connexionPythonSQL import * 
+from connexionPythonSQL import ouvrir_connexion
 from hashlib import sha256
 from datetime import datetime, timedelta
+
 cnx = ouvrir_connexion()
 
 def get_cnx():
@@ -96,6 +97,21 @@ def ajout_fournisseur(cnx, nom, adresse,mail, tel):
     except:
         print("erreur d'ajout du fournisseur")
         raise
+
+def get_all_information_to_Materiel(cnx, nomcat=None):
+    my_list = []
+    if nomcat is None:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
+        for row in result:
+            my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
+    else:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS where nomCategorie = '" + nomcat + "';"))
+        for row in result:
+            my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
+    print(my_list)
+    return my_list
+
+get_all_information_to_Materiel(cnx)
 
 def connexion_utilisateur(cnx, email,mot_de_passe):
     result = cnx.execute(text("select * from UTILISATEUR where email = '" + email + "' and mdp = '" + mot_de_passe + "';"))
