@@ -10,3 +10,53 @@ begin
     end if;
 end |
 delimiter ;
+
+
+
+delimiter |
+CREATE OR REPLACE function recupereSommeActuelle(id int) returns float
+BEGIN
+declare sommeActuelle float;
+SELECT prixTotalDemande INTO sommeActuelle FROM DEMANDE WHERE idDemande = id ;
+return sommeActuelle;
+end |
+delimiter ;
+
+delimiter |
+CREATE OR REPLACE function recuperePrixMateriel(idM int, idF int, qte int) returns float
+BEGIN
+declare prix float;
+SELECT prixMateriel INTO prix FROM MATERIELFOURNISSEUR WHERE idMateriel = idM and idFournisseur = idF ;
+return prix*qte;
+end |
+delimiter ;
+
+
+delimiter |
+create or replace TRIGGER insereSommeCommande after insert on AJOUTERMATERIEL for each row
+begin
+    declare mes varchar(255);
+    declare idM int ;
+    declare idF int ;
+    declare qte int ;
+    declare sommePrix float default 0;
+    declare prixIndividuel float;
+    declare fini boolean default false ;
+
+    declare produits cursor for 
+        SELECT idMateriel, idFournisseur, quantite FROM AJOUTERMATERIEL WHERE idDemande = new.idDemande;
+        
+    declare continue handler for not found set fini = true ;
+    open produits ;
+    while not fini do
+        fetch produits into idM, idF, qte ;
+        if not fini then
+            SELECT recuperePrixMateriel(idM, idF, qte) into prixIndividuel ;
+            SET sommePrix = sommePrix + prixIndividuel ;
+        end if ;
+    end while ;
+    close produits ;
+
+    UPDATE DEMANDE SET prixTotalDemande = sommePrix WHERE idDemande = new.idDemande ;
+end |
+delimiter ;
