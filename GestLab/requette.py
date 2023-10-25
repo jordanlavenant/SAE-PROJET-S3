@@ -4,6 +4,8 @@ from sqlalchemy import text
 from .connexionPythonSQL import * 
 from hashlib import sha256
 from datetime import datetime, timedelta
+import random
+import string
 cnx = ouvrir_connexion()
 
 def get_cnx():
@@ -120,33 +122,6 @@ def get_materiaux(cnx):
         print(row[0])
 
 # get_materiaux(cnx)
-
-def ajout_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
-    
-    try:
-        last_id = int(get_last_id(cnx, "UTILISATEUR", "idUt")) + 1
-        cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
-        cnx.commit()
-        print("utilisateur ajouté")
-    except:
-        print("erreur d'ajout de l'utilisateur")
-        raise
-
-# ajout_proffesseur(cnx, "blandeau", "erwan", "test@gmail.com", "erwanB")
-
-
-def ajout_gestionnaire(cnx, nom, prenom, email, mdp, idSt = 3):
-        
-        try:
-            last_id = int(get_last_id(cnx, "UTILISATEUR", "idUt")) + 1
-            cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
-            cnx.commit()
-            print("utilisateur ajouté")
-        except:
-            print("erreur d'ajout de l'utilisateur")
-            raise
-
-# ajout_gestionnaire(cnx, "blandeauG", "erwang", "testG", "erwanBG")
 
 
 def update_email_utilisateur(cnx, new_email, nom, mdp):
@@ -309,6 +284,7 @@ def get_nb_demande(cnx):
     except Exception as e:
         print("Erreur lors de la récupération du nombre de demandes :", str(e))
         raise
+
         
 def get_nb_alert(cnx):
     try:
@@ -342,3 +318,46 @@ def get_info_materiel_alert(cnx):
     except Exception as e:
         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
         raise
+
+
+def ajout_professeur(cnx, nom, prenom, email, idStatut = 2):
+    
+    try:
+        mdpRandom = generer_mot_de_passe()
+        # envoyer mail avec mdpRandom
+        print(mdpRandom)
+        mdphash = hasher_mdp(mdpRandom)
+        cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
+        cnx.commit()
+        print("utilisateur ajouté")
+        return True
+    except:
+        print("erreur d'ajout de l'utilisateur")
+        return False
+
+def ajout_gestionnaire(cnx, nom, prenom, email, idStatut = 3):
+    
+    try:
+        mdpRandom = generer_mot_de_passe()
+        # envoyer mail avec mdpRandom
+        print(mdpRandom)
+        mdphash = hasher_mdp(mdpRandom)
+        cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
+        cnx.commit()
+        print("utilisateur ajouté")
+        return True
+    except:
+        print("erreur d'ajout de l'utilisateur")
+        return False
+
+def generer_mot_de_passe():
+    caracteres = string.ascii_letters + string.digits
+    mot_de_passe = ''.join(random.choice(caracteres) for _ in range(10))
+
+    return mot_de_passe
+
+def hasher_mdp(mdp):
+    m = sha256()
+    m.update(mdp.encode("utf-8"))
+    return m.hexdigest()
+
