@@ -110,6 +110,14 @@ def alertes():
     title="Alertes"
     )
 
+@app.route("/etat/<int:id>")
+def etat(id):
+    return render_template(
+    "etat.html",
+    id=id,
+    title="Etat"
+    )
+
 @app.route("/utilisateurs/")
 def utilisateurs():
     return render_template(

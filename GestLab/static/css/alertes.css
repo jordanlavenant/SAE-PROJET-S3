@@ -1,3 +1,7 @@
+a {
+    text-decoration: none;
+}
+
 main{
     display: flex;
     flex-wrap: wrap;

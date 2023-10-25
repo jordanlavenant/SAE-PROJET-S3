@@ -12,7 +12,7 @@
         {% for i in range(nb_alerte) %}
         <div class="container-alerte">
             <p class="texte_rouge">Alerte de péremption:</p>
-            <p class="texte_bleu">{{nom_materiels[i][0]}} - <a href="#">Consulter l'état ></a></p>
+            <p class="texte_bleu">{{nom_materiels[i][0]}} - <a href="{{ url_for('etat',id=nom_materiels[i][1] ) }}">Consulter l'état ></a></p>
         </div>
         {%endfor%}
     </section>

@@ -1,7 +1,7 @@
 import random
 import string
 from sqlalchemy import text
-from .connexionPythonSQL import * 
+from .connexionPythonSQL import *
 from hashlib import sha256
 from datetime import datetime, timedelta
 import random
