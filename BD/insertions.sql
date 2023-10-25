@@ -1,5 +1,3 @@
-
-
 INSERT INTO STATUT (idStatut, nomStatut, consultation, reservation, commander, creationUilisateur, modificationUtilisateur) VALUES
 (1, 'Administrateur', true, true, true, true, true),
 (2, 'Professeur/Laborantin', true, true, false, true, true),
@@ -70,7 +68,23 @@ INSERT INTO CATEGORIESMATERIEL (idMateriel, idCategorie) VALUES
 (13, 6),
 (14, 7);
 
-INSERT INTO DATEPEREMPTION (idMateriel, datePeremption) VALUES
+INSERT INTO MATERIELUNIQUE (idMaterielUnique, utilisable) VALUES
+(1, true),
+(2, true),
+(3, true),
+(4, true),
+(5, true),
+(6, true),
+(7, true),
+(8, true),
+(9, true),
+(10, true),
+(11, true),
+(12, true),
+(13, true),
+(14, true);
+
+INSERT INTO DATEPEREMPTION (idMaterielUnique, datePeremption) VALUES
 (2, '2023-12-31'),
 (3, '2024-06-30');
 
@@ -84,7 +98,7 @@ INSERT INTO FOURNISSEUR (nomFournisseur, adresseFournisseur, mailFournisseur, te
 ('Fournisseur B', '456 Rue Fournisseur', 'fournisseur.b@example.com', '9876543210'),
 ('Fournisseur C', '789 Rue Fournisseur', 'fournisseur.c@example.com', '5555555555');
 
-INSERT INTO MATERIELFOURNISSEUR (idMateriel, idFournisseur, prixMateriel, stockFournisseur) VALUES
+INSERT INTO MATERIELFOURNISSEUR (idMaterielUnique, idFournisseur, prixMateriel, stockFournisseur) VALUES
 (1, 1, 800.0, 100),
 (2, 2, 50.0, 200),
 (3, 3, 1200.0, 20),
@@ -96,10 +110,10 @@ INSERT INTO DEMANDE (idDemande, idUtilisateur, prixTotalDemande) VALUES
 (1, 1, 0),
 (2, 2, 0);
 
-INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, idFournisseur, quantite) VALUES
-(1, 1, 1, 10),
-(1, 2, 2, 5),
-(2, 3, 3, 2);
+INSERT INTO AJOUTERMATERIEL (idDemande, idMaterielUnique, quantite) VALUES
+(1, 1, 10),
+(1, 2, 5),
+(2, 3, 2);
 
 INSERT INTO ETATCOMMANDE (idEtat, nomEtat) VALUES
 (1, 'En attente'),
@@ -118,6 +132,12 @@ INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
 INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
 (1, 1, 'Facture-001.pdf'),
 (2, 2, 'Facture-002.pdf');
+
+INSERT INTO TYPESALERTES (idAlerte, descriptionAlerte) VALUES 
+(1, "Date de péremption dépassée"),
+(2, "Date de péremption dépassée dans 10 jours"),
+(3, "Quantité en dessous du seuil minimal"),
+(4, "Quantité de l'objet à 0") ;
 
 INSERT INTO RECHERCHEMATERIELS(materielRecherche) 
 VALUES  ('Microscope'),

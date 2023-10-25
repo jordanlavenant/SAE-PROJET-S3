@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS MATERIELFOURNISSEUR;
 DROP TABLE IF EXISTS FOURNISSEUR;
 DROP TABLE IF EXISTS STOCKLABORATOIRE;
 DROP TABLE IF EXISTS DATEPEREMPTION;
+DROP TABLE IF EXISTS MATERIELUNIQUE;
 DROP TABLE IF EXISTS CATEGORIESMATERIEL ;
 DROP TABLE IF EXISTS MATERIEL;
 DROP TABLE IF EXISTS RISQUES;
@@ -20,9 +21,7 @@ DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
 DROP TABLE IF EXISTS RECHERCHEMATERIELS;
 DROP TABLE IF EXISTS ARCHIVECOMMANDE;
-DROP TABLE IF EXISTS debug_table ;
-DROP TABLE IF EXISTS debug_table_prix ;
-DROP TABLE IF EXISTS debug_table_id ;
+DROP TABLE IF EXISTS TYPESALERTES;
 
 create table STATUT(
     idStatut int not null,
@@ -94,16 +93,24 @@ create table CATEGORIESMATERIEL(
     primary key(idMateriel, idCategorie)
 );
 
-create table DATEPEREMPTION(
+create table MATERIELUNIQUE(
     idMateriel int not null references MATERIEL,
+    idMaterielUnique int not null auto_increment,
+    utilisable boolean not null,
+    primary key (idMaterielUnique)
+);
+
+create table DATEPEREMPTION(
+    idMaterielUnique int not null references MATERIELUNIQUE,
     datePeremption date not null,
-    primary key(idMateriel, datePeremption)
+    primary key(idMaterielUnique, datePeremption)
 );
 
 create table STOCKLABORATOIRE(
     idStock int not null auto_increment,
     idMateriel int not null references MATERIEL,
     quantiteLaboratoire int default 0 ,
+    quantiteMinimale int,
     primary key(idStock)
 );
 
@@ -135,10 +142,9 @@ create table DEMANDE(
 
 create table AJOUTERMATERIEL(
     idDemande int not null references DEMANDE,
-    idMateriel int not null references MATERIEL,
-    idFournisseur int not null references FOURNISSEUR,
+    idMaterielUnique int not null references MATERIELUNIQUE,
     quantite int not null,
-    primary key(idDemande, idMateriel)
+    primary key(idDemande, idMaterielUnique)
 );
 
 create table ETATCOMMANDE(
@@ -183,4 +189,11 @@ create table ARCHIVECOMMANDE(
     telFournisseur varchar(10) not null,
     facture varchar(50) not null,
     primary key(numColis)
+);
+
+create table TYPESALERTES(
+    idAlerte int not null,
+    descriptionAlerte varchar(50) not null,
+    unique(descriptionAlerte),
+    primary key(idAlerte)
 );
