@@ -1,3 +1,5 @@
+import random
+import string
 from sqlalchemy import text
 from .connexionPythonSQL import * 
 from hashlib import sha256
@@ -193,10 +195,17 @@ def update_prenom_utilisateur(cnx, email, new_prenom):
         print("erreur de mise a jour du prenom")
         raise
 
+def generer_mot_de_passe():
+    caracteres = string.ascii_letters + string.digits
+    mot_de_passe = ''.join(random.choice(caracteres) for _ in range(10))
+
+    return mot_de_passe
+
 def hasher_mdp(mdp):
     m = sha256()
     m.update(mdp.encode("utf-8"))
     return m.hexdigest()
+
 
 def get_nom_and_statut_and_email(cnx, email):
     result = cnx.execute(text("select nom, idStatut from UTILISATEUR where email = '" + email + "';"))
@@ -205,16 +214,63 @@ def get_nom_and_statut_and_email(cnx, email):
         return (row[0], row[1], email)
 
 
+def get_user_with_statut(cnx, nomStatut):
+    liste = []
+    result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where nomStatut = '" + str(nomStatut) + "';"))
+    for row in result:
+        print(row[0],row[2],row[3])
+        liste.append((row[0],row[2],row[3]))
+    return liste
+
+def get_all_information_to_Materiel(cnx, nomcat=None):
+    my_list = []
+    if nomcat is None:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
+        for row in result:
+            my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
+    else:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS where nomCategorie = '" + nomcat + "';"))
+        for row in result:
+            my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
+    print(my_list)
+    return my_list
+
+def get_categories(cnx):
+    liste = []
+    result = cnx.execute(text("select * from CATEGORIE;"))
+    for row in result:
+        liste.append((row[0],row[1]))
+    return liste
+
 def get_nb_alert(cnx):
     try:
         # Calculer la date qui est 1 mois à partir de maintenant
-        one_month_ago = datetime.now() - timedelta(days=30)
-        one_month_ago_str = one_month_ago.strftime('%Y-%m-%d')
+        today = datetime.now()
+        ten_days_from_now = datetime.now() + timedelta(days=10)
         # Exécuter la requête SQL
-        result = cnx.execute(text("SELECT COUNT(*) FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + one_month_ago_str + "';"))
+        result = cnx.execute(
+            text(
+                "SELECT COUNT(*) FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
         count = result.first()[0]
         print(count)
         return count
+    except Exception as e:
+        print("Erreur lors de la récupération du nombre d'alertes :", str(e))
+        raise
+
+def get_info_materiel_alert(cnx):
+    try:
+        # Calculer la date qui est 1 mois à partir de maintenant
+        today = datetime.now()
+        ten_days_from_now = datetime.now() + timedelta(days=10)
+        # Exécuter la requête SQL
+        result = cnx.execute(
+            text(
+                "SELECT nomMateriel FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
+        liste_nom = []
+        for row in result:
+            liste_nom.append(row[0])
+        return liste_nom
     except Exception as e:
         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
         raise
