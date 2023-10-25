@@ -213,8 +213,7 @@ INSERT INTO RISQUES (idFDS, idRisque) VALUES
 (2, 2),
 (3, 3);
 
-
-INSERT INTO MATERIEL VALUES
+INSERT INTO MATERIEL (idMateriel, idCategorie, idFDS, nomMateriel) VALUES
 (1, 1, 1,'Disjoncteur électrique'),
 (2, 2, 1, 'Acide sulfurique'),
 (3, 3, null, 'Oscilloscope'),
@@ -250,8 +249,7 @@ INSERT INTO MATERIELFOURNISSEUR (idMateriel, idFournisseur, prixMateriel, stockF
 (3, 3, 1200.0, 20),
 (4, 3, 900.0, 50),
 (5, 1, 60.0, 150),
-(6, 2, 1300.0, 30)
-;
+(6, 2, 1300.0, 30) ;
 
 INSERT INTO DEMANDE (idDemande, idUtilisateur, prixTotalDemande) VALUES
 (1, 1, 1000.0),
@@ -278,17 +276,15 @@ INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
 (2, 'Entrepôt B', 54321),
 (3, 'Entrepôt C', 98765);
 
-INSERT INTO RECHERCHEMATERIELS (materielRecherche) VALUES
-('Microscope'),
-('Réactif chimique');
-
 INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
 (1, 1, 'Facture-001.pdf'),
 (2, 2, 'Facture-002.pdf'),
 (3, 3, 'Facture-003.pdf');
 
 INSERT INTO RECHERCHEMATERIELS(materielRecherche) 
-VALUES  ('Tubes à essai'),
+VALUES  ('Microscope'),
+        ('Réactif chimique'),
+        ('Tubes à essai'),
         ('Tubes à essai à fond plat'),
         ('Tubes à essai à fond rond'),
         ('Tubes à essai à col large'),
