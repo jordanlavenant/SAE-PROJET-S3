@@ -9,7 +9,7 @@ def afficher_table(cnx, table):
 
     result = cnx.execute(text("select * from " + table + ";"))
     for row in result:
-        print(row)
+        print(row[0])
 
 
 # afficher_table(cnx, "RECHERCHEMATERIELS")
@@ -60,7 +60,7 @@ def get_id_ut_with_email(cnx, email):
         print(row[0])
         return row[0]
 
-# get_id_ut_with_email(cnx, "leo@")
+# get_id_ut_with_email(cnx, "alice.johnson@example.com")
 
 def get_password_hashed_with_email(cnx, email):
     result = cnx.execute(text("select motDePasse from UTILISATEUR where email = '" + email + "';"))
@@ -68,7 +68,7 @@ def get_password_hashed_with_email(cnx, email):
         print(row[0])
         return row[0]
 
-# get_password_hashed_with_email(cnx, "leo@")
+# get_password_hashed_with_email(cnx, "alice.johnson@example.com")
 
 def get_statut_with_email(cnx, email):
     result = cnx.execute(text("select nomStatut from UTILISATEUR natural join STATUT where email = '" + email + "';"))
@@ -76,7 +76,7 @@ def get_statut_with_email(cnx, email):
         print(row[0])
         return row[0]
     
-# get_statut_with_email(cnx, "admin@testhash2")
+# get_statut_with_email(cnx, "alice.johnson@example.com")
 
 
 def get_nom_and_statut_with_email(cnx, email):
@@ -85,13 +85,14 @@ def get_nom_and_statut_with_email(cnx, email):
         print(row[0], row[1])
         return (row[0], row[1])
 
-# get_nom_and_statut_with_email(cnx, "leo@")
+# get_nom_and_statut_with_email(cnx, "alice.johnson@example.com")
 
 def get_utilisateur_is_in_db_with_email_passwrd(cnx, email,mot_de_passe):
     result = cnx.execute(text("select * from UTILISATEUR where email = '" + email + "' and mdp = '" + mot_de_passe + "';"))
     for _ in result:
         return True
     return False
+
 
 def get_blob_with_ifd_and_idrisque(cnx, idF, idR):
     result = cnx.execute(text("select pictogramme from RISQUES where idFDS = '" + str(idF) + "' and idRisque = '" + str(idR) + "';"))
@@ -107,6 +108,8 @@ def get_user_with_statut(cnx, nomStatut):
         print(row[0],row[2],row[3])
         list.append((row[0],row[2],row[3]))
     return list
+
+# get_user_with_statut(cnx, "Administrateur")
         
 
 # get_user_with_statut(cnx, "Administrateur")
