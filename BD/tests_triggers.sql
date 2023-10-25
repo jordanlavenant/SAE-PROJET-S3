@@ -22,3 +22,8 @@ UPDATE AJOUTERMATERIEL SET quantite = 5 WHERE idDemande = 1 AND idMateriel = 1;
 UPDATE AJOUTERMATERIEL SET quantite = 15 WHERE idDemande = 1 AND idMateriel = 1;
 
 DELETE FROM AJOUTERMATERIEL WHERE idMateriel = 1 AND idDemande = 1 ;
+
+--modifsSurDemande
+INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, idFournisseur, quantite) VALUES (2, 4, 3, 1);
+
+UPDATE AJOUTERMATERIEL SET quantite = 1 WHERE idDemande = 2 ;
