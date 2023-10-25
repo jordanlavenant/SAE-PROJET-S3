@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static',filename='./css/etat.css') }}">
+{% endblock %}
+{% block content %}
+    <section>
+        <div id="info">
+            <img id="attention-rouge" src="../static/images/attention-rouge.png" alt="attention-rouge">
+            <p class="texte_rouge">état{{ materiel }}</p>
+        </div>
+        {% for i in range(2)%}
+        <div class="container-alerte">
+        </div>
+        {%endfor%}
+    </section>
+{% endblock %}

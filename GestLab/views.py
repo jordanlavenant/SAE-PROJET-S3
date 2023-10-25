@@ -77,6 +77,7 @@ def alertes():
     return render_template(
     "alertes.html",
     alertes = str(nb_alertes),
+    nb_alerte = nb_alertes,
     nom_materiels = nom_materiel,
     title="Alertes"
     )
@@ -114,6 +115,14 @@ def commentaire():
     return render_template(
     "commentaire.html",
     title="Envoyer un Commentaire"
+    )
+
+@app.route("/etat/")
+def etat():
+    # objet = ..(id)
+    return render_template(
+        "etat.html",
+        title="état des alertes"
     )
 
 @app.route("/login/", methods=("GET","POST",))

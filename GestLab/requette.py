@@ -315,12 +315,23 @@ def get_info_materiel_alert(cnx):
         # Exécuter la requête SQL
         result = cnx.execute(
             text(
-                "SELECT nomMateriel FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
-        count = result.first()[0]
-        print(count)
-        return count
+                "SELECT nomMateriel, idMateriel FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
+        liste_nom = [] 
+        for row in result:
+            liste_nom.append((row[0], row[1]))
+        return liste_nom
     except Exception as e:
         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
+        raise
+
+def get_id_whith_nomMateriel(cnx, nom):
+    try:
+        result = cnx.execute(text("select idMateriel from MATERIEL where nomMateriel = '" + nom + "';"))
+        for row in result:
+            print(row[0])
+            return row[0]
+    except:
+        print("erreur de nom de materiel")
         raise
 
 def hasher_mdp(mdp):
