@@ -111,7 +111,7 @@ def get_all_information_to_Materiel(cnx, nomcat=None):
     print(my_list)
     return my_list
 
-get_all_information_to_Materiel(cnx)
+# get_all_information_to_Materiel(cnx)
 
 def connexion_utilisateur(cnx, email,mot_de_passe):
     result = cnx.execute(text("select * from UTILISATEUR where email = '" + email + "' and mdp = '" + mot_de_passe + "';"))
@@ -130,6 +130,17 @@ def get_nom_whith_email(cnx, email):
     
 #get_nom_whith_email(cnx, "DUPONT@gmail.com")
 
+def get_id_whith_nomMateriel(cnx, nom):
+    try:
+        result = cnx.execute(text("select idMateriel from MATERIEL where nomMateriel = '" + nom + "';"))
+        for row in result:
+            print(row[0])
+            return row[0]
+    except:
+        print("erreur de nom de materiel")
+        raise
+
+
 def get_materiaux(cnx):
     result = cnx.execute(text("select * from MATERIAUX_RECHERCHE;"))
     for row in result:
@@ -137,19 +148,21 @@ def get_materiaux(cnx):
 
 # get_materiaux(cnx)
 
-def ajout_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
+def ajout_proff(cnx, nom, prenom, email, idStatut = 2):
     
     try:
-        last_id = int(get_last_id(cnx, "UTILISATEUR", "idUt")) + 1
-        cnx.execute(text("insert into UTILISATEUR (idUt, nom, prenom, email, mdp, idSt) values ('" + str(last_id) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdp +  "', '" + str(idSt) + "');"))
+        mdpRandom = generer_mot_de_passe()
+        # envoyer mail avec mdpRandom
+        print(mdpRandom)
+        mdphash = hasher_mdp(mdpRandom)
+        cnx.execute(text("insert into UTILISATEUR (nom, prenom, email, mdp, idStatut) values ('" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "', '" + str(idStatut) + "');"))
         cnx.commit()
         print("utilisateur ajouté")
     except:
         print("erreur d'ajout de l'utilisateur")
         raise
 
-# ajout_proffesseur(cnx, "blandeau", "erwan", "test@gmail.com", "erwanB")
-
+# ajout_proff(cnx, "blandeau", "erwan", "test@")
 
 def ajout_gestionnaire(cnx, nom, prenom, email, mdp, idSt = 3):
         
@@ -287,6 +300,18 @@ def get_info_materiel_alert(cnx):
         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
         raise
 
+def get_info_materiel_with_id(cnx, idMateriel):
+    try:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS where idMateriel = " + str(idMateriel) + ";"))
+        for row in result:
+            print(row)
+            return row
+    except Exception as e:
+        print("Erreur lors de la récupération des infos du matériel :", str(e))
+        raise
+
+get_info_materiel_with_id(cnx, 1)
+
 def get_nb_demande(cnx):
     try:
         result = cnx.execute(text("SELECT count(*) FROM DEMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ETATCOMMANDE WHERE nomEtat = 'En attente';"))
@@ -298,3 +323,8 @@ def get_nb_demande(cnx):
         raise
 
 
+def generer_mot_de_passe():
+    caracteres = string.ascii_letters + string.digits
+    mot_de_passe = ''.join(random.choice(caracteres) for _ in range(10))
+
+    return mot_de_passe
