@@ -235,4 +235,23 @@ def get_user_with_statut(cnx, nomStatut):
         print(row[0],row[2],row[3])
         liste.append((row[0],row[2],row[3]))
     return liste
-# get_user_with_statut(cnx, "Administrateur")
+
+def get_all_information_to_Materiel(cnx, nomcat=None):
+    my_list = []
+    if nomcat is None:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
+        for row in result:
+            my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
+    else:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS where nomCategorie = '" + nomcat + "';"))
+        for row in result:
+            my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
+    print(my_list)
+    return my_list
+
+def get_categories(cnx):
+    liste = []
+    result = cnx.execute(text("select * from CATEGORIE;"))
+    for row in result:
+        liste.append((row[0],row[1]))
+    return liste

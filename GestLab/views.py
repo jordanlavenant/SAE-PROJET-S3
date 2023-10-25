@@ -3,11 +3,12 @@ from flask import render_template, url_for, redirect, request, session
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, FileField, SubmitField
+from wtforms import StringField, HiddenField, FileField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
 from .requette import *
+
 
 cnx = get_cnx()
 
@@ -54,7 +55,13 @@ class ChangerMailForm(FlaskForm):
         confirmerMail = self.confirmerMail.data
         mdp = self.mdp.data
         return (ancienMail, nouveauMail, confirmerMail, mdp)
-    
+
+class RechercherFrom(FlaskForm):
+    value = StringField('value', validators=[DataRequired()])
+
+    def get_value(self):
+        value = self.value.data
+        return value
 
 @app.route("/")
 def base():
@@ -93,8 +100,17 @@ def demandes():
 
 @app.route("/inventaire/")
 def inventaire():
+    javascript_code = """
+    const maCombo = document.getElementById('categorie-select');
+    maCombo.addEventListener('change', function () {
+        console.log(maCombo.value);
+    });
+    """
     return render_template(
     "inventaire.html",
+    categories = get_categories(get_cnx()),
+    javascript_code = javascript_code,
+    items = get_all_information_to_Materiel(get_cnx()),
     title="Inventaire"
     )
 
