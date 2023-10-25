@@ -285,6 +285,41 @@ def get_nb_demande(cnx):
         print("Erreur lors de la récupération du nombre de demandes :", str(e))
         raise
 
+        
+def get_nb_alert(cnx):
+    try:
+        # Calculer la date qui est 1 mois à partir de maintenant
+        today = datetime.now()
+        ten_days_from_now = datetime.now() + timedelta(days=10)
+        # Exécuter la requête SQL
+        result = cnx.execute(
+            text(
+                "SELECT COUNT(*) FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
+        count = result.first()[0]
+        print(count)
+        return count
+    except Exception as e:
+        print("Erreur lors de la récupération du nombre d'alertes :", str(e))
+        raise
+
+def get_info_materiel_alert(cnx):
+    try:
+        # Calculer la date qui est 1 mois à partir de maintenant
+        today = datetime.now()
+        ten_days_from_now = datetime.now() + timedelta(days=10)
+        # Exécuter la requête SQL
+        result = cnx.execute(
+            text(
+                "SELECT nomMateriel, idMateriel FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
+        liste_nom = [] 
+        for row in result:
+            liste_nom.append((row[0], row[1]))
+        return liste_nom
+    except Exception as e:
+        print("Erreur lors de la récupération du nombre d'alertes :", str(e))
+        raise
+
+
 def ajout_professeur(cnx, nom, prenom, email, idStatut = 2):
     
     try:
@@ -325,3 +360,4 @@ def hasher_mdp(mdp):
     m = sha256()
     m.update(mdp.encode("utf-8"))
     return m.hexdigest()
+

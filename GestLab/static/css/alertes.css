@@ -1,0 +1,44 @@
+main{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+main > section {
+    border-radius: 1em;
+    width: 50%;
+    border: solid;
+    margin: 1em 0 2em 0;
+}
+.container-alerte {
+    display: flex;
+    justify-content: space-between;
+}
+
+#info {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.texte_rouge{
+    color: red;
+    padding-left: 1em;
+    align-items: center;
+}
+
+.texte_bleu {
+    font-weight: bold;
+    color: #384274;
+    padding-right: 1em;
+}
+
+#attention-rouge{
+    max-width: 50px;
+    max-height: 50px;
+}
+
+p {
+    margin: 0.5em;
+}
