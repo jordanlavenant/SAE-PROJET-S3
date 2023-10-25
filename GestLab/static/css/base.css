@@ -2,7 +2,20 @@ body {
     padding: 0;
     margin: 0;
     background-color: #e0e0e0;
-    font-family: 'Hind Siliguri', sans-serif;
+    font-family: 'Alumni Sans', sans-serif;
+    font-variant: small-caps;
+    font-weight: 500;
+    font-size: 30px;
+}
+
+button {
+    font-family: 'Alumni Sans', sans-serif;
+    font-size: 30px;
+}
+
+input {
+    font-family: 'Alumni Sans', sans-serif;
+    font-size: 30px;
 }
 
 ul {
@@ -11,7 +24,7 @@ ul {
 
 header {
     position: relative;
-    margin-bottom: 5.5em;
+    margin-bottom: 2em;
 }
 
 /* titre */
@@ -62,7 +75,7 @@ header {
     text-decoration: none;
     color: #fff;
     border-bottom: 2px solid transparent;
-    font-size: 20px;
+    font-size: 30px;
 }
 
 .nav ul a:hover {

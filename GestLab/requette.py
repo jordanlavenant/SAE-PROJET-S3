@@ -222,6 +222,17 @@ def get_user_with_statut(cnx, nomStatut):
         liste.append((row[0],row[2],row[3]))
     return liste
 
+def get_all_user(cnx, idStatut=None):
+    liste = []
+    if idStatut is None:
+        result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where idStatut != 1;"))
+    else:
+        result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where idStatut = '" + str(idStatut) + "';"))
+    for row in result:
+        print(row[1],row[0],row[2],row[3],row[4])
+        liste.append((row[1],row[0],row[2],row[3],row[4]))
+    return (liste, len(liste))
+
 def get_all_information_to_Materiel(cnx, nomcat=None):
     my_list = []
     if nomcat is None:

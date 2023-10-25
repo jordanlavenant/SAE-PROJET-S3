@@ -4,5 +4,35 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/consulterUtilisateur.css') }}">
 {% endblock %}
 {% block content %}
-
+<div class="utilisateur-container-overall">
+    <div class="header-container">
+        <a href="{{ url_for('utilisateurs') }}"><button id="btn-retour">< retour</button></a>
+        <div class="search-content">
+            <input type="text" id="search-bar" placeholder="Chercher un utilisateur">
+            <button id="btn-search">Rechercher</button>
+        </div>
+        <div class="filter-container">
+            <p>trier par : </p>
+            <form id="formulaire-comboBox" action="{{ url_for('consulter_utilisateur') }}" method="post">
+                <select name="cat" id="categorie-select" class="{{ nbUser }}">
+                    {% for categorie in categories %}
+                        <option value="{{ categorie }}" name="{{ categorie }}">{{ categorie }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+    <div class="container-info-utilisateur">
+        {% for utilisateur in utilisateurs %}
+            <section id="{{ utilisateur[1] }}" class="sous-container-info-utilisateur">
+                <p>{{ utilisateur[2] }} {{ utilisateur[3] }}</p>
+                <a href="#"><button>modifier</button></a>
+            </section>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="../static/js/comboBox.js"></script>
 {% endblock %}

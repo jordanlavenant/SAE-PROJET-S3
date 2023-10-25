@@ -121,10 +121,41 @@ def ajouter_utilisateur():
     AjouterUtilisateurForm=f
     )
 
-@app.route("/consulter-utilisateur/")
+@app.route("/consulter-utilisateur/", methods=("GET","POST",))
 def consulter_utilisateur():
+    if 'cat' in request.form:
+        selected_value = request.form['cat']
+        print("Option sélectionnée : "+selected_value)
+        if selected_value == "Tous":
+            return render_template(
+            "consulterUtilisateur.html",
+            utilisateurs = get_all_user(get_cnx())[0],
+            nbUser = get_all_user(get_cnx())[1],
+            categories = ["Tous", "Professeur", "Gestionnaire"],
+            title="Consulter les Utilisateurs"
+            )
+        elif selected_value == "Professeur":
+            return render_template(
+            "consulterUtilisateur.html",
+            utilisateurs = get_all_user(get_cnx(), 2)[0],
+            nbUser = get_all_user(get_cnx(), 2)[1],
+            categories = ["Tous", "Professeur", "Gestionnaire"],
+            title="Consulter les Utilisateurs"
+            )
+        elif selected_value == "Gestionnaire":
+            return render_template(
+            "consulterUtilisateur.html",
+            utilisateurs = get_all_user(get_cnx(), 3)[0],
+            nbUser = get_all_user(get_cnx(), 3)[1],
+            categories = ["Tous", "Professeur", "Gestionnaire"],
+            title="Consulter les Utilisateurs"
+            )
+
     return render_template(
     "consulterUtilisateur.html",
+    utilisateurs = get_all_user(get_cnx())[0],
+    nbUser = get_all_user(get_cnx())[1],
+    categories = ["Tous", "Professeur", "Gestionnaire"],
     title="Consulter les Utilisateurs"
     )
 
