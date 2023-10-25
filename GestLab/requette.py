@@ -113,6 +113,16 @@ def get_all_information_to_Materiel(cnx, nomcat=None):
 
 # get_all_information_to_Materiel(cnx)
 
+def get_all_information_to_Materiel_with_id(cnx, id):
+    try:
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS where idMateriel = " + str(id) + ";"))
+        for row in result:
+            print(row)
+            return row
+    except:
+        print("erreur de l'id")
+        raise
+
 def connexion_utilisateur(cnx, email,mot_de_passe):
     result = cnx.execute(text("select * from UTILISATEUR where email = '" + email + "' and mdp = '" + mot_de_passe + "';"))
     for _ in result:
