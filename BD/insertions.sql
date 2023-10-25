@@ -24,9 +24,9 @@ INSERT INTO CATEGORIE (idCategorie, idDomaine, nomCategorie) VALUES
 (7, 2, 'Verrerie');
 
 INSERT INTO RISQUE (idRisque, nomRisque, pictogramme) VALUES
-(1, 'Toxicité', 'toxic.png'),
-(2, 'Feu', 'fire.png'),
-(3, 'Radiation', 'radiation.png');
+(1, 'Toxicité', null),
+(2, 'Feu', null),
+(3, 'Radiation', null);
 
 INSERT INTO FDS (idFDS, nomFDS) VALUES
 (1, 'FDS-001'),
@@ -108,18 +108,16 @@ INSERT INTO ETATCOMMANDE (idEtat, nomEtat) VALUES
 
 INSERT INTO BONCOMMANDE (idBonCommande, idDemande, idEtat, dateCommande) VALUES
 (1, 1, 1, '2023-10-15 10:00:00'),
+(3, 1, 1, '2023-10-16 10:00:00'),
 (2, 2, 2,'2023-10-16 11:30:00');
---(3, 3, 3, '2023-10-17 14:15:00');
 
 INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
 (1, 'Entrepôt A', 12345),
 (2, 'Entrepôt B', 54321);
---(3, 'Entrepôt C', 98765);
 
 INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
 (1, 1, 'Facture-001.pdf'),
 (2, 2, 'Facture-002.pdf');
---(3, 3, 'Facture-003.pdf');
 
 INSERT INTO RECHERCHEMATERIELS(materielRecherche) 
 VALUES  ('Microscope'),
