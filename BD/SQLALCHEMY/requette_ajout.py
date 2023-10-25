@@ -55,7 +55,7 @@ def ajout_gestionnaire(cnx, nom, prenom, email, idStatut = 3):
             raise
 
 
-ajout_gestionnaire(cnx, "colin", "colin", "colin@")
+# ajout_gestionnaire(cnx, "colin", "colin", "colin@")
 
 def add_proffesseur(cnx, nom, prenom, email, mdp, idSt = 1):
     
@@ -123,3 +123,14 @@ def delete_utilisateur(cnx, idUt):
     except:
         print("erreur de suppression de l'utilisateur")
         raise
+
+def ajout_blob_in_risques(cnx, idFDS, idRisque, file_path):
+    try:
+        blob = req_annexe.convert_data(file_path)
+        cnx.execute("insert into RISQUE (idRisque, nomRisque, pictogramme) values (%s, %s, %s);", idFDS, idRisque, blob)
+        cnx.commit()
+        print("Blob ajouté")
+    except Exception as e:
+        raise
+
+ajout_blob_in_risques(cnx, 4, 1, "r.png")
