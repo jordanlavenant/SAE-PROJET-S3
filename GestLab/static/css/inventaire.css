@@ -84,6 +84,7 @@
     width: 750px;
     height: 200px;
     display: flex;
+    flex-direction: row;
     padding: 0;
     background-color: #384274;
 }
@@ -153,5 +154,11 @@
 @media screen and (max-width: 1000px) {
     .filter-container {
         display: block;
+    }
+}
+
+@media screen and (max-width: 680px) {
+    .item {
+        flex-direction: column;
     }
 }
