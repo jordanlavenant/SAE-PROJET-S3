@@ -1,3 +1,5 @@
+import random
+import string
 from sqlalchemy import text
 from .connexionPythonSQL import * 
 from hashlib import sha256
@@ -218,10 +220,17 @@ def update_prenom_utilisateur(cnx, email, new_prenom):
         print("erreur de mise a jour du prenom")
         raise
 
+def generer_mot_de_passe():
+    caracteres = string.ascii_letters + string.digits
+    mot_de_passe = ''.join(random.choice(caracteres) for _ in range(10))
+
+    return mot_de_passe
+
 def hasher_mdp(mdp):
     m = sha256()
     m.update(mdp.encode("utf-8"))
     return m.hexdigest()
+
 
 def get_nom_and_statut_and_email(cnx, email):
     result = cnx.execute(text("select nom, idStatut from UTILISATEUR where email = '" + email + "';"))
