@@ -31,5 +31,3 @@ def ouvrir_connexion():
     print("connexion réussie")
     return cnx
 
-def get_cnx():
-    return ouvrir_connexion()
