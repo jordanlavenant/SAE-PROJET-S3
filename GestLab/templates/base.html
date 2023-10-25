@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static',filename='./css/base.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&family=Hind+Siliguri:wght@300;400;500;600&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    {% block styles %}
+    <!-- css -->
+    {% endblock %}
+    <title>{{ title }}</title>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="{{ url_for('base') }}"><img src="../static/images/logo-GestLab.png" alt="logo GestLab"></a>
+            <ul>
+                <li><a href="{{ url_for('base') }}">Accueil</a></li>
+                {% if 'utilisateur' in session %}
+
+                <!-- admin -->
+                {% if session['utilisateur'][1] == 1 %} 
+                <li><a href="{{ url_for('alertes') }}">Alertes</a></li>
+                <li><a href="{{ url_for('utilisateurs') }}">Utilisateurs</a></li>
+                {% endif %}
+
+                <!-- professeur -->
+                {% if session['utilisateur'][1] == 2 %}
+                <li><a href="{{ url_for('demander') }}">Demander</a></li>
+                <li><a href="{{ url_for('inventaire') }}">Inventaire</a></li>
+                <li><a href="{{ url_for('commentaire') }}">Envoyer un Commentaire</a></li>
+                {% endif %}
+
+                <!-- gestionnaire -->
+                {% if session['utilisateur'][1] == 3 %}
+                <li><a href="{{ url_for('commander') }}">Commander</a></li>
+                <li><a href="{{ url_for('inventaire') }}">Inventaire</a></li>
+                <li><a href="{{ url_for('alertes') }}">Alertes</a></li>
+                <li><a href="{{ url_for('demandes') }}">Demandes</a></li>
+                {% endif %}
+
+                {% endif %}
+                <li><a class="profil" href="{{ url_for('login') }}"><img src="../static/images/compte.png" alt="logo compte"></a></li>
+            </ul>
+        </nav>
+        <h1 class="title"><span>GestLab</span> {{ title }}</h1>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer class="footer">
+        <div class="footer-haut">
+            <img class="logo-academie" src="../static/images/Logo_Academie-Orleans-Tours.png" alt="logo lycée François Villon">
+            
+        </div>
+        <div class="footer-bas">
+            <p>© 2023 - GestLab - Tous droits réservés</p>
+        </div>
+    </footer>
+    {% block scripts %}
+        <!-- Optional JavaScript -->
+    {% endblock %}
+</body>
+</html>

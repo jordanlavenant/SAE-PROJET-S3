@@ -1,0 +1,121 @@
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #e0e0e0;
+    font-family: 'Hind Siliguri', sans-serif;
+}
+
+ul {
+    list-style-type: none;
+}
+
+header {
+    position: relative;
+    margin-bottom: 5.5em;
+}
+
+/* titre */
+
+.title {
+    position: absolute;
+    color: #fff;
+    padding: 20px 70px;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1; /* Pour chevaucher le nav */
+    text-align: center;
+    font-size: 30px;
+    font-weight: 300;
+    background-color: #384274;
+    border-radius: 40px;
+}
+
+
+.title span {
+    font-size: 50px;
+}
+
+
+/* barre de navigation */
+
+.nav {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center; 
+    background-color: #009AF0;
+    padding: 0 10px;
+}
+
+.nav ul {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.nav li {
+    padding: 0 10px;
+}
+
+.nav ul a {
+    text-decoration: none;
+    color: #fff;
+    border-bottom: 2px solid transparent;
+    font-size: 20px;
+}
+
+.nav ul a:hover {
+    border-bottom: 2px solid white;
+    transition: 0.2s;
+}
+
+.active {
+    color: white;
+}
+
+.nav a img {
+    height: 100px;
+    transition: .5s;
+}
+
+.nav img:hover {
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+.profil {
+    border: 0 !important;
+}
+
+.profil:hover {
+    border: 0 !important;
+}
+
+.profil img {
+    max-width: 50px;
+    max-height: 50px;
+    padding-top: 8px;
+}
+
+/* footer */
+
+.footer-haut {
+    background-color: #384274;
+}
+
+.footer-bas {
+    background-color: rgb(59, 59, 59);
+}
+
+.footer-bas p {
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.logo-academie {
+    max-width: 200px;
+    margin: 0 10px;
+}
