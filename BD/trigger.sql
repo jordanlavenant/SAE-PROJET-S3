@@ -1,4 +1,34 @@
 delimiter |
+create or replace TRIGGER modifsSurDemandeInsert before insert on AJOUTERMATERIEL for each row
+begin
+    declare presente int;
+    declare mes varchar(255);
+
+    SELECT COUNT(ifnull(DEMANDE.idDemande, 0)) into presente FROM DEMANDE JOIN BONCOMMANDE ON DEMANDE.idDemande = BONCOMMANDE.idDemande WHERE DEMANDE.idDemande = new.idDemande ;
+
+    if presente > 0 then
+        set mes = concat("Le matériel ne peut être ajouté à la demande (id demande : ", new.idDemande,") car celle-ci déjà associée à un bon de commande.");
+        signal SQLSTATE '45000' set MESSAGE_TEXT = mes;
+    end if;
+end |
+delimiter ;
+
+delimiter |
+create or replace TRIGGER modifsSurDemandeUpdate before update on AJOUTERMATERIEL for each row
+begin
+    declare presente int;
+    declare mes varchar(255);
+
+    SELECT COUNT(ifnull(DEMANDE.idDemande, 0)) into presente FROM DEMANDE JOIN BONCOMMANDE ON DEMANDE.idDemande = BONCOMMANDE.idDemande WHERE DEMANDE.idDemande = new.idDemande ;
+
+    if presente > 0 then
+        set mes = concat("La modification ne peut être effectuée sur la demande (id demande : ", new.idDemande,") car celle-ci déjà associée à un bon de commande.");
+        signal SQLSTATE '45000' set MESSAGE_TEXT = mes;
+    end if;
+end |
+delimiter ;
+
+delimiter |
 create or replace TRIGGER emailUtilisateurUniqueInsert before insert on UTILISATEUR for each row
 begin
     declare compteur int;

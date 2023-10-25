@@ -102,7 +102,7 @@ create table DATEPEREMPTION(
 create table STOCKLABORATOIRE(
     idStock int not null auto_increment,
     idMateriel int not null references MATERIEL,
-    quantiteLaboratoire int,
+    quantiteLaboratoire int default 0 ,
     primary key(idStock)
 );
 
