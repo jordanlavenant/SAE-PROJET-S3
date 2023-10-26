@@ -101,9 +101,23 @@ def commander():
 
 @app.route("/alertes/")
 def alertes():
+    nb_alertes = get_nb_alert(cnx)
+    nom_materiel = get_info_materiel_alert(cnx)
     return render_template(
     "alertes.html",
+    alertes = str(nb_alertes),
+    nb_alerte = nb_alertes,
+    nom_materiels = nom_materiel,
     title="Alertes"
+    )
+
+@app.route("/etat/<int:id>")
+def etat(id):
+    return render_template(
+    "etat.html",
+    id=id,
+    title="Etat",
+    item_properties=get_all_information_to_Materiel_with_id(cnx, id)
     )
 
 @app.route("/utilisateurs/")

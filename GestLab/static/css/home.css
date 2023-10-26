@@ -10,6 +10,10 @@
 
 /*  bouton se connecter */
 
+a {
+    text-decoration: none;
+}
+
 #container-bouton-connexion {
     display: flex;
     flex-wrap: nowrap;
