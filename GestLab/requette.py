@@ -373,6 +373,7 @@ def get_all_information_utilisateur_with_id(cnx,id):
         result = cnx.execute(text("select nom,prenom,email,nomStatut from UTILISATEUR natural join STATUT where idUtilisateur = " + str(id) + ";"))
         for row in result:
             print(row)
+            return row
     except:
         print("erreur de l'id")
         raise
