@@ -13,7 +13,6 @@ from .connexionPythonSQL import *
 
 cnx = get_cnx()
 
-
 class LoginForm(FlaskForm):
     email = StringField('email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -96,7 +95,8 @@ def base():
 def commander():
     return render_template(
     "commander.html",
-    title="Commander"
+    title="Commander",
+    chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
 @app.route("/alertes/")
@@ -108,7 +108,8 @@ def alertes():
     alertes = str(nb_alertes),
     nb_alerte = nb_alertes,
     nom_materiels = nom_materiel,
-    title="Alertes"
+    title="Alertes",
+    chemin = [("base", "Accueil"), ("alertes", "Alertes")]
     )
 
 @app.route("/etat/<int:id>")
@@ -117,14 +118,16 @@ def etat(id):
     "etat.html",
     id=id,
     title="Etat",
-    item_properties=get_all_information_to_Materiel_with_id(cnx, id)
+    item_properties=get_all_information_to_Materiel_with_id(cnx, id),
+    chemin = [("base", "Accueil"), ("inventaire", "Inventaire"), ("inventaire", "Etat")]
     )
 
 @app.route("/utilisateurs/")
 def utilisateurs():
     return render_template(
     "utilisateurs.html",
-    title="Utilisateurs"
+    title="Utilisateurs",
+    chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs")]
     )
 
 @app.route("/ajouter-utilisateur/")
@@ -133,7 +136,8 @@ def ajouter_utilisateur():
     return render_template(
     "ajouterUtilisateur.html",
     title="Ajouter un Utilisateur",
-    AjouterUtilisateurForm=f
+    AjouterUtilisateurForm=f,
+    chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("ajouter_utilisateur", "Ajouter un Utilisateur")]
     )
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
@@ -144,39 +148,43 @@ def consulter_utilisateur():
         print("Option sélectionnée : "+selected_value)
         if selected_value == "Tous":
             return render_template(
-            "consulterUtilisateur.html",
-            utilisateurs = get_all_user(get_cnx())[0],
-            nbUser = get_all_user(get_cnx())[1],
-            categories = ["Tous", "Professeur", "Gestionnaire"],
-            title="Consulter les Utilisateurs",
-            RechercherFrom=f
+                "consulterUtilisateur.html",
+                utilisateurs = get_all_user(get_cnx())[0],
+                nbUser = get_all_user(get_cnx())[1],
+                categories = ["Tous", "Professeur", "Gestionnaire"],
+                title="Consulter les Utilisateurs",
+                RechercherFrom=f,
+                chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
         elif selected_value == "Professeur":
             return render_template(
-            "consulterUtilisateur.html",
-            utilisateurs = get_all_user(get_cnx(), 2)[0],
-            nbUser = get_all_user(get_cnx(), 2)[1],
-            categories = ["Tous", "Professeur", "Gestionnaire"],
-            title="Consulter les Utilisateurs",
-            RechercherFrom=f
+                "consulterUtilisateur.html",
+                utilisateurs = get_all_user(get_cnx(), 2)[0],
+                nbUser = get_all_user(get_cnx(), 2)[1],
+                categories = ["Tous", "Professeur", "Gestionnaire"],
+                title="Consulter les Utilisateurs",
+                RechercherFrom=f,
+                chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
         elif selected_value == "Gestionnaire":
             return render_template(
-            "consulterUtilisateur.html",
-            utilisateurs = get_all_user(get_cnx(), 3)[0],
-            nbUser = get_all_user(get_cnx(), 3)[1],
-            categories = ["Tous", "Professeur", "Gestionnaire"],
-            title="Consulter les Utilisateurs",
-            RechercherFrom=f
+                "consulterUtilisateur.html",
+                utilisateurs = get_all_user(get_cnx(), 3)[0],
+                nbUser = get_all_user(get_cnx(), 3)[1],
+                categories = ["Tous", "Professeur", "Gestionnaire"],
+                title="Consulter les Utilisateurs",
+                RechercherFrom=f,
+                chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
 
     return render_template(
-    "consulterUtilisateur.html",
-    utilisateurs = get_all_user(get_cnx())[0],
-    nbUser = get_all_user(get_cnx())[1],
-    categories = ["Tous", "Professeur", "Gestionnaire"],
-    title="Consulter les Utilisateurs",
-    RechercherFrom=f
+        "consulterUtilisateur.html",
+        utilisateurs = get_all_user(get_cnx())[0],
+        nbUser = get_all_user(get_cnx())[1],
+        categories = ["Tous", "Professeur", "Gestionnaire"],
+        title="Consulter les Utilisateurs",
+        RechercherFrom=f,
+        chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
     )
 
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
@@ -193,7 +201,8 @@ def recherche_utilisateur():
             nbUser = recherche_all_in_utilisateur_with_search(get_cnx(), value)[1],
             categories = ["Tous", "Professeur", "Gestionnaire"],
             title="Consulter les Utilisateurs",
-            RechercherFrom=f
+            RechercherFrom=f,
+            chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
         )
 
     return render_template(
@@ -202,7 +211,8 @@ def recherche_utilisateur():
     nbUser = get_all_user(get_cnx())[1],
     categories = ["Tous", "Professeur", "Gestionnaire"],
     title="Consulter les Utilisateurs",
-    RechercherFrom=f
+    RechercherFrom=f,
+    chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
     )
 
 @app.route("/modifier-utilisateur/<int:id>/", methods=("GET","POST",))
@@ -234,7 +244,8 @@ def modifier_utilisateur(id):
     prenom=prenom,
     email=email,
     statut=statut,
-    id=id
+    id=id,
+    chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs"), ("consulter_utilisateur", "Modifier un Utilisateur")] 
     )
 
 
@@ -242,30 +253,26 @@ def modifier_utilisateur(id):
 def demandes():
     return render_template(
     "demandes.html",
-    title="Demandes"
+    title="Demandes",
+    chemin = [("base", "Accueil"), ("demandes", "Demandes")]
     )
 
 @app.route("/inventaire/")
 def inventaire():
-    javascript_code = """
-    const maCombo = document.getElementById('categorie-select');
-    maCombo.addEventListener('change', function () {
-        console.log(maCombo.value);
-    });
-    """
     return render_template(
     "inventaire.html",
     categories = get_categories(get_cnx()),
-    javascript_code = javascript_code,
     items = get_all_information_to_Materiel(get_cnx()),
-    title="Inventaire"
+    title="Inventaire",
+    chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
     )
 
 @app.route("/demander/")
 def demander():
     return render_template(
     "demander.html",
-    title="Demander"
+    title="Demander",
+    chemin = [("base", "Accueil"), ("demander", "Demander")]
     )
 
 @app.route("/commentaire/")
@@ -273,7 +280,8 @@ def commentaire():
     return render_template(
     "commentaire.html",
     users= get_user_with_statut(get_cnx(), "Gestionnaire"),
-    title="Envoyer un Commentaire"
+    title="Envoyer un Commentaire",
+    chemin = [("base", "Accueil"), ("commentaire", "Envoyer un Commentaire")]
     )
 
 @app.route("/login/", methods=("GET","POST",))

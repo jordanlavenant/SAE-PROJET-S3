@@ -42,9 +42,17 @@
 
                 {% endif %}
                 <li><a class="profil" href="{{ url_for('login') }}"><img src="{{ url_for('static',filename='./images/compte.png') }}" alt="logo compte"></a></li>
+                
             </ul>
         </nav>
+        <div id="fil-ariane">
+            {% for elem in chemin %}
+            <li><a href="{{ url_for(elem[0]) }}">{{ elem[1] }}</a></li>
+            <li><img src="{{ url_for('static',filename='./images/chevron.png') }}"></li>
+            {% endfor %}
+        </div>
         <h1 class="title">{{ title }}</h1>
+        
     </header>
     <main>
         {% block content %}
