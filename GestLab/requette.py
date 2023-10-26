@@ -320,7 +320,7 @@ def get_info_materiel_with_id(cnx, idMateriel):
         print("Erreur lors de la récupération des infos du matériel :", str(e))
         raise
 
-get_info_materiel_with_id(cnx, 1)
+# get_info_materiel_with_id(cnx, 1)
 
 def get_nb_demande(cnx):
     try:
@@ -338,3 +338,33 @@ def generer_mot_de_passe():
     mot_de_passe = ''.join(random.choice(caracteres) for _ in range(10))
 
     return mot_de_passe
+
+
+def recherche_all_in_utilisateur_with_search(cnx, search):
+    try:
+        list = []
+        result = cnx.execute(text("select * from UTILISATEUR where nom like '%" + search + "%'" or " prenom like '%" + search + "%' ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de recherche")
+        raise
+
+# recherche_all_in_utilisateur_with_search(cnx, "jo")
+
+def recherche_all_in_materiel_with_search(cnx, search):
+    try:
+        list = []
+        result = cnx.execute(text("select * from MATERIEL where nomMateriel like '%" + search + "%' ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de recherche")
+        raise
+
+# recherche_all_in_materiel_with_search(cnx, "chi")
+
