@@ -1,7 +1,7 @@
 import random
 import string
 from sqlalchemy import text
-from .connexionPythonSQL import *
+from connexionPythonSQL import *
 from hashlib import sha256
 from datetime import datetime, timedelta
 import random
@@ -378,4 +378,28 @@ def get_all_information_to_Materiel_with_id(cnx, id):
         print("erreur de l'id")
         raise
 
-print(get_all_information_to_Materiel_with_id(cnx, 3))
+# print(get_all_information_to_Materiel_with_id(cnx, 3))
+
+
+def get_all_information_utilisateur_with_id(cnx,id):
+    try:
+        result = cnx.execute(text("select nom,prenom,email,nomStatut from UTILISATEUR natural join STATUT where idUtilisateur = " + str(id) + ";"))
+        for row in result:
+            print(row)
+            return row
+    except:
+        print("erreur de l'id")
+        raise
+
+# get_all_information_utilisateur_with_id(cnx, 1)
+
+
+def update_all_information_utillisateur_with_id(cnx,id,nom,prenom,email,idStatut):
+    try:
+        cnx.execute(text( "update UTILISATEUR set nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "', idStatut = '" + str(idStatut) + "' where idUtilisateur = " + str(id) + ";"))
+        cnx.commit()
+    except:
+        print("erreur de l'id")
+        raise
+
+# update_all_information_utillisateur_with_id(cnx,1,"John","Doe","john.doe@example.com",1)
