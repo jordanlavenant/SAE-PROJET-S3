@@ -14,7 +14,7 @@
 <body>
     <header class="header">
         <nav class="nav">
-            <a href="{{ url_for('base') }}"><img src="../static/images/logo-GestLab.png" alt="logo GestLab"></a>
+            <a href="{{ url_for('base') }}"><img src="{{ url_for('static',filename='./images/logo-GestLab.png') }}" alt="logo GestLab"></a>
             <ul>
                 <li><a href="{{ url_for('base') }}">accueil</a></li>
                 {% if 'utilisateur' in session %}
@@ -41,7 +41,7 @@
                 {% endif %}
 
                 {% endif %}
-                <li><a class="profil" href="{{ url_for('login') }}"><img src="../static/images/compte.png" alt="logo compte"></a></li>
+                <li><a class="profil" href="{{ url_for('login') }}"><img src="{{ url_for('static',filename='./images/compte.png') }}" alt="logo compte"></a></li>
             </ul>
         </nav>
         <h1 class="title">{{ title }}</h1>
@@ -52,7 +52,7 @@
     </main>
     <footer class="footer">
         <div class="footer-haut">
-            <img class="logo-academie" src="../static/images/Logo_Academie-Orleans-Tours.png" alt="logo lycée François Villon">
+            <img class="logo-academie" src="{{ url_for('static',filename='./images/Logo_Academie-Orleans-Tours.png') }}" alt="logo lycée François Villon">
             
         </div>
         <div class="footer-bas">

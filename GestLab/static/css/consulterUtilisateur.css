@@ -12,7 +12,7 @@
     gap: 30px;
 }
 
-#search-bar {
+.form-control {
     flex-basis: 80%;
     width: calc(100% - 60px);
     height: 50px;
@@ -90,10 +90,14 @@
 .container-info-utilisateur {
     margin: 5vh;
     margin-left: 10vw;
-    margin-right: 50vw;
+    margin-right: 10vw;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .sous-container-info-utilisateur {
+    flex-basis: 40%;
     margin-bottom: 5vh;
     display: flex;
     flex-wrap: nowrap;
