@@ -1,13 +1,9 @@
 DROP TABLE IF EXISTS RISQUES;
-DROP TABLE IF EXISTS CATEGORIESMATERIEL;
 DROP TABLE IF EXISTS RESERVELABORATOIRE;
 DROP TABLE IF EXISTS STOCKLABORATOIRE;
 DROP TABLE IF EXISTS ENVOIFOURNISSEUR;
-DROP TABLE IF EXISTS BONCOMMANDE;
 DROP TABLE IF EXISTS SUIVICOMMANDE;
 DROP TABLE IF EXISTS AJOUTERMATERIEL;
-DROP TABLE IF EXISTS DEMANDE;
-DROP TABLE IF EXISTS ETATCOMMANDE;
 DROP TABLE IF EXISTS RECHERCHEMATERIELS;
 DROP TABLE IF EXISTS MATERIELUNIQUE;
 DROP TABLE IF EXISTS MATERIEL;
@@ -18,8 +14,12 @@ DROP TABLE IF EXISTS CATEGORIE;
 DROP TABLE IF EXISTS DOMAINE;
 DROP TABLE IF EXISTS RISQUE;
 DROP TABLE IF EXISTS FDS;
-DROP TABLE IF EXISTS STATUT;
+DROP TABLE IF EXISTS BONCOMMANDE;
+DROP TABLE IF EXISTS DEMANDE;
+DROP TABLE IF EXISTS ETATCOMMANDE;
 DROP TABLE IF EXISTS UTILISATEUR;
+DROP TABLE IF EXISTS STATUT;
+DROP TABLE IF EXISTS TYPESALERTES;
 
 
 create table STATUT(
@@ -49,7 +49,6 @@ create table CATEGORIE(
     idCategorie int not null auto_increment,
     idDomaine int not null references DOMAINE,
     nomCategorie varchar(50) not null,
-    unique(nomCategorie),
     primary key(idCategorie)
 );
 
@@ -78,33 +77,30 @@ create table RANGEMENT(
     position varchar(50),
     unique(endroit),
     primary key(idRangement)
-):
+);
 
 create table MATERIEL(
-    referenceMateriel int not null,
+    idMateriel int not null auto_increment,
+    referenceMateriel varchar(50) not null,
     idFDS int references FDS,
     nomMateriel varchar(50) not null,
+    idCategorie int not null references CATEGORIE,
     caracteristiquesComplementaires varchar(2000),
     informationsComplementairesEtSecurite varchar(2000),
     unique(nomMateriel),
-    primary key (referenceMateriel)
+    unique(referenceMateriel),
+    primary key (idMateriel)
 );
 
 create table MATERIELUNIQUE(
     idMaterielUnique int not null auto_increment,
-    referenceMateriel int not null references MATERIEL,
+    idMateriel int not null references MATERIEL,
     idRangement int not null references RANGEMENT,
     dateReception datetime not null,
     commentaireMateriel varchar(100),
     quantiteApproximative float,
     datePeremption datetime,
     primary key(idMaterielUnique)
-);
-
-create table CATEGORIESMATERIEL(
-    idMateriel int not null references MATERIEL,
-    idCategorie int not null references CATEGORIE,
-    primary key(idMateriel, idCategorie)
 );
 
 create table RESERVELABORATOIRE(
@@ -176,6 +172,12 @@ create table ENVOIFOURNISSEUR(
     idFournisseur int not null references FOURNISSEUR,
     facture varchar(50) not null,
     primary key(idBonCommande, idFournisseur)
+);
+
+CREATE TABLE TYPESALERTES (
+    idAlerte int not null,
+    descriptionAlerte varchar(100) not null,
+    primary key (idAlerte)
 );
 
 create table ARCHIVECOMMANDE(
