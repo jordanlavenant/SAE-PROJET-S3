@@ -372,3 +372,11 @@ def ajouterUtilisateur():
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)
+
+@app.route("/ajouter-materiel/")
+def ajouter_materiel():
+    return render_template(
+    "ajouterMateriel.html",
+    title="Ajouter un Matériel",
+    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    )

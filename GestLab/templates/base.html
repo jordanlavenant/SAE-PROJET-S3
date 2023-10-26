@@ -39,6 +39,13 @@
                 <li><a href="{{ url_for('demandes') }}">demandes</a></li>
                 {% endif %}
 
+                <!-- laborantin -->
+                {% if session['utilisateur'][1] == 4 %}
+                <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
+                <li><a href="{{ url_for('demander') }}">demander</a></li>
+                <li><a href="{{ url_for('ajouter_materiel') }}">ajouter materiel</a></li>
+                {% endif %}
+
                 {% endif %}
                 <li><a class="profil" href="{{ url_for('login') }}"><img src="{{ url_for('static',filename='./images/compte.png') }}" alt="logo compte"></a></li>
                 
