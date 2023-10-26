@@ -80,9 +80,21 @@ begin
 end |
 delimiter ;
 
+
+delimiter |
+CREATE OR REPLACE function recupereidMateriel(idMU int) returns int
+BEGIN
+declare idM int;
+SELECT idMateriel INTO idM FROM MATERIELUNIQUE WHERE idMaterielUnique = idMU ;
+return idM;
+end |
+delimiter ;
+
+
 delimiter |
 create or replace TRIGGER modificationStockLaboInsert after insert on BONCOMMANDE for each row
 BEGIN
+    declare idMU int ;
     declare idM int ;
     declare qte int ;
     declare prixIndividuel float;
@@ -91,27 +103,24 @@ BEGIN
     declare stock int ;
        
     declare produits cursor for 
-        SELECT idMateriel, quantite FROM AJOUTERMATERIEL WHERE idDemande = new.idDemande;
+        SELECT idMaterielUnique FROM RESERVELABORATOIRE ;
 
     declare continue handler for not found set fini = true ;
 
-    SELECT idEtat INTO etat FROM BONCOMMANDE WHERE idBonCommande = new.idBonCommande ;
-
-    if etat = 4 then 
-        open produits ;
-        while not fini do
-            fetch produits into idM, qte ;
-            if not fini then
-                SELECT recupereStockLabo(idM) into stock ;
-                if stock is null then
-                    INSERT INTO STOCKLABORATOIRE VALUES (idM, qte) ;
-                else 
-                    UPDATE STOCKLABORATOIRE set quantiteLaboratoire = stock + qte WHERE idMateriel = idM ;
-                end if ;
+    open produits ;
+    while not fini do
+        fetch produits into idMU ;
+        if not fini then
+            SELECT recupereidMateriel(idMU) into idM ;
+            SELECT recupereStockLabo(idM) into stock ;
+            if stock is null then
+                INSERT INTO STOCKLABORATOIRE VALUES (idM, qte) ;
+            else 
+                UPDATE STOCKLABORATOIRE set quantiteLaboratoire = stock + qte WHERE idMateriel = idM ;
             end if ;
-        end while ;
-        close produits ;
-    end if;
+        end if ;
+    end while ;
+    close produits ;
 end |
 delimiter ;
 

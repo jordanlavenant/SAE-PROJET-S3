@@ -87,16 +87,8 @@ INSERT INTO MATERIEL (referenceMateriel, seuilAlerte, idFDS, nomMateriel, idCate
 INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, commentaireMateriel, quantiteApproximative, datePeremption) VALUES
 (1, 1, '2023-10-26 10:00:00', 'Bon état', 1, NULL),
 (2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 2, '2024-10-26 11:00:00'),
-(2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 8, '2024-10-26 11:00:00'),
-(2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 10, '2024-10-26 11:00:00'),
-(2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 10, '2024-10-26 11:00:00'),
 (2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 10, '2024-10-26 11:00:00'),
 (3, 3, '2023-10-26 12:00:00', null, 1, NULL) ;
-
-INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES
-(1),
-(2),
-(3);
 
 INSERT INTO FOURNISSEUR (nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur) VALUES
 ('Fournisseur 1', 'Adresse 1', 'fournisseur1@example.com', '1234567890'),
@@ -128,6 +120,10 @@ INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
 INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
 (1, 1, 'Facture 1'),
 (2, 2, 'Facture 2');
+
+INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES
+(2),
+(3);
 
 INSERT INTO TYPESALERTES (idAlerte, descriptionAlerte) VALUES 
 (1, "Date de péremption dépassée"),
