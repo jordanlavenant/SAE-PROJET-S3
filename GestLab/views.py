@@ -297,8 +297,8 @@ def commentaire():
     return render_template(
     "commentaire.html",
     users= get_user_with_statut(get_cnx(), "Gestionnaire"),
-    title="Envoyer un Commentaire",
-    chemin = [("base", "Accueil"), ("commentaire", "Envoyer un Commentaire")]
+    title="Signaler des alertes",
+    chemin = [("base", "Accueil"), ("commentaire", "Signaler des alertes")]
     )
 
 @app.route("/login/", methods=("GET","POST",))
