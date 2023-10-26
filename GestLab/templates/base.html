@@ -21,7 +21,6 @@
 
                 <!-- admin -->
                 {% if session['utilisateur'][1] == 1 %} 
-                <li><a href="{{ url_for('alertes') }}">alertes</a></li>
                 <li><a href="{{ url_for('utilisateurs') }}">utilisateurs</a></li>
                 {% endif %}
 
@@ -40,11 +39,26 @@
                 <li><a href="{{ url_for('demandes') }}">demandes</a></li>
                 {% endif %}
 
+                <!-- laborantin -->
+                {% if session['utilisateur'][1] == 4 %}
+                <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
+                <li><a href="{{ url_for('demander') }}">demander</a></li>
+                <li><a href="{{ url_for('ajouter_materiel') }}">ajouter materiel</a></li>
+                {% endif %}
+
                 {% endif %}
                 <li><a class="profil" href="{{ url_for('login') }}"><img src="{{ url_for('static',filename='./images/compte.png') }}" alt="logo compte"></a></li>
+                
             </ul>
         </nav>
+        <div id="fil-ariane">
+            {% for elem in chemin %}
+            <li><a href="{{ url_for(elem[0]) }}">{{ elem[1] }}</a></li>
+            <li><img src="{{ url_for('static',filename='./images/chevron.png') }}"></li>
+            {% endfor %}
+        </div>
         <h1 class="title">{{ title }}</h1>
+        
     </header>
     <main>
         {% block content %}

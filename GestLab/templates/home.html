@@ -10,29 +10,10 @@
     
         <!-- admin -->
         {% if session['utilisateur'][1] == 1 %}
-        <section class="section-alertes">
-            {% if alertes|int > 0 %}
-                <img src="../static/images/attention-rouge.png" alt="logo alertes">
-                {% if alertes|int == 1 %}
-                <p>{{ alertes }} Alerte</p>
-                {% else %}
-                <p>{{ alertes }} Alertes</p>
-                {% endif %}
-                <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
-            {% endif %}
-        </section>
 
         <!-- sous titre -->
         <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
 
-        <a href="{{ url_for('alertes') }}">
-            <section class="carte-lien">
-                <h2>ALERTES</h2>
-                <p>quantité</p>
-                <p>étalonnages</p>
-                <p>péremptions</p>
-            </section>
-        </a>
         <a href="{{ url_for('utilisateurs') }}">
             <section class="carte-lien">
                 <h2>UTILISATEUR</h2>
