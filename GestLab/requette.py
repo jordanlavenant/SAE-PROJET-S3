@@ -357,6 +357,21 @@ def ajout_gestionnaire(cnx, nom, prenom, email, idStatut = 3):
         print("erreur d'ajout de l'utilisateur")
         return False
 
+def ajout_laborantin(cnx, nom, prenom, email, idStatut = 4):
+    
+    try:
+        mdpRandom = generer_mot_de_passe()
+        # envoyer mail avec mdpRandom
+        print(mdpRandom)
+        mdphash = hasher_mdp(mdpRandom)
+        cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
+        cnx.commit()
+        print("utilisateur ajouté")
+        return True
+    except:
+        print("erreur d'ajout de l'utilisateur")
+        return False
+
 def generer_mot_de_passe():
     caracteres = string.ascii_letters + string.digits
     mot_de_passe = ''.join(random.choice(caracteres) for _ in range(10))

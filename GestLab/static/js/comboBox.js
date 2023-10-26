@@ -19,6 +19,9 @@ maCombo.addEventListener('change', function () {
         if(select_option == "Gestionnaire" && id != 3){
             sectionUser[i].style.display = "none";
         }
+        if(select_option == "Laborantin" && id != 4){
+            sectionUser[i].style.display = "none";
+        }
     }
 
     // form.submit();

@@ -68,7 +68,7 @@ class AjouterUtilisateurForm(FlaskForm):
     nom = StringField('nom', validators=[DataRequired()])
     prenom = StringField('prenom', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired()])
-    choices = [('professeur', 'Professeur'), ('gestionnaire', 'Gestionnaire')]
+    choices = [('professeur', 'Professeur'), ('gestionnaire', 'Gestionnaire'), ('laborantin', 'Laborantin')]
     statut = SelectField('ComboBox', choices=choices)
     next = HiddenField()
 
@@ -151,7 +151,7 @@ def consulter_utilisateur():
                 "consulterUtilisateur.html",
                 utilisateurs = get_all_user(get_cnx())[0],
                 nbUser = get_all_user(get_cnx())[1],
-                categories = ["Tous", "Professeur", "Gestionnaire"],
+                categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
                 chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
@@ -161,7 +161,7 @@ def consulter_utilisateur():
                 "consulterUtilisateur.html",
                 utilisateurs = get_all_user(get_cnx(), 2)[0],
                 nbUser = get_all_user(get_cnx(), 2)[1],
-                categories = ["Tous", "Professeur", "Gestionnaire"],
+                categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
                 chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
@@ -171,7 +171,17 @@ def consulter_utilisateur():
                 "consulterUtilisateur.html",
                 utilisateurs = get_all_user(get_cnx(), 3)[0],
                 nbUser = get_all_user(get_cnx(), 3)[1],
-                categories = ["Tous", "Professeur", "Gestionnaire"],
+                categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
+                title="Consulter les Utilisateurs",
+                RechercherFrom=f,
+                chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+            )
+        elif selected_value == "Laborantin":
+            return render_template(
+                "consulterUtilisateur.html",
+                utilisateurs = get_all_user(get_cnx(), 4)[0],
+                nbUser = get_all_user(get_cnx(), 4)[1],
+                categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
                 chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
@@ -181,7 +191,7 @@ def consulter_utilisateur():
         "consulterUtilisateur.html",
         utilisateurs = get_all_user(get_cnx())[0],
         nbUser = get_all_user(get_cnx())[1],
-        categories = ["Tous", "Professeur", "Gestionnaire"],
+        categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
         title="Consulter les Utilisateurs",
         RechercherFrom=f,
         chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
@@ -199,7 +209,7 @@ def recherche_utilisateur():
             "rechercheUtilisateur.html",
             utilisateurs = recherche_all_in_utilisateur_with_search(get_cnx(), value)[0],
             nbUser = recherche_all_in_utilisateur_with_search(get_cnx(), value)[1],
-            categories = ["Tous", "Professeur", "Gestionnaire"],
+            categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
             title="Consulter les Utilisateurs",
             RechercherFrom=f,
             chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
@@ -230,6 +240,13 @@ def modifier_utilisateur(id):
                     return redirect(url_for('utilisateurs'))
             elif statut == "gestionnaire":
                 res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 3)
+                if res:
+                    return redirect(url_for('utilisateurs'))
+                else:
+                    print("erreur de modification d'utilisateur")
+                    return redirect(url_for('utilisateurs'))
+            elif statut == "laborantin":
+                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 4)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:
@@ -364,6 +381,13 @@ def ajouterUtilisateur():
                     return redirect(url_for('utilisateurs'))
             elif statut == "gestionnaire":
                 res = ajout_gestionnaire(cnx, nom, prenom, email)
+                if res:
+                    return redirect(url_for('utilisateurs'))
+                else:
+                    print("erreur d'insertion d'utilisateur")
+                    return redirect(url_for('utilisateurs'))
+            elif statut == "laborantin":
+                res = ajout_laborantin(cnx, nom, prenom, email)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:
