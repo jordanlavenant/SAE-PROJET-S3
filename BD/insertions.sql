@@ -120,10 +120,10 @@ INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
 INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
 (1, 1, 'Facture 1'),
 (2, 2, 'Facture 2');
-
-INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES
-(2),
-(3);
+INSERT into debug (test) VALUES (1)  ;
+INSERT INTO RESERVELABORATOIRE (idReserve, idMaterielUnique) VALUES
+(1, 2),
+(2, 3);
 
 INSERT INTO TYPESALERTES (idAlerte, descriptionAlerte) VALUES 
 (1, "Date de péremption dépassée"),

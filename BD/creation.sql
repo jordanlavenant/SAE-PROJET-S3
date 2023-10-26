@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS ETATCOMMANDE;
 DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
 DROP TABLE IF EXISTS TYPESALERTES;
-
+drop table if exists debug ;
 
 create table STATUT(
     idStatut int not null,
@@ -105,7 +105,7 @@ create table MATERIELUNIQUE(
 );
 
 create table RESERVELABORATOIRE(
-    idReserve int not null auto_increment,
+    idReserve int not null,
     idMaterielUnique int not null references MATERIELUNIQUE,
     primary key(idReserve, idMaterielUnique)
 );
@@ -190,4 +190,9 @@ create table ARCHIVECOMMANDE(
     telFournisseur varchar(10) not null,
     facture varchar(50) not null,
     primary key(numColis)
+);
+
+create table debug(
+    test int,
+    primary key(test)
 );
