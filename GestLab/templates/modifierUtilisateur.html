@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static',filename='./css/modifierUtilisateur.css') }}">
+{% endblock %}
+{% block content %}
+<div id="ajouterUtilisateur-container">
+    <a href="{{ url_for('consulter_utilisateur') }}" id="btn-retour"><img src="{{ url_for('static',filename='./images/fleche-gauche.png') }}" alt="logo fleche gauche"></a>
+    <div id="ajouterUtilisateur-box">
+        <form class="form-ajoutUtilisateur" role="form" method="POST" action ="{{ url_for('modifier_utilisateur', id=id) }}">
+            {{ AjouterUtilisateurForm.hidden_tag() }}
+            <div class="user-box">
+                <div>{{ AjouterUtilisateurForm.nom(size=50, class_="form-control element", placeholder="Nom", value=nom) }}</div>
+            </div>
+            <div class="user-box">
+                <div>{{ AjouterUtilisateurForm.prenom(size=50, class_="form-control element", placeholder="Prenom", value=prenom) }}</div>
+            </div>
+            <div class="user-box">
+                <div>{{ AjouterUtilisateurForm.email(size=50, class_="form-control element", placeholder="Email", value=email) }}</div>
+            </div>
+            <div class="user-box">
+                <div>{{ AjouterUtilisateurForm.statut(size=0, class_="comboBox") }}</div>
+            </div>
+            <div class="valid-container">
+                <input type="submit" value="modifier l'utilisateur" class="element">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

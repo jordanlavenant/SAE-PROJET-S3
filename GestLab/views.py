@@ -58,7 +58,8 @@ class ChangerMailForm(FlaskForm):
         return (ancienMail, nouveauMail, confirmerMail, mdp)
       
 class RechercherFrom(FlaskForm):
-    value = StringField('value', validators=[DataRequired()])
+    value = StringField('value')
+    submit = SubmitField('Rechercher')
 
     def get_value(self):
         value = self.value.data
@@ -137,6 +138,7 @@ def ajouter_utilisateur():
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
 def consulter_utilisateur():
+    f = RechercherFrom()
     if 'cat' in request.form:
         selected_value = request.form['cat']
         print("Option sélectionnée : "+selected_value)
@@ -146,7 +148,8 @@ def consulter_utilisateur():
             utilisateurs = get_all_user(get_cnx())[0],
             nbUser = get_all_user(get_cnx())[1],
             categories = ["Tous", "Professeur", "Gestionnaire"],
-            title="Consulter les Utilisateurs"
+            title="Consulter les Utilisateurs",
+            RechercherFrom=f
             )
         elif selected_value == "Professeur":
             return render_template(
@@ -154,7 +157,8 @@ def consulter_utilisateur():
             utilisateurs = get_all_user(get_cnx(), 2)[0],
             nbUser = get_all_user(get_cnx(), 2)[1],
             categories = ["Tous", "Professeur", "Gestionnaire"],
-            title="Consulter les Utilisateurs"
+            title="Consulter les Utilisateurs",
+            RechercherFrom=f
             )
         elif selected_value == "Gestionnaire":
             return render_template(
@@ -162,7 +166,8 @@ def consulter_utilisateur():
             utilisateurs = get_all_user(get_cnx(), 3)[0],
             nbUser = get_all_user(get_cnx(), 3)[1],
             categories = ["Tous", "Professeur", "Gestionnaire"],
-            title="Consulter les Utilisateurs"
+            title="Consulter les Utilisateurs",
+            RechercherFrom=f
             )
 
     return render_template(
@@ -170,8 +175,68 @@ def consulter_utilisateur():
     utilisateurs = get_all_user(get_cnx())[0],
     nbUser = get_all_user(get_cnx())[1],
     categories = ["Tous", "Professeur", "Gestionnaire"],
-    title="Consulter les Utilisateurs"
+    title="Consulter les Utilisateurs",
+    RechercherFrom=f
     )
+
+@app.route("/recherche-utilisateur/", methods=("GET","POST",))
+def recherche_utilisateur():
+    f = RechercherFrom()
+    print("recherche utilisateur")
+    
+    value = f.get_value()
+    print("value : "+value)
+    if value != None:
+        return render_template(
+            "rechercheUtilisateur.html",
+            utilisateurs = recherche_all_in_utilisateur_with_search(get_cnx(), value)[0],
+            nbUser = recherche_all_in_utilisateur_with_search(get_cnx(), value)[1],
+            categories = ["Tous", "Professeur", "Gestionnaire"],
+            title="Consulter les Utilisateurs",
+            RechercherFrom=f
+        )
+
+    return render_template(
+    "consulterUtilisateur.html",
+    utilisateurs = get_all_user(get_cnx())[0],
+    nbUser = get_all_user(get_cnx())[1],
+    categories = ["Tous", "Professeur", "Gestionnaire"],
+    title="Consulter les Utilisateurs",
+    RechercherFrom=f
+    )
+
+@app.route("/modifier-utilisateur/<int:id>/", methods=("GET","POST",))
+def modifier_utilisateur(id):
+    f = AjouterUtilisateurForm()
+    if f.validate_on_submit():
+        nom, prenom, email, statut = f.get_full_user()
+        if nom != None and prenom != None and email != None and statut != None:
+            if statut == "professeur":
+                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 2)
+                if res:
+                    return redirect(url_for('utilisateurs'))
+                else:
+                    print("erreur de modification d'utilisateur")
+                    return redirect(url_for('utilisateurs'))
+            elif statut == "gestionnaire":
+                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 3)
+                if res:
+                    return redirect(url_for('utilisateurs'))
+                else:
+                    print("erreur de modification d'utilisateur")
+                    return redirect(url_for('utilisateurs'))
+    prenom, nom, email, statut = get_all_information_utilisateur_with_id(get_cnx(), id)
+    return render_template(
+    "modifierUtilisateur.html",
+    title="Modifier un Utilisateur",
+    AjouterUtilisateurForm=f,
+    nom=nom,
+    prenom=prenom,
+    email=email,
+    statut=statut,
+    id=id
+    )
+
 
 @app.route("/demandes/")
 def demandes():
