@@ -69,25 +69,29 @@ INSERT INTO RANGEMENT (endroit, position) VALUES
 ('Étagère 2', 'bas'),
 ('Armoire 1', 'gauche');
 
-INSERT INTO MATERIEL (referenceMateriel, idFDS, nomMateriel, idCategorie, caracteristiquesComplementaires, informationsComplementairesEtSecurite) VALUES
-('REF123', 1, 'Microscope électronique', 1, 'Microscope électronique haute résolution', "Utilisé pour observer des échantillons à l'échelle microscopique."),
-('REF456', 2, 'Acide chlorhydrique', 5, "Solution d'acide chlorhydrique à 37%", 'Utilisé comme réactif de laboratoire.'),
-('REF789', null, 'Oscilloscope Tektronix TBS1052B', 1, 'Oscilloscope numérique à deux canaux', "Utilisé pour l'analyse de signaux électriques."),
-('REF101', null, 'Bécher en verre de 250 ml', 6, 'Bécher en verre borosilicaté', "Utilisé pour contenir des liquides en laboratoire."),
-('REF202', null, 'Pipette graduée en plastique 10 ml', 6, 'Pipette jetable à usage unique', 'Utilisée pour mesurer des volumes liquides avec précision.'),
-('REF303', null, "DVD éducatif sur l'électricité", 4, "DVD interactif d'enseignement", "Utilisé pour l'apprentissage des concepts électricité."),
-('REF404', null, 'Multimètre Fluke 87V', 2, 'Multimètre numérique professionnel', 'Utilisé pour la mesure de tensions, courants, et résistances électriques.'),
-('REF505', 3, 'Sulfate de cuivre', 3, 'Poudre cristalline bleue', 'Utilisé comme réactif chimique dans diverses expériences.'),
-('REF606', null, 'Générateur de signaux Rohde & Schwarz', 2, 'Générateur de signaux RF haute fréquence', 'Utilisé pour la génération de signaux électriques complexes.'),
-( 'REF707', null, 'Burette automatique en verre 50 ml', 6, "Burette en verre avec système d'étalonnage automatique", 'Utilisée pour doser des solutions avec précision.'),
-( 'REF808', null, 'Pipette Pasteur en plastique 3 ml', 6, 'Pipette jetable en plastique', 'Utilisée pour le transfert de petits volumes liquides.'),
-( 'REF909', null, 'Logiciel de modélisation moléculaire', 4, 'Logiciel de simulation chimique avancé', 'Utilisé pour la modélisation moléculaire et la simulation de réactions chimiques.'),
-( 'REF1010', null, 'Pissette en verre 500 ml', 6, 'Pissette en verre classique', 'Utilisée pour le transfert de liquides en laboratoire.');
+INSERT INTO MATERIEL (referenceMateriel, seuilAlerte, idFDS, nomMateriel, idCategorie, caracteristiquesComplementaires, informationsComplementairesEtSecurite) VALUES
+('REF123', 1, 1, 'Microscope électronique', 1, 'Microscope électronique haute résolution', "Utilisé pour observer des échantillons à l'échelle microscopique."),
+('REF456', 10, 2, 'Acide chlorhydrique', 5, "Solution d'acide chlorhydrique à 37%", 'Utilisé comme réactif de laboratoire.'),
+('REF789', 1, null, 'Oscilloscope Tektronix TBS1052B', 1, 'Oscilloscope numérique à deux canaux', "Utilisé pour l'analyse de signaux électriques."),
+('REF101', 1, null, 'Bécher en verre de 250 ml', 6, 'Bécher en verre borosilicaté', "Utilisé pour contenir des liquides en laboratoire."),
+('REF202', 15, null, 'Pipette graduée en plastique 10 ml', 6, 'Pipette jetable à usage unique', 'Utilisée pour mesurer des volumes liquides avec précision.'),
+('REF303', 1, null, "DVD éducatif sur l'électricité", 4, "DVD interactif d'enseignement", "Utilisé pour l'apprentissage des concepts électricité."),
+('REF404', 1, null, 'Multimètre Fluke 87V', 2, 'Multimètre numérique professionnel', 'Utilisé pour la mesure de tensions, courants, et résistances électriques.'),
+('REF505', 30, 3, 'Sulfate de cuivre', 3, 'Poudre cristalline bleue', 'Utilisé comme réactif chimique dans diverses expériences.'),
+('REF606', 1, null, 'Générateur de signaux Rohde & Schwarz', 2, 'Générateur de signaux RF haute fréquence', 'Utilisé pour la génération de signaux électriques complexes.'),
+('REF707', 1, null, 'Burette automatique en verre 50 ml', 6, "Burette en verre avec système d'étalonnage automatique", 'Utilisée pour doser des solutions avec précision.'),
+('REF808', 5, null, 'Pipette Pasteur en plastique 3 ml', 6, 'Pipette jetable en plastique', 'Utilisée pour le transfert de petits volumes liquides.'),
+('REF909', 1, null, 'Logiciel de modélisation moléculaire', 4, 'Logiciel de simulation chimique avancé', 'Utilisé pour la modélisation moléculaire et la simulation de réactions chimiques.'),
+('REF1010', 1,  null, 'Pissette en verre 500 ml', 6, 'Pissette en verre classique', 'Utilisée pour le transfert de liquides en laboratoire.');
 
 INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, commentaireMateriel, quantiteApproximative, datePeremption) VALUES
-(1, 1, '2023-10-26 10:00:00', 'Microscope en bon état', 1, NULL),
+(1, 1, '2023-10-26 10:00:00', 'Bon état', 1, NULL),
+(2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 2, '2024-10-26 11:00:00'),
+(2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 8, '2024-10-26 11:00:00'),
 (2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 10, '2024-10-26 11:00:00'),
-(3, 3, '2023-10-26 12:00:00', "Réactifs prêts à l'emploi", 5, NULL);
+(2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 10, '2024-10-26 11:00:00'),
+(2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 10, '2024-10-26 11:00:00'),
+(3, 3, '2023-10-26 12:00:00', null, 1, NULL) ;
 
 INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES
 (1),
@@ -105,12 +109,13 @@ INSERT INTO DEMANDE (idUtilisateur, descriptionDemande) VALUES
 INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES
 (1, 1, 2),
 (1, 2, 5),
-(2, 3, 10);
+(2, 2, 2);
 
 INSERT INTO ETATCOMMANDE (nomEtat) VALUES
 ('En attente'),
 ('En cours de traitement'),
-('Expédiée');
+('Expédiée'),
+('Livrée');
 
 INSERT INTO BONCOMMANDE (idDemande, idEtat, dateCommande) VALUES
 (1, 1, '2023-10-26 13:00:00'),

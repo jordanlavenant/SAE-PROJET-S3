@@ -80,7 +80,6 @@ begin
 end |
 delimiter ;
 
-
 delimiter |
 create or replace TRIGGER modificationStockLaboInsert after insert on BONCOMMANDE for each row
 BEGIN
@@ -98,7 +97,7 @@ BEGIN
 
     SELECT idEtat INTO etat FROM BONCOMMANDE WHERE idBonCommande = new.idBonCommande ;
 
-    if etat = 3 then 
+    if etat = 4 then 
         open produits ;
         while not fini do
             fetch produits into idM, qte ;

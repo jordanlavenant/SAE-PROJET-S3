@@ -85,6 +85,7 @@ create table MATERIEL(
     idFDS int references FDS,
     nomMateriel varchar(50) not null,
     idCategorie int not null references CATEGORIE,
+    seuilAlerte int,
     caracteristiquesComplementaires varchar(2000),
     informationsComplementairesEtSecurite varchar(2000),
     unique(nomMateriel),
