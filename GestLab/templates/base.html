@@ -21,7 +21,6 @@
 
                 <!-- admin -->
                 {% if session['utilisateur'][1] == 1 %} 
-                <li><a href="{{ url_for('alertes') }}">alertes</a></li>
                 <li><a href="{{ url_for('utilisateurs') }}">utilisateurs</a></li>
                 {% endif %}
 

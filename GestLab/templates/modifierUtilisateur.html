@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 <div id="ajouterUtilisateur-container">
-    <a href="{{ url_for('consulter_utilisateur') }}" id="btn-retour"><img src="{{ url_for('static',filename='./images/fleche-gauche.png') }}" alt="logo fleche gauche"></a>
+    <a id="btn-retour" href="{{ url_for('consulter_utilisateur') }}">retour</a>
     <div id="ajouterUtilisateur-box">
         <form class="form-ajoutUtilisateur" role="form" method="POST" action ="{{ url_for('modifier_utilisateur', id=id) }}">
             {{ AjouterUtilisateurForm.hidden_tag() }}
