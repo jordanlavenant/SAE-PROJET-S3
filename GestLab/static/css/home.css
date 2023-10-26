@@ -2,7 +2,7 @@
 
 .sous-title {
     text-align: center;
-    font-size: 30px;
+    font-size: 50px;
     margin: 20px 0;
     font-weight: 300;
     flex-basis: 100%;
@@ -63,11 +63,11 @@ transform: scale(1.1);
 .section-alertes a {
     text-decoration: underline;
     color: #384274;
-    font-size: 20px;
+    font-size: 35px;
 }
 
 .section-alertes p {
-    font-size: 25px;
+    font-size: 35px;
     color: #D35252;
     text-align: center;
 }
@@ -84,11 +84,11 @@ transform: scale(1.1);
 .section-demandes a {
     text-decoration: underline;
     color: #384274;
-    font-size: 20px;
+    font-size: 35px;
 }
 
 .section-demandes p {
-    font-size: 25px;
+    font-size: 35px;
     color: #FFC700;
     text-align: center;
 }
