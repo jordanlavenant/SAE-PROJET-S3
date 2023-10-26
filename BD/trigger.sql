@@ -1,5 +1,34 @@
 delimiter |
-create or replace TRIGGER emailUtilisateurUnique before insert on UTILISATEUR for each row
+create or replace TRIGGER modifsSurDemandeUpdate before update on DEMANDE for each row
+begin
+    declare presente int;
+    declare mes varchar(255);
+
+    SELECT COUNT(ifnull(DEMANDE.idDemande, 0)) into presente FROM DEMANDE JOIN BONCOMMANDE ON DEMANDE.idDemande = BONCOMMANDE.idDemande WHERE DEMANDE.idDemande = new.idDemande ;
+
+    if presente > 0 then
+        set mes = concat("La modification ne peut être effectuée sur la demande (id demande : ", new.idDemande,") car celle-ci est associée à un bon de commande.");
+        signal SQLSTATE '45000' set MESSAGE_TEXT = mes;
+    end if;
+end |
+delimiter ;
+
+
+delimiter |
+create or replace TRIGGER emailUtilisateurUniqueInsert before insert on UTILISATEUR for each row
+begin
+    declare compteur int;
+    declare mes varchar(255);
+    SELECT COUNT(*) INTO compteur from UTILISATEUR WHERE email = new.email;
+    if compteur > 0 then
+        set mes = concat("L'email ", new.email, " est déjà utilisé.");
+        signal SQLSTATE '45000' set MESSAGE_TEXT = mes;
+    end if;
+end |
+delimiter ;
+
+delimiter |
+create or replace TRIGGER emailUtilisateurUniqueUpdate before update on UTILISATEUR for each row
 begin
     declare compteur int;
     declare mes varchar(255);
@@ -14,50 +43,11 @@ delimiter ;
 
 
 delimiter |
-CREATE OR REPLACE function recupereSommeActuelle(id int) returns float
+CREATE OR REPLACE function recupereStockLabo(idM int) returns int
 BEGIN
-declare sommeActuelle float;
-SELECT prixTotalDemande INTO sommeActuelle FROM DEMANDE WHERE idDemande = id ;
-return sommeActuelle;
-end |
-delimiter ;
-
-delimiter |
-CREATE OR REPLACE function recuperePrixMateriel(idM int, idF int, qte int) returns float
-BEGIN
-declare prix float;
-SELECT prixMateriel INTO prix FROM MATERIELFOURNISSEUR WHERE idMateriel = idM and idFournisseur = idF ;
-return prix*qte;
-end |
-delimiter ;
-
-
-delimiter |
-create or replace TRIGGER insereSommeCommande after insert on AJOUTERMATERIEL for each row
-begin
-    declare mes varchar(255);
-    declare idM int ;
-    declare idF int ;
-    declare qte int ;
-    declare sommePrix float default 0;
-    declare prixIndividuel float;
-    declare fini boolean default false ;
-
-    declare produits cursor for 
-        SELECT idMateriel, idFournisseur, quantite FROM AJOUTERMATERIEL WHERE idDemande = new.idDemande;
-        
-    declare continue handler for not found set fini = true ;
-    open produits ;
-    while not fini do
-        fetch produits into idM, idF, qte ;
-        if not fini then
-            SELECT recuperePrixMateriel(idM, idF, qte) into prixIndividuel ;
-            SET sommePrix = sommePrix + prixIndividuel ;
-        end if ;
-    end while ;
-    close produits ;
-
-    UPDATE DEMANDE SET prixTotalDemande = sommePrix WHERE idDemande = new.idDemande ;
+declare stock float;
+SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM ;
+return stock;
 end |
 delimiter ;
 
@@ -90,5 +80,81 @@ begin
 end |
 delimiter ;
 
-SELECT demandesEnAttente() ;
 
+delimiter |
+CREATE OR REPLACE function recupereidMateriel(idMU int) returns int
+BEGIN
+declare idM int;
+SELECT idMateriel INTO idM FROM MATERIELUNIQUE WHERE idMaterielUnique = idMU ;
+return idM;
+end |
+delimiter ;
+
+
+delimiter |
+create or replace TRIGGER modificationStockLaboInsert after insert on BONCOMMANDE for each row
+BEGIN
+    declare idMU int ;
+    declare idM int ;
+    declare qte int ;
+    declare prixIndividuel float;
+    declare fini boolean default false ;
+    declare etat int ;
+    declare stock int ;
+       
+    declare produits cursor for 
+        SELECT idMaterielUnique FROM RESERVELABORATOIRE ;
+
+    declare continue handler for not found set fini = true ;
+
+    open produits ;
+    while not fini do
+        fetch produits into idMU ;
+        if not fini then
+            SELECT recupereidMateriel(idMU) into idM ;
+            SELECT recupereStockLabo(idM) into stock ;
+            if stock is null then
+                INSERT INTO STOCKLABORATOIRE VALUES (idM, qte) ;
+            else 
+                UPDATE STOCKLABORATOIRE set quantiteLaboratoire = stock + qte WHERE idMateriel = idM ;
+            end if ;
+        end if ;
+    end while ;
+    close produits ;
+end |
+delimiter ;
+
+delimiter |
+create or replace TRIGGER modificationStockLaboUpdate after update on BONCOMMANDE for each row
+BEGIN
+    declare idM int ;
+    declare qte int ;
+    declare prixIndividuel float;
+    declare fini boolean default false ;
+    declare etat int ;
+    declare stock int ;
+       
+    declare produits cursor for 
+        SELECT idMateriel, quantite FROM AJOUTERMATERIEL WHERE idDemande = new.idDemande;
+
+    declare continue handler for not found set fini = true ;
+
+    SELECT idEtat INTO etat FROM BONCOMMANDE WHERE idBonCommande = new.idBonCommande ;
+
+    if etat = 3 then 
+        open produits ;
+        while not fini do
+            fetch produits into idM, qte ;
+            if not fini then
+                SELECT recupereStockLabo(idM) into stock ;
+                if stock is null then
+                    INSERT INTO STOCKLABORATOIRE VALUES (idM, qte) ;
+                else 
+                    UPDATE STOCKLABORATOIRE set quantiteLaboratoire = stock + qte WHERE idMateriel = idM ;
+                end if ;
+            end if ;
+        end while ;
+        close produits ;
+    end if;
+end |
+delimiter ;
