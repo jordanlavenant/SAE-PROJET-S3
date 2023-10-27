@@ -1,7 +1,7 @@
 import random
 import string
 from sqlalchemy import text
-from connexionPythonSQL import *
+from .connexionPythonSQL import *
 from hashlib import sha256
 from datetime import datetime, timedelta
 import random
@@ -123,6 +123,23 @@ def ajout_administrateur(cnx, nom, prenom, email):
         print("erreur d'ajout de l'utilisateur")
         return False
 
+def ajout_laborantin(cnx, nom, prenom, email):
+    
+    try:
+        idStatut = 4
+        mdpRandom = generer_mot_de_passe()
+        # envoyer mail avec mdpRandom
+        print(mdpRandom)
+        mdphash = hasher_mdp(mdpRandom)
+        cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
+        cnx.commit()
+        print("utilisateur ajouté")
+        return True
+    except:
+        print("erreur d'ajout de l'utilisateur")
+        return False
+    
+
 #marche BD 5
 def get_nom_whith_email(cnx, email):
     result = cnx.execute(text("select nom from UTILISATEUR where email = '" + email + "';"))
@@ -161,7 +178,6 @@ def modification_droit_utilisateur(cnx, idut, idSt):
         print("erreur de mise a jour du droit")
         raise
 
-modification_droit_utilisateur(cnx, 6, 2)
 #marche BD 5
 def get_password_hashed_with_email(cnx, email):
     result = cnx.execute(text("select motDePasse from UTILISATEUR where email = '" + email + "';"))
@@ -219,7 +235,6 @@ def get_user_with_statut(cnx, nomStatut):
     liste = []
     result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where nomStatut = '" + str(nomStatut) + "';"))
     for row in result:
-        print(row[0],row[2],row[3])
         liste.append((row[0],row[2],row[3]))
     return liste
 
@@ -257,22 +272,21 @@ def get_categories(cnx):
     return liste
 
 # besoin d'aide >>>>> Anna
-def get_nb_alert(cnx):
-    try:
-        # Calculer la date qui est 1 mois à partir de maintenant
-        today = datetime.now()
-        ten_days_from_now = datetime.now() + timedelta(days=60)
-        # Exécuter la requête SQL
-        result = cnx.execute(
-            text(
-                "SELECT COUNT(*) FROM MATERIEL NATURAL JOIN MATERIELUNIQUE WHERE dateReception < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
-        count = result.first()[0]
-        print(count)
-        return count
-    except Exception as e:
-        print("Erreur lors de la récupération du nombre d'alertes :", str(e))
-        raise
-get_nb_alert(cnx)
+# def get_nb_alert(cnx):
+#     try:
+#         # Calculer la date qui est 1 mois à partir de maintenant
+#         today = datetime.now()
+#         ten_days_from_now = datetime.now() + timedelta(days=60)
+#         # Exécuter la requête SQL
+#         result = cnx.execute(
+#             text(
+#                 "SELECT COUNT(*) FROM MATERIEL NATURAL JOIN MATERIELUNIQUE WHERE dateReception < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
+#         count = result.first()[0]
+#         print(count)
+#         return count
+#     except Exception as e:
+#         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
+#         raise
 
 # def get_info_materiel_alert(cnx):
 #     try:
@@ -291,15 +305,15 @@ get_nb_alert(cnx)
 #         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
 #         raise
 
-# def get_nb_demande(cnx):
-#     try:
-#         result = cnx.execute(text("SELECT count(*) FROM DEMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ETATCOMMANDE WHERE nomEtat = 'En attente';"))
-#         count = result.first()[0]
-#         print(count)
-#         return count
-#     except Exception as e:
-#         print("Erreur lors de la récupération du nombre de demandes :", str(e))
-#         raise
+def get_nb_demande(cnx):
+    try:
+        result = cnx.execute(text("SELECT count(*) FROM DEMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ETATCOMMANDE WHERE nomEtat = 'En attente';"))
+        count = result.first()[0]
+        print(count)
+        return count
+    except Exception as e:
+        print("Erreur lors de la récupération du nombre de demandes :", str(e))
+        raise
 
 
 #marhce BD 5
@@ -323,35 +337,61 @@ def get_all_information_to_Materiel_with_id(cnx, id):
         print("erreur de l'id")
         raise
 
-
-
-
-def update_all_information_utillisateur_with_id(cnx,id,nom,prenom,email,idStatut):
+def get_all_information_to_Materiel(cnx):
     try:
-        cnx.execute(text( "update UTILISATEUR set nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "', idStatut = '" + str(idStatut) + "' where idUtilisateur = " + str(id) + ";"))
+        list = []
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de l'id")
+        raise
+
+#marche BD 5
+def get_all_information_to_Materiel_cat_com(cnx):
+    try:
+        list = []
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite from MATERIEL  NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de l'id")
+        raise
+
+#marche BD 5
+def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email):
+    try:
+        cnx.execute(text("update UTILISATEUR set idStatut = '" + str(idStatut) + "', nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "' where idUtilisateur = '" + str(id) + "';"))
         cnx.commit()
+        print("utilisateur mis a jour")
         return True
     except:
         print("erreur de l'id")
         return False
 
+
+#marche BD 5
 def recherche_all_in_utilisateur_with_search(cnx, search):
     try:
         list = []
         result = cnx.execute(text("select * from UTILISATEUR where nom like '%" + search + "%'" or " prenom like '%" + search + "%' ;"))
         for row in result:
+            print(row)
             list.append(row)
         return (list, len(list))
     except:
         print("erreur de recherche")
         raise
 
-# recherche_all_in_utilisateur_with_search(cnx, "jo")
-
+#marche BD 5
 def recherche_all_in_materiel_with_search(cnx, search):
     try:
         list = []
-        result = cnx.execute(text("select * from MATERIEL where nomMateriel like '%" + search + "%' ;"))
+        result = cnx.execute(text("select idMateriel,nomMateriel,referenceMateriel,idFDS,idFDS,seuilAlerte,caracteristiquesComplementaires,caracteristiquesComplementaires from MATERIEL where nomMateriel like '%" + search + "%' ;"))
         for row in result:
             print(row)
             list.append(row)
@@ -360,3 +400,28 @@ def recherche_all_in_materiel_with_search(cnx, search):
         print("erreur de recherche")
         raise
 
+
+def get_all_info_from_domaine(cnx):
+    try:
+        list = []
+        result = cnx.execute(text("select * from DOMAINE ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de l'id")
+        raise
+
+def get_info_demande(cnx):
+    try:
+        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
+        info_commande = []
+        for row in result:
+            info_commande.append(row)
+        return  info_commande
+    except Exception as e:
+        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+        raise
+
+get_info_demande(cnx)

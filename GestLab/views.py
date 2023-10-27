@@ -7,7 +7,7 @@ from wtforms import StringField, HiddenField, FileField, SubmitField, SelectFiel
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
-from .requette import *
+from .requetebd5 import *
 from .connexionPythonSQL import *
 
 
@@ -270,8 +270,19 @@ def modifier_utilisateur(id):
 def demandes():
     return render_template(
     "demandes.html",
+    nb_demande = get_nb_demande(cnx),
+    info_demande = get_info_demande(cnx),
     title="Demandes",
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
+    )
+
+@app.route("/bonDeCommande/<int:idDemmande>")
+def bonDeCommande(idDemmande):
+    return render_template(
+        "bonDeCommande.html",
+        idDemmande = idDemmande,
+        title = "Bon De Commande",
+        chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
     )
 
 @app.route("/inventaire/")
