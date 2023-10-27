@@ -4,6 +4,7 @@ INSERT INTO UTILISATEUR (idStatut, nom, prenom, email, motDePasse) VALUES
 (3, 'Dupont', 'Dupond', 'admin@example.com', 'mdp');
 
 UPDATE UTILISATEUR SET email = 'admin@example.com' WHERE idUtilisateur = 2 ;
+UPDATE UTILISATEUR SET nom = 'Yoyoyo' WHERE idUtilisateur = 2 ;
 
 --modifsSurDemande
 
