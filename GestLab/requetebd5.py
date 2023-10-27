@@ -425,4 +425,3 @@ def get_info_demande(cnx):
         raise
 
 get_info_demande(cnx)
-
