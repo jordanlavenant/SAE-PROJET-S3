@@ -265,3 +265,33 @@ BEGIN
     close curseur;
 end |
 delimiter ;
+
+delimiter |
+CREATE OR REPLACE TRIGGER modificationStockLaboDelete AFTER DELETE ON RESERVELABORATOIRE FOR EACH ROW
+BEGIN
+    declare idM INT;
+    declare stock INT;
+    declare fini BOOLEAN default false;
+
+    declare curseur cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMaterielUnique = old.idMaterielUnique;
+
+    declare continue handler for not found set fini = true ;
+
+    open curseur;
+
+    boucle: loop
+        fetch curseur into idM;
+        if fini then
+            LEAVE boucle;
+        end if;
+
+        SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM;
+
+        if stock - 1 > 0 then
+            UPDATE STOCKLABORATOIRE SET quantiteLaboratoire = stock - 1 WHERE idMateriel = idM;
+        end if;
+    end loop;
+    close curseur;
+end |
+delimiter ;
