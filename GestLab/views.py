@@ -425,3 +425,4 @@ def ajouter_materiel():
     "ajouterMateriel.html",
     title="Ajouter un Matériel",
     chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    )
