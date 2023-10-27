@@ -1,0 +1,135 @@
+.utilisateur-container-overall {
+    margin: 15vh 5vw;
+}
+
+.header-container {
+    margin: 5vh 10vw;
+}
+
+.search-content {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.form-control {
+    flex-basis: 80%;
+    width: calc(100% - 60px);
+    height: 50px;
+    border-radius: 20px;
+    border: none;
+    padding: 0 30px;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+#btn-search {
+    flex-basis: 20%;
+    max-height: 50px;
+    color: #fff;
+    background-color: #384274;
+    padding: 0px 0px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-search:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#btn-retour {
+    color: #fff;
+    background-color: #384274;
+    padding: 10px 20px;
+    margin: 10px 0px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-retour:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.filter-container {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    margin-bottom: 25px;
+    align-items: center;
+}
+
+.filter-container > p {
+    color: #384274;
+    font-size: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+#categorie-select {
+    cursor: pointer;
+    color: #fff;
+    background-color: #384274;
+    border-radius: 20px;
+    font-size: 20px;
+    padding: 10px 60px;
+    border: none;
+}
+
+/* info utilisateur */
+
+.container-info-utilisateur {
+    margin: 5vh;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.sous-container-info-utilisateur {
+    flex-basis: 40%;
+    margin-bottom: 5vh;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 50px;
+    align-items: center;
+    justify-content: space-between;
+    border: 4px solid #384274;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.sous-container-info-utilisateur p {
+    margin: 0;
+    padding: 0;
+    font-size: 40px;
+    font-weight: bold;
+    color: #384274;
+}
+
+.sous-container-info-utilisateur button {
+    color: #fff;
+    background-color: #384274;
+    padding: 10px 20px;
+    margin: 10px 0px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+.sous-container-info-utilisateur button:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    cursor: pointer;
+}

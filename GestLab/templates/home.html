@@ -10,29 +10,10 @@
     
         <!-- admin -->
         {% if session['utilisateur'][1] == 1 %}
-        <section class="section-alertes">
-            {% if alertes|int > 0 %}
-                <img src="../static/images/attention-rouge.png" alt="logo alertes">
-                {% if alertes|int == 1 %}
-                <p>{{ alertes }} Alerte</p>
-                {% else %}
-                <p>{{ alertes }} Alertes</p>
-                {% endif %}
-                <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
-            {% endif %}
-        </section>
 
         <!-- sous titre -->
         <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
 
-        <a href="{{ url_for('alertes') }}">
-            <section class="carte-lien">
-                <h2>ALERTES</h2>
-                <p>quantité</p>
-                <p>étalonnages</p>
-                <p>péremptions</p>
-            </section>
-        </a>
         <a href="{{ url_for('utilisateurs') }}">
             <section class="carte-lien">
                 <h2>UTILISATEUR</h2>
@@ -67,7 +48,7 @@
         </a>
         <a href="{{ url_for('commentaire') }}">
             <section class="carte-lien">
-                <h2>ENVOYER UN COMMENTAIRE</h2>
+                <h2>SIGNALER DES ALERTES</h2>
                 <p>aux gestionnaires</p>
                 <p>à l'administration</p>
             </section>
@@ -135,7 +116,44 @@
             </section>
         </a>
         {% endif %}
+
+
+        <!-- laborantin -->
+        {% if session['utilisateur'][1] == 4 %}
+        <!-- sous titre -->
+        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
+
+        <a href="{{ url_for('demander') }}">
+            <section class="carte-lien">
+                <h2>DEMANDER</h2>
+                <p>produits</p>
+                <p>accessoires</p>
+                <p>verrerie</p>
+                <p>Matériel</p>
+                <p>médias</p>
+                <p>...</p>
+            </section>
+        </a>
+        <a href="{{ url_for('ajouter_materiel') }}">
+            <section class="carte-lien">
+                <h2>AJOUTER</h2>
+                <p>produits</p>
+                <p>accessoires</p>
+                <p>verrerie</p>
+                <p>Matériel</p>
+                <p>médias</p>
+                <p>...</p>
+            </section>
+        </a>
+        <a href="{{ url_for('inventaire') }}">
+            <section class="carte-lien">
+                <h2>INVENTAIRE</h2>
+                <p>consulter</p>
+            </section>
+        </a>
+        {% endif %}
     </div>
+
     
     <!-- si l'utilisateur n'est pas connecter -->
     {% else %}
