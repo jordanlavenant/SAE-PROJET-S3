@@ -291,41 +291,17 @@ def get_nb_demande(cnx):
     except Exception as e:
         print("Erreur lors de la récupération du nombre de demandes :", str(e))
         raise
-
-        
-def get_nb_alert(cnx):
+    
+def get_info_demande(cnx):
     try:
-        # Calculer la date qui est 1 mois à partir de maintenant
-        today = datetime.now()
-        ten_days_from_now = datetime.now() + timedelta(days=10)
-        # Exécuter la requête SQL
-        result = cnx.execute(
-            text(
-                "SELECT COUNT(*) FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
-        count = result.first()[0]
-        print(count)
-        return count
-    except Exception as e:
-        print("Erreur lors de la récupération du nombre d'alertes :", str(e))
-        raise
-
-def get_info_materiel_alert(cnx):
-    try:
-        # Calculer la date qui est 1 mois à partir de maintenant
-        today = datetime.now()
-        ten_days_from_now = datetime.now() + timedelta(days=10)
-        # Exécuter la requête SQL
-        result = cnx.execute(
-            text(
-                "SELECT nomMateriel, idMateriel FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
-        liste_nom = [] 
+        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
+        info_commande = []
         for row in result:
-            liste_nom.append((row[0], row[1]))
-        return liste_nom
+            info_commande.append(row)
+        return  info_commande
     except Exception as e:
-        print("Erreur lors de la récupération du nombre d'alertes :", str(e))
+        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
-
 
 def ajout_professeur(cnx, nom, prenom, email, idStatut = 2):
     
@@ -372,16 +348,6 @@ def ajout_laborantin(cnx, nom, prenom, email, idStatut = 4):
         print("erreur d'ajout de l'utilisateur")
         return False
 
-def generer_mot_de_passe():
-    caracteres = string.ascii_letters + string.digits
-    mot_de_passe = ''.join(random.choice(caracteres) for _ in range(10))
-
-    return mot_de_passe
-
-def hasher_mdp(mdp):
-    m = sha256()
-    m.update(mdp.encode("utf-8"))
-    return m.hexdigest()
 
 def get_all_information_utilisateur_with_id(cnx,id):
     try:

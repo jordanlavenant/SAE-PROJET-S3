@@ -91,6 +91,7 @@ a {
     flex-direction: row;
     padding: 0;
     background-color: #384274;
+    border-left: 15px #2EDD94 solid;
 }
 
 #img-item {
@@ -102,8 +103,8 @@ a {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex-basis: 67%;
-    padding: 1% 5% 1% 10%;
+    flex-basis: 100%;
+    padding: 1% 5%;
 }
 
 .item-properties > h2 {
@@ -140,8 +141,8 @@ a {
 #btn-redirect-item {
     color: #384274;
     background-color: white;
-    padding: 14px 20px;
-    border-radius: 20px;
+    padding: 14px 40px;
+    border-radius: 25px;
     font-size: 20px;
     border: none;
     transition: 0.2s;
