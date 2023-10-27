@@ -1,7 +1,7 @@
 import random
 import string
 from sqlalchemy import text
-from .connexionPythonSQL import *
+from connexionPythonSQL import *
 from hashlib import sha256
 from datetime import datetime, timedelta
 import random
@@ -305,15 +305,15 @@ def get_categories(cnx):
 #         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
 #         raise
 
-def get_nb_demande(cnx):
-    try:
-        result = cnx.execute(text("SELECT count(*) FROM DEMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ETATCOMMANDE WHERE nomEtat = 'En attente';"))
-        count = result.first()[0]
-        print(count)
-        return count
-    except Exception as e:
-        print("Erreur lors de la récupération du nombre de demandes :", str(e))
-        raise
+# def get_nb_demande(cnx):
+#     try:
+#         result = cnx.execute(text("SELECT count(*) FROM DEMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ETATCOMMANDE WHERE nomEtat = 'En attente';"))
+#         count = result.first()[0]
+#         print(count)
+#         return count
+#     except Exception as e:
+#         print("Erreur lors de la récupération du nombre de demandes :", str(e))
+#         raise
 
 
 #marhce BD 5
@@ -415,12 +415,12 @@ def get_all_info_from_domaine(cnx):
 
 def get_info_demande(cnx):
     try:
-        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
+        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
         info_commande = []
         for row in result:
             info_commande.append(row)
         return  info_commande
-    except Exception as e:
+    except:
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
 

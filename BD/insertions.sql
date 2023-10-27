@@ -1,125 +1,137 @@
+INSERT INTO DOMAINE (nomDomaine) VALUES
+('Appareillage'),
+('Électricité'),
+('Matériel de laboratoire'),
+('Médias'),
+('Produits chimiques'),
+('Verrerie et associés');
 
+INSERT INTO CATEGORIE (idDomaine, nomCategorie) VALUES
+(1, 'Observation'), 
+(1, 'Mesures'), 
+(1, 'ExAO'), 
+(1, 'Multimédia'), 
+(1, 'Expérimentation'), 
+(1, 'Divers'),
+(6, 'Verrerie'), 
+(6, 'Associés'),
+(5, 'Produits organiques'),
+(5, 'Produits minéraux'),
+(5, 'Enzymes'),
+(5, 'Colorants'),
+(5, 'Entretien'),
+(5, 'Autres'),
+(3, 'Appareils de labo'),
+(3, 'Sécurité'),
+(3, 'Fournitures'),
+(3, 'Mobilier'),
+(3, 'Divers'),
+(4, 'Logiciels'),
+(4, 'DVD/VHS'),
+(4, 'Manuels scolaires'),
+(4, 'Livres scientifiques'),
+(4, 'Cartes/Posters'),
+(4, 'Divers'),
+(2, 'Générateurs'),
+(2, 'Mesures'),
+(2, 'Récepteurs'),
+(2, 'Connectique'),
+(2, 'Métaux'),
+(2, 'Divers');
 
-INSERT INTO STATUT (idStatut, nomStatut, consultation, reservation, commander, creationUilisateur, modificationUtilisateur) VALUES
-(1, 'Administrateur', true, true, true, true, true),
-(2, 'Professeur/Laborantin', true, true, false, true, true),
-(3, 'Gestionnaire', true, false, true, true, true);
+INSERT INTO STATUT (idStatut, nomStatut) VALUES
+(1, 'Administrateur'),
+(2, 'Professseur'),
+(3, 'Laborantin'),
+(4, 'Gestionnaire');
 
-INSERT INTO UTILISATEUR (idStatut, nom, prenom, email, motDePasse) VALUES 
-(1, 'John', 'Doe', 'john.doe@example.com', 'motdepasse1'),
-(2, 'Jane', 'Smith', 'jane.smith@example.com', 'motdepasse2'),
-(3, 'Alice', 'Johnson', 'alice.johnson@example.com', 'motdepasse3');
+INSERT INTO UTILISATEUR (idStatut, nom, prenom, email, motDePasse) VALUES
+(1, 'Admin', 'Admin', 'admin@example.com', 'motdepasseadmin'),
+(2, 'Utilisateur', 'Standard', 'user@example.com', 'motdepasseuser');
 
-INSERT INTO DOMAINE (idDomaine, nomDomaine) VALUES
-(1, 'Physique'),
-(2, 'Chimie');
+INSERT INTO RISQUE (nomRisque) VALUES
+('Toxicité'),
+('Feu'),
+('Radiation');
 
-INSERT INTO CATEGORIE (idCategorie, idDomaine, nomCategorie) VALUES
-(1, 1, 'Matériel électrique'),
-(2, 2, 'Produits chimiques'),
-(3, 1, 'Appareillage'),
-(4, 2, 'Matériel de laboratoire'),
-(5, 2, 'Accessoires associés au matériel de laboratoire'),
-(6, 1, 'Médias'),
-(7, 2, 'Verrerie');
-
-INSERT INTO RISQUE (idRisque, nomRisque, pictogramme) VALUES
-(1, 'Toxicité', null),
-(2, 'Feu', null),
-(3, 'Radiation', null);
-
-INSERT INTO FDS (idFDS, nomFDS) VALUES
-(1, 'FDS-001'),
-(2, 'FDS-002'),
-(3, 'FDS-003');
+INSERT INTO FDS (nomFDS) VALUES
+('FDS 1'),
+('FDS 2'),
+('FDS 3');
 
 INSERT INTO RISQUES (idFDS, idRisque) VALUES
 (1, 1),
 (2, 2),
 (3, 3);
 
-INSERT INTO MATERIEL (idMateriel, idFDS, nomMateriel) VALUES
-(1, 1,'Disjoncteur électrique'),
-(2, 1, 'Acide sulfurique'),
-(3, null, 'Oscilloscope'),
-(4, null, 'Érlenmeyer en verre'),
-(5, null, 'Pipette graduée'),
-(6, null, "DVD éducatif sur l'électricité"),
-(7, null, 'Becher en verre'),
-(8, null, 'Multimètre numérique'),
-(9, 2, 'Hydroxyde de sodium (Soude caustique)'),
-(10, null, 'Générateur de signaux'),
-(11, null, 'Burette en verre'),
-(12, null, 'Pipette Pasteur en plastique'),
-(13, null, 'CD-ROM de simulation de réactions chimiques'),
-(14, null, 'Pissette en verre');
+INSERT INTO RANGEMENT (endroit, position) VALUES
+('Étagère 1', 'haut'),
+('Étagère 2', 'bas'),
+('Armoire 1', 'gauche');
 
-INSERT INTO CATEGORIESMATERIEL (idMateriel, idCategorie) VALUES
-(1, 1),
-(8, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7),
-(9, 2),
-(10, 3),
-(11, 4),
-(12, 5),
-(13, 6),
-(14, 7);
+INSERT INTO MATERIEL (referenceMateriel, seuilAlerte, idFDS, nomMateriel, idCategorie, caracteristiquesComplementaires, informationsComplementairesEtSecurite) VALUES
+('REF123', 1, 1, 'Microscope électronique', 1, 'Microscope électronique haute résolution', "Utilisé pour observer des échantillons à l'échelle microscopique."),
+('REF456', 10, 2, 'Acide chlorhydrique', 5, "Solution d'acide chlorhydrique à 37%", 'Utilisé comme réactif de laboratoire.'),
+('REF789', 1, null, 'Oscilloscope Tektronix TBS1052B', 1, 'Oscilloscope numérique à deux canaux', "Utilisé pour l'analyse de signaux électriques."),
+('REF101', 1, null, 'Bécher en verre de 250 ml', 6, 'Bécher en verre borosilicaté', "Utilisé pour contenir des liquides en laboratoire."),
+('REF202', 15, null, 'Pipette graduée en plastique 10 ml', 6, 'Pipette jetable à usage unique', 'Utilisée pour mesurer des volumes liquides avec précision.'),
+('REF303', 1, null, "DVD éducatif sur l'électricité", 4, "DVD interactif d'enseignement", "Utilisé pour l'apprentissage des concepts électricité."),
+('REF404', 1, null, 'Multimètre Fluke 87V', 2, 'Multimètre numérique professionnel', 'Utilisé pour la mesure de tensions, courants, et résistances électriques.'),
+('REF505', 30, 3, 'Sulfate de cuivre', 3, 'Poudre cristalline bleue', 'Utilisé comme réactif chimique dans diverses expériences.'),
+('REF606', 1, null, 'Générateur de signaux Rohde & Schwarz', 2, 'Générateur de signaux RF haute fréquence', 'Utilisé pour la génération de signaux électriques complexes.'),
+('REF707', 1, null, 'Burette automatique en verre 50 ml', 6, "Burette en verre avec système d'étalonnage automatique", 'Utilisée pour doser des solutions avec précision.'),
+('REF808', 5, null, 'Pipette Pasteur en plastique 3 ml', 6, 'Pipette jetable en plastique', 'Utilisée pour le transfert de petits volumes liquides.'),
+('REF909', 1, null, 'Logiciel de modélisation moléculaire', 4, 'Logiciel de simulation chimique avancé', 'Utilisé pour la modélisation moléculaire et la simulation de réactions chimiques.'),
+('REF1010', 1,  null, 'Pissette en verre 500 ml', 6, 'Pissette en verre classique', 'Utilisée pour le transfert de liquides en laboratoire.');
 
-INSERT INTO DATEPEREMPTION (idMateriel, datePeremption) VALUES
-(2, '2023-12-31'),
-(3, '2024-06-30');
-
-INSERT INTO STOCKLABORATOIRE (idStock, idMateriel, quantiteLaboratoire) VALUES
-(1, 1, 50),
-(2, 2, 100),
-(3, 3, 10);
+INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, commentaireMateriel, quantiteApproximative, datePeremption) VALUES
+(1, 1, '2023-10-26 10:00:00', 'Bon état', 1, NULL),
+(2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 2, '2024-10-26 11:00:00'),
+(2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 10, '2024-10-26 11:00:00'),
+(3, 3, '2023-10-26 12:00:00', null, 1, NULL) ;
 
 INSERT INTO FOURNISSEUR (nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur) VALUES
-('Fournisseur A', '123 Rue Fournisseur', 'fournisseur.a@example.com', '1234567890'),
-('Fournisseur B', '456 Rue Fournisseur', 'fournisseur.b@example.com', '9876543210'),
-('Fournisseur C', '789 Rue Fournisseur', 'fournisseur.c@example.com', '5555555555');
+('Fournisseur 1', 'Adresse 1', 'fournisseur1@example.com', '1234567890'),
+('Fournisseur 2', 'Adresse 2', 'fournisseur2@example.com', '9876543210');
 
-INSERT INTO MATERIELFOURNISSEUR (idMateriel, idFournisseur, prixMateriel, stockFournisseur) VALUES
-(1, 1, 800.0, 100),
-(2, 2, 50.0, 200),
-(3, 3, 1200.0, 20),
-(4, 3, 900.0, 50),
-(5, 1, 60.0, 150),
-(6, 2, 1300.0, 30) ;
+INSERT INTO DEMANDE (idUtilisateur, descriptionDemande) VALUES
+(2, 'Demande 1 de l''utilisateur standard'),
+(2, 'Demande 2 de l''utilisateur standard');
 
-INSERT INTO DEMANDE (idDemande, idUtilisateur, prixTotalDemande) VALUES
-(1, 1, 0),
-(2, 2, 0);
+INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES
+(1, 1, 2),
+(1, 2, 5),
+(2, 2, 2);
 
-INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, idFournisseur, quantite) VALUES
-(1, 1, 1, 10),
-(1, 2, 2, 5),
-(2, 3, 3, 2);
+INSERT INTO ETATCOMMANDE (nomEtat) VALUES
+('En attente'),
+('En cours de traitement'),
+('Expédiée'),
+('Livrée');
 
-INSERT INTO ETATCOMMANDE (idEtat, nomEtat) VALUES
-(1, 'En attente'),
-(2, 'En cours'),
-(3, 'Terminée');
-
-INSERT INTO BONCOMMANDE (idBonCommande, idDemande, idEtat, dateCommande) VALUES
-(1, 1, 1, '2023-10-15 10:00:00'),
-(3, 1, 1, '2023-10-16 10:00:00'),
-(2, 2, 2,'2023-10-16 11:30:00');
+INSERT INTO BONCOMMANDE (idDemande, idEtat, dateCommande) VALUES
+(1, 1, '2023-10-26 13:00:00'),
+(2, 2, '2023-10-26 14:00:00');
 
 INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
-(1, 'Entrepôt A', 12345),
-(2, 'Entrepôt B', 54321);
+(1, 'Entrepôt 1', 12345),
+(2, 'Entrepôt 2', 67890);
 
 INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
-(1, 1, 'Facture-001.pdf'),
-(2, 2, 'Facture-002.pdf');
+(1, 1, 'Facture 1'),
+(2, 2, 'Facture 2');
 
-INSERT INTO RECHERCHEMATERIELS(materielRecherche) 
+INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES
+(2),
+(3);
+
+INSERT INTO TYPESALERTES (idAlerte, descriptionAlerte) VALUES 
+(1, "Date de péremption dépassée"),
+(2, "Date de péremption dépassée dans 10 jours"),
+(3, "Quantité en dessous du seuil minimal"),
+(4, "Quantité de l'objet à 0") ;
+
+INSERT INTO RECHERCHEMATERIELS (materielRecherche) 
 VALUES  ('Microscope'),
         ('Réactif chimique'),
         ('Tubes à essai'),

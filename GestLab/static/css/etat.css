@@ -3,6 +3,29 @@ p {
     padding: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
+#btn-back {
+    margin-left: 10vw;
+    color: white;
+    background-color: #384274;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-back:hover {
+    color: white;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
 .state-container {
     display: flex;
     flex-direction: row;
@@ -11,15 +34,10 @@ p {
 }
 
 .item-card {
-    flex-basis: 20%;
+    flex-basis: 40%;
     background-color: #384274;
     padding: 0;
-}
-
-#img-item {
-    object-fit: cover;
-    max-width: 450px;
-    aspect-ratio: 1/1;
+    border-left: 15px solid #2EDD94;
 }
 
 .item-properties {
@@ -38,14 +56,8 @@ p {
     justify-content: space-between;
     color: white;
     font-size: 30px;
-    /* padding: 1% 5% 1% 10%; */
 }
 
 .item-info {
-    flex-basis: 80%;
+    flex-basis: 60%;
 }
-
-
-
-
-
