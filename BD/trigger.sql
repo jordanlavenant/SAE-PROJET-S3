@@ -190,3 +190,78 @@ BEGIN
     call alertesQuantiteSeuil() ;
 end |
 delimiter ;
+
+delimiter |
+create or replace TRIGGER empecheSuppressionsStockLaboratoire before delete on STOCKLABORATOIRE for each row
+begin
+    declare mes varchar(255);
+
+    set mes = concat("Les suppressions ne sont pas autorisés sur la table STOCKLABORATOIRE. Si un objet n'est plus en stock, veuillez mettre sa quantité à 0.");
+    signal SQLSTATE '45000' set MESSAGE_TEXT = mes;
+end |
+delimiter ;
+
+
+delimiter |
+CREATE OR REPLACE TRIGGER modificationStockLaboInsert AFTER INSERT ON RESERVELABORATOIRE FOR EACH ROW
+BEGIN
+    declare idM INT;
+    declare stock INT;
+    declare fini BOOLEAN default false;
+
+    declare curseur cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMaterielUnique = new.idMaterielUnique;
+
+    declare continue handler for not found set fini = true ;
+
+    open curseur;
+
+    boucle: loop
+        fetch curseur into idM;
+        if fini then
+            LEAVE boucle;
+        end if;
+
+        SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM;
+
+        if stock is null then
+            INSERT INTO STOCKLABORATOIRE (idMateriel, quantiteLaboratoire) VALUES (idM, 1);
+        else
+            UPDATE STOCKLABORATOIRE SET quantiteLaboratoire = stock + 1 WHERE idMateriel = idM;
+        end if;
+    end loop;
+    close curseur;
+end |
+delimiter ;
+
+delimiter |
+CREATE OR REPLACE TRIGGER modificationStockLaboUpdate AFTER UPDATE ON RESERVELABORATOIRE FOR EACH ROW
+BEGIN
+    declare idM INT;
+    declare stock INT;
+    declare fini BOOLEAN default false;
+
+    declare curseur cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMaterielUnique = new.idMaterielUnique;
+
+    declare continue handler for not found set fini = true ;
+
+    open curseur;
+
+    boucle: loop
+        fetch curseur into idM;
+        if fini then
+            LEAVE boucle;
+        end if;
+
+        SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM;
+
+        if stock is null then
+            INSERT INTO STOCKLABORATOIRE (idMateriel, quantiteLaboratoire) VALUES (idM, 1);
+        else
+            UPDATE STOCKLABORATOIRE SET quantiteLaboratoire = stock + 1 WHERE idMateriel = idM;
+        end if;
+    end loop;
+    close curseur;
+end |
+delimiter ;

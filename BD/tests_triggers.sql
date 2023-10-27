@@ -11,4 +11,7 @@ UPDATE UTILISATEUR SET nom = 'Yoyoyo' WHERE idUtilisateur = 2 ;
 UPDATE DEMANDE SET descriptionDemande = 'blablabla' WHERE idDemande = 2 ;
 
 --modificationStockLabo
-UPDATE BONCOMMANDE SET idEtat = 3 WHERE idDemande = 2 ;
+UPDATE RESERVELABORATOIRE SET idMaterielUnique = 1 WHERE idReserve = 1 ;
+
+--empecheSuppressionsStockLaboratoire
+DELETE FROM STOCKLABORATOIRE where idStock = 1 ;

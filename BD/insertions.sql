@@ -91,6 +91,7 @@ INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, commentaireM
 (3, 3, '2023-10-26 12:00:00', null, 1, NULL),
 (2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 10, '2023-10-30') ;
 
+--éviter les insertions manuelles sur stocklaboratoire, exceptionnel ici pour les tests sur les alertes
 INSERT INTO STOCKLABORATOIRE(idMateriel, quantiteLaboratoire) VALUES
 (3, 1),
 (1, 0) ;
