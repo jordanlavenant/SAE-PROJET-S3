@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static',filename='./css/etat.css') }}">
+{% endblock %}
+{% block content %}
+<a id="btn-back" href="{{ url_for('inventaire') }}">Retour</a>
+<div class="state-container">
+    <div class="item-card">
+        <div class="item-properties">
+            <h2>{{ item_properties[1] }}</h2>
+            <div class="quantite-container">
+                <p class="quantite-label">Quantité : </p>
+                <p class="quantite">{{ item_properties[6] }} unités</p>
+            </div>
+            <div class="categorie-container">
+                <p class="categorie-label">Catégorie : </p>
+                <p class="quantite">{{ item_properties[3] }}</p>
+            </div>
+            <div class="domaine-container">
+                <p class="quantite-label">Domaine : </p>
+                <p class="quantite">{{ item_properties[5] }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="item-info"></div>
+</div>
+{% endblock %}

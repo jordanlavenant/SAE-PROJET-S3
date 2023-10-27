@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static',filename='./css/inventaire.css') }}">
+{% endblock %}
+{% block content %}
+<div class="inventaire-container-overall">
+    <div class="header-container">
+        <div class="search-content">
+            <input type="text" id="search-bar" placeholder="matériel, produits, ustensibles">
+            <button id="btn-search">Rechercher</button>
+        </div>
+        <div class="filter-container">
+            <p>trier par : </p>
+            <form action="/traiter" method="post">
+                <select name="cat" id="categorie-select">
+                    <option value="">(aucun)</option>
+                    {% for categorie in categories %}
+                        <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+    <div class="item-container">
+        {% for item in items %}
+            <div class="item">
+                <div class="item-properties">
+                    <h2>{{ item[1] }}</h2>
+                    <div class="quantity-container">
+                        <p class="quantity-label">Quantité : </p>
+                        <p class="quantity">{{ item[6] }} unités</p>
+                    </div>
+                    <div class="footer-properties">
+                        <div>azklejrk</div>
+                        <a id="btn-redirect-item" href="{{ url_for('etat',id=item[0]) }}">Détails</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

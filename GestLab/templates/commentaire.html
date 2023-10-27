@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+
+<link rel="stylesheet" href="{{ url_for('static',filename='./css/commentaire.css') }}">
+{% endblock %}
+{% block content %}
+<div class="comment-container">
+    <div class="destinataire">
+        <p>A :</p>
+        <select name="dest" id="dest-select">
+            <option value="">(aucun)</option>
+            {% for user in users %}
+                <option value="{{ user[0] }}">{{ user[1] }} {{ user[2] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <textarea name="comment-container" id="comment-wrapper" cols="30" rows="10"></textarea>
+    <div class="btn-container">
+        <a id="btn-send" href="{{ url_for('base') }}">Envoyer le commentaire ></a>
+    </div>
+</div>
+
+<div class="popup" id="myPopup">
+    <div class="popup-content">
+        <h2>Confirmation</h2>
+        <p>Votre commentaire a bien été envoyé !</p>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='./js/commentaire.js') }}"></script>
+{% endblock %}
