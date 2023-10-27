@@ -8,11 +8,11 @@
 
 ## Membres 
 
-    LUCIDOR Léo
-    LALLIER Anna
-    PILET Colin
-    BLANDEAU Erwan
-    LAVENANT Jordan
+LUCIDOR Léo  
+LALLIER Anna  
+PILET Colin  
+BLANDEAU Erwan  
+LAVENANT Jordan  
 
 ## Prérequis
 
@@ -65,10 +65,14 @@ Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée
 
 ## Tâches réalisées
 
-- BD Réaliser le (23/10/2023)
-- creation des fonction (23/10/2023 / 24/10/2023)
-- création fonction pour hash les mots de passe (24/10/2023)
-- creation de procedure et trigger
+- Différents diagrammes réalisés à partir du 23/10/2023
+- MCD et base de données commencée le 23/10/2023 et actualisée chaque jour
+- Creation des fonctions pour se connecter à partir du 23/10/2023
+- Création des fonctions pour hash les mots de passe 24/10/2023
+- Creation des procedures et triggers à partir du 24/10/2023
+- Création des maquettes à partir du 24/10/2023
+- Création des fonctions requêtes afin de rendre l'implémentation du site fonctionnelle (tout au long de la semaine)
+- Début de l'implémentation des maquettes à partir du 24/10/2023
 
 ## Problèmes rencontrés
 
