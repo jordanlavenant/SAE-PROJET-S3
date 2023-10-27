@@ -7,7 +7,7 @@ from wtforms import StringField, HiddenField, FileField, SubmitField, SelectFiel
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
-from .requetebd5 import *
+from .requette import *
 from .connexionPythonSQL import *
 
 
@@ -97,6 +97,28 @@ def commander():
     "commander.html",
     title="Commander",
     chemin = [("base", "Accueil"), ("commander", "Commander")]
+    )
+
+@app.route("/bon-commande/")
+def bon_commande():
+    return render_template(
+    "bonCommande.html",
+    title="Bon de Commande",
+    chemin = [("base", "Accueil"), ("commander", "Commander"), ("bon_commande", "Bon de Commande")]
+    )
+
+@app.route("/commander-materiel/")
+def commander_materiel():
+    nb_alertes = get_nb_alert(cnx)
+    nb_demandes = get_nb_demande(cnx)
+    return render_template(
+        "commanderMateriel.html",
+        title="Commander du Matériel",
+        categories = get_domaine(get_cnx()),
+        alertes=str(nb_alertes),
+        demandes=str(nb_demandes),
+        liste_materiel = get_info_rechercheMateriel(get_cnx()),
+        chemin = [("base", "Accueil"), ("commander", "Commander"), ("commander_materiel", "Commander du Matériel")]
     )
 
 @app.route("/alertes/")
@@ -270,19 +292,8 @@ def modifier_utilisateur(id):
 def demandes():
     return render_template(
     "demandes.html",
-    nb_demande = get_nb_demande(cnx),
-    info_demande = get_info_demande(cnx),
     title="Demandes",
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
-    )
-
-@app.route("/bonDeCommande/<int:idDemmande>")
-def bonDeCommande(idDemmande):
-    return render_template(
-        "bonDeCommande.html",
-        idDemmande = idDemmande,
-        title = "Bon De Commande",
-        chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
     )
 
 @app.route("/inventaire/")
@@ -414,4 +425,3 @@ def ajouter_materiel():
     "ajouterMateriel.html",
     title="Ajouter un Matériel",
     chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
-    )

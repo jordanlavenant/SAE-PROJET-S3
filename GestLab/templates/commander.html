@@ -4,4 +4,16 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/commander.css') }}">
 {% endblock %}
 {% block content %}
+<div class="container-main">
+    <a href="{{ url_for('commander_materiel') }}">
+        <section class="carte-lien">
+            <h2>COMMANDER PAR MOI MÊME</h2>
+        </section>
+    </a>
+    <a href="{{ url_for('bon_commande') }}">
+        <section class="carte-lien">
+            <h2>VOIR LES BONS DE COMMANDES</h2>
+        </section>
+    </a>
+</div>
 {% endblock %}
