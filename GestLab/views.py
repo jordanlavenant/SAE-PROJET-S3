@@ -99,6 +99,28 @@ def commander():
     chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
+@app.route("/bon-commande/")
+def bon_commande():
+    return render_template(
+    "bonCommande.html",
+    title="Bon de Commande",
+    chemin = [("base", "Accueil"), ("commander", "Commander"), ("bon_commande", "Bon de Commande")]
+    )
+
+@app.route("/commander-materiel/")
+def commander_materiel():
+    nb_alertes = get_nb_alert(cnx)
+    nb_demandes = get_nb_demande(cnx)
+    return render_template(
+        "commanderMateriel.html",
+        title="Commander du Matériel",
+        categories = get_domaine(get_cnx()),
+        alertes=str(nb_alertes),
+        demandes=str(nb_demandes),
+        liste_materiel = get_info_rechercheMateriel(get_cnx()),
+        chemin = [("base", "Accueil"), ("commander", "Commander"), ("commander_materiel", "Commander du Matériel")]
+    )
+
 @app.route("/alertes/")
 def alertes():
     nb_alertes = get_nb_alert(cnx)
