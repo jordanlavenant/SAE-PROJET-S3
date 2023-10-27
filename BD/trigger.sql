@@ -91,36 +91,102 @@ end |
 delimiter ;
 
 delimiter |
-create or replace TRIGGER modificationStockLaboInsert after insert on RESERVELABORATOIRE for each row
+create or replace procedure alertesPeremption() 
 BEGIN
-    declare idM int ;
-    declare stock int ;
+    declare fini boolean default false ;
+    declare idMu int ;
 
+    declare idMateriels cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE datePeremption <= CURDATE() ;
+
+    declare continue handler for not found set fini = true ;
     
-    SELECT recupereidMateriel(new.idMaterielUnique) into idM ;
-    SELECT recupereStockLabo(idM) into stock ;
-    INSERT into debug VALUE (stock) ;
-    if stock is null then
-        INSERT INTO STOCKLABORATOIRE VALUES (idM, 1) ;
-    else 
-        UPDATE STOCKLABORATOIRE set quantiteLaboratoire = stock + 1 WHERE idMateriel = idM ;
-    end if ;
+    open idMateriels ;
+    while not fini do
+        fetch idMateriels into idMu ;
+        if not fini then 
+            INSERT INTO ALERTESENCOURS VALUES(1, idMu) ;
+        end if ;
+    end while ;
+    close idMateriels ;
+end |
+delimiter ;
+
+
+delimiter |
+create or replace procedure alertesPeremptionDixJours() 
+BEGIN
+    declare fini boolean default false ;
+    declare idMu int ;
+
+    declare idMateriels cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE datePeremption > CURDATE() AND datePeremption <= CURDATE() + INTERVAL 10 DAY ;
+
+    declare continue handler for not found set fini = true ;
+    
+    open idMateriels ;
+    while not fini do
+        fetch idMateriels into idMu ;
+        if not fini then 
+            INSERT INTO ALERTESENCOURS VALUES(2, idMu) ;
+        end if ;
+    end while ;
+    close idMateriels ;
 end |
 delimiter ;
 
 delimiter |
-create or replace TRIGGER modificationStockLaboUpdate after update on RESERVELABORATOIRE for each row
+create or replace procedure alertesQuantiteSeuil() 
 BEGIN
-    declare idM int ;
-    declare qte int ;
-    declare stock int ;
+    declare fini boolean default false ;
+    declare idMu int ;
 
-    SELECT recupereidMateriel(new.idMaterielUnique) into idM ;
-    SELECT recupereStockLabo(idM) into stock ;
-    if stock is null then
-        INSERT INTO STOCKLABORATOIRE VALUES (idM, qte) ;
-    else 
-        UPDATE STOCKLABORATOIRE set quantiteLaboratoire = stock + qte WHERE idMateriel = idM ;
-    end if ;
+    declare idMateriels cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE quantiteApproximative <= (seuilAlerte/4) ;
+
+    declare continue handler for not found set fini = true ;
+    
+    open idMateriels ;
+    while not fini do
+        fetch idMateriels into idMu ;
+        if not fini then 
+            INSERT INTO ALERTESENCOURS VALUES(3, idMu) ;
+        end if ;
+    end while ;
+    close idMateriels ;
+end |
+delimiter ;
+
+delimiter |
+create or replace procedure alertesQuantiteAZero() 
+BEGIN
+    declare fini boolean default false ;
+    declare idMu int ;
+
+    declare idMateriels cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE quantiteApproximative > (seuilAlerte/4) AND quantiteApproximative = 0 ;
+    declare continue handler for not found set fini = true ;
+    
+    open idMateriels ;
+    while not fini do
+        fetch idMateriels into idMu ;
+        if not fini then 
+            INSERT INTO ALERTESENCOURS VALUES(4, idMu) ;
+        end if ;
+    end while ;
+    close idMateriels ;
+end |
+delimiter ;
+
+
+delimiter |
+create or replace EVENT insereAlertesAuto ON SCHEDULE EVERY 1 minute DO
+BEGIN
+    DELETE FROM ALERTESENCOURS ;
+    INSERT INTO debug VALUES ("test") ;
+    call alertesPeremption() ;
+    call alertesPeremptionDixJours() ;
+    call alertesQuantiteAZero() ;
+    call alertesQuantiteSeuil() ;
 end |
 delimiter ;

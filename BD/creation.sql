@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS ENVOIFOURNISSEUR;
 DROP TABLE IF EXISTS SUIVICOMMANDE;
 DROP TABLE IF EXISTS AJOUTERMATERIEL;
 DROP TABLE IF EXISTS RECHERCHEMATERIELS;
+DROP TABLE IF EXISTS ALERTESENCOURS ;
 DROP TABLE IF EXISTS MATERIELUNIQUE;
 DROP TABLE IF EXISTS MATERIEL;
 DROP TABLE IF EXISTS ARCHIVECOMMANDE;
@@ -20,7 +21,6 @@ DROP TABLE IF EXISTS ETATCOMMANDE;
 DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
 DROP TABLE IF EXISTS TYPESALERTES;
-drop table if exists debug ;
 
 create table STATUT(
     idStatut int not null,
@@ -192,7 +192,13 @@ create table ARCHIVECOMMANDE(
     primary key(numColis)
 );
 
-create table debug(
-    test int,
-    primary key(test)
+CREATE TABLE ALERTESENCOURS(
+    idAlerte int not null references TYPESALERTES, 
+    idMaterielUnique int not null references MATERIELUNIQUE,
+    primary key(idAlerte, idMaterielUnique)
 );
+
+CREATE TABLE debug(
+    test varchar(50),
+    primary key(test)
+) ;
