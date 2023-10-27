@@ -38,9 +38,10 @@ flask run
 ```
 
 ## Présentation du sujet
-    Projet proposé par les professeurs de Sciences Physiques du Lycée François VILLON à BEAUGENCY.
 
-    Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée François VILLON à BEAUGENCY doivent partager un seul et unique laboratoire, avec l’aide de laborantins. Ils doivent par conséquent se partager l’appareillage, la verrerie et les accessoires associés, le matériel électrique, les produits chimiques, le matériel de laboratoire et différents médias. Pour faciliter la gestion de tous ces matériels, les professeurs ont donc évoqué le besoin de la création d’un outil.
+Projet proposé par les professeurs de Sciences Physiques du Lycée François VILLON à BEAUGENCY.
+
+Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée François VILLON à BEAUGENCY doivent partager un seul et unique laboratoire, avec l’aide de laborantins. Ils doivent par conséquent se partager l’appareillage, la verrerie et les accessoires associés, le matériel électrique, les produits chimiques, le matériel de laboratoire et différents médias. Pour faciliter la gestion de tous ces matériels, les professeurs ont donc évoqué le besoin de la création d’un outil.
 
 ## Fonctionnalitées demandées
 
@@ -71,7 +72,7 @@ flask run
 
 ## Problèmes rencontrés
 
-    - Mauvaise compréhension de certaines notions du sujet qui nous ont mener à avancer dans la mauvaise direction, dû à un manque de renseignement de notre part
+- Mauvaise compréhension de certaines notions du sujet qui nous ont mener à avancer dans la mauvaise direction, dû à un manque de renseignement de notre part
 
 ## Identifiants pour se connecter
 
