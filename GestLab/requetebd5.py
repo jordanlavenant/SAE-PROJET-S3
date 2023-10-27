@@ -161,7 +161,6 @@ def modification_droit_utilisateur(cnx, idut, idSt):
         print("erreur de mise a jour du droit")
         raise
 
-modification_droit_utilisateur(cnx, 6, 2)
 #marche BD 5
 def get_password_hashed_with_email(cnx, email):
     result = cnx.execute(text("select motDePasse from UTILISATEUR where email = '" + email + "';"))
@@ -272,7 +271,6 @@ def get_nb_alert(cnx):
     except Exception as e:
         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
         raise
-get_nb_alert(cnx)
 
 # def get_info_materiel_alert(cnx):
 #     try:
@@ -323,35 +321,49 @@ def get_all_information_to_Materiel_with_id(cnx, id):
         print("erreur de l'id")
         raise
 
-
-
-
-def update_all_information_utillisateur_with_id(cnx,id,nom,prenom,email,idStatut):
+#marche BD 5
+def get_all_information_to_Materiel_cat_com(cnx):
     try:
-        cnx.execute(text( "update UTILISATEUR set nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "', idStatut = '" + str(idStatut) + "' where idUtilisateur = " + str(id) + ";"))
+        list = []
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite from MATERIEL  NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de l'id")
+        raise
+
+#marche BD 5
+def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email):
+    try:
+        cnx.execute(text("update UTILISATEUR set idStatut = '" + str(idStatut) + "', nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "' where idUtilisateur = '" + str(id) + "';"))
         cnx.commit()
+        print("utilisateur mis a jour")
         return True
     except:
         print("erreur de l'id")
         return False
 
+
+#marche BD 5
 def recherche_all_in_utilisateur_with_search(cnx, search):
     try:
         list = []
         result = cnx.execute(text("select * from UTILISATEUR where nom like '%" + search + "%'" or " prenom like '%" + search + "%' ;"))
         for row in result:
+            print(row)
             list.append(row)
         return (list, len(list))
     except:
         print("erreur de recherche")
         raise
 
-# recherche_all_in_utilisateur_with_search(cnx, "jo")
-
+#marche BD 5
 def recherche_all_in_materiel_with_search(cnx, search):
     try:
         list = []
-        result = cnx.execute(text("select * from MATERIEL where nomMateriel like '%" + search + "%' ;"))
+        result = cnx.execute(text("select idMateriel,nomMateriel,referenceMateriel,idFDS,idFDS,seuilAlerte,caracteristiquesComplementaires,caracteristiquesComplementaires from MATERIEL where nomMateriel like '%" + search + "%' ;"))
         for row in result:
             print(row)
             list.append(row)
@@ -360,3 +372,4 @@ def recherche_all_in_materiel_with_search(cnx, search):
         print("erreur de recherche")
         raise
 
+recherche_all_in_materiel_with_search(cnx, "a")
