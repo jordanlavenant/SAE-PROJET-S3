@@ -123,6 +123,23 @@ def ajout_administrateur(cnx, nom, prenom, email):
         print("erreur d'ajout de l'utilisateur")
         return False
 
+def ajout_laborantin(cnx, nom, prenom, email):
+    
+    try:
+        idStatut = 4
+        mdpRandom = generer_mot_de_passe()
+        # envoyer mail avec mdpRandom
+        print(mdpRandom)
+        mdphash = hasher_mdp(mdpRandom)
+        cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
+        cnx.commit()
+        print("utilisateur ajouté")
+        return True
+    except:
+        print("erreur d'ajout de l'utilisateur")
+        return False
+    
+
 #marche BD 5
 def get_nom_whith_email(cnx, email):
     result = cnx.execute(text("select nom from UTILISATEUR where email = '" + email + "';"))
@@ -218,7 +235,6 @@ def get_user_with_statut(cnx, nomStatut):
     liste = []
     result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where nomStatut = '" + str(nomStatut) + "';"))
     for row in result:
-        print(row[0],row[2],row[3])
         liste.append((row[0],row[2],row[3]))
     return liste
 
@@ -256,21 +272,21 @@ def get_categories(cnx):
     return liste
 
 # besoin d'aide >>>>> Anna
-def get_nb_alert(cnx):
-    try:
-        # Calculer la date qui est 1 mois à partir de maintenant
-        today = datetime.now()
-        ten_days_from_now = datetime.now() + timedelta(days=60)
-        # Exécuter la requête SQL
-        result = cnx.execute(
-            text(
-                "SELECT COUNT(*) FROM MATERIEL NATURAL JOIN MATERIELUNIQUE WHERE dateReception < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
-        count = result.first()[0]
-        print(count)
-        return count
-    except Exception as e:
-        print("Erreur lors de la récupération du nombre d'alertes :", str(e))
-        raise
+# def get_nb_alert(cnx):
+#     try:
+#         # Calculer la date qui est 1 mois à partir de maintenant
+#         today = datetime.now()
+#         ten_days_from_now = datetime.now() + timedelta(days=60)
+#         # Exécuter la requête SQL
+#         result = cnx.execute(
+#             text(
+#                 "SELECT COUNT(*) FROM MATERIEL NATURAL JOIN MATERIELUNIQUE WHERE dateReception < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
+#         count = result.first()[0]
+#         print(count)
+#         return count
+#     except Exception as e:
+#         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
+#         raise
 
 # def get_info_materiel_alert(cnx):
 #     try:
@@ -317,6 +333,18 @@ def get_all_information_to_Materiel_with_id(cnx, id):
         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE WHERE idMateriel = " + str(id) + ";"))
         for row in result:
             return row
+    except:
+        print("erreur de l'id")
+        raise
+
+def get_all_information_to_Materiel(cnx):
+    try:
+        list = []
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
     except:
         print("erreur de l'id")
         raise
@@ -372,4 +400,29 @@ def recherche_all_in_materiel_with_search(cnx, search):
         print("erreur de recherche")
         raise
 
-recherche_all_in_materiel_with_search(cnx, "a")
+
+def get_all_info_from_domaine(cnx):
+    try:
+        list = []
+        result = cnx.execute(text("select * from DOMAINE ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de l'id")
+        raise
+
+def get_info_demande(cnx):
+    try:
+        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
+        info_commande = []
+        for row in result:
+            info_commande.append(row)
+        return  info_commande
+    except:
+        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+        raise
+
+get_info_demande(cnx)
+
