@@ -1,4 +1,4 @@
-from .app import app # db
+from .app import app
 import GestLab.views
 import GestLab.commands
 import GestLab.models

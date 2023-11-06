@@ -7,8 +7,9 @@ from wtforms import StringField, HiddenField, FileField, SubmitField, SelectFiel
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
-from .requette import *
+from .requetebd5 import *
 from .connexionPythonSQL import *
+from .models import *
 
 
 cnx = get_cnx()
@@ -78,6 +79,16 @@ class AjouterUtilisateurForm(FlaskForm):
         email = self.email.data
         statut = self.statut.data
         return (nom, prenom, email, statut)
+
+class CommentaireForm(FlaskForm):
+    gestionnaires = SelectField('ComboBox', choices=get_user_with_statut(get_cnx(), "Gestionnaire"))
+    text = TextAreaField('text', validators=[DataRequired()])
+    submit = SubmitField('envoyer le commentaire')
+
+    def get_text(self):
+        gest = self.gestionnaires.data
+        text = self.text.data
+        return text, gest
 
 
 @app.route("/")
@@ -191,8 +202,8 @@ def consulter_utilisateur():
         elif selected_value == "Gestionnaire":
             return render_template(
                 "consulterUtilisateur.html",
-                utilisateurs = get_all_user(get_cnx(), 3)[0],
-                nbUser = get_all_user(get_cnx(), 3)[1],
+                utilisateurs = get_all_user(get_cnx(), 4)[0],
+                nbUser = get_all_user(get_cnx(), 4)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
@@ -201,8 +212,8 @@ def consulter_utilisateur():
         elif selected_value == "Laborantin":
             return render_template(
                 "consulterUtilisateur.html",
-                utilisateurs = get_all_user(get_cnx(), 4)[0],
-                nbUser = get_all_user(get_cnx(), 4)[1],
+                utilisateurs = get_all_user(get_cnx(), 3)[0],
+                nbUser = get_all_user(get_cnx(), 3)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
@@ -254,21 +265,21 @@ def modifier_utilisateur(id):
         nom, prenom, email, statut = f.get_full_user()
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
-                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 2)
+                res = update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('utilisateurs'))
             elif statut == "gestionnaire":
-                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 3)
+                res = update_all_information_utillisateur_with_id(cnx, id, 4, nom, prenom, email)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('utilisateurs'))
             elif statut == "laborantin":
-                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 4)
+                res = update_all_information_utillisateur_with_id(cnx, id, 3, nom, prenom, email)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:
@@ -316,13 +327,22 @@ def demander():
     chemin = [("base", "Accueil"), ("demander", "Demander")]
     )
 
-@app.route("/commentaire/")
+@app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():
+    users = get_user_with_statut(get_cnx(), "Gestionnaire")
+    f = CommentaireForm()
+    if f.validate_on_submit():
+        text, gest = f.get_text()
+        if text != None and gest != None:
+            mail = session['utilisateur'][2]
+            envoyer_mail_commentaire(gest, mail, text)
+            return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
-    users= get_user_with_statut(get_cnx(), "Gestionnaire"),
-    title="Signaler des alertes",
-    chemin = [("base", "Accueil"), ("commentaire", "Signaler des alertes")]
+    users = users,
+    title ="envoyer un commentaire",
+    chemin = [("base", "Accueil"), ("commentaire", "envoyer un commentaire")],
+    CommentaireForm=f
     )
 
 @app.route("/login/", methods=("GET","POST",))
