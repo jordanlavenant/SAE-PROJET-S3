@@ -217,3 +217,16 @@
   max-height: 50px;
 }
 
+.container-mdp-oublier {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#btn-mdp-oublier {
+  background: none;
+  border: none;
+  color: #fff;
+}
