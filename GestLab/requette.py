@@ -294,11 +294,22 @@ def get_nb_demande(cnx):
     
 def get_info_demande(cnx):
     try:
-        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
+        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
         info_commande = []
         for row in result:
             info_commande.append(row)
         return  info_commande
+    except Exception as e:
+        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+        raise
+
+def get_info_demande_with_id(cnx, idDemande):
+    try:
+        result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idBonCommande from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL natural join BONCOMMANDE where idDemande =" + str(idDemande) + ";"))
+        info_demande = []
+        for row in result:
+            info_demande.append(row)
+        return info_demande
     except Exception as e:
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
@@ -434,16 +445,5 @@ def get_info_rechercheMateriel(cnx):
             info_rechercheMateriel.append(row[0])
         return  info_rechercheMateriel
     except:
-        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
-        raise
-
-def get_info_demande(cnx):
-    try:
-        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
-        info_commande = []
-        for row in result:
-            info_commande.append(row)
-        return  info_commande
-    except Exception as e:
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise

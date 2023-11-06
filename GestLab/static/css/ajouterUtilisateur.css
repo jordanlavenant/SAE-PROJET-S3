@@ -71,10 +71,11 @@
       transition: 0.2s;
     }
 
-    .comboBox {
+    .comboBox, .comboBox option{
         width: 100%;
         padding: 10px 0;
         font-size: 30px;
+        font-family: 'Alumni Sans', sans-serif;
         color: #fff;
         margin-bottom: 30px;
         border: none;
@@ -83,10 +84,12 @@
         background: transparent;
     }
 
-    .comboBox option {
+    /* .comboBox option {
         background-color: #384274;
+        font-size: 30px;
+        font-family: 'Alumni Sans', sans-serif;
         color: #fff;
-    } 
+    }  */
 
 
   /* bouton retour */
