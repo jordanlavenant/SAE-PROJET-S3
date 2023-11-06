@@ -2,7 +2,7 @@ import random
 import string
 from numpy import split
 from sqlalchemy import text
-from connexionPythonSQL import *
+from .connexionPythonSQL import *
 from hashlib import sha256
 from datetime import datetime, timedelta
 import random
@@ -143,7 +143,6 @@ def ajout_laborantin(cnx, nom, prenom, email):
         print("erreur d'ajout de l'utilisateur")
         return False
 
-ajout_laborantin(cnx, "labo", "labo", "labo@")
 #marche BD 5
 def get_nom_whith_email(cnx, email):
     result = cnx.execute(text("select nom from UTILISATEUR where email = '" + email + "';"))
@@ -457,3 +456,17 @@ def get_all_user(cnx, idStatut=None):
         print(row)
         liste.append((row[1],row[0],row[2],row[3],row[4]))
     return (liste, len(liste))
+
+
+def recuperation_de_mot_de_passe(cnx, email):
+    try:
+        mdpRandom = generer_mot_de_passe()
+        print(mdpRandom)
+        mdphash = hasher_mdp(mdpRandom)
+        cnx.execute(text("update UTILISATEUR set motDePasse = '" + mdphash + "' where email = '" + email + "';"))
+        cnx.commit()
+        print("mdp mis a jour")
+        return True
+    except:
+        print("erreur de mise a jour du mdp")
+        return False
