@@ -1,6 +1,5 @@
 import random
 import string
-from numpy import split
 from sqlalchemy import text
 from .connexionPythonSQL import *
 from hashlib import sha256
