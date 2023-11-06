@@ -142,7 +142,7 @@ BEGIN
     declare idMu int ;
 
     declare idMateriels cursor for
-        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE quantiteApproximative <= (seuilAlerte/4) ;
+        SELECT idMaterielUnique FROM MATERIELUNIQUE NATURAL JOIN MATERIEL WHERE quantiteApproximative <= (seuilAlerte/4) ;
 
     declare continue handler for not found set fini = true ;
     
@@ -164,7 +164,7 @@ BEGIN
     declare idMu int ;
 
     declare idMateriels cursor for
-        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE quantiteApproximative > (seuilAlerte/4) AND quantiteApproximative = 0 ;
+        SELECT idMaterielUnique FROM MATERIELUNIQUE NATURAL JOIN MATERIEL WHERE quantiteApproximative > (seuilAlerte/4) AND quantiteApproximative = 0 ;
     declare continue handler for not found set fini = true ;
     
     open idMateriels ;
@@ -177,6 +177,19 @@ BEGIN
     close idMateriels ;
 end |
 delimiter ;
+
+delimiter |
+create or replace procedure gestionAlertes() 
+BEGIN
+    DELETE FROM ALERTESENCOURS ;
+    call alertesPeremption() ;
+    call alertesPeremptionDixJours() ;
+    call alertesQuantiteAZero() ;
+    call alertesQuantiteSeuil() ;
+end |
+delimiter ;
+
+SELECT COUNT(*) FROM ALERTESENCOURS ;
 
 
 delimiter |
@@ -260,6 +273,36 @@ BEGIN
             INSERT INTO STOCKLABORATOIRE (idMateriel, quantiteLaboratoire) VALUES (idM, 1);
         else
             UPDATE STOCKLABORATOIRE SET quantiteLaboratoire = stock + 1 WHERE idMateriel = idM;
+        end if;
+    end loop;
+    close curseur;
+end |
+delimiter ;
+
+delimiter |
+CREATE OR REPLACE TRIGGER modificationStockLaboDelete AFTER DELETE ON RESERVELABORATOIRE FOR EACH ROW
+BEGIN
+    declare idM INT;
+    declare stock INT;
+    declare fini BOOLEAN default false;
+
+    declare curseur cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMaterielUnique = old.idMaterielUnique;
+
+    declare continue handler for not found set fini = true ;
+
+    open curseur;
+
+    boucle: loop
+        fetch curseur into idM;
+        if fini then
+            LEAVE boucle;
+        end if;
+
+        SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM;
+
+        if stock - 1 > 0 then
+            UPDATE STOCKLABORATOIRE SET quantiteLaboratoire = stock - 1 WHERE idMateriel = idM;
         end if;
     end loop;
     close curseur;
