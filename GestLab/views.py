@@ -81,12 +81,14 @@ class AjouterUtilisateurForm(FlaskForm):
         return (nom, prenom, email, statut)
 
 class CommentaireForm(FlaskForm):
+    gestionnaires = SelectField('ComboBox', choices=get_user_with_statut(get_cnx(), "Gestionnaire"))
     text = TextAreaField('text', validators=[DataRequired()])
     submit = SubmitField('envoyer le commentaire')
 
     def get_text(self):
+        gest = self.gestionnaires.data
         text = self.text.data
-        return text
+        return text, gest
 
 
 @app.route("/")
@@ -271,7 +273,6 @@ def modifier_utilisateur(id):
     f = AjouterUtilisateurForm()
     if f.validate_on_submit():
         nom, prenom, email, statut = f.get_full_user()
-        print(statut)
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
                 res = update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
@@ -338,17 +339,18 @@ def demander():
 
 @app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():
+    users = get_user_with_statut(get_cnx(), "Gestionnaire")
     f = CommentaireForm()
     if f.validate_on_submit():
-        text = f.get_text()
-        if text != None:
+        text, gest = f.get_text()
+        if text != None and gest != None:
             mail = session['utilisateur'][2]
-            envoyer_mail_commentaire("testgestionnaire1@gmail.com", mail, text)
+            envoyer_mail_commentaire(gest, mail, text)
             return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
-    users= get_user_with_statut(get_cnx(), "Gestionnaire"),
-    title="envoyer un commentaire",
+    users = users,
+    title ="envoyer un commentaire",
     chemin = [("base", "Accueil"), ("commentaire", "envoyer un commentaire")],
     CommentaireForm=f
     )
