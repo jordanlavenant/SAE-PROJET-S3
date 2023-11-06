@@ -25,7 +25,8 @@ def get_nom_dom_cat_materiel_with_id(cnx, id):
         raise
     
 #marche BD 5
-def ajoute_materiel(cnx, reFerenceMateriel, nomMateriel, idCategorie, seuilAlerte, caracteristiquesComplementaires,informationsComplementairesEtSecurite):
+def ajouter_materiel(cnx, reFerenceMateriel, nomMateriel, idCategorie, seuilAlerte, caracteristiquesComplementaires,informationsComplementairesEtSecurite):
+    print("EH")
     try:
         cnx.execute(text("insert into MATERIEL (reFerenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesComplementaires,informationsComplementairesEtSecurite ) values ('" + reFerenceMateriel + "', 1, '" + nomMateriel + "', '" + str(idCategorie) + "', '" + str(seuilAlerte) + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "');"))
         cnx.commit()
@@ -458,3 +459,12 @@ def get_all_user(cnx, idStatut=None):
         print(row)
         liste.append((row[1],row[0],row[2],row[3],row[4]))
     return (liste, len(liste))
+
+def insere_materiel(cnx, idCategorie, nomMateriel, seuilAlerte, caracteristiquesComplementaires, informationsComplementairesEtSecurite, nomDomaine):
+    try:
+        cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, seuilAlerte, caracteristiquesComplementaires, informationsComplementairesEtSecurite, nomDomaine) values ('" + str(idCategorie) + "', '" + nomMateriel + "', '" + str(seuilAlerte) + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "', '" + nomDomaine + "');"))
+        cnx.commit()
+        print("materiel ajouté")
+    except:
+        print("erreur d'ajout du materiel")
+        raise

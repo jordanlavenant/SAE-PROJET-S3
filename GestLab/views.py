@@ -123,6 +123,7 @@ def ajouter_materiel():
     f.domaine.choices = get_domaine_choices() 
     if f.validate_on_submit():
         selected_domain_id = f.domaine.data
+        print("baaaaaaaaaaaaah")
         f.categorie.choices = get_categorie_choices(selected_domain_id)
     return render_template(
     "ajouterMateriel.html",
