@@ -273,10 +273,10 @@ def get_info_materiel_alert(cnx):
         # Exécuter la requête SQL
         result = cnx.execute(
             text(
-                "SELECT nomMateriel FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
+                "SELECT nomMateriel,idMateriel FROM MATERIEL NATURAL JOIN DATEPEREMPTION WHERE datePeremption < '" + ten_days_from_now.strftime('%Y-%m-%d') + "' OR datePeremption <= '" + today.strftime('%Y-%m-%d') + "';"))
         liste_nom = []
         for row in result:
-            liste_nom.append(row[0])
+            liste_nom.append(row)
         return liste_nom
     except Exception as e:
         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
@@ -402,3 +402,48 @@ def recherche_all_in_materiel_with_search(cnx, search):
         print("erreur de recherche")
         raise
 
+def get_domaine(cnx):
+    try:
+        list = []
+        result = cnx.execute(text("select * from DOMAINE ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de l'id")
+        raise
+
+def get_all_information_to_Materiel_cat_com(cnx):
+    try:
+        list = []
+        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite from MATERIEL  NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de l'id")
+        raise
+
+def get_info_rechercheMateriel(cnx):
+    try:
+        result = cnx.execute(text("SELECT * from RECHERCHEMATERIELS;"))
+        info_rechercheMateriel = []
+        for row in result:
+            info_rechercheMateriel.append(row[0])
+        return  info_rechercheMateriel
+    except:
+        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+        raise
+
+def get_info_demande(cnx):
+    try:
+        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
+        info_commande = []
+        for row in result:
+            info_commande.append(row)
+        return  info_commande
+    except Exception as e:
+        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+        raise
