@@ -142,7 +142,7 @@ BEGIN
     declare idMu int ;
 
     declare idMateriels cursor for
-        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE quantiteApproximative <= (seuilAlerte/4) ;
+        SELECT idMaterielUnique FROM MATERIELUNIQUE NATURAL JOIN MATERIEL WHERE quantiteApproximative <= (seuilAlerte/4) ;
 
     declare continue handler for not found set fini = true ;
     
@@ -164,7 +164,7 @@ BEGIN
     declare idMu int ;
 
     declare idMateriels cursor for
-        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE quantiteApproximative > (seuilAlerte/4) AND quantiteApproximative = 0 ;
+        SELECT idMaterielUnique FROM MATERIELUNIQUE NATURAL JOIN MATERIEL WHERE quantiteApproximative > (seuilAlerte/4) AND quantiteApproximative = 0 ;
     declare continue handler for not found set fini = true ;
     
     open idMateriels ;
@@ -177,6 +177,19 @@ BEGIN
     close idMateriels ;
 end |
 delimiter ;
+
+delimiter |
+create or replace procedure gestionAlertes() 
+BEGIN
+    DELETE FROM ALERTESENCOURS ;
+    call alertesPeremption() ;
+    call alertesPeremptionDixJours() ;
+    call alertesQuantiteAZero() ;
+    call alertesQuantiteSeuil() ;
+end |
+delimiter ;
+
+SELECT COUNT(*) FROM ALERTESENCOURS ;
 
 
 delimiter |
