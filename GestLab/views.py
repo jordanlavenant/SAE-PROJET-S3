@@ -1,5 +1,5 @@
 from .app import app #, db
-from flask import render_template, url_for, redirect, request, session
+from flask import render_template, url_for, redirect, request, session, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
@@ -7,8 +7,9 @@ from wtforms import StringField, HiddenField, FileField, SubmitField, SelectFiel
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
-from .requette import *
+from .requetebd5 import *
 from .connexionPythonSQL import *
+from .models import *
 
 
 cnx = get_cnx()
@@ -79,6 +80,66 @@ class AjouterUtilisateurForm(FlaskForm):
         statut = self.statut.data
         return (nom, prenom, email, statut)
 
+class AjouterMaterielForm(FlaskForm):
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
+    submit = SubmitField('Submit')
+    nom = StringField('nom', validators=[DataRequired()])
+    reference = StringField('reference')
+    caracteristiques = StringField('caracteristiques')
+    infossup = StringField('infossup')
+    seuilalerte  = StringField('seuilalerte')
+    next = HiddenField()
+
+    def get_full_materiel(self):
+        domaine = self.domaine.data
+        print("domaine + " + str(domaine))
+        categorie = self.categorie.data
+        nom = self.nom.data
+        reference = self.reference.data
+        caracteristiques = self.caracteristiques.data
+        infossup = self.infossup.data
+        seuilalerte = self.seuilalerte.data
+        return (domaine, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+
+def get_domaine_choices():
+    query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
+    result = cnx.execute(query)
+    domaines =  [(str(id_), name) for name, id_ in result]
+    domaines.insert(0, ("", "Choisir un domaine"))
+    return domaines
+
+@app.route('/get_categorie_choices', methods=['GET'])
+def get_categorie_choices():
+    selected_domain_id = request.args.get('domaine_id')
+    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
+    categories = {str(id_): name for name, id_ in result}
+    return jsonify(categories)
+
+
+@app.route("/ajouter-materiel/")
+def ajouter_materiel():
+    f = AjouterMaterielForm()
+    f.domaine.choices = get_domaine_choices() 
+    if f.validate_on_submit():
+        selected_domain_id = f.domaine.data
+        f.categorie.choices = get_categorie_choices(selected_domain_id)
+    return render_template(
+    "ajouterMateriel.html",
+    title="Ajouter un matériel",
+    AjouterMaterielForm=f,
+    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    )
+
+
+class CommentaireForm(FlaskForm):
+    text = TextAreaField('text', validators=[DataRequired()])
+    submit = SubmitField('envoyer le commentaire')
+
+    def get_text(self):
+        text = self.text.data
+        return text
+
 
 @app.route("/")
 def base():
@@ -97,6 +158,15 @@ def commander():
     "commander.html",
     title="Commander",
     chemin = [("base", "Accueil"), ("commander", "Commander")]
+    )
+
+
+@app.route("/bon-commande/")
+def bon_commande():
+    return render_template(
+    "bonCommande.html",
+    title="Bon de Commande",
+    chemin = [("base", "Accueil"), ("commander", "Commander"), ("bon_commande", "Bon de Commande")]
     )
 
 @app.route("/bonDeCommande/<int:idDemmande>")
@@ -192,8 +262,8 @@ def consulter_utilisateur():
         elif selected_value == "Gestionnaire":
             return render_template(
                 "consulterUtilisateur.html",
-                utilisateurs = get_all_user(get_cnx(), 3)[0],
-                nbUser = get_all_user(get_cnx(), 3)[1],
+                utilisateurs = get_all_user(get_cnx(), 4)[0],
+                nbUser = get_all_user(get_cnx(), 4)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
@@ -202,8 +272,8 @@ def consulter_utilisateur():
         elif selected_value == "Laborantin":
             return render_template(
                 "consulterUtilisateur.html",
-                utilisateurs = get_all_user(get_cnx(), 4)[0],
-                nbUser = get_all_user(get_cnx(), 4)[1],
+                utilisateurs = get_all_user(get_cnx(), 3)[0],
+                nbUser = get_all_user(get_cnx(), 3)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
@@ -253,23 +323,24 @@ def modifier_utilisateur(id):
     f = AjouterUtilisateurForm()
     if f.validate_on_submit():
         nom, prenom, email, statut = f.get_full_user()
+        print(statut)
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
-                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 2)
+                res = update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('utilisateurs'))
             elif statut == "gestionnaire":
-                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 3)
+                res = update_all_information_utillisateur_with_id(cnx, id, 4, nom, prenom, email)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('utilisateurs'))
             elif statut == "laborantin":
-                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 4)
+                res = update_all_information_utillisateur_with_id(cnx, id, 3, nom, prenom, email)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:
@@ -317,13 +388,21 @@ def demander():
     chemin = [("base", "Accueil"), ("demander", "Demander")]
     )
 
-@app.route("/commentaire/")
+@app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():
+    f = CommentaireForm()
+    if f.validate_on_submit():
+        text = f.get_text()
+        if text != None:
+            mail = session['utilisateur'][2]
+            envoyer_mail_commentaire("testgestionnaire1@gmail.com", mail, text)
+            return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
     users= get_user_with_statut(get_cnx(), "Gestionnaire"),
-    title="Signaler des alertes",
-    chemin = [("base", "Accueil"), ("commentaire", "Signaler des alertes")]
+    title="envoyer un commentaire",
+    chemin = [("base", "Accueil"), ("commentaire", "envoyer un commentaire")],
+    CommentaireForm=f
     )
 
 @app.route("/login/", methods=("GET","POST",))
@@ -421,11 +500,3 @@ def ajouterUtilisateur():
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)
-
-@app.route("/ajouter-materiel/")
-def ajouter_materiel():
-    return render_template(
-    "ajouterMateriel.html",
-    title="Ajouter un Matériel",
-    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
-    )
