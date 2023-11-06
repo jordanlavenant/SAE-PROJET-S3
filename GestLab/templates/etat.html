@@ -8,18 +8,33 @@
 <div class="state-container">
     <div class="item-card">
         <div class="item-properties">
-            <h2>{{ item_properties[1] }}</h2>
+            <div class="header-container">
+                <h2>{{ item_properties[1] }}</h2>
+                <a href="{{ url_for('commentaire') }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
+            </div>
+            <div class="date-reception">
+                <p class="date-reception-label">Date de réception : </p>
+                <p class="date-reception-content">(date rec. requête)</p>
+            </div>
+            <div class="date-peremption">
+                <p class="date-peremption-label">Date de péremption : </p>
+                <p class="date-peremption-content">(date pérm. requête)</p>
+            </div>
             <div class="quantite-container">
-                <p class="quantite-label">Quantité : </p>
-                <p class="quantite">{{ item_properties[6] }} unités</p>
+                <p class="quantite-label">Quantité approx.: </p>
+                <p class="quantite-content">(quantité si pro-chim)</p>
             </div>
             <div class="categorie-container">
                 <p class="categorie-label">Catégorie : </p>
-                <p class="quantite">{{ item_properties[3] }}</p>
+                <p class="categorie-content">{{ item_properties[3] }}</p>
             </div>
             <div class="domaine-container">
-                <p class="quantite-label">Domaine : </p>
-                <p class="quantite">{{ item_properties[5] }}</p>
+                <p class="domaine-label">Domaine : </p>
+                <p class="domaine-content">{{ item_properties[5] }}</p>
+            </div>
+            <div class="comment-container">
+                <p class="comment-label">Commentaire : </p>
+                <p class="comment-content">(commentaire - requête)</p>
             </div>
         </div>
     </div>

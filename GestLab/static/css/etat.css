@@ -5,6 +5,7 @@ p {
 
 a {
     text-decoration: none;
+    align-items: center;
 }
 
 #btn-back {
@@ -26,6 +27,28 @@ a {
     transform: scale(1.1);
     cursor: pointer;
 }
+
+.header-container {
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-container h2 {
+    margin: 0;
+    padding: 0;
+}
+
+.header-container a {
+    display: flex;
+    color: #2EDD94;
+}
+
+#report-redirect-img {
+    width: 20px;    
+    align-items: center;
+}
+
 .state-container {
     display: flex;
     flex-direction: row;
@@ -50,12 +73,36 @@ a {
     color: white;
 }
 
-.quantite-container, .categorie-container, .domaine-container {
+.date-reception, 
+.date-peremption, 
+.quantite-container, 
+.categorie-container, 
+.domaine-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     color: white;
     font-size: 30px;
+}
+
+.comment-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    font-size: 30px;
+}
+
+.comment-container > .comment-label {
+    text-decoration: underline;
+}
+
+.date-reception-content, 
+.date-peremption-content, 
+.quantite-content, 
+.categorie-content, 
+.domaine-content {
+    font-weight: bold;
 }
 
 .item-info {

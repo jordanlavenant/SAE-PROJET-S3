@@ -16,7 +16,7 @@
 
         <a href="{{ url_for('utilisateurs') }}">
             <section class="carte-lien">
-                <h2>UTILISATEUR</h2>
+                <h2>UTILISATEURS</h2>
                 <p>ajouter un compte</p>
                 <p>modifier un compte</p>
                 <p>gesions des droits</p>
@@ -28,18 +28,6 @@
         {% if session['utilisateur'][1] == 2 %}
         <!-- sous titre -->
         <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
-
-        <a href="{{ url_for('demander') }}">
-            <section class="carte-lien">
-                <h2>DEMANDER</h2>
-                <p>produits</p>
-                <p>accessoires</p>
-                <p>verrerie</p>
-                <p>Matériel</p>
-                <p>médias</p>
-                <p>...</p>
-            </section>
-        </a>
         <a href="{{ url_for('inventaire') }}">
             <section class="carte-lien">
                 <h2>INVENTAIRE</h2>
@@ -152,7 +140,6 @@
         </a>
         {% endif %}
     </div>
-
     
     <!-- si l'utilisateur n'est pas connecter -->
     {% else %}
