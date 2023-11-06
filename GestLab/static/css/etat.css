@@ -73,12 +73,36 @@ a {
     color: white;
 }
 
-.quantite-container, .categorie-container, .domaine-container {
+.date-reception, 
+.date-peremption, 
+.quantite-container, 
+.categorie-container, 
+.domaine-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     color: white;
     font-size: 30px;
+}
+
+.comment-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    font-size: 30px;
+}
+
+.comment-container > .comment-label {
+    text-decoration: underline;
+}
+
+.date-reception-content, 
+.date-peremption-content, 
+.quantite-content, 
+.categorie-content, 
+.domaine-content {
+    font-weight: bold;
 }
 
 .item-info {
