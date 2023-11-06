@@ -5,6 +5,7 @@ p {
 
 a {
     text-decoration: none;
+    align-items: center;
 }
 
 #btn-back {
@@ -26,6 +27,28 @@ a {
     transform: scale(1.1);
     cursor: pointer;
 }
+
+.header-container {
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-container h2 {
+    margin: 0;
+    padding: 0;
+}
+
+.header-container a {
+    display: flex;
+    color: #2EDD94;
+}
+
+#report-redirect-img {
+    width: 20px;    
+    align-items: center;
+}
+
 .state-container {
     display: flex;
     flex-direction: row;

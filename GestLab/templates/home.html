@@ -122,6 +122,12 @@
                 <p>...</p>
             </section>
         </a>
+        <a href="{{ url_for('inventaire') }}">
+            <section class="carte-lien">
+                <h2>INVENTAIRE</h2>
+                <p>consulter</p>
+            </section>
+        </a>
         <a href="{{ url_for('ajouter_materiel') }}">
             <section class="carte-lien">
                 <h2>AJOUTER</h2>
@@ -133,10 +139,11 @@
                 <p>...</p>
             </section>
         </a>
-        <a href="{{ url_for('inventaire') }}">
+        <a href="{{ url_for('commentaire') }}">
             <section class="carte-lien">
-                <h2>INVENTAIRE</h2>
-                <p>consulter</p>
+                <h2>SIGNALER DES ALERTES</h2>
+                <p>aux gestionnaires</p>
+                <p>à l'administration</p>
             </section>
         </a>
         {% endif %}

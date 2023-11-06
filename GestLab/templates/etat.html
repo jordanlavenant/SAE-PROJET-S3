@@ -8,7 +8,10 @@
 <div class="state-container">
     <div class="item-card">
         <div class="item-properties">
-            <h2>{{ item_properties[1] }}</h2>
+            <div class="header-container">
+                <h2>{{ item_properties[1] }}</h2>
+                <a href="{{ url_for('commentaire') }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
+            </div>
             <div class="quantite-container">
                 <p class="quantite-label">Quantité : </p>
                 <p class="quantite">{{ item_properties[6] }} unités</p>
