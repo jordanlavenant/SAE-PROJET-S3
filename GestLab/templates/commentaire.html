@@ -15,10 +15,13 @@
             {% endfor %}
         </select>
     </div>
-    <textarea name="comment-container" id="comment-wrapper" cols="30" rows="10"></textarea>
-    <div class="btn-container">
-        <a id="btn-send" href="{{ url_for('base') }}">Envoyer le commentaire ></a>
-    </div>
+    <form class="form-horizontal" role="form" method="POST" action ="{{ url_for('commentaire') }}">
+        {{ CommentaireForm.hidden_tag() }}
+        {{ CommentaireForm.text(size=50, class_="form-control", placeholder="Votre texte ici", id="comment-wrapper", cols="30", rows="10") }}
+      <div class="btn-container">
+        {{ CommentaireForm.submit(size=50, class_="form-control", id="btn-send") }}
+      </div>
+    </form>
 </div>
 
 <div class="popup" id="myPopup">

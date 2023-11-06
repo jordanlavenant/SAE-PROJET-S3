@@ -9,6 +9,7 @@ from wtforms import PasswordField
 from hashlib import sha256
 from .requetebd5 import *
 from .connexionPythonSQL import *
+from .models import *
 
 
 cnx = get_cnx()
@@ -78,6 +79,14 @@ class AjouterUtilisateurForm(FlaskForm):
         email = self.email.data
         statut = self.statut.data
         return (nom, prenom, email, statut)
+
+class CommentaireForm(FlaskForm):
+    text = TextAreaField('text', validators=[DataRequired()])
+    submit = SubmitField('envoyer le commentaire')
+
+    def get_text(self):
+        text = self.text.data
+        return text
 
 
 @app.route("/")
@@ -327,13 +336,21 @@ def demander():
     chemin = [("base", "Accueil"), ("demander", "Demander")]
     )
 
-@app.route("/commentaire/")
+@app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():
+    f = CommentaireForm()
+    if f.validate_on_submit():
+        text = f.get_text()
+        if text != None:
+            mail = session['utilisateur'][2]
+            envoyer_mail_commentaire("testgestionnaire1@gmail.com", mail, text)
+            redirect(url_for('base'))
     return render_template(
     "commentaire.html",
     users= get_user_with_statut(get_cnx(), "Gestionnaire"),
-    title="Signaler des alertes",
-    chemin = [("base", "Accueil"), ("commentaire", "Signaler des alertes")]
+    title="envoyer un commentaire",
+    chemin = [("base", "Accueil"), ("commentaire", "envoyer un commentaire")],
+    CommentaireForm=f
     )
 
 @app.route("/login/", methods=("GET","POST",))
