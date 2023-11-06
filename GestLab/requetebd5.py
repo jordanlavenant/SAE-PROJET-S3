@@ -99,7 +99,7 @@ def ajout_professeur(cnx, nom, prenom, email):
 def ajout_gestionnaire(cnx, nom, prenom, email):
     
     try:
-        idStatut = 3
+        idStatut = 4
         mdpRandom = generer_mot_de_passe()
         # envoyer mail avec mdpRandom
         print(mdpRandom)
@@ -131,7 +131,7 @@ def ajout_administrateur(cnx, nom, prenom, email):
 def ajout_laborantin(cnx, nom, prenom, email):
     
     try:
-        idStatut = 4
+        idStatut = 3
         mdpRandom = generer_mot_de_passe()
         # envoyer mail avec mdpRandom
         print(mdpRandom)
@@ -143,8 +143,8 @@ def ajout_laborantin(cnx, nom, prenom, email):
     except:
         print("erreur d'ajout de l'utilisateur")
         return False
-    
 
+ajout_laborantin(cnx, "labo", "labo", "labo@")
 #marche BD 5
 def get_nom_whith_email(cnx, email):
     result = cnx.execute(text("select nom from UTILISATEUR where email = '" + email + "';"))
@@ -382,6 +382,8 @@ def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email
     except:
         print("erreur de l'id")
         return False
+    
+update_all_information_utillisateur_with_id(cnx, 16, 2, "blandeau", "erwan", "erwan.blandeau@gmail.com")
 
 
 #marche BD 5
@@ -467,3 +469,16 @@ def get_domaine(cnx):
     except:
         print("erreur de l'id")
         raise
+
+def get_all_user(cnx, idStatut=None):
+    liste = []
+    if idStatut is None:
+        result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where idStatut != 1;"))
+    else:
+        result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where idStatut = '" + str(idStatut) + "';"))
+    for row in result:
+        print(row)
+        liste.append((row[1],row[0],row[2],row[3],row[4]))
+    return (liste, len(liste))
+
+get_all_user(cnx)
