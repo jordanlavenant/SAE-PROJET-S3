@@ -6,6 +6,10 @@ from hashlib import sha256
 from datetime import datetime, timedelta
 import random
 import string
+import smtplib
+import json
+from email.message import EmailMessage
+
 
 cnx = ouvrir_connexion()
 
@@ -21,7 +25,7 @@ def get_nom_dom_cat_materiel_with_id(cnx, id):
     except:
         print("erreur de l'id")
         raise
-
+    
 #marche BD 5
 def ajoute_materiel(cnx, reFerenceMateriel, nomMateriel, idCategorie, seuilAlerte, caracteristiquesComplementaires,informationsComplementairesEtSecurite):
     try:
@@ -123,6 +127,7 @@ def ajout_administrateur(cnx, nom, prenom, email):
         print("erreur d'ajout de l'utilisateur")
         return False
 
+
 def ajout_laborantin(cnx, nom, prenom, email):
     
     try:
@@ -179,7 +184,7 @@ def modification_droit_utilisateur(cnx, idut, idSt):
         raise
 
 #marche BD 5
-def get_password_hashed_with_email(cnx, email):
+def get_password_with_email(cnx, email):
     result = cnx.execute(text("select motDePasse from UTILISATEUR where email = '" + email + "';"))
     for row in result:
         return row[0]
@@ -189,7 +194,7 @@ def update_mdp_utilisateur(cnx, email,mdp, new_mdp):
     try:
         init_mdp = hasher_mdp(mdp)
         new_mdp_hash = hasher_mdp(new_mdp)
-        mdp_get = get_password_hashed_with_email(cnx, email)
+        mdp_get = get_password_with_email(cnx, email)
         if mdp_get != init_mdp:
             print("mdp incorrect")
             return False
@@ -288,6 +293,9 @@ def get_categories(cnx):
 #         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
 #         raise
 
+def get_nb_alert(cnx):
+    return 1
+
 # def get_info_materiel_alert(cnx):
 #     try:
 #         # Calculer la date qui est 1 mois à partir de maintenant
@@ -315,6 +323,8 @@ def get_categories(cnx):
 #         print("Erreur lors de la récupération du nombre de demandes :", str(e))
 #         raise
 
+def get_nb_demande(cnx):
+    return 1
 
 #marhce BD 5
 def get_all_information_utilisateur_with_id(cnx,id):
@@ -413,15 +423,47 @@ def get_all_info_from_domaine(cnx):
         print("erreur de l'id")
         raise
 
-def get_info_demande(cnx):
-    try:
-        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
-        info_commande = []
-        for row in result:
-            info_commande.append(row)
-        return  info_commande
-    except:
-        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
-        raise
+# def get_info_demande(cnx):
+#     try:
+#         result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
+#         info_commande = []
+#         for row in result:
+#             info_commande.append(row)
+#         return  info_commande
+#     except Exception as e:
+#         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+#         raise
 
-get_info_demande(cnx)
+# get_info_demande(cnx)
+
+
+def envoyer_mail(mailreceveur, login, mdp):
+    json_file = open('Gestlab/static/data/configEmail.json')
+    gmail_config = json.load(json_file)
+
+    msg = EmailMessage()
+    msg['Subject'] = 'Test email'
+
+    #email de l'envoyeur
+    msg['From'] = gmail_config["email"]
+
+    #email du receveur
+    msg['To'] = mailreceveur
+    msg.set_content('Voici le login: ' + login  + ' \nVoici le mots de passe temporaire: ' + mdp)
+ 
+    with smtplib.SMTP_SSL('smtp.gmail.com', gmail_config["port"]) as smtp:
+        smtp.login(gmail_config["email"], gmail_config["password"])
+        smtp.send_message(msg)
+        print("Mail envoyé")
+
+def get_domaine(cnx):
+    try:
+        list = []
+        result = cnx.execute(text("select * from DOMAINE ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de l'id")
+        raise

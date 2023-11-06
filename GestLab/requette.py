@@ -447,3 +447,18 @@ def get_info_demande(cnx):
     except Exception as e:
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
+
+def get_domaine(cnx):
+    try:
+        list = []
+        result = cnx.execute(text("select * from DOMAINE ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    
+    except Exception as e:
+        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+        raise
+
+get_domaine(cnx)
