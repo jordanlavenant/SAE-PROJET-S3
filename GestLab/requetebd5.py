@@ -7,6 +7,7 @@ from hashlib import sha256
 from datetime import datetime, timedelta
 import random
 import string
+from .models import *
 
 
 
@@ -88,6 +89,7 @@ def ajout_professeur(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
+        envoyer_mail_nouveau_compte(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -100,11 +102,11 @@ def ajout_gestionnaire(cnx, nom, prenom, email):
     try:
         idStatut = 4
         mdpRandom = generer_mot_de_passe()
-        # envoyer mail avec mdpRandom
         print(mdpRandom)
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
+        envoyer_mail_nouveau_compte(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -120,6 +122,7 @@ def ajout_administrateur(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
+        envoyer_mail_nouveau_compte(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -137,6 +140,7 @@ def ajout_laborantin(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
+        envoyer_mail_nouveau_compte(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -238,7 +242,7 @@ def get_user_with_statut(cnx, nomStatut):
     liste = []
     result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where nomStatut = '" + str(nomStatut) + "';"))
     for row in result:
-        liste.append((row[0],row[2],row[3]))
+        liste.append((row[4]))
     return liste
 
 #marche BD 5
@@ -445,6 +449,7 @@ def get_domaine(cnx):
     except:
         print("erreur de l'id")
         raise
+
 
 def get_all_user(cnx, idStatut=None):
     liste = []
