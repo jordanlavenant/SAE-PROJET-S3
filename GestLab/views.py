@@ -99,12 +99,15 @@ def commander():
     chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
-@app.route("/bonDeCommande/<int:idDemmande>")
-def bonDeCommande(idDemmande):
+@app.route("/bonDeCommande/<int:idDemande>")
+def bonDeCommande(idDemande):
+    info_commande = get_info_demande_with_id(get_cnx(), idDemande)
     return render_template(
         "bonDeCommande.html",
-        idDemmande = idDemmande,
-        title = "Bon De Commande",
+        idDemande = idDemande,
+        infoCommande = info_commande,
+        len = len(info_commande),
+        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
         chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
     )
 
