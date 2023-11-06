@@ -1,7 +1,7 @@
 #from .app import db
 from flask_login import UserMixin
 from .app import login_manager
-from .requette import *
+from .requetebd5 import *
 from .connexionPythonSQL import *
 import smtplib
 import json
