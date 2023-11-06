@@ -1,5 +1,15 @@
 a {
-    text-decoration: none;
+    color: #384274;
+    font-variant: small-caps;
+    transition: 0.2s;
+    font-size: 20px;
+}
+
+a:hover {
+    color: #384274;
+    transition: 0.2s;
+    font-size: 21px;
+    cursor: pointer;
 }
 
 main{
@@ -44,5 +54,7 @@ main > section {
 }
 
 p {
-    margin: 0.5em;
+    font-size: 20px;
+    margin: 0;
+    font-weight: bold;
 }
