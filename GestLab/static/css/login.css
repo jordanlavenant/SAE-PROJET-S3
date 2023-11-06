@@ -217,16 +217,48 @@
   max-height: 50px;
 }
 
+
+
+/* mdp oublier */
+
 .container-mdp-oublier {
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+  z-index: 100;
 }
 
 #btn-mdp-oublier {
   background: none;
   border: none;
   color: #fff;
+  cursor: pointer;
 }
+
+#mdp-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+
+#mdp-box {
+  margin-top: 5em;
+  margin-bottom: 5em;
+  width: 400px;
+  padding: 40px;
+  background: #009af0;
+  box-shadow: 0 15px 25px #384274;
+  border-radius: 10px;
+  }
+
+  #mdp-box h2 {
+      margin: 0 0 30px;
+      padding: 0;
+      color: #fff;
+      text-align: center;
+  }
+  

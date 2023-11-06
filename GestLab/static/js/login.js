@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const lienAccueil = document.getElementById("lien-accueil");
     const formChangerMDP = document.getElementById("ChangerMDPForm");
     const formChangerMail = document.getElementById("ChangerMailForm");
+    const formLogin = document.getElementById("login-container");
+    const formMdpOublier = document.getElementById("mdp-container");
+    const boutonMdpOublier = document.getElementById("btn-mdp-oublier");
 
     
     // Définir la fonction pour masquer l'élément
@@ -51,8 +54,15 @@ document.addEventListener("DOMContentLoaded", function() {
         estAfficherMDP = false;
     }
 
+    function masquerLogin() {
+        console.log("test");
+        // formLogin.style.display = "none";
+        // formMdpOublier.style.display = "flex";
+    }
+
     // Ajouter un écouteur d'événement sur le bouton pour appeler la fonction masquerElement lors du clic
     btnChangerMDP.addEventListener("click", masquerMDP);
     btnChangerMail.addEventListener("click", masquerMail);
     btnRetour.addEventListener("click", masquerTout);
+    boutonMdpOublier.addEventListener("click", masquerLogin);
 });

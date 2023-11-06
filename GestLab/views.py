@@ -89,6 +89,14 @@ class CommentaireForm(FlaskForm):
         gest = self.gestionnaires.data
         text = self.text.data
         return text, gest
+    
+class MdpOublierForm(FlaskForm):
+    email = StringField('email', validators=[DataRequired()])
+    submit = SubmitField('Recevoir un nouveau mot de passe')
+
+    def get_email(self):
+        email = self.email.data
+        return email
 
 
 @app.route("/")
@@ -350,6 +358,7 @@ def login():
     f = LoginForm ()
     changerMDP = ChangerMDPForm()
     changerMail = ChangerMailForm()
+    mdpOublier = MdpOublierForm()
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
@@ -365,7 +374,9 @@ def login():
         title="Profil",
         form=f,
         fromChangerMDP=changerMDP,
-        fromChangerMail=changerMail)
+        fromChangerMail=changerMail,
+        MdpOublierForm=mdpOublier
+        )
 
 @app.route("/logout/")
 def logout():
