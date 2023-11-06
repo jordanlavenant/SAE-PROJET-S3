@@ -99,6 +99,15 @@ def commander():
     chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
+
+@app.route("/bon-commande/")
+def bon_commande():
+    return render_template(
+    "bonCommande.html",
+    title="Bon de Commande",
+    chemin = [("base", "Accueil"), ("commander", "Commander"), ("bon_commande", "Bon de Commande")]
+    )
+
 @app.route("/bonDeCommande/<int:idDemmande>")
 def bonDeCommande(idDemmande):
     return render_template(
@@ -192,8 +201,8 @@ def consulter_utilisateur():
         elif selected_value == "Gestionnaire":
             return render_template(
                 "consulterUtilisateur.html",
-                utilisateurs = get_all_user(get_cnx(), 3)[0],
-                nbUser = get_all_user(get_cnx(), 3)[1],
+                utilisateurs = get_all_user(get_cnx(), 4)[0],
+                nbUser = get_all_user(get_cnx(), 4)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
@@ -202,8 +211,8 @@ def consulter_utilisateur():
         elif selected_value == "Laborantin":
             return render_template(
                 "consulterUtilisateur.html",
-                utilisateurs = get_all_user(get_cnx(), 4)[0],
-                nbUser = get_all_user(get_cnx(), 4)[1],
+                utilisateurs = get_all_user(get_cnx(), 3)[0],
+                nbUser = get_all_user(get_cnx(), 3)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
@@ -253,23 +262,24 @@ def modifier_utilisateur(id):
     f = AjouterUtilisateurForm()
     if f.validate_on_submit():
         nom, prenom, email, statut = f.get_full_user()
+        print(statut)
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
-                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 2)
+                res = update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('utilisateurs'))
             elif statut == "gestionnaire":
-                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 3)
+                res = update_all_information_utillisateur_with_id(cnx, id, 4, nom, prenom, email)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('utilisateurs'))
             elif statut == "laborantin":
-                res = update_all_information_utillisateur_with_id(cnx, id, nom, prenom, email, 4)
+                res = update_all_information_utillisateur_with_id(cnx, id, 3, nom, prenom, email)
                 if res:
                     return redirect(url_for('utilisateurs'))
                 else:

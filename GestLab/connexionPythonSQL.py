@@ -1,5 +1,5 @@
 import sqlalchemy  
-from loginSQL import *  # importe les paramètres de connexion à la BD
+from .loginSQL import *  # importe les paramètres de connexion à la BD
 import pymysql
 
 pymysql.install_as_MySQLdb()
