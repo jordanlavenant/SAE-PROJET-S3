@@ -344,7 +344,7 @@ def commentaire():
         if text != None:
             mail = session['utilisateur'][2]
             envoyer_mail_commentaire("testgestionnaire1@gmail.com", mail, text)
-            redirect(url_for('base'))
+            return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
     users= get_user_with_statut(get_cnx(), "Gestionnaire"),
