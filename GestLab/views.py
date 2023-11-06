@@ -7,7 +7,7 @@ from wtforms import StringField, HiddenField, FileField, SubmitField, SelectFiel
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
-from .requette import *
+from .requetebd5 import *
 from .connexionPythonSQL import *
 
 
@@ -102,6 +102,7 @@ def commander():
 @app.route("/bonDeCommande/<int:idDemande>")
 def bonDeCommande(idDemande):
     info_commande = get_info_demande_with_id(get_cnx(), idDemande)
+    print(info_commande)
     return render_template(
         "bonDeCommande.html",
         idDemande = idDemande,
@@ -297,7 +298,7 @@ def demandes():
     return render_template(
     "demandes.html",
     title="Demandes",
-    nb_demande = get_nb_demande(cnx),
+    nb_demande = int(get_nb_demande(cnx)),
     info_demande = get_info_demande(cnx),
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
     )
