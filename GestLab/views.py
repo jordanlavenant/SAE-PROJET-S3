@@ -152,6 +152,7 @@ def etat(id):
     id=id,
     title="Etat",
     item_properties=get_all_information_to_Materiel_with_id(cnx, id),
+    items_unique=get_all_information_to_MaterielUnique_with_id(cnx, id),
     chemin = [("base", "Accueil"), ("inventaire", "Inventaire"), ("inventaire", "Etat")]
     )
 
@@ -315,6 +316,7 @@ def inventaire():
     "inventaire.html",
     categories = get_categories(get_cnx()),
     items = get_all_information_to_Materiel(get_cnx()),
+    alertes = nb_alert_par_materiel_dict(get_cnx()),
     title="Inventaire",
     chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
     )

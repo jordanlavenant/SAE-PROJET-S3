@@ -310,6 +310,27 @@ def get_all_information_to_Materiel_with_id(cnx, id):
         print("erreur de l'id")
         raise
 
+def get_all_information_to_MaterielUnique_with_id(cnx, id):
+    try:
+        list = []
+        result = cnx.execute(text("select * from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de l'id")
+        raise
+
+def get_nb_materiel_to_MaterielUnique_with_id(cnx, id):
+    try:
+        result = cnx.execute(text("select count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("erreur de l'id")
+    raise
+
 def get_info_materiel_alert(cnx):
     try:
         list = []
@@ -351,11 +372,29 @@ def get_all_information_to_Materiel(cnx):
         list = []
         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE ;"))
         for row in result:
-            print(row)
-            list.append(row)
-        return list
+            id = row[0]
+            result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+            for row_count in result_count:
+                print((row_count[1]))
+                list.append((row,row_count[1]))
+        return list, len(list)
     except:
         print("erreur de l'id")
+        raise
+
+def nb_alert_par_materiel_dict(cnx):
+    try:
+        dict = {}
+        result = cnx.execute(text("select idMateriel,idMaterielUnique from ALERTESENCOURS natural join MATERIELUNIQUE;"))
+        for row in result:
+            if row[0] in dict:
+                dict[row[0]] += 1
+            else:
+                dict[row[0]] = 1
+
+        print(dict)
+        return dict
+    except: 
         raise
 
 #marche BD 5

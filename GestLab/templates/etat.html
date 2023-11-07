@@ -6,39 +6,61 @@
 {% block content %}
 <a id="btn-back" href="{{ url_for('inventaire') }}">Retour</a>
 <div class="state-container">
-    <div class="item-card">
-        <div class="item-properties">
-            <div class="header-container">
-                <h2>{{ item_properties[1] }}</h2>
-                <a href="{{ url_for('commentaire') }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
-            </div>
-            <div class="date-reception">
-                <p class="date-reception-label">Date de réception : </p>
-                <p class="date-reception-content">(date rec. requête)</p>
-            </div>
-            <div class="date-peremption">
-                <p class="date-peremption-label">Date de péremption : </p>
-                <p class="date-peremption-content">(date pérm. requête)</p>
-            </div>
-            <div class="quantite-container">
-                <p class="quantite-label">Quantité approx.: </p>
-                <p class="quantite-content">(quantité si pro-chim)</p>
-            </div>
-            <div class="categorie-container">
-                <p class="categorie-label">Catégorie : </p>
-                <p class="categorie-content">{{ item_properties[3] }}</p>
-            </div>
-            <div class="domaine-container">
-                <p class="domaine-label">Domaine : </p>
-                <p class="domaine-content">{{ item_properties[5] }}</p>
-            </div>
-            <div class="comment-container">
-                <p class="comment-label">Commentaire : </p>
-                <p class="comment-content">(commentaire - requête)</p>
+    {% for item in items_unique %}
+        <div class="item-card">
+            <div class="item-properties">
+                <div class="header-container">
+                    <h2>{{ item_properties[1] }}</h2>
+                    <a href="{{ url_for('commentaire') }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
+                </div>
+                <div class="date-reception">
+                    <p class="date-reception-label">Date de réception : </p>
+                    <p class="date-reception-content">{{ item[5] }}</p>
+                </div>
+                <div class="date-peremption">
+                    <p class="date-peremption-label">Date de péremption : </p>
+                    {% if item[0] == 3 %}
+                        <p class="date-peremption-content">{{ item[8] }}</p>
+                    {% endif %}
+                    {% if item[0] == 5 %}
+                        <p class="date-peremption-content">{{ item[8] }}</p>
+                    {% else %}
+                        <p class="date-peremption-content">-</p>
+                    {% endif %}
+                </div>
+                <div class="quantite-container">
+                    <p class="quantite-label">Quantité approx.: </p>
+                    {% if item[0] == 5%}
+                        <p class="quantite-content">{{ item[7] }} L</p>
+                    {% else %}
+                        <p class="quantite-content">-</p>
+                    {% endif %}
+                </div>
+                <div class="categorie-container">
+                    <p class="categorie-label">Catégorie : </p>
+                    <p class="categorie-content">{{ item_properties[3] }}</p>
+                </div>
+                <div class="domaine-container">
+                    <p class="domaine-label">Domaine : </p>
+                    <p class="domaine-content">{{ item_properties[5] }}</p>
+                </div>
+                <div class="comment-container">
+                    <p class="comment-label">Commentaire : </p>
+                    {% if item[6] != None %}
+                        <p class="comment-content">{{ item[6] }}</p>
+                    {% else %}
+                        <p class="comment-content">-</p>
+                    {% endif %}
+                </div>
+                <div class="footer-state">
+                    <div class="alerts-state">
+                        <img id="attention-rouge" src="{{ url_for('static',filename='./images/attention-rouge.png') }}" alt="attention-rouge">
+                        <p class="texte_rouge">1 Alertes</p>
+                    </div>
+                    <a id="btn-redirect-order" href="#">Commander</a>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="item-info"></div>
+    {% endfor %}
 </div>
 {% endblock %}

@@ -103,7 +103,7 @@ a {
 .item-properties {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     flex-basis: 100%;
     padding: 1% 5%;
 }
@@ -150,6 +150,35 @@ a {
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
+}
+
+.alerts-state {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#attention-rouge{
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.alerts-statement {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.alerts_count{
+    color: #d35252;
+    align-items: center;
+    margin: 0;
+}
+
+.texte_rouge{
+    color: #d35252;
+    align-items: center;
+    margin: 0;
 }
 
 @media screen and (max-width: 1000px) {
