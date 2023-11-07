@@ -1,9 +1,9 @@
 from .app import app #, db
-from flask import render_template, url_for, redirect, request, session
+from flask import render_template, url_for, redirect, request, session, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField
+from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
@@ -89,7 +89,68 @@ class CommentaireForm(FlaskForm):
         gest = self.gestionnaires.data
         text = self.text.data
         return text, gest
+    
+class MdpOublierForm(FlaskForm):
+    email = StringField('email', validators=[DataRequired()])
+    submit = SubmitField('Recevoir un nouveau mot de passe')
 
+    def get_email(self):
+        email = self.email.data
+        return email
+
+class AjouterMaterielForm(FlaskForm):
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
+    submit = SubmitField('Submit')
+    nom = StringField('nom', validators=[DataRequired()])
+    reference = StringField('reference')
+    date_reception = DateField('date_reception')
+    date_peremption = DateField('date_peremption')
+    caracteristiques = StringField('caracteristiques')
+    infossup = StringField('infossup')
+    quantite = StringField('quantite')
+    seuilalerte  = StringField('seuilalerte')
+    next = HiddenField()
+
+    def get_full_materiel(self):
+        domaine = self.domaine.data
+        print("domaine + " + str(domaine))
+        categorie = self.categorie.data
+        nom = self.nom.data
+        reference = self.reference.data
+        caracteristiques = self.caracteristiques.data
+        infossup = self.infossup.data
+        seuilalerte = self.seuilalerte.data
+        return (domaine, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+
+def get_domaine_choices():
+    query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
+    result = cnx.execute(query)
+    domaines =  [(str(id_), name) for name, id_ in result]
+    domaines.insert(0, ("", "Choisir un domaine"))
+    return domaines
+
+@app.route('/get_categorie_choices', methods=['GET'])
+def get_categorie_choices():
+    selected_domain_id = request.args.get('domaine_id')
+    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
+    categories = {str(id_): name for name, id_ in result}
+    return jsonify(categories)
+
+
+@app.route("/ajouter-materiel/")
+def ajouter_materiel():
+    f = AjouterMaterielForm()
+    f.domaine.choices = get_domaine_choices() 
+    if f.validate_on_submit():
+        selected_domain_id = f.domaine.data
+        f.categorie.choices = get_categorie_choices(selected_domain_id)
+    return render_template(
+    "ajouterMateriel.html",
+    title="Ajouter un matériel",
+    AjouterMaterielForm=f,
+    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    )
 
 @app.route("/")
 def base():
@@ -101,6 +162,18 @@ def base():
     demandes=str(nb_demandes),
     title="votre chemin vers la facilité"
     )
+
+@app.route("/motdepasseoublie/", methods=("GET","POST",))
+def mot_de_passe_oublier():
+    f = MdpOublierForm()
+    if f.validate_on_submit():
+        email = f.get_email()
+        print("email : "+email)
+        recuperation_de_mot_de_passe(cnx, email)
+        return redirect(url_for('login'))
+    return render_template(
+        "login.html",
+        MdpOublierForm=f)
 
 @app.route("/commander/")
 def commander():
@@ -269,6 +342,7 @@ def modifier_utilisateur(id):
     f = AjouterUtilisateurForm()
     if f.validate_on_submit():
         nom, prenom, email, statut = f.get_full_user()
+        print(statut)
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
                 res = update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
@@ -357,6 +431,7 @@ def login():
     f = LoginForm ()
     changerMDP = ChangerMDPForm()
     changerMail = ChangerMailForm()
+    mdpOublier = MdpOublierForm()
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
@@ -372,7 +447,9 @@ def login():
         title="Profil",
         form=f,
         fromChangerMDP=changerMDP,
-        fromChangerMail=changerMail)
+        fromChangerMail=changerMail,
+        MdpOublierForm=mdpOublier
+        )
 
 @app.route("/logout/")
 def logout():
@@ -447,11 +524,3 @@ def ajouterUtilisateur():
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)
-
-@app.route("/ajouter-materiel/")
-def ajouter_materiel():
-    return render_template(
-    "ajouterMateriel.html",
-    title="Ajouter un Matériel",
-    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
-    )
