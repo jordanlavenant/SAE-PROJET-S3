@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const formChangerMDP = document.getElementById("ChangerMDPForm");
     const formChangerMail = document.getElementById("ChangerMailForm");
 
+
     
     // Définir la fonction pour masquer l'élément
     function masquerMDP() {

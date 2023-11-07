@@ -89,6 +89,14 @@ class CommentaireForm(FlaskForm):
         gest = self.gestionnaires.data
         text = self.text.data
         return text, gest
+    
+class MdpOublierForm(FlaskForm):
+    email = StringField('email', validators=[DataRequired()])
+    submit = SubmitField('Recevoir un nouveau mot de passe')
+
+    def get_email(self):
+        email = self.email.data
+        return email
 
 class AjouterMaterielForm(FlaskForm):
     domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
@@ -141,16 +149,6 @@ def ajouter_materiel():
     chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
     )
 
-
-class CommentaireForm(FlaskForm):
-    text = TextAreaField('text', validators=[DataRequired()])
-    submit = SubmitField('envoyer le commentaire')
-
-    def get_text(self):
-        text = self.text.data
-        return text
-
-
 @app.route("/")
 def base():
     nb_alertes = get_nb_alert(cnx)
@@ -161,6 +159,18 @@ def base():
     demandes=str(nb_demandes),
     title="votre chemin vers la facilité"
     )
+
+@app.route("/motdepasseoublie/", methods=("GET","POST",))
+def mot_de_passe_oublier():
+    f = MdpOublierForm()
+    if f.validate_on_submit():
+        email = f.get_email()
+        print("email : "+email)
+        recuperation_de_mot_de_passe(cnx, email)
+        return redirect(url_for('login'))
+    return render_template(
+        "login.html",
+        MdpOublierForm=f)
 
 @app.route("/commander/")
 def commander():
@@ -418,6 +428,7 @@ def login():
     f = LoginForm ()
     changerMDP = ChangerMDPForm()
     changerMail = ChangerMailForm()
+    mdpOublier = MdpOublierForm()
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
@@ -433,7 +444,9 @@ def login():
         title="Profil",
         form=f,
         fromChangerMDP=changerMDP,
-        fromChangerMail=changerMail)
+        fromChangerMail=changerMail,
+        MdpOublierForm=mdpOublier
+        )
 
 @app.route("/logout/")
 def logout():
