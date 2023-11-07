@@ -99,6 +99,13 @@ class MdpOublierForm(FlaskForm):
         email = self.email.data
         return email
 
+class A2FForm(FlaskForm):
+    code = StringField('code', validators=[DataRequired()])
+    submit = SubmitField('Valider')
+
+    def get_code(self):
+        code = self.code.data
+        return code
 
 @app.route("/")
 def base():
@@ -116,12 +123,26 @@ def mot_de_passe_oublier():
     f = MdpOublierForm()
     if f.validate_on_submit():
         email = f.get_email()
-        print("email : "+email)
-        recuperation_de_mot_de_passe(cnx, email)
-        return redirect(url_for('login'))
+        # recuperation_de_mot_de_passe(cnx, email)
+        return redirect(url_for('a2f', mail=email))
     return render_template(
         "login.html",
         MdpOublierForm=f)
+
+@app.route("/a2f/<string:mail>", methods=("GET","POST",))
+def a2f(mail):
+    f = A2FForm()
+    if f.validate_on_submit():
+        code = f.get_code()
+        uri = get_uri_with_email(cnx, mail)
+        if verify(uri, code):
+            print("code valide")
+    return render_template(
+        "a2f.html",
+        title="A2F - "+mail,
+        mail=mail,
+        A2FForm=f,
+    )
 
 @app.route("/commander/")
 def commander():

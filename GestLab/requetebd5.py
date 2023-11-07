@@ -78,6 +78,42 @@ def hasher_mdp(mdp):
     m.update(mdp.encode("utf-8"))
     return m.hexdigest()
 
+def random_key():
+    return pyotp.random_base32()
+
+def create_uri(email):
+    cnx = get_cnx()
+    key = random_key()
+    add_two_authenticator_in_bd(cnx,key ,email,get_id_with_email(cnx, email) )
+    return pyotp.totp.TOTP(key).provisioning_uri(name= email, issuer_name= "GestLab")
+
+def add_two_authenticator_in_bd(cnx,key, email, id):
+    try:
+        if id != None:
+            cnx.execute(text("insert into 2FA (email,uri,idUtilisateur) values ('" + email + "', '" + key + "', '" + str(id) + "');"))
+            cnx.commit()
+            print("uri ajouté")
+        else:
+            print("id non trouvé")
+    except:
+        print("erreur d'ajout de l'uri")
+        raise
+
+def verify(key, code):
+    return pyotp.TOTP(key).verify(code)
+
+def get_uri_with_email(cnx, email):
+    result = cnx.execute(text("select uri from 2FA where email = '" + email + "';"))
+    for row in result:
+        print(row[0])
+        return row[0]
+    
+def get_id_with_email(cnx, email):
+    result = cnx.execute(text("select idUtilisateur from UTILISATEUR where email = '" + email + "';"))
+    for row in result:
+        print(row[0])
+        return row[0]
+
 #marche BD 5
 def ajout_professeur(cnx, nom, prenom, email):
     try:
