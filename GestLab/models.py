@@ -6,6 +6,9 @@ from .connexionPythonSQL import *
 import smtplib
 import json
 from email.message import EmailMessage
+import smtplib
+import json
+from email.message import EmailMessage
 
 @login_manager.user_loader
 def load_user(email):

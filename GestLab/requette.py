@@ -345,104 +345,128 @@ def ajout_professeur(cnx, nom, prenom, email, idStatut = 2):
 
 # def ajout_laborantin(cnx, nom, prenom, email, idStatut = 4):
     
-    try:
-        mdpRandom = generer_mot_de_passe()
-        # envoyer mail avec mdpRandom
-        print(mdpRandom)
-        mdphash = hasher_mdp(mdpRandom)
-        cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
-        cnx.commit()
-        print("utilisateur ajouté")
-        return True
-    except:
-        print("erreur d'ajout de l'utilisateur")
-        return False
+#     try:
+#         mdpRandom = generer_mot_de_passe()
+#         # envoyer mail avec mdpRandom
+#         print(mdpRandom)
+#         mdphash = hasher_mdp(mdpRandom)
+#         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
+#         cnx.commit()
+#         print("utilisateur ajouté")
+#         return True
+#     except:
+#         print("erreur d'ajout de l'utilisateur")
+#         return False
 
 
-def get_all_information_utilisateur_with_id(cnx,id):
-    try:
-        result = cnx.execute(text("select nom,prenom,email,nomStatut from UTILISATEUR natural join STATUT where idUtilisateur = " + str(id) + ";"))
-        for row in result:
-            print(row)
-            return row
-    except:
-        print("erreur de l'id")
-        raise
+# def get_all_information_utilisateur_with_id(cnx,id):
+#     try:
+#         result = cnx.execute(text("select nom,prenom,email,nomStatut from UTILISATEUR natural join STATUT where idUtilisateur = " + str(id) + ";"))
+#         for row in result:
+#             print(row)
+#             return row
+#     except:
+#         print("erreur de l'id")
+#         raise
 
-def get_all_information_to_Materiel_with_id(cnx, id):
-    try:
-        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS where idMateriel = " + str(id) + ";"))
-        for row in result:
-            return row
-    except:
-        print("erreur de l'id")
-        raise
+# def get_all_information_to_Materiel_with_id(cnx, id):
+#     try:
+#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE natural left join DATEPEREMPTION natural left join DOMAINE natural left join CATEGORIE natural join FDS where idMateriel = " + str(id) + ";"))
+#         for row in result:
+#             return row
+#     except:
+#         print("erreur de l'id")
+#         raise
 
-def update_all_information_utillisateur_with_id(cnx,id,nom,prenom,email,idStatut):
-    try:
-        cnx.execute(text( "update UTILISATEUR set nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "', idStatut = '" + str(idStatut) + "' where idUtilisateur = " + str(id) + ";"))
-        cnx.commit()
-        return True
-    except:
-        print("erreur de l'id")
-        return False
+# def update_all_information_utillisateur_with_id(cnx,id,nom,prenom,email,idStatut):
+#     try:
+#         cnx.execute(text( "update UTILISATEUR set nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "', idStatut = '" + str(idStatut) + "' where idUtilisateur = " + str(id) + ";"))
+#         cnx.commit()
+#         return True
+#     except:
+#         print("erreur de l'id")
+#         return False
 
-def recherche_all_in_utilisateur_with_search(cnx, search):
-    try:
-        list = []
-        result = cnx.execute(text("select * from UTILISATEUR where nom like '%" + search + "%'" or " prenom like '%" + search + "%' ;"))
-        for row in result:
-            list.append(row)
-        return (list, len(list))
-    except:
-        print("erreur de recherche")
-        raise
+# def recherche_all_in_utilisateur_with_search(cnx, search):
+#     try:
+#         list = []
+#         result = cnx.execute(text("select * from UTILISATEUR where nom like '%" + search + "%'" or " prenom like '%" + search + "%' ;"))
+#         for row in result:
+#             list.append(row)
+#         return (list, len(list))
+#     except:
+#         print("erreur de recherche")
+#         raise
 
-# recherche_all_in_utilisateur_with_search(cnx, "jo")
+# # recherche_all_in_utilisateur_with_search(cnx, "jo")
 
-def recherche_all_in_materiel_with_search(cnx, search):
-    try:
-        list = []
-        result = cnx.execute(text("select * from MATERIEL where nomMateriel like '%" + search + "%' ;"))
-        for row in result:
-            print(row)
-            list.append(row)
-        return list
-    except:
-        print("erreur de recherche")
-        raise
+# def recherche_all_in_materiel_with_search(cnx, search):
+#     try:
+#         list = []
+#         result = cnx.execute(text("select * from MATERIEL where nomMateriel like '%" + search + "%' ;"))
+#         for row in result:
+#             print(row)
+#             list.append(row)
+#         return list
+#     except:
+#         print("erreur de recherche")
+#         raise
 
-def get_domaine(cnx):
-    try:
-        list = []
-        result = cnx.execute(text("select * from DOMAINE ;"))
-        for row in result:
-            print(row)
-            list.append(row)
-        return list
-    except:
-        print("erreur de l'id")
-        raise
+# def get_domaine(cnx):
+#     try:
+#         list = []
+#         result = cnx.execute(text("select * from DOMAINE ;"))
+#         for row in result:
+#             print(row)
+#             list.append(row)
+#         return list
+#     except:
+#         print("erreur de l'id")
+#         raise
 
-def get_all_information_to_Materiel_cat_com(cnx):
-    try:
-        list = []
-        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite from MATERIEL  NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE ;"))
-        for row in result:
-            print(row)
-            list.append(row)
-        return list
-    except:
-        print("erreur de l'id")
-        raise
+# def get_all_information_to_Materiel_cat_com(cnx):
+#     try:
+#         list = []
+#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite from MATERIEL  NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE ;"))
+#         for row in result:
+#             print(row)
+#             list.append(row)
+#         return list
+#     except:
+#         print("erreur de l'id")
+#         raise
 
-def get_info_rechercheMateriel(cnx):
-    try:
-        result = cnx.execute(text("SELECT * from RECHERCHEMATERIELS;"))
-        info_rechercheMateriel = []
-        for row in result:
-            info_rechercheMateriel.append(row[0])
-        return  info_rechercheMateriel
-    except:
-        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
-        raise
+# def get_info_rechercheMateriel(cnx):
+#     try:
+#         result = cnx.execute(text("SELECT * from RECHERCHEMATERIELS;"))
+#         info_rechercheMateriel = []
+#         for row in result:
+#             info_rechercheMateriel.append(row[0])
+#         return  info_rechercheMateriel
+#     except:
+#         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+#         raise
+
+# def get_info_demande(cnx):
+#     try:
+#         result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
+#         info_commande = []
+#         for row in result:
+#             info_commande.append(row)
+#         return  info_commande
+#     except Exception as e:
+#         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+#         raise
+
+# def get_domaine(cnx):
+#     try:
+#         list = []
+#         result = cnx.execute(text("select * from DOMAINE ;"))
+#         for row in result:
+#             print(row)
+#             list.append(row)
+#         return list
+    
+#     except Exception as e:
+#         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+#         raise

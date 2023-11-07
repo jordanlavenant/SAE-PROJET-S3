@@ -1,5 +1,5 @@
 from .app import app #, db
-from flask import render_template, url_for, redirect, request, session
+from flask import render_template, url_for, redirect, request, session, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
@@ -8,7 +8,9 @@ from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
 from .requetebd5 import *
+from .requetebd5 import *
 from .connexionPythonSQL import *
+from .models import *
 from .models import *
 
 
@@ -89,6 +91,66 @@ class CommentaireForm(FlaskForm):
         gest = self.gestionnaires.data
         text = self.text.data
         return text, gest
+
+class AjouterMaterielForm(FlaskForm):
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
+    submit = SubmitField('Submit')
+    nom = StringField('nom', validators=[DataRequired()])
+    reference = StringField('reference')
+    caracteristiques = StringField('caracteristiques')
+    infossup = StringField('infossup')
+    seuilalerte  = StringField('seuilalerte')
+    next = HiddenField()
+
+    def get_full_materiel(self):
+        domaine = self.domaine.data
+        print("domaine + " + str(domaine))
+        categorie = self.categorie.data
+        nom = self.nom.data
+        reference = self.reference.data
+        caracteristiques = self.caracteristiques.data
+        infossup = self.infossup.data
+        seuilalerte = self.seuilalerte.data
+        return (domaine, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+
+def get_domaine_choices():
+    query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
+    result = cnx.execute(query)
+    domaines =  [(str(id_), name) for name, id_ in result]
+    domaines.insert(0, ("", "Choisir un domaine"))
+    return domaines
+
+@app.route('/get_categorie_choices', methods=['GET'])
+def get_categorie_choices():
+    selected_domain_id = request.args.get('domaine_id')
+    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
+    categories = {str(id_): name for name, id_ in result}
+    return jsonify(categories)
+
+
+@app.route("/ajouter-materiel/")
+def ajouter_materiel():
+    f = AjouterMaterielForm()
+    f.domaine.choices = get_domaine_choices() 
+    if f.validate_on_submit():
+        selected_domain_id = f.domaine.data
+        f.categorie.choices = get_categorie_choices(selected_domain_id)
+    return render_template(
+    "ajouterMateriel.html",
+    title="Ajouter un matériel",
+    AjouterMaterielForm=f,
+    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    )
+
+
+class CommentaireForm(FlaskForm):
+    text = TextAreaField('text', validators=[DataRequired()])
+    submit = SubmitField('envoyer le commentaire')
+
+    def get_text(self):
+        text = self.text.data
+        return text
 
 
 @app.route("/")
@@ -269,6 +331,7 @@ def modifier_utilisateur(id):
     f = AjouterUtilisateurForm()
     if f.validate_on_submit():
         nom, prenom, email, statut = f.get_full_user()
+        print(statut)
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
                 res = update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
@@ -335,6 +398,7 @@ def demander():
     )
 
 @app.route("/commentaire/", methods=("GET","POST",))
+@app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():
     users = get_user_with_statut(get_cnx(), "Gestionnaire")
     f = CommentaireForm()
@@ -346,8 +410,8 @@ def commentaire():
             return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
-    users = users,
-    title ="envoyer un commentaire",
+    users= get_user_with_statut(get_cnx(), "Gestionnaire"),
+    title="envoyer un commentaire",
     chemin = [("base", "Accueil"), ("commentaire", "envoyer un commentaire")],
     CommentaireForm=f
     )
@@ -447,11 +511,3 @@ def ajouterUtilisateur():
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)
-
-@app.route("/ajouter-materiel/")
-def ajouter_materiel():
-    return render_template(
-    "ajouterMateriel.html",
-    title="Ajouter un Matériel",
-    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
-    )

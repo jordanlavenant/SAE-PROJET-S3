@@ -9,10 +9,6 @@ import random
 import string
 from .models import *
 
-
-
-
-
 cnx = ouvrir_connexion()
 
 def get_cnx():
@@ -149,8 +145,6 @@ def ajout_laborantin(cnx, nom, prenom, email):
         print("erreur d'ajout de l'utilisateur")
         return False
 
-ajout_laborantin(cnx, "labo", "labo", "labo@")
-#marche BD 5
 def get_nom_whith_email(cnx, email):
     result = cnx.execute(text("select nom from UTILISATEUR where email = '" + email + "';"))
     for row in result:
@@ -424,7 +418,8 @@ def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email
     except:
         print("erreur de l'id")
         return False
-    
+
+
 
 
 #marche BD 5
@@ -466,6 +461,21 @@ def get_all_info_from_domaine(cnx):
         print("erreur de l'id")
         raise
 
+# def get_info_demande(cnx):
+#     try:
+#         result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
+#         info_commande = []
+#         for row in result:
+#             info_commande.append(row)
+#         return  info_commande
+#     except Exception as e:
+#         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+#         raise
+
+# get_info_demande(cnx)
+
+
+# def get_domaine(cnx):
 # def get_info_demande(cnx):
 #     try:
 #         result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
