@@ -465,3 +465,23 @@ def get_all_user(cnx, idStatut=None):
         print(row)
         liste.append((row[1],row[0],row[2],row[3],row[4]))
     return (liste, len(liste))
+
+def get_materiel(cnx, idMateriel) :
+    try:
+        materiel = []
+        result = cnx.execute(text("SELECT * FROM MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
+        for row in result:
+            materiel.append(row)
+        return materiel
+    except:
+        print("Erreur lors de la récupération du matériel")
+        raise
+
+def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
+    try:
+        cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))
+        cnx.commit()
+        print("Materiel modifié")
+    except:
+        print("Erreur lors de la modification du matériel")
+        raise

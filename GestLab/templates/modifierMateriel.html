@@ -8,38 +8,38 @@
     <a id="btn-retour" href="{{ url_for('consulter_utilisateur') }}">retour</a>
     <div id="modifierMateriel-box">
         <form class="form-modifMateriel" role="form" method="POST" action="{{ url_for('modifier_materiel', id=id) }}">
-            {{ ModifierMaterielForm.hidden_tag() }}
+            {{ AjouterMaterielForm.hidden_tag() }}
             <div class="user-box">
                 <label for="domaine">Domaine :</label>
-                <div>{{ ModifierMaterielForm.domaine(size=0, class_="comboBox") }}</div>
+                <div>{{ AjouterMaterielForm.domaine(size=0, class_="comboBox") }}</div>
             </div>
             <div class="user-box">
                 <label for="categorie">Catégorie :</label>
-                <div>{{ ModifierMaterielForm.categorie(size=0, class_="comboBox") }}</div>
+                <div>{{ AjouterMaterielForm.categorie(size=0, class_="comboBox") }}</div>
             </div>
             <div class="user-box">
                 <label for="nom">Nom :</label>
-                <div>{{ ModifierMaterielForm.nom(size=50, class_="form-control element", placeholder="Nom", value=nom) }}</div>
+                <div>{{ AjouterMaterielForm.nom(size=50, class_="form-control element", placeholder="Nom", value=nom) }}</div>
             </div>
             <div class="user-box">
                 <label for="reference">Référence :</label>
-                <div>{{ ModifierMaterielForm.reference(size=50, class_="form-control element", placeholder="Référence", value=reference) }}</div>
+                <div>{{ AjouterMaterielForm.reference(size=50, class_="form-control element", placeholder="Référence", value=reference) }}</div>
             </div>
             <div class="user-box">
                 <label for="caracteristiques">Caractéristiques :</label>
-                <div>{{ ModifierMaterielForm.caracteristiques(size=50, class_="form-control element", placeholder="Caractéristiques", value=caracteristiques) }}</div>
+                <div>{{ AjouterMaterielForm.caracteristiques(size=50, class_="form-control element", placeholder="Caractéristiques", value=caracteristiques) }}</div>
             </div>
             <div class="user-box">
                 <label for="infossup">Informations complémentaires :</label>
-                <div>{{ ModifierMaterielForm.infossup(size=50, class_="form-control element", placeholder="Informations complémentaires, mesures de sécurité...", value=infossup) }}</div>
+                <div>{{ AjouterMaterielForm.infossup(size=50, class_="form-control element", placeholder="Informations complémentaires, mesures de sécurité...", value=infossup) }}</div>
             </div>
             <div class="user-box">
                 <label for="seuilalerte">Seuil d'alerte quantité :</label>
-                <div>{{ ModifierMaterielForm.seuilalerte(size=50, class_="form-control element", placeholder="Quantité minimale à avoir en stock", value=seuilalerte) }}</div>
+                <div>{{ AjouterMaterielForm.seuilalerte(size=50, class_="form-control element", placeholder="Quantité minimale à avoir en stock", value=seuilalerte) }}</div>
             </div>
             <!--modifier une façon d'uploader une fds ???-->
             <div class="valid-container">
-                <input type="submit" value="Modifier matériel" class="element">
+                <input type="submit" value="Ajouter matériel" class="element">
             </div>
         </form>
     </div>

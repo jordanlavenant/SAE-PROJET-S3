@@ -322,23 +322,38 @@ def modifier_utilisateur(id):
     chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs"), ("consulter_utilisateur", "Modifier un Utilisateur")] 
     )
 
-@app.route("/modifier-materiel/", methods=("GET","POST",))
+@app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
 def modifier_materiel(id):
-    f = AjouterMaterielForm()
+    print("hee hee")
+    materiel = get_materiel(cnx, id)
+    idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
+
+    """    
+    idMateriel = materiel[0][0]
+    referenceMateriel = materiel[0][1]
+    idFDS = materiel[0][2]
+    nomMateriel = materiel[0][3]
+    idCategorie = materiel[0][4]
+    seuilAlerte = materiel[0][5]
+    caracteristiquesCompelmentaires = materiel[0][6]
+    informationsComplementairesEtSecurite = materiel[0][7]"""                          
+    f = AjouterMaterielForm(reference = referenceMateriel, nom = nomMateriel, seuilalerte = seuilAlerte, caracteristiques = caracteristiquesCompelmentaires, infossup = informationsComplementairesEtSecurite)
     f.domaine.choices = get_domaine_choices() 
+
     if f.validate_on_submit() :
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
-        res = modifie_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        res = modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
         if res:
             return redirect(url_for('inventaire'))
         else:
             print("Erreur lors de la modification du matériel")
-            return redirect(url_for('modifier_materiel'))
+            return redirect(url_for('inventaire'))
     return render_template(
     "modifierMateriel.html",
     title="Modifier un matériel",
     AjouterMaterielForm=f,
-    chemin = [("base", "Accueil"), ("#", "#") ("modifier_materiel", "Modifier un Matériel")]
+    id = idMateriel,
+    chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
     )
 
 @app.route("/demandes/")
