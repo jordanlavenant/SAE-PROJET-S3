@@ -110,11 +110,16 @@ def commander():
     chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
-@app.route("/bon-commande/")
-def bon_commande():
+@app.route("/bonDeCommande/<int:idDemande>")
+def bonDeCommande(idDemande):
+    info_commande = get_info_demande_with_id(get_cnx(), idDemande)
+    print(info_commande)
     return render_template(
         "bonDeCommande.html",
-        title = "Bon De Commande",
+        idDemande = idDemande,
+        infoCommande = info_commande,
+        len = len(info_commande),
+        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
         chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
     )
 
@@ -305,7 +310,7 @@ def demandes():
     return render_template(
     "demandes.html",
     title="Demandes",
-    nb_demande = get_nb_demande(cnx),
+    nb_demande = int(get_nb_demande(cnx)),
     info_demande = get_info_demande(cnx),
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
     )

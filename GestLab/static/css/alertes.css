@@ -12,13 +12,13 @@ a:hover {
     cursor: pointer;
 }
 
-
-main{
+main {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
+
 main > section {
     border-radius: 1em;
     width: 50%;
@@ -26,6 +26,7 @@ main > section {
     margin: 1em 0 2em 0;
     padding: 1%;
 }
+
 .container-alerte {
     display: flex;
     justify-content: space-between;
@@ -38,7 +39,7 @@ main > section {
     align-items: center;
 }
 
-.texte_rouge{
+.texte_rouge {
     color: #d35252;
     align-items: center;
 }
@@ -49,7 +50,7 @@ main > section {
     padding-right: 1em;
 }
 
-#attention-rouge{
+#attention-rouge {
     max-width: 50px;
     max-height: 50px;
 }
