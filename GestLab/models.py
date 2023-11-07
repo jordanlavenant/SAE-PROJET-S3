@@ -5,6 +5,9 @@ from .connexionPythonSQL import *
 import smtplib
 import json
 from email.message import EmailMessage
+import smtplib
+import json
+from email.message import EmailMessage
 
 @login_manager.user_loader
 def load_user(email):
@@ -12,19 +15,16 @@ def load_user(email):
     return get_nom_whith_email(cnx, email)
 
 def envoyer_mail_nouveau_compte(mailreceveur, mdp):
-    json_file = open('Gestlab/static/data/configEmail.json')
+    json_file = open('GestLab/static/data/configEmail.json')
     gmail_config = json.load(json_file)
-
     msg = EmailMessage()
     msg['Subject'] = 'Test email'
-
     #email de l'envoyeur
     msg['From'] = gmail_config["email"]
-
     #email du receveur
     msg['To'] = mailreceveur
     msg.set_content('Voici le login: ' + mailreceveur  + ' \nVoici le mots de passe temporaire: ' + mdp)
- 
+
     with smtplib.SMTP_SSL('smtp.gmail.com', gmail_config["port"]) as smtp:
         smtp.login(gmail_config["email"], gmail_config["password"])
         smtp.send_message(msg)

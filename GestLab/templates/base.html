@@ -89,7 +89,7 @@
                 <!-- Professeur -->
                 {% if session['utilisateur'][1] == 2 %}
                 <ul>
-                    <li><a href="{{ url_for('inventaire') }}">Inventaire</a></li>
+                    <li><a href="{{ url_for('inventaire') }}, target=_blank">Inventaire</a></li>
                     <li><a href="{{ url_for('commentaire') }}">Commentaire</a></li>
                 </ul>
                 {% endif %}

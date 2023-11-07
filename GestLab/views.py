@@ -1,9 +1,9 @@
 from .app import app #, db
-from flask import render_template, url_for, redirect, request, session
+from flask import render_template, url_for, redirect, request, session, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField
+from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
@@ -99,6 +99,59 @@ class MdpOublierForm(FlaskForm):
         email = self.email.data
         return email
 
+class AjouterMaterielForm(FlaskForm):
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
+    submit = SubmitField('Submit')
+    nom = StringField('nom', validators=[DataRequired()])
+    reference = StringField('reference')
+    date_reception = DateField('date_reception')
+    date_peremption = DateField('date_peremption')
+    caracteristiques = StringField('caracteristiques')
+    infossup = StringField('infossup')
+    quantite = StringField('quantite')
+    seuilalerte  = StringField('seuilalerte')
+    next = HiddenField()
+
+    def get_full_materiel(self):
+        domaine = self.domaine.data
+        print("domaine + " + str(domaine))
+        categorie = self.categorie.data
+        nom = self.nom.data
+        reference = self.reference.data
+        caracteristiques = self.caracteristiques.data
+        infossup = self.infossup.data
+        seuilalerte = self.seuilalerte.data
+        return (domaine, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+
+def get_domaine_choices():
+    query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
+    result = cnx.execute(query)
+    domaines =  [(str(id_), name) for name, id_ in result]
+    domaines.insert(0, ("", "Choisir un domaine"))
+    return domaines
+
+@app.route('/get_categorie_choices', methods=['GET'])
+def get_categorie_choices():
+    selected_domain_id = request.args.get('domaine_id')
+    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
+    categories = {str(id_): name for name, id_ in result}
+    return jsonify(categories)
+
+
+@app.route("/ajouter-materiel/")
+def ajouter_materiel():
+    f = AjouterMaterielForm()
+    f.domaine.choices = get_domaine_choices() 
+    if f.validate_on_submit():
+        selected_domain_id = f.domaine.data
+        f.categorie.choices = get_categorie_choices(selected_domain_id)
+    return render_template(
+    "ajouterMateriel.html",
+    title="Ajouter un matériel",
+    AjouterMaterielForm=f,
+    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    )
 class A2FForm(FlaskForm):
     code = StringField('code', validators=[DataRequired()])
     submit = SubmitField('Valider')
@@ -154,11 +207,16 @@ def commander():
     chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
-@app.route("/bon-commande/")
-def bon_commande():
+@app.route("/bonDeCommande/<int:idDemande>")
+def bonDeCommande(idDemande):
+    info_commande = get_info_demande_with_id(get_cnx(), idDemande)
+    print(info_commande)
     return render_template(
         "bonDeCommande.html",
-        title = "Bon De Commande",
+        idDemande = idDemande,
+        infoCommande = info_commande,
+        len = len(info_commande),
+        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
         chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
     )
 
@@ -196,6 +254,7 @@ def etat(id):
     id=id,
     title="Etat",
     item_properties=get_all_information_to_Materiel_with_id(cnx, id),
+    items_unique=get_all_information_to_MaterielUnique_with_id(cnx, id),
     chemin = [("base", "Accueil"), ("inventaire", "Inventaire"), ("inventaire", "Etat")]
     )
 
@@ -307,6 +366,7 @@ def modifier_utilisateur(id):
     f = AjouterUtilisateurForm()
     if f.validate_on_submit():
         nom, prenom, email, statut = f.get_full_user()
+        print(statut)
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
                 res = update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
@@ -348,7 +408,7 @@ def demandes():
     return render_template(
     "demandes.html",
     title="Demandes",
-    nb_demande = get_nb_demande(cnx),
+    nb_demande = int(get_nb_demande(cnx)),
     info_demande = get_info_demande(cnx),
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
     )
@@ -359,6 +419,7 @@ def inventaire():
     "inventaire.html",
     categories = get_categories(get_cnx()),
     items = get_all_information_to_Materiel(get_cnx()),
+    alertes = nb_alert_par_materiel_dict(get_cnx()),
     title="Inventaire",
     chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
     )
@@ -487,11 +548,3 @@ def ajouterUtilisateur():
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)
-
-@app.route("/ajouter-materiel/")
-def ajouter_materiel():
-    return render_template(
-    "ajouterMateriel.html",
-    title="Ajouter un Matériel",
-    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
-    )
