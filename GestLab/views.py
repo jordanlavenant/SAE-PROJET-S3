@@ -176,26 +176,56 @@ def mot_de_passe_oublier():
     f = MdpOublierForm()
     if f.validate_on_submit():
         email = f.get_email()
-        # recuperation_de_mot_de_passe(cnx, email)
-        return redirect(url_for('a2f', mail=email))
+        return redirect(url_for('a2f', mail=email, id=1))
     return render_template(
         "login.html",
         MdpOublierForm=f)
 
-@app.route("/a2f/<string:mail>", methods=("GET","POST",))
-def a2f(mail):
+@app.route("/a2f/<string:mail>/<int:id>", methods=("GET","POST",))
+def a2f(mail, id):
+    oldMdp = request.args.get('oldMdp')
+    newMdp = request.args.get('newMdp')
+    newMail = request.args.get('newMail')
+    mdp = request.args.get('mdp')
+    print(oldMdp)
+    print(newMdp)
+    print(newMail)
+    print(mdp)
     f = A2FForm()
     if f.validate_on_submit():
         code = f.get_code()
         uri = get_uri_with_email(cnx, mail)
         if verify(uri, code):
-            recuperation_de_mot_de_passe(cnx, mail)
-            print("code valide")
-            return redirect(url_for('login'))
+            if id == 1:
+                recuperation_de_mot_de_passe(cnx, mail)
+                print("code valide")
+                return redirect(url_for('login'))
+            if id == 2:
+                res = update_mdp_utilisateur(cnx, session['utilisateur'][2], oldMdp, newMdp)
+                if res:
+                    session.pop('utilisateur', None)
+                    return redirect(url_for('login'))
+                else:
+                    print("erreur de changement de mdp")
+                    return redirect(url_for('login'))
+            if id == 3:
+                res = update_email_utilisateur(cnx, newMail, session['utilisateur'][0], mdp)
+                print(newMail, session['utilisateur'][0], mdp)
+                if res:
+                    session.pop('utilisateur', None)
+                    return redirect(url_for('login'))
+                else:
+                    print("erreur de changement de mail")
+                    return redirect(url_for('login'))
     return render_template(
         "a2f.html",
         title="A2F - "+mail,
         mail=mail,
+        id=id,
+        oldMdp=oldMdp,
+        newMdp=newMdp,
+        newMail=newMail,
+        mdp=mdp,
         A2FForm=f,
     )
 
@@ -488,13 +518,7 @@ def changerMDP():
         ancienMDP, nouveauMDP, confirmerMDP = f.get_full_mdp()
         if ancienMDP != None and nouveauMDP != None and confirmerMDP != None:
             if nouveauMDP == confirmerMDP:
-                res = update_mdp_utilisateur(cnx, session['utilisateur'][2], ancienMDP, nouveauMDP)
-                if res:
-                    session.pop('utilisateur', None)
-                    return redirect(url_for('login'))
-                else:
-                    print("erreur de changement de mdp")
-                    return redirect(url_for('login'))
+                return redirect('/a2f/'+session['utilisateur'][2]+'/2?oldMdp='+ancienMDP+'&newMdp='+nouveauMDP+'&newMail=rien&mdp=rien')
     return render_template(
         "login.html",
         fromChangerMDP=f)
@@ -506,14 +530,7 @@ def changerMail():
         ancienMail, nouveauMail, confirmerMail, mdp = f.get_full_mail()
         if ancienMail != None and nouveauMail != None and confirmerMail != None and mdp != None:
             if nouveauMail == confirmerMail and ancienMail == session['utilisateur'][2]:
-                res = update_email_utilisateur(cnx, nouveauMail, session['utilisateur'][0], mdp)
-                print(nouveauMail, session['utilisateur'][0], mdp)
-                if res:
-                    session.pop('utilisateur', None)
-                    return redirect(url_for('login'))
-                else:
-                    print("erreur de changement de mail")
-                    return redirect(url_for('login'))
+                return redirect('/a2f/'+session['utilisateur'][2]+'/3?oldMdp=rien&newMdp=rien&newMail='+nouveauMail+'&mdp='+mdp)
     return render_template(
         "login.html",
         fromChangerMail=f)
