@@ -10,6 +10,7 @@ from hashlib import sha256
 from .requetebd5 import *
 from .connexionPythonSQL import *
 from .models import *
+import time
 
 
 cnx = get_cnx()
@@ -356,6 +357,7 @@ def commentaire():
         if text != None and gest != None:
             mail = session['utilisateur'][2]
             envoyer_mail_commentaire(gest, mail, text)
+            time.sleep(.5)
             return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
@@ -392,7 +394,6 @@ def login():
 
 @app.route("/logout/")
 def logout():
-    #logout_user()
     session.pop('utilisateur', None)
     return redirect(url_for('base'))
 
