@@ -26,7 +26,6 @@
 
                 <!-- professeur -->
                 {% if session['utilisateur'][1] == 2 %}
-                <li><a href="{{ url_for('demander') }}">demander</a></li>
                 <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
                 <li><a href="{{ url_for('commentaire') }}">envoyer commentaire</a></li>
                 {% endif %}
