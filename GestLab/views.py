@@ -136,7 +136,9 @@ def a2f(mail):
         code = f.get_code()
         uri = get_uri_with_email(cnx, mail)
         if verify(uri, code):
+            recuperation_de_mot_de_passe(cnx, mail)
             print("code valide")
+            return redirect(url_for('login'))
     return render_template(
         "a2f.html",
         title="A2F - "+mail,
