@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const formLogin = document.getElementById("login-container");
     const formMdpOublier = document.getElementById("mdp-container");
     const boutonMdpOublier = document.getElementById("btn-mdp-oublier");
+    const boutonTest = document.querySelector("btn-mdp-oublier")
 
     
     // Définir la fonction pour masquer l'élément
@@ -65,4 +66,5 @@ document.addEventListener("DOMContentLoaded", function() {
     btnChangerMail.addEventListener("click", masquerMail);
     btnRetour.addEventListener("click", masquerTout);
     boutonMdpOublier.addEventListener("click", masquerLogin);
+    boutonTest.addEventListener("click", masquerLogin);
 });
