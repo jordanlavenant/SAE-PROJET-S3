@@ -110,6 +110,18 @@ def base():
     title="votre chemin vers la facilité"
     )
 
+@app.route("/motdepasseoublie/", methods=("GET","POST",))
+def mot_de_passe_oublier():
+    f = MdpOublierForm()
+    if f.validate_on_submit():
+        email = f.get_email()
+        print("email : "+email)
+        recuperation_de_mot_de_passe(cnx, email)
+        return redirect(url_for('login'))
+    return render_template(
+        "login.html",
+        MdpOublierForm=f)
+
 @app.route("/commander/")
 def commander():
     return render_template(

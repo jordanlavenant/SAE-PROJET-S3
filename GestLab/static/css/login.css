@@ -223,7 +223,7 @@
 
 .container-mdp-oublier {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
@@ -239,7 +239,6 @@
 }
 
 #mdp-container {
-  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -247,13 +246,20 @@
 }
 
 #mdp-box {
-  margin-top: 5em;
   margin-bottom: 5em;
-  width: 400px;
+  width: 600px;
   padding: 40px;
   background: #009af0;
   box-shadow: 0 15px 25px #384274;
   border-radius: 10px;
+  }
+
+  .container-form-mdp {
+    flex-basis: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
   }
 
   #mdp-box h2 {
@@ -263,3 +269,21 @@
       text-align: center;
   }
   
+#btn-retour-mdp {
+  margin-right: 50%;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+  color: #fff;
+  background-color: #384274;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+#btn-retour-mdp:hover {
+  background-color: #009af0;
+  box-shadow: 0 0 15px #009af0;
+  transition: 0.2s;
+  transform: scale(1.1);
+  cursor: pointer;
+}
