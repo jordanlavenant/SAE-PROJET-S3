@@ -122,18 +122,14 @@ def create_qr_code_utilisateur_deja_existant(cnx,email):
     uri = get_uri_with_email(cnx,email)
     qrcode.make(uri).save("qrcode.png")
 
-def create_qr_code_nouvel_utlisateur(email):
+def create_qr_code_nouvel_utlisateur(email, mdp):
     key = random_key()
     uri = create_uri(key,email)
     qrcode.make(uri).save("qrcode.png")
-    envoyer_mail(email,"login","mdp", uri)
+    envoyer_mail(email,mdp, key)
 
 def random_key():
     return pyotp.random_base32()
-
-
-
-
 
 def verify(key, code):
     return pyotp.TOTP(key).verify(code)
@@ -150,7 +146,7 @@ def ajout_professeur(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
-        envoyer_mail_nouveau_compte(email, mdpRandom)
+        create_qr_code_nouvel_utlisateur(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -167,7 +163,7 @@ def ajout_gestionnaire(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
-        envoyer_mail_nouveau_compte(email, mdpRandom)
+        create_qr_code_nouvel_utlisateur(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -183,7 +179,7 @@ def ajout_administrateur(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
-        envoyer_mail_nouveau_compte(email, mdpRandom)
+        create_qr_code_nouvel_utlisateur(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -201,7 +197,7 @@ def ajout_laborantin(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
-        envoyer_mail_nouveau_compte(email, mdpRandom)
+        create_qr_code_nouvel_utlisateur(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -524,16 +520,16 @@ def get_all_info_from_domaine(cnx):
         print("erreur de l'id")
         raise
 
-# def get_info_demande(cnx):
-#     try:
-#         result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
-#         info_commande = []
-#         for row in result:
-#             info_commande.append(row)
-#         return  info_commande
-#     except Exception as e:
-#         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
-#         raise
+def get_info_demande(cnx):
+    try:         
+        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
+        info_commande = []
+        for row in result:
+            info_commande.append(row)
+        return  info_commande
+    except Exception as e:
+        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+        raise
 
 # get_info_demande(cnx)
 

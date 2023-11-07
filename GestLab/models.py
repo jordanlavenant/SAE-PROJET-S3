@@ -30,7 +30,7 @@ def envoyer_mail_nouveau_compte(mailreceveur, mdp):
         smtp.send_message(msg)
         print("Mail envoyé")
 
-def envoyer_mail(mailreceveur, login, mdp, key):
+def envoyer_mail(mailreceveur, mdp, key):
     json_file = open('GestLab/static/data/configEmail.json')
     gmail_config = json.load(json_file)
 
@@ -40,7 +40,7 @@ def envoyer_mail(mailreceveur, login, mdp, key):
     msg['To'] = mailreceveur
 
     # Texte de l'e-mail avec l'image incorporée
-    text = f'Voici le login: {login}\nVoici le mot de passe temporaire: {mdp} et la clé : {key} '
+    text = f'Voici le login: {mailreceveur}\nVoici le mot de passe temporaire: {mdp} et la clé : {key} '
     
     # Utilisation de balises HTML pour incorporer l'image dans le corps du message
     text_with_image = f'<html><body>{text}<br><img src="cid:image1"></body></html>'
