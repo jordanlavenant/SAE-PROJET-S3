@@ -32,11 +32,17 @@ a {
     font-size: 20px;
     padding: 0px 40px;
     border: none;
+    outline: none;
 }
 
 #dest-select {
     cursor: pointer;
 }
+
+.comboBox option {
+    background-color: #384274;
+    color: #fff;
+} 
 
 #comment-wrapper {
     width: calc(100% - 40px);
@@ -60,7 +66,7 @@ a {
     background-color: #384274;
     padding: 14px 20px;
     border-radius: 20px;
-    font-size: 20px;
+    font-size: 25px;
     border: none;
     transition: 0.2s;
 }
@@ -93,3 +99,4 @@ a {
     padding: 20px;
     border: none;
 }
+

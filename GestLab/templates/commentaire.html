@@ -6,25 +6,24 @@
 {% endblock %}
 {% block content %}
 <div class="comment-container">
-    <div class="destinataire">
-        <p>A :</p>
-        <select name="dest" id="dest-select">
-            <option value="">(aucun)</option>
-            {% for user in users %}
-                <option value="{{ user[0] }}">{{ user[1] }} {{ user[2] }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <textarea name="comment-container" id="comment-wrapper" cols="30" rows="10"></textarea>
-    <div class="btn-container">
-        <a id="btn-send" href="{{ url_for('base') }}">Envoyer le commentaire ></a>
-    </div>
+    <form class="form-horizontal" role="form" method="POST" action ="{{ url_for('commentaire') }}">
+        {{ CommentaireForm.hidden_tag() }}
+        <div class="destinataire">
+            <p>à :</p>
+            {{ CommentaireForm.gestionnaires(size=0, class_="comboBox", id="dest-select") }}
+        </div>
+        {{ CommentaireForm.text(size=50, class_="form-control", placeholder="Votre texte ici", id="comment-wrapper", cols="30", rows="10") }}
+      <div class="btn-container">
+        {{ CommentaireForm.submit(size=50, class_="form-control", id="btn-send") }}
+      </div>
+    </form>
 </div>
 
 <div class="popup" id="myPopup">
     <div class="popup-content">
         <h2>Confirmation</h2>
         <p>Votre commentaire a bien été envoyé !</p>
+
     </div>
 </div>
 {% endblock %}

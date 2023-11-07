@@ -7,6 +7,9 @@ from hashlib import sha256
 from datetime import datetime, timedelta
 import random
 import string
+from .models import *
+
+
 
 
 
@@ -88,6 +91,7 @@ def ajout_professeur(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
+        envoyer_mail_nouveau_compte(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -100,11 +104,11 @@ def ajout_gestionnaire(cnx, nom, prenom, email):
     try:
         idStatut = 4
         mdpRandom = generer_mot_de_passe()
-        # envoyer mail avec mdpRandom
         print(mdpRandom)
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
+        envoyer_mail_nouveau_compte(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -120,6 +124,7 @@ def ajout_administrateur(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
+        envoyer_mail_nouveau_compte(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -137,6 +142,7 @@ def ajout_laborantin(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
+        envoyer_mail_nouveau_compte(email, mdpRandom)
         print("utilisateur ajouté")
         return True
     except:
@@ -239,7 +245,7 @@ def get_user_with_statut(cnx, nomStatut):
     liste = []
     result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where nomStatut = '" + str(nomStatut) + "';"))
     for row in result:
-        liste.append((row[0],row[2],row[3]))
+        liste.append((row[4]))
     return liste
 
 #marche BD 5
@@ -308,11 +314,32 @@ def get_all_information_to_Materiel_with_id(cnx, id):
         print("erreur de l'id")
         raise
 
+def get_all_information_to_MaterielUnique_with_id(cnx, id):
+    try:
+        list = []
+        result = cnx.execute(text("select * from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de l'id")
+        raise
+
+def get_nb_materiel_to_MaterielUnique_with_id(cnx, id):
+    try:
+        result = cnx.execute(text("select count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("erreur de l'id")
+    raise
+
 def get_info_materiel_alert(cnx):
     try:
         list = []
-        result = cnx.execute(text("select * from MATERIEL natural join MATERIELUNIQUE natural join ALERTESENCOURS;"))
-        for row in result:
+        result = cnx.execute(text("select * from MATERIEL natural join MATERIELUNIQUE natural join ALERTESENCOURS;"))    
+        for row in result: 
             list.append((row))
         print(list)
         return list
@@ -349,11 +376,29 @@ def get_all_information_to_Materiel(cnx):
         list = []
         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE ;"))
         for row in result:
-            print(row)
-            list.append(row)
-        return list
+            id = row[0]
+            result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+            for row_count in result_count:
+                print((row_count[1]))
+                list.append((row,row_count[1]))
+        return list, len(list)
     except:
         print("erreur de l'id")
+        raise
+
+def nb_alert_par_materiel_dict(cnx):
+    try:
+        dict = {}
+        result = cnx.execute(text("select idMateriel,idMaterielUnique from ALERTESENCOURS natural join MATERIELUNIQUE;"))
+        for row in result:
+            if row[0] in dict:
+                dict[row[0]] += 1
+            else:
+                dict[row[0]] = 1
+
+        print(dict)
+        return dict
+    except: 
         raise
 
 #marche BD 5
@@ -421,7 +466,21 @@ def get_all_info_from_domaine(cnx):
         print("erreur de l'id")
         raise
 
-def get_info_demande(cnx):
+# def get_info_demande(cnx):
+#     try:
+#         result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
+#         info_commande = []
+#         for row in result:
+#             info_commande.append(row)
+#         return  info_commande
+#     except Exception as e:
+#         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+#         raise
+
+# get_info_demande(cnx)
+
+
+def get_domaine(cnx):
     try:
         result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
         info_commande = []
@@ -445,18 +504,6 @@ def get_info_demande_with_id(cnx, idDemande):
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
 
-def get_domaine(cnx):
-    try:
-        list = []
-        result = cnx.execute(text("select * from DOMAINE ;"))
-        for row in result:
-            print(row)
-            list.append(row)
-        return list
-    except:
-        print("erreur de l'id")
-        raise
-
 def get_all_user(cnx, idStatut=None):
     liste = []
     if idStatut is None:
@@ -467,3 +514,17 @@ def get_all_user(cnx, idStatut=None):
         print(row)
         liste.append((row[1],row[0],row[2],row[3],row[4]))
     return (liste, len(liste))
+
+
+def recuperation_de_mot_de_passe(cnx, email):
+    try:
+        mdpRandom = generer_mot_de_passe()
+        print(mdpRandom)
+        mdphash = hasher_mdp(mdpRandom)
+        cnx.execute(text("update UTILISATEUR set motDePasse = '" + mdphash + "' where email = '" + email + "';"))
+        cnx.commit()
+        print("mdp mis a jour")
+        return True
+    except:
+        print("erreur de mise a jour du mdp")
+        return False
