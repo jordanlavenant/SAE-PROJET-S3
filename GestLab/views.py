@@ -3,7 +3,7 @@ from flask import render_template, url_for, redirect, request, session, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField
+from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
@@ -104,8 +104,11 @@ class AjouterMaterielForm(FlaskForm):
     submit = SubmitField('Submit')
     nom = StringField('nom', validators=[DataRequired()])
     reference = StringField('reference')
+    date_reception = DateField('date_reception')
+    date_peremption = DateField('date_peremption')
     caracteristiques = StringField('caracteristiques')
     infossup = StringField('infossup')
+    quantite = StringField('quantite')
     seuilalerte  = StringField('seuilalerte')
     next = HiddenField()
 
