@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/modifierMateriel.css') }}">
+{% endblock %}
+{% block content %}
+<div id="modifierMateriel-container">
+    <a id="btn-retour" href="{{ url_for('consulter_utilisateur') }}">retour</a>
+    <div id="modifierMateriel-box">
+        <form class="form-modifMateriel" role="form" method="POST" action="{{ url_for('modifier_materiel', id=id) }}">
+            {{ ModifierMaterielForm.hidden_tag() }}
+            <div class="user-box">
+                <label for="domaine">Domaine :</label>
+                <div>{{ ModifierMaterielForm.domaine(size=0, class_="comboBox") }}</div>
+            </div>
+            <div class="user-box">
+                <label for="categorie">Catégorie :</label>
+                <div>{{ ModifierMaterielForm.categorie(size=0, class_="comboBox") }}</div>
+            </div>
+            <div class="user-box">
+                <label for="nom">Nom :</label>
+                <div>{{ ModifierMaterielForm.nom(size=50, class_="form-control element", placeholder="Nom", value=nom) }}</div>
+            </div>
+            <div class="user-box">
+                <label for="reference">Référence :</label>
+                <div>{{ ModifierMaterielForm.reference(size=50, class_="form-control element", placeholder="Référence", value=reference) }}</div>
+            </div>
+            <div class="user-box">
+                <label for="caracteristiques">Caractéristiques :</label>
+                <div>{{ ModifierMaterielForm.caracteristiques(size=50, class_="form-control element", placeholder="Caractéristiques", value=caracteristiques) }}</div>
+            </div>
+            <div class="user-box">
+                <label for="infossup">Informations complémentaires :</label>
+                <div>{{ ModifierMaterielForm.infossup(size=50, class_="form-control element", placeholder="Informations complémentaires, mesures de sécurité...", value=infossup) }}</div>
+            </div>
+            <div class="user-box">
+                <label for="seuilalerte">Seuil d'alerte quantité :</label>
+                <div>{{ ModifierMaterielForm.seuilalerte(size=50, class_="form-control element", placeholder="Quantité minimale à avoir en stock", value=seuilalerte) }}</div>
+            </div>
+            <!--modifier une façon d'uploader une fds ???-->
+            <div class="valid-container">
+                <input type="submit" value="Modifier matériel" class="element">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const domaineSelect = document.getElementById("domaine");
+        const categorieSelect = document.getElementById("categorie");
+
+        domaineSelect.addEventListener("change", function() {
+            const selectedDomaine = domaineSelect.value;
+            fetch(`/get_categorie_choices?domaine_id=${selectedDomaine}`)
+                .then(response => response.json())
+                .then(data => {
+                    categorieSelect.innerHTML = '';
+                    for (const [key, value] of Object.entries(data)) {
+                        const option = document.createElement("option");
+                        option.value = key;
+                        option.text = value;
+                        categorieSelect.appendChild(option);
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+    });
+</script>
+{% endblock %}

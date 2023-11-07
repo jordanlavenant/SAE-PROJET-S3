@@ -61,3 +61,25 @@ a {
 .item-info {
     flex-basis: 60%;
 }
+
+/* bouton-modifier */
+
+#btn-modifier {
+    margin-top: 10vh;
+    margin-right: 60%;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #384274;
+    background-color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+
+#btn-modifier:hover {
+    transition: 0.2s;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transform: scale(1.1);
+    cursor: pointer;
+}

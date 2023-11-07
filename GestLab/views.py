@@ -322,6 +322,24 @@ def modifier_utilisateur(id):
     chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs"), ("consulter_utilisateur", "Modifier un Utilisateur")] 
     )
 
+@app.route("/modifier-materiel/", methods=("GET","POST",))
+def modifier_materiel(id):
+    f = AjouterMaterielForm()
+    f.domaine.choices = get_domaine_choices() 
+    if f.validate_on_submit() :
+        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
+        res = modifie_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de la modification du matériel")
+            return redirect(url_for('modifier_materiel'))
+    return render_template(
+    "modifierMateriel.html",
+    title="Modifier un matériel",
+    AjouterMaterielForm=f,
+    chemin = [("base", "Accueil"), ("#", "#") ("modifier_materiel", "Modifier un Matériel")]
+    )
 
 @app.route("/demandes/")
 def demandes():
@@ -496,3 +514,4 @@ def ajouter_materiel():
     AjouterMaterielForm=f,
     chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
     )
+
