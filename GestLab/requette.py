@@ -292,6 +292,7 @@
 #         print("Erreur lors de la récupération du nombre de demandes :", str(e))
 #         raise
     
+"""
 def get_info_demande(cnx):
     try:
         result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
@@ -313,9 +314,9 @@ def get_info_demande_with_id(cnx, idDemande):
     except Exception as e:
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
+"""
 
-def ajout_professeur(cnx, nom, prenom, email, idStatut = 2):
-    
+#def ajout_professeur(cnx, nom, prenom, email, idStatut = 2):
 #     try:
 #         mdpRandom = generer_mot_de_passe()
 #         # envoyer mail avec mdpRandom
