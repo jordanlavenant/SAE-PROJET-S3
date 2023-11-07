@@ -8,9 +8,7 @@ from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
 from .requetebd5 import *
-from .requetebd5 import *
 from .connexionPythonSQL import *
-from .models import *
 from .models import *
 
 
@@ -398,7 +396,6 @@ def demander():
     )
 
 @app.route("/commentaire/", methods=("GET","POST",))
-@app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():
     users = get_user_with_statut(get_cnx(), "Gestionnaire")
     f = CommentaireForm()
@@ -410,8 +407,8 @@ def commentaire():
             return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
-    users= get_user_with_statut(get_cnx(), "Gestionnaire"),
-    title="envoyer un commentaire",
+    users = users,
+    title ="envoyer un commentaire",
     chemin = [("base", "Accueil"), ("commentaire", "envoyer un commentaire")],
     CommentaireForm=f
     )
