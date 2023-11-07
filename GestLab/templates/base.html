@@ -27,23 +27,24 @@
                 <!-- professeur -->
                 {% if session['utilisateur'][1] == 2 %}
                 <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
-                <li><a href="{{ url_for('commentaire') }}">Signaler des alertes</a></li>
+                <li><a href="{{ url_for('commentaire') }}">envoyer commentaire</a></li>
+                {% endif %}
+
+                <!-- laborantin -->
+                {% if session['utilisateur'][1] == 3 %}
+                <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
+                <li><a href="{{ url_for('demander') }}">demander</a></li>
+                <li><a href="{{ url_for('ajouter_materiel') }}">ajouter materiel</a></li>
                 {% endif %}
 
                 <!-- gestionnaire -->
-                {% if session['utilisateur'][1] == 3 %}
+                {% if session['utilisateur'][1] == 4 %}
                 <li><a href="{{ url_for('commander') }}">commander</a></li>
                 <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
                 <li><a href="{{ url_for('alertes') }}">alertes</a></li>
                 <li><a href="{{ url_for('demandes') }}">demandes</a></li>
                 {% endif %}
 
-                <!-- laborantin -->
-                {% if session['utilisateur'][1] == 4 %}
-                <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
-                <li><a href="{{ url_for('demander') }}">demander</a></li>
-                <li><a href="{{ url_for('ajouter_materiel') }}">ajouter materiel</a></li>
-                {% endif %}
 
                 {% endif %}
                 <li><a class="profil" href="{{ url_for('login') }}"><img src="{{ url_for('static',filename='./images/compte.png') }}" alt="logo compte"></a></li>
@@ -65,8 +66,69 @@
     </main>
     <footer class="footer">
         <div class="footer-haut">
-            <img class="logo-academie" src="{{ url_for('static',filename='./images/Logo_Academie-Orleans-Tours.png') }}" alt="logo lycée François Villon">
-            
+            <div class="images">
+                <img src="{{ url_for('static',filename='./images/republique_francaise.png') }}" alt="république française" id="republique_francaise_banner">
+                <img src="{{ url_for('static',filename='./images/Logo_Academie-Orleans-Tours.png') }}" alt="" id="academie_orleans_tours">
+            </div>
+            <div class="plan-du-site">
+                {% if 'utilisateur' in session %}
+
+                <h4>Plan du site : </h4>
+                <!-- Admin -->
+                {% if session['utilisateur'][1] == 1 %}
+                <ul>
+                    <li><a href="{{ url_for('utilisateurs') }}">Utilisateurs</a></li>
+                </ul>
+                {% endif %}
+                
+                <!-- Professeur -->
+                {% if session['utilisateur'][1] == 2 %}
+                <ul>
+                    <li><a href="{{ url_for('inventaire') }}, target=_blank">Inventaire</a></li>
+                    <li><a href="{{ url_for('commentaire') }}">Commentaire</a></li>
+                </ul>
+                {% endif %}
+
+                <!-- Gestionnaire -->
+                {% if session['utilisateur'][1] == 3 %}
+                <ul>
+                    <li><a href="commander">Commander</a></li>
+                    <li><a href="inventaire">Inventaire</a></li>
+                    <li><a href="alertes">Alertes</a></li>
+                    <li><a href="demandes">Demandes</a></li>
+                </ul>
+                {% endif %}
+
+                <!-- Laborantin -->
+                {% if session['utilisateur'][1] == 4 %}
+                <ul>
+                    <li><a href="demander">Demander</a></li>
+                    <li><a href="inventaire">Inventaire</a></li>
+                    <li><a href="ajouter_materiel">Ajouter</a></li>
+                    <li><a href="commentaire">Commentaire</a></li>
+                </ul>
+                {% endif %}
+
+                {% endif %}
+            </div>
+            <div class="utilitaires">
+                <h4>Utilitaires : </h3>
+                <ul>
+                    <li><a href="https://www.legtfrancoisvillon.fr/v3/">Lycée François Villon</a></li>                    
+                    <li><a href="https://ent.netocentre.fr/cas/login?service=https://lycees.netocentre.fr/portail/Login%3FrefUrl%3D%2Fportail%2Ff%2Faccueil%2Fnormal%2Frender.uP&token=020e78251cdefbdfe0365d73cad6a32e">ENT</a></li>                    
+                </ul>
+            </div>
+
+            <div class="workers">
+                <h4>Réalisé par : </h3>
+                <ul>
+                    <li>BLANDEAU Erwan</li>
+                    <li>LALLIER Anna</li>
+                    <li>LAVENANT Jordan</li>
+                    <li>LUCIDOR Léo</li>
+                    <li>PILET Colin</li>
+                </ul>
+            </div>
         </div>
         <div class="footer-bas">
             <p>© 2023 - gestlab - tous droits réservés</p>
