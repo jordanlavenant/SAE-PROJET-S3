@@ -79,59 +79,25 @@ class AjouterUtilisateurForm(FlaskForm):
         email = self.email.data
         statut = self.statut.data
         return (nom, prenom, email, statut)
-
+    
 class AjouterMaterielForm(FlaskForm):
-    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
-    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
-    submit = SubmitField('Submit')
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
     nom = StringField('nom', validators=[DataRequired()])
-    reference = StringField('reference')
+    reference = StringField('reference', validators=[DataRequired()])
     caracteristiques = StringField('caracteristiques')
     infossup = StringField('infossup')
     seuilalerte  = StringField('seuilalerte')
     next = HiddenField()
 
     def get_full_materiel(self):
-        domaine = self.domaine.data
-        print("domaine + " + str(domaine))
         categorie = self.categorie.data
         nom = self.nom.data
         reference = self.reference.data
         caracteristiques = self.caracteristiques.data
         infossup = self.infossup.data
         seuilalerte = self.seuilalerte.data
-        return (domaine, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
-
-def get_domaine_choices():
-    query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
-    result = cnx.execute(query)
-    domaines =  [(str(id_), name) for name, id_ in result]
-    domaines.insert(0, ("", "Choisir un domaine"))
-    return domaines
-
-@app.route('/get_categorie_choices', methods=['GET'])
-def get_categorie_choices():
-    selected_domain_id = request.args.get('domaine_id')
-    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
-    categories = {str(id_): name for name, id_ in result}
-    return jsonify(categories)
-
-
-@app.route("/ajouter-materiel/")
-def ajouter_materiel():
-    f = AjouterMaterielForm()
-    f.domaine.choices = get_domaine_choices() 
-    if f.validate_on_submit():
-        selected_domain_id = f.domaine.data
-        print("baaaaaaaaaaaaah")
-        f.categorie.choices = get_categorie_choices(selected_domain_id)
-    return render_template(
-    "ajouterMateriel.html",
-    title="Ajouter un matériel",
-    AjouterMaterielForm=f,
-    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
-    )
-
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
 
 class CommentaireForm(FlaskForm):
     text = TextAreaField('text', validators=[DataRequired()])
@@ -501,3 +467,36 @@ def ajouterUtilisateur():
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)
+
+def get_domaine_choices():
+    query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
+    result = cnx.execute(query)
+    domaines =  [(str(id_), name) for name, id_ in result]
+    domaines.insert(0, ("", "Choisir un domaine"))
+    return domaines
+
+@app.route('/get_categorie_choices', methods=['GET'])
+def get_categorie_choices():
+    selected_domain_id = request.args.get('domaine_id')
+    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
+    categories = {str(id_): name for name, id_ in result}
+    return jsonify(categories)
+
+@app.route("/ajouter-materiel/", methods=("GET","POST",))
+def ajouter_materiel():
+    f = AjouterMaterielForm()
+    f.domaine.choices = get_domaine_choices() 
+    if f.validate_on_submit() :
+        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
+        res = insere_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de l'insertion du matériel")
+            return redirect(url_for('ajouter_materiel'))
+    return render_template(
+    "ajouterMateriel.html",
+    title="Ajouter un matériel",
+    AjouterMaterielForm=f,
+    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    )

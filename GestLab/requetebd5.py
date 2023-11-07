@@ -25,15 +25,19 @@ def get_nom_dom_cat_materiel_with_id(cnx, id):
         raise
     
 #marche BD 5
-def ajouter_materiel(cnx, reFerenceMateriel, nomMateriel, idCategorie, seuilAlerte, caracteristiquesComplementaires,informationsComplementairesEtSecurite):
-    print("EH")
+def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
     try:
-        cnx.execute(text("insert into MATERIEL (reFerenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesComplementaires,informationsComplementairesEtSecurite ) values ('" + reFerenceMateriel + "', 1, '" + nomMateriel + "', '" + str(idCategorie) + "', '" + str(seuilAlerte) + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "');"))
+        if seuilAlerte == '' :
+            seuilAlerte = "NULL"
+        cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
         cnx.commit()
-        print("materiel ajouté")
-    except:
-        print("erreur d'ajout du materiel")
-        raise
+        return True
+    except sqlalchemy.exc.OperationalError as e:
+        print(f"SQL OperationalError: {e}")
+        return False
+    except sqlalchemy.exc.IntegrityError as e:
+        print(f"SQL IntegrityError: {e}")
+        return False
 
 
 #marche BD 5
@@ -459,12 +463,3 @@ def get_all_user(cnx, idStatut=None):
         print(row)
         liste.append((row[1],row[0],row[2],row[3],row[4]))
     return (liste, len(liste))
-
-def insere_materiel(cnx, idCategorie, nomMateriel, seuilAlerte, caracteristiquesComplementaires, informationsComplementairesEtSecurite, nomDomaine):
-    try:
-        cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, seuilAlerte, caracteristiquesComplementaires, informationsComplementairesEtSecurite, nomDomaine) values ('" + str(idCategorie) + "', '" + nomMateriel + "', '" + str(seuilAlerte) + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "', '" + nomDomaine + "');"))
-        cnx.commit()
-        print("materiel ajouté")
-    except:
-        print("erreur d'ajout du materiel")
-        raise
