@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/demandes.css') }}">
 {% endblock %}
 {% block content %}
-    <section>
+<a id="btn-back" href="{{ url_for('base') }}">Retour</a>
+<section>
         <div id="info">
             <img id="attention-orange" src="../static/images/attention-orange.png" alt="attention-orange">
             <p class="texte_orange">{{nb_demande}} Demande</p>
