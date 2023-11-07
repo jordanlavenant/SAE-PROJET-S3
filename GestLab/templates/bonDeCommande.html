@@ -5,12 +5,11 @@
 {% endblock %}
 {% block content %}
     <section>
+        {% for i in range(0, len) %}
         <div id="info">
-            <img id="attention-orange" src="../static/images/attention-orange.png" alt="attention-orange">
-            <p class="texte_orange"> Demande</p>
+            <p class="texte_blanc"> {{infoCommande[i][3]}}</p>
+            <p class="texte_blanc"> Quantité: {{infoCommande[i][2]}}</p>
         </div>
-        <div class="container-demande">
-
-        </div>
+        {%endfor%}
     </section>
 {% endblock %}

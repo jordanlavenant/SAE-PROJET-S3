@@ -8,6 +8,7 @@ from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
 from .requetebd5 import *
+from .requetebd5 import *
 from .connexionPythonSQL import *
 from .models import *
 
@@ -127,21 +128,16 @@ def commander():
     chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
-
-@app.route("/bon-commande/")
-def bon_commande():
-    return render_template(
-    "bonCommande.html",
-    title="Bon de Commande",
-    chemin = [("base", "Accueil"), ("commander", "Commander"), ("bon_commande", "Bon de Commande")]
-    )
-
-@app.route("/bonDeCommande/<int:idDemmande>")
-def bonDeCommande(idDemmande):
+@app.route("/bonDeCommande/<int:idDemande>")
+def bonDeCommande(idDemande):
+    info_commande = get_info_demande_with_id(get_cnx(), idDemande)
+    print(info_commande)
     return render_template(
         "bonDeCommande.html",
-        idDemmande = idDemmande,
-        title = "Bon De Commande",
+        idDemande = idDemande,
+        infoCommande = info_commande,
+        len = len(info_commande),
+        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
         chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
     )
 
@@ -332,7 +328,7 @@ def demandes():
     return render_template(
     "demandes.html",
     title="Demandes",
-    nb_demande = get_nb_demande(cnx),
+    nb_demande = int(get_nb_demande(cnx)),
     info_demande = get_info_demande(cnx),
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
     )
