@@ -10,6 +10,7 @@ from hashlib import sha256
 from .requetebd5 import *
 from .connexionPythonSQL import *
 from .models import *
+import time
 
 
 cnx = get_cnx()
@@ -151,6 +152,13 @@ def ajouter_materiel():
     AjouterMaterielForm=f,
     chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
     )
+class A2FForm(FlaskForm):
+    code = StringField('code', validators=[DataRequired()])
+    submit = SubmitField('Valider')
+
+    def get_code(self):
+        code = self.code.data
+        return code
 
 @app.route("/")
 def base():
@@ -168,12 +176,28 @@ def mot_de_passe_oublier():
     f = MdpOublierForm()
     if f.validate_on_submit():
         email = f.get_email()
-        print("email : "+email)
-        recuperation_de_mot_de_passe(cnx, email)
-        return redirect(url_for('login'))
+        # recuperation_de_mot_de_passe(cnx, email)
+        return redirect(url_for('a2f', mail=email))
     return render_template(
         "login.html",
         MdpOublierForm=f)
+
+@app.route("/a2f/<string:mail>", methods=("GET","POST",))
+def a2f(mail):
+    f = A2FForm()
+    if f.validate_on_submit():
+        code = f.get_code()
+        uri = get_uri_with_email(cnx, mail)
+        if verify(uri, code):
+            recuperation_de_mot_de_passe(cnx, mail)
+            print("code valide")
+            return redirect(url_for('login'))
+    return render_template(
+        "a2f.html",
+        title="A2F - "+mail,
+        mail=mail,
+        A2FForm=f,
+    )
 
 @app.route("/commander/")
 def commander():
@@ -417,6 +441,7 @@ def commentaire():
         if text != None and gest != None:
             mail = session['utilisateur'][2]
             envoyer_mail_commentaire(gest, mail, text)
+            time.sleep(.5)
             return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
@@ -453,7 +478,6 @@ def login():
 
 @app.route("/logout/")
 def logout():
-    #logout_user()
     session.pop('utilisateur', None)
     return redirect(url_for('base'))
 

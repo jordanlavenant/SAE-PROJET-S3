@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static',filename='./css/a2f.css') }}">
+{% endblock %}
+{% block content %}
+<div id="code-container">
+    <a href="{{ url_for('login') }}"><button id="btn-retour">retour</button></a>
+    <div class="container-form-code">
+      <div id="code-box">
+        <h2 class="element">Entrer votre code d'authentification</h2>
+        <form class="form-horizontal" role="form" method="POST", action="{{ url_for('a2f', mail=mail) }}">
+            {{ A2FForm.hidden_tag() }}
+          <div class="user-box">
+            {{ A2FForm.code(size=50, class_="form-control element", placeholder="Votre code d'authentification") }}
+          </div>
+          <div class="valid-container">
+            {{ A2FForm.submit(size=50, class_="form-control element") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

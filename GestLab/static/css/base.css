@@ -32,6 +32,11 @@ header {
     margin-bottom: 2em;
 }
 
+::selection {
+    background-color: #FFFF00; /* Jaune */
+    color: #384274; /* Couleur du texte en surbrillance */
+}
+
 /* titre */
 
 .title {

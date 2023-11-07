@@ -1,10 +1,9 @@
 import random
 import string
-from numpy import split
+import pyotp
 from sqlalchemy import text
 from .connexionPythonSQL import *
 from hashlib import sha256
-from datetime import datetime, timedelta
 import random
 import string
 from .models import *
@@ -76,6 +75,70 @@ def hasher_mdp(mdp):
     m = sha256()
     m.update(mdp.encode("utf-8"))
     return m.hexdigest()
+
+
+import json
+import smtplib
+from email.message import EmailMessage
+
+import pyotp
+import qrcode
+
+
+
+def get_uri_with_email(cnx, email):
+    result = cnx.execute(text("select uri from 2FA where email = '" + email + "';"))
+    for row in result:
+        print(row[0])
+        return row[0]
+    
+def get_id_with_email(cnx, email):
+    result = cnx.execute(text("select idUtilisateur from UTILISATEUR where email = '" + email + "';"))
+    for row in result:
+        print(row[0])
+        return row[0]
+
+def random_key():
+    return pyotp.random_base32()
+
+def add_two_authenticator_in_bd(cnx,key, email, id):
+    try:
+        if id != None:
+            cnx.execute(text("insert into 2FA (email,uri,idUtilisateur) values ('" + email + "', '" + key + "', '" + str(id) + "');"))
+            cnx.commit()
+            print("uri ajouté")
+        else:
+            print("id non trouvé")
+    except:
+        print("erreur d'ajout de l'uri")
+        raise
+
+def create_uri(key,email):
+    cnx = get_cnx()
+    add_two_authenticator_in_bd(cnx,key ,email,get_id_with_email(cnx, email) )
+    return pyotp.totp.TOTP(key).provisioning_uri(name= email, issuer_name= "GestLab")
+
+def create_qr_code_utilisateur_deja_existant(cnx,email):
+    uri = get_uri_with_email(cnx,email)
+    qrcode.make(uri).save("qrcode.png")
+
+def create_qr_code_nouvel_utlisateur(email):
+    key = random_key()
+    uri = create_uri(key,email)
+    qrcode.make(uri).save("qrcode.png")
+    envoyer_mail(email,"login","mdp", uri)
+
+def random_key():
+    return pyotp.random_base32()
+
+
+
+
+
+def verify(key, code):
+    return pyotp.TOTP(key).verify(code)
+
+
 
 #marche BD 5
 def ajout_professeur(cnx, nom, prenom, email):
