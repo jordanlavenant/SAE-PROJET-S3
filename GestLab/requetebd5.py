@@ -506,9 +506,11 @@ def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email
 def recherche_all_in_utilisateur_with_search(cnx, search):
     try:
         list = []
-        result = cnx.execute(text("select * from UTILISATEUR where nom like '%" + search + "%'" or " prenom like '%" + search + "%' ;"))
+        result = cnx.execute(text("select * from UTILISATEUR where nom like '%" + search + "%'" + " ;"))
+        result1 = cnx.execute(text("select * from UTILISATEUR where prenom like '%" + search + "%' ;"))
+        for row in result1:
+            list.append(row)
         for row in result:
-            print(row)
             list.append(row)
         return (list, len(list))
     except:
