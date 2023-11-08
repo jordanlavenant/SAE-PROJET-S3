@@ -521,7 +521,7 @@ def changerMDP():
         ancienMDP, nouveauMDP, confirmerMDP = f.get_full_mdp()
         if ancienMDP != None and nouveauMDP != None and confirmerMDP != None:
             if nouveauMDP == confirmerMDP:
-                return redirect('/a2f/'+session['utilisateur'][2]+'/2?oldMdp='+ancienMDP+'&newMdp='+nouveauMDP+'&newMail=rien&oldMail=rien&mdp=rien')
+                return redirect('/a2f/'+session['utilisateur'][2]+'/2?oldMdp='+ancienMDP+'&newMdp='+nouveauMDP)
     return render_template(
         "login.html",
         fromChangerMDP=f)
@@ -533,7 +533,7 @@ def changerMail():
         ancienMail, nouveauMail, confirmerMail, mdp = f.get_full_mail()
         if ancienMail != None and nouveauMail != None and confirmerMail != None and mdp != None:
             if nouveauMail == confirmerMail and ancienMail == session['utilisateur'][2]:
-                return redirect('/a2f/'+session['utilisateur'][2]+'/3?oldMdp=rien&newMdp=rien&newMail='+nouveauMail+'&oldMail='+ancienMail+'&mdp='+mdp)
+                return redirect('/a2f/'+session['utilisateur'][2]+'/3?newMail='+nouveauMail+'&oldMail='+ancienMail+'&mdp='+mdp)
     return render_template(
         "login.html",
         fromChangerMail=f)
