@@ -485,3 +485,12 @@ def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristique
     except:
         print("Erreur lors de la modification du matériel")
         raise
+
+def get_id_domaine_from_categorie(cnx, id_categorie) :
+    try:
+        result = cnx.execute(text("SELECT idDomaine FROM CATEGORIE WHERE idCategorie = " + str(id_categorie) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération du domaine")
+        raise

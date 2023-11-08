@@ -99,6 +99,44 @@ class AjouterMaterielForm(FlaskForm):
         infossup = self.infossup.data
         seuilalerte = self.seuilalerte.data
         return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+    
+@app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
+def modifier_materiel(id):
+    print("hee hee")
+    materiel = get_materiel(cnx, id)
+    idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
+                         
+    idDomaine = get_id_domaine_from_categorie(cnx, idCategorie)
+    f = AjouterMaterielForm()
+    print(f.get_full_materiel())
+    f.nom.default = nomMateriel
+    f.reference.default = referenceMateriel
+    f.caracteristiques.default = caracteristiquesCompelmentaires
+    f.infossup.default = informationsComplementairesEtSecurite
+    f.seuilalerte.default = str(seuilAlerte)
+    print(f.get_full_materiel())
+
+    print(get_domaine_choices())
+    f.domaine.choices = get_domaine_choices() 
+    f.domaine.default = str(idDomaine)
+    f.process()
+    print(f.domaine.data)
+
+    if f.validate_on_submit() :
+        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
+        res = modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de la modification du matériel")
+            return redirect(url_for('inventaire'))
+    return render_template(
+    "modifierMateriel.html",
+    title="Modifier un matériel",
+    AjouterMaterielForm=f,
+    id = idMateriel,
+    chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
+    )
 
 class CommentaireForm(FlaskForm):
     text = TextAreaField('text', validators=[DataRequired()])
@@ -322,39 +360,7 @@ def modifier_utilisateur(id):
     chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs"), ("consulter_utilisateur", "Modifier un Utilisateur")] 
     )
 
-@app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
-def modifier_materiel(id):
-    print("hee hee")
-    materiel = get_materiel(cnx, id)
-    idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
-
-    """    
-    idMateriel = materiel[0][0]
-    referenceMateriel = materiel[0][1]
-    idFDS = materiel[0][2]
-    nomMateriel = materiel[0][3]
-    idCategorie = materiel[0][4]
-    seuilAlerte = materiel[0][5]
-    caracteristiquesCompelmentaires = materiel[0][6]
-    informationsComplementairesEtSecurite = materiel[0][7]"""                          
-    f = AjouterMaterielForm(reference = referenceMateriel, nom = nomMateriel, seuilalerte = seuilAlerte, caracteristiques = caracteristiquesCompelmentaires, infossup = informationsComplementairesEtSecurite)
-    f.domaine.choices = get_domaine_choices() 
-
-    if f.validate_on_submit() :
-        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
-        res = modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
-        if res:
-            return redirect(url_for('inventaire'))
-        else:
-            print("Erreur lors de la modification du matériel")
-            return redirect(url_for('inventaire'))
-    return render_template(
-    "modifierMateriel.html",
-    title="Modifier un matériel",
-    AjouterMaterielForm=f,
-    id = idMateriel,
-    chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
-    )
+#ici, modifier materiel
 
 @app.route("/demandes/")
 def demandes():
