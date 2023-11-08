@@ -11,7 +11,7 @@
             <div class="item-properties">
                 <div class="header-container">
                     <h2>{{ item_properties[1] }}</h2>
-                    <a href="{{ url_for('commentaire') }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
+                    <a href="/commentaire?materiel={{ item_properties[1] }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
                 </div>
                 <div class="date-reception">
                     <p class="date-reception-label">Date de réception : </p>
