@@ -4,14 +4,42 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/bonDeCommande.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('demandes') }}">Retour</a>
-{% for i in range(0, len) %}
+<div class="header-container">
+    <div class="container-top">
+        <a class="lien-item" href="{{ url_for('demandes') }}"><button id="btn-retour">retour</button></a>
+    </div>
+    <div class="search-content">
+        <input type="text" id="search-bar" placeholder="Chercher un matériel">
+        <button id="btn-search">Rechercher</button>
+    </div>
+    <div class="filter-container">
+        <p>trier par : </p>
+        <form action="/traiter" method="post">
+            <select name="cat" id="categorie-select">
+                <option value="aucun-tri">aucun tri</option>
+                {% for categorie in categories %}
+                    <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+</div>
+<div class="container-valider">
+    <button id="btn-pdf">générer un bon de commande</button>
+    <a id="btn-valider" href="#">Valider la commande</a>
+</div>
+{% for i in range(0, longeur) %}
 <div id="container-objet">
     <div id="info">
         <p class="texte_blanc"> {{infoCommande[i][3]}}</p>
-        <p class="texte_blanc"> Quantité: {{infoCommande[i][2]}}</p>
+        <div class="container-qte">
+            <p class="texte_blanc"> Quantité: {{infoCommande[i][2]}} </p>
+            <button id="btn-moins">-</button>
+            <p>0</p>
+            <button id="btn-plus">+</button>
+        </div>
     </div>
-    <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}">Voir le stock ></a>
+    <a id="btn-voir" href="#">supprimer</a>
 </div>
 {%endfor%}
 {% endblock %}

@@ -1,3 +1,157 @@
+.header {
+    margin-bottom: 1em !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+.commander-container-overall {
+    margin: 10vh 5vw;
+}
+
+.header-container {
+    margin: 5vh 10vw;
+}
+
+.search-content {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+#search-bar {
+    flex-basis: 80%;
+    width: calc(100% - 60px);
+    height: 50px;
+    border-radius: 20px;
+    border: none;
+    padding: 0 30px;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+#btn-search {
+    flex-basis: 20%;
+    max-height: 50px;
+    color: #fff;
+    background-color: #384274;
+    padding: 0px 0px;
+    border-radius: 20px;
+    font-size: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-search:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#btn-retour {
+    color: #fff;
+    background-color: #384274;
+    padding: 10px 20px;
+    margin: 10px 0px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-retour:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.filter-container {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    margin-bottom: 25px;
+    align-items: center;
+}
+
+.filter-container > p {
+    color: #384274;
+    font-size: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+#categorie-select {
+    color: #fff;
+    background-color: #384274;
+    border-radius: 20px;
+    font-size: 20px;
+    padding: 10px 60px;
+    border: none;
+}
+
+#categorie-select {
+    cursor: pointer;
+    padding: 10px 60px;
+}
+
+/* valider/pdf */
+
+.container-valider {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#btn-pdf {
+    color: #fff;
+    background-color: #384274;
+    padding: 10px 20px;
+    margin: 10px 0px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-pdf:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#btn-valider {
+    color: #fff;
+    background-color: #384274;
+    padding: 10px 20px;
+    margin: 10px 0px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-valider:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* item */
+
+.container-qte {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
 #container-objet {
     margin: 3% 30vw 3% 30vw;
     padding: 1em;

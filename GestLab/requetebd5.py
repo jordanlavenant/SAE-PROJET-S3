@@ -634,3 +634,14 @@ def get_info_rechercheMateriel(cnx):
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
 
+def afficher_table(cnx, table):
+    try:
+        list = []
+        result = cnx.execute(text("SELECT * FROM " + table + ";"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("Erreur lors de l'affichage de la table")
+        raise
