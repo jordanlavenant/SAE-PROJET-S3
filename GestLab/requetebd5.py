@@ -671,3 +671,22 @@ def get_id_domaine_from_categorie(cnx, id_categorie) :
     except:
         print("Erreur lors de la récupération du domaine")
         raise
+
+def get_id_materiel_from_id_materiel_unique(cnx, id_materiel_unique) :
+    try:
+        result = cnx.execute(text("SELECT idMateriel FROM MATERIELUNIQUE NATURAL JOIN MATERIEL WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération de l'id du matériel")
+        raise
+
+def supprimer_materiel_unique_bdd(cnx, id_materiel_unique) :
+    try :
+        cnx.execute(text("DELETE FROM ALERTESENCOURS WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
+        cnx.execute(text("DELETE FROM RESERVELABORATOIRE WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
+        cnx.execute(text("DELETE FROM MATERIELUNIQUE WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
+        cnx.commit()
+    except:
+        print("Erreur lors de la suppression du matériel unique")
+        raise
