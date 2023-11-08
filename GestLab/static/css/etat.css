@@ -33,6 +33,8 @@ a {
 }
 
 .text {
+    display: flex;
+    gap: 10px;
     color: white;
     font-size: 25px;
     margin: 0;
