@@ -1,16 +1,7 @@
-/* body {
-    padding: 0;
-    margin: 0;
-    background-color: #e0e0e0;
-    font-family: 'Alumni Sans', sans-serif;
-    font-variant: small-caps;
-    font-weight: 500;
-    font-size: 30px;
-} */
-
 p {
     color: white;
     font-size: 25px;
+    margin: 2vh 0;
 }
 
 #btn-back {
@@ -36,42 +27,22 @@ p {
 .ajouterMateriel-container {
     display: flex;
     justify-content: center;
+    margin: 5%;
 }
 
-.ajoutMateriel-properties {
+.form-ajoutMateriel {
     background-color: #384274;
-    margin-top: 10vh;
-    display: flex;
-    flex-direction: column;
-    border: green 1px solid;
-}
-
-.identifieurs-dom-cat {
+    width: 80%;
+    padding: 5%;
     display: flex;
     flex-direction: row;
-    gap: 25px;
-    padding: 1%;
+    justify-content: space-around;
 }
 
-.overall-informations {
-    display: flex;
-    flex-direction: row;
-    gap: 25px;
-    padding: 1%;
-}
-
-.item-short-info {
+.right-side-info {
     display: flex;
     flex-direction: column;
-    flex-basis: 50%;
-    border: orange 1px solid
-}
-
-.item-long-info {
-    border: 1px red solid;
-    display: flex;
-    flex-direction: column;
-    flex-basis: 50%;
+    justify-content: space-between;
 }
 
 .domaine-container,
@@ -85,18 +56,102 @@ p {
 .cat-select {
     color: #384274;
     background-color: #fff;
-    border-radius: 20px;
-    font-size: 20px;
-    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 25px;
+    padding: 10px;
     border: none;
     outline: none;
     cursor: pointer;
+    font-family: 'Alumni Sans', sans-serif;
+
 }
 
 .element {
-    border-radius: 10px;
-    border: none;
-    font-size: 25px;
+    border: 0;
     padding: 10px;
-
+    border-radius: 10px;
+    font-size: 25px;
+    color: #384274;
 }
+
+.pair-info {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+
+.text-area {
+    width: calc(100% - 20px);
+    height: 150px;
+    border-radius: 20px;
+    padding: 10px;
+    border: none;
+    outline: none;
+    resize: none;
+    font-size: 25px;
+    font-family: 'Alumni Sans', sans-serif;
+}
+
+.valid-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.submit {
+    color: #384274;
+    background-color: white;
+    padding: 14px 20px;
+    border-radius: 20px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+}
+
+.submit:hover {
+    color: white;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+@media screen and (max-width: 1200px) {
+    .pair-info {
+        flex-direction: column;
+    }
+    .text-area {
+        height: 100%;
+    }
+}
+
+@media screen and (max-width: 1050px) {
+    .form-ajoutMateriel {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+    .pair-info {
+        flex-direction: row;
+    }
+    .submit {
+        margin-top: 30px;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .pair-info {
+        flex-direction: column;
+    }
+    .user-box > div{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .pair-info > div > p {
+        text-align: center;
+    }
+}
+

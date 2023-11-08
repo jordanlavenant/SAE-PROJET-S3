@@ -8,66 +8,69 @@
 <div class="ajouterMateriel-container">
     <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('ajouter_materiel', id=id) }}">
         {{ AjouterMaterielForm.hidden_tag() }}
-        <div class="ajoutMateriel-properties">
 
-            <div class="identifieurs-dom-cat">
-                <div class="user-box domaine-container">
-                    <p>Domaine : </p>
-                    <div>{{ AjouterMaterielForm.domaine(size=0, class_="comboBox dom-select") }}</div>
+        <div class="left-side-info">
+
+            <div class="user-box domaine-container">
+                <p>Domaine : </p>
+                <div>{{ AjouterMaterielForm.domaine(size=auto, class_="comboBox dom-select") }}</div>
+            </div>
+
+            <div class="user-box categorie-container">
+                <p>Catégorie : </p>
+                <div>{{ AjouterMaterielForm.categorie(size=auto, class_="comboBox cat-select") }}</div>
+            </div>
+
+            <div class="pair-info">
+                <div class="user-box name-container">
+                    <p>Nom : </p>
+                    <div>{{ AjouterMaterielForm.nom(size=30, class_="form-control element", placeholder="Nom", value=nom) }}</div>
                 </div>
-                <div class="user-box categorie-container">
-                    <p>Catégorie : </p>
-                    <div>{{ AjouterMaterielForm.categorie(size=0, class_="comboBox cat-select") }}</div>
+            
+                <div class="user-box reference-container">
+                    <p>Référence : </p>
+                    <div>{{ AjouterMaterielForm.reference(size=5, class_="form-control element", placeholder="Rèf.", value=reference) }}</div>
                 </div>
             </div>
 
-            <div class="overall-informations">
-                <div class="item-short-info">              
-                    <div class="user-box name-container">
-                        <p>Nom : </p>
-                        <div>{{ AjouterMaterielForm.nom(size=30, class_="form-control element", placeholder="Nom", value=nom) }}</div>
-                    </div>
-        
-                    <div class="user-box reference-container">
-                        <p>Référence : </p>
-                        <div>{{ AjouterMaterielForm.reference(size=20, class_="form-control element", placeholder="Référence", value=reference) }}</div>
-                    </div>
-        
-                    <div class="user-box date-reception-container">
-                        <p>Date de réception : </p>
-                        <div>{{ AjouterMaterielForm.date_reception(size=50, class_="form-control element", placeholder="Date de réception", value=reference) }}</div>
-                    </div>
-        
-                    <div class="user-box date-peremption-container">
-                        <p>Date de péremption / étalonnage : </p>
-                        <div>{{ AjouterMaterielForm.date_peremption(size=50, class_="form-control element", placeholder="Date de péremption / étalonnage", value=reference) }}</div>
-                    </div>
-        
-                    <div class="user-box quantite-container">
-                        <p>Quantité : </p>
-                        <div>{{ AjouterMaterielForm.quantite(size=10, class_="form-control element", placeholder="Quantité", value=quantite) }}</div>
-                    </div>
-        
-                    <div class="user-box seuil-alerte-container">
-                        <p>Seuil de quantité : </p>
-                        <div>{{ AjouterMaterielForm.seuilalerte(size=10 , class_="form-control element", placeholder="Quantité minimale à avoir en stock", value=seuilalerte) }}</div>
-                    </div>
-        
+            <div class="pair-info">
+                <div class="user-box date-reception-container">
+                    <p>Date de réception : </p>
+                    <div>{{ AjouterMaterielForm.date_reception(size=10, class_="form-control element", placeholder="Date de réception", value=reference) }}</div>
                 </div>
-    
-                <div class="item-long-info">
-                    <div class="user-box description-container">
-                        <div>{{ AjouterMaterielForm.caracteristiques(size=20, class_="form-control element", placeholder="Caractéristiques", value=caracteristiques) }}</div> 
-                    </div>
-    
-                    <div class="user-box infossup-container">
-                        <div>{{ AjouterMaterielForm.infossup(size=20, class_="form-control element", placeholder="Informations complémentaires, mesures de sécurité...", value=infossup) }}</div>
-                    </div>
-    
-                    <div class="valid-container">
-                        <input type="submit" value="Ajouter le matériel à la liste de suggestions" class="element">
-                    </div>
+
+                <div class="user-box date-peremption-container">
+                    <p>Date de péremption / étalonnage : </p>
+                    <div>{{ AjouterMaterielForm.date_peremption(size=10, class_="form-control element", placeholder="Date de péremption / étalonnage", value=reference) }}</div>
                 </div>
+            </div>
+        
+            <div class="pair-info">
+                <div class="user-box quantite-container">
+                    <p>Quantité : </p>
+                    <div>{{ AjouterMaterielForm.quantite(size=10, class_="form-control element", placeholder="Quantité", value=quantite) }}</div>
+                </div>
+
+                <div class="user-box seuil-alerte-container">
+                    <p>Seuil de quantité : </p>
+                    <div>{{ AjouterMaterielForm.seuilalerte(size=10 , class_="form-control element", placeholder="Quantité minimale à avoir en stock", value=seuilalerte) }}</div>
+                </div>
+            </div>
+        
+        </div>
+
+        <div class="right-side-info">
+
+            <div class="user-box description-container">
+                <div>{{ AjouterMaterielForm.caracteristiques(size=20, class_="form-control text-area", placeholder="Caractéristiques", value=caracteristiques,cols="30", rows="10") }}</div> 
+            </div>
+    
+            <div class="user-box infossup-container">
+                <div>{{ AjouterMaterielForm.infossup(size=20, class_="form-control text-area", placeholder="Informations complémentaires, mesures de sécurité...", value=infossup,cols="30", rows="10") }}</div>
+            </div>
+    
+            <div class="valid-container">
+                {{ AjouterMaterielForm.submit(size=20, class_="form-control submit", value="Ajouter le matériel à la liste de suggestions") }}
             </div>
             <!--ajouter une façon d'uploader une fds ???-->        
         </div>

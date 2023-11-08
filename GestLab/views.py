@@ -101,27 +101,30 @@ class MdpOublierForm(FlaskForm):
 class AjouterMaterielForm(FlaskForm):
     domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
     categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
-    submit = SubmitField('Submit')
     nom = StringField('nom', validators=[DataRequired()])
     reference = StringField('reference')
     date_reception = DateField('date_reception')
     date_peremption = DateField('date_peremption')
-    caracteristiques = StringField('caracteristiques')
-    infossup = StringField('infossup')
+    caracteristiques = TextAreaField('caracteristiques')
+    infossup = TextAreaField('infossup')
     quantite = StringField('quantite')
     seuilalerte  = StringField('seuilalerte')
+    submit = SubmitField('submit')
     next = HiddenField()
 
     def get_full_materiel(self):
         domaine = self.domaine.data
-        print("domaine + " + str(domaine))
         categorie = self.categorie.data
         nom = self.nom.data
         reference = self.reference.data
+        date_reception = self.date_reception.data
+        date_peremption = self.date_peremption.data
         caracteristiques = self.caracteristiques.data
         infossup = self.infossup.data
+        quantite = self.quantite.data
         seuilalerte = self.seuilalerte.data
-        return (domaine, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+
+        return (domaine, categorie, nom, reference, date_reception, date_peremption, caracteristiques, infossup, quantite, seuilalerte)
 
 def get_domaine_choices():
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
@@ -138,18 +141,19 @@ def get_categorie_choices():
     return jsonify(categories)
 
 
-@app.route("/ajouter-materiel/")
+@app.route("/ajouter-materiel/", methods=('GET','POST',))
 def ajouter_materiel():
     f = AjouterMaterielForm()
     f.domaine.choices = get_domaine_choices() 
     if f.validate_on_submit():
         selected_domain_id = f.domaine.data
         f.categorie.choices = get_categorie_choices(selected_domain_id)
+        # print(f.get_full_materiel())
     return render_template(
     "ajouterMateriel.html",
     title="Ajouter un matériel",
     AjouterMaterielForm=f,
-    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    chemin = [("base", "Accueil"), ("ajouter_materiel", "    un Matériel")]
     )
 
 @app.route("/")
