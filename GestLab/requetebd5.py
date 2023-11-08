@@ -432,8 +432,6 @@ def get_nb_demande(cnx):
         print("Erreur lors de la récupération du nombre de demandes :", str(e))
         raise
 
-get_nb_demande(cnx)
-
 #marhce BD 5
 def get_all_information_utilisateur_with_id(cnx,id):
     try:
@@ -587,7 +585,7 @@ def get_domaine(cnx):
 
 def get_info_demande_with_id(cnx, idDemande):
     try:
-        result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idBonCommande from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL natural join BONCOMMANDE where idDemande =" + str(idDemande) + ";"))
+        result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, idBonCommande from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL natural join BONCOMMANDE where idDemande =" + str(idDemande) + ";"))
         info_demande = []
         for row in result:
             info_demande.append(row)
