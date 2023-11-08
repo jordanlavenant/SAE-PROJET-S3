@@ -4,12 +4,14 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/bonDeCommande.css') }}">
 {% endblock %}
 {% block content %}
-    <section>
-        {% for i in range(0, len) %}
-        <div id="info">
-            <p class="texte_blanc"> {{infoCommande[i][3]}}</p>
-            <p class="texte_blanc"> Quantité: {{infoCommande[i][2]}}</p>
-        </div>
-        {%endfor%}
-    </section>
+<a id="btn-back" href="{{ url_for('demandes') }}">Retour</a>
+{% for i in range(0, len) %}
+<div id="container-objet">
+    <div id="info">
+        <p class="texte_blanc"> {{infoCommande[i][3]}}</p>
+        <p class="texte_blanc"> Quantité: {{infoCommande[i][2]}}</p>
+    </div>
+    <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}">Voir le stock ></a>
+</div>
+{%endfor%}
 {% endblock %}

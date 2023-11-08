@@ -94,10 +94,31 @@
             <input type="submit" value="Se Connecter" class="element">
           </div>
         </form>
+        <div class="container-mdp-oublier">
+          <button id="btn-mdp-oublier">mot de passe oublié ?</button>
+        </div>
     </div>
+</div>
+<div id="mdp-container">
+  <button id="btn-retour-mdp">retour</button>
+  <div class="container-form-mdp">
+    <div id="mdp-box">
+      <h2 class="element">Mot de passe oublié</h2>
+      <form class="form-horizontal" role="form" method="POST", action="{{ url_for('mot_de_passe_oublier') }}">
+          {{ MdpOublierForm.hidden_tag() }}
+        <div class="user-box">
+          {{ MdpOublierForm.email(size=50, class_="form-control element", placeholder="Email") }}
+        </div>
+        <div class="valid-container">
+          {{ MdpOublierForm.submit(size=50, class_="form-control element") }}
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 {% endif %}
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='./js/login.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/mdpOublier.js') }}"></script>
 {% endblock %}

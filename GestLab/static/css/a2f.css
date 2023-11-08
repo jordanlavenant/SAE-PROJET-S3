@@ -1,0 +1,120 @@
+.container-mdp-oublier {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    z-index: 100;
+  }
+  
+  #btn-mdp-oublier {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    z-index: 100;
+  }
+  
+  #code-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+  
+  #code-box {
+    margin-bottom: 5em;
+    width: 600px;
+    padding: 40px;
+    background: #009af0;
+    box-shadow: 0 15px 25px #384274;
+    border-radius: 10px;
+    }
+  
+    .container-form-code {
+      flex-basis: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    #code-box h2 {
+        margin: 0 0 30px;
+        padding: 0;
+        color: #fff;
+        text-align: center;
+    }
+    
+  #btn-retour {
+    margin-right: 50%;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #fff;
+    background-color: #384274;
+    border-radius: 20px;
+    padding: 10px 20px;
+  }
+
+  #btn-retour a {
+    text-decoration: none;
+    color: #fff;
+  }
+  
+  #btn-retour:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+  }
+
+
+  .user-box {
+    position: relative;
+  }
+  
+  .user-box input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 30px;
+    color: #fff;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+  }
+ 
+  .valid-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 30px;
+  }
+
+  .valid-container input {
+    padding: 10px 20px;  
+    color: #fff;
+    font-size: 30px;
+    text-decoration: none;
+    transition: .5s;
+    background-color: #384274;
+    border-radius: 5px;
+    border: 0;
+  }
+  
+  .valid-container input:hover {
+    box-shadow: 0 0 15px #384274;
+  }
+
+  .valid-container a {
+    text-decoration: none;
+    color: #fff;
+  }
+
+  .valid-container a:hover {
+    color: #384274;
+    transition: 0.2s;
+  }

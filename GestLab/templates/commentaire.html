@@ -1,33 +1,45 @@
 {% extends 'base.html' %}
 {% block styles %}
 {{ super() }}
-
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/commentaire.css') }}">
 {% endblock %}
 {% block content %}
 <div class="comment-container">
-    <div class="destinataire">
-        <p>A :</p>
-        <select name="dest" id="dest-select">
-            <option value="">(aucun)</option>
-            {% for user in users %}
-                <option value="{{ user[0] }}">{{ user[1] }} {{ user[2] }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <form class="form-horizontal" role="form" method="POST" action ="{{ url_for('commentaire') }}">
+    {% if materiel != None %}
+    <form class="form-horizontal" role="form" method="POST" action ="/commentaire?materiel={{ materiel }}">
         {{ CommentaireForm.hidden_tag() }}
+        <div class="destinataire">
+            <p>à :</p>
+            {{ CommentaireForm.gestionnaires(size=0, class_="comboBox", id="dest-select") }}
+        </div>
+        <div class="container-materiel">
+            <p>Matériel : {{ materiel }}</p>
+        </div>
         {{ CommentaireForm.text(size=50, class_="form-control", placeholder="Votre texte ici", id="comment-wrapper", cols="30", rows="10") }}
       <div class="btn-container">
         {{ CommentaireForm.submit(size=50, class_="form-control", id="btn-send") }}
       </div>
     </form>
+    {% else %}
+    <form class="form-horizontal" role="form" method="POST" action ="{{ url_for('commentaire') }}">
+        {{ CommentaireForm.hidden_tag() }}
+        <div class="destinataire">
+            <p>à :</p>
+            {{ CommentaireForm.gestionnaires(size=0, class_="comboBox", id="dest-select") }}
+        </div>
+        {{ CommentaireForm.text(size=50, class_="form-control", placeholder="Votre texte ici", id="comment-wrapper", cols="30", rows="10") }}
+      <div class="btn-container">
+        {{ CommentaireForm.submit(size=50, class_="form-control", id="btn-send") }}
+      </div>
+    </form>
+    {% endif %}
 </div>
 
 <div class="popup" id="myPopup">
     <div class="popup-content">
         <h2>Confirmation</h2>
         <p>Votre commentaire a bien été envoyé !</p>
+        <p>Vous allez être rediriger dans quelque instant</p>
     </div>
 </div>
 {% endblock %}

@@ -32,11 +32,14 @@ a {
     font-size: 20px;
     padding: 0px 40px;
     border: none;
-}
-
-#dest-select {
+    outline: none;
     cursor: pointer;
 }
+
+.comboBox option {
+    background-color: #384274;
+    color: #fff;
+} 
 
 #comment-wrapper {
     width: calc(100% - 40px);
@@ -60,7 +63,7 @@ a {
     background-color: #384274;
     padding: 14px 20px;
     border-radius: 20px;
-    font-size: 20px;
+    font-size: 25px;
     border: none;
     transition: 0.2s;
 }
@@ -80,7 +83,8 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    /* background: rgba(0, 0, 0,0.7); */
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(5px);
 }
 
 .popup-content {
@@ -92,4 +96,7 @@ a {
     background: #384274;
     padding: 20px;
     border: none;
+    border-radius: 20px;
+    text-align: center;
 }
+
