@@ -7,6 +7,10 @@ from hashlib import sha256
 import random
 import string
 from .models import *
+import json
+import smtplib
+from email.message import EmailMessage
+import qrcode
 
 cnx = ouvrir_connexion()
 
@@ -22,17 +26,21 @@ def get_nom_dom_cat_materiel_with_id(cnx, id):
     except:
         print("erreur de l'id")
         raise
-    
-#marche BD 5
-def ajoute_materiel(cnx, reFerenceMateriel, nomMateriel, idCategorie, seuilAlerte, caracteristiquesComplementaires,informationsComplementairesEtSecurite):
-    try:
-        cnx.execute(text("insert into MATERIEL (reFerenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesComplementaires,informationsComplementairesEtSecurite ) values ('" + reFerenceMateriel + "', 1, '" + nomMateriel + "', '" + str(idCategorie) + "', '" + str(seuilAlerte) + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "');"))
-        cnx.commit()
-        print("materiel ajouté")
-    except:
-        print("erreur d'ajout du materiel")
-        raise
 
+#marche BD 5
+def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
+    try:
+        if seuilAlerte == '' :
+            seuilAlerte = "NULL"
+        cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
+        cnx.commit()
+        return True
+    except sqlalchemy.exc.OperationalError as e:
+        print(f"SQL OperationalError: {e}")
+        return False
+    except sqlalchemy.exc.IntegrityError as e:
+        print(f"SQL IntegrityError: {e}")
+        return False
 
 #marche BD 5
 # est ce que pour ajouter du materiel on est obliger de passer par materiel unique ?
@@ -75,16 +83,6 @@ def hasher_mdp(mdp):
     m = sha256()
     m.update(mdp.encode("utf-8"))
     return m.hexdigest()
-
-
-import json
-import smtplib
-from email.message import EmailMessage
-
-import pyotp
-import qrcode
-
-
 
 def get_uri_with_email(cnx, email):
     result = cnx.execute(text("select uri from 2FA where email = '" + email + "';"))
@@ -133,7 +131,6 @@ def random_key():
 
 def verify(key, code):
     return pyotp.TOTP(key).verify(code)
-
 
 
 #marche BD 5
@@ -499,9 +496,6 @@ def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email
         print("erreur de l'id")
         return False
 
-
-
-
 #marche BD 5
 def recherche_all_in_utilisateur_with_search(cnx, search):
     try:
@@ -632,3 +626,33 @@ def get_info_rechercheMateriel(cnx):
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
 
+
+def get_materiel(cnx, idMateriel) :
+    try:
+        materiel = []
+        result = cnx.execute(text("SELECT * FROM MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
+        for row in result:
+            materiel.append(row)
+        return materiel
+    except:
+        print("Erreur lors de la récupération du matériel")
+        raise
+
+def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
+    try:
+        if seuilalerte is None or seuilalerte == "None" :
+            seuilalerte = "NULL"
+        cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
+        cnx.commit()
+    except:
+        print("Erreur lors de la modification du matériel")
+        raise
+
+def get_id_domaine_from_categorie(cnx, id_categorie) :
+    try:
+        result = cnx.execute(text("SELECT idDomaine FROM CATEGORIE WHERE idCategorie = " + str(id_categorie) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération du domaine")
+        raise
