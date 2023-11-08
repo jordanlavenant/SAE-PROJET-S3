@@ -38,7 +38,6 @@ a {
     background-color: #384274;
     padding: 0px 0px;
     border-radius: 20px;
-    font-size: 20px;
     border: none;
     transition: 0.2s;
 }
@@ -168,7 +167,6 @@ a {
 .container-qte p {
     margin: 0;
     padding: 0;
-    /* font-size: 30px; */
     color: #fff;
 }
 

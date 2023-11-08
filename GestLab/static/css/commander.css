@@ -38,7 +38,6 @@ a {
     background-color: #384274;
     padding: 0px 0px;
     border-radius: 20px;
-    font-size: 20px;
     border: none;
     transition: 0.2s;
 }
@@ -160,6 +159,23 @@ a {
     text-align: center;
 }
 
+.bouton-moins {
+    margin-left: 1em;
+    margin-right: 5px;
+    color: #fff;
+    background-color: #384274;
+    border: none;
+}
+
+.bouton-plus {
+    margin-left: 5px;
+    color: #fff;
+    background-color: #384274;
+    border: none;
+}
+
+
+
 /* partie item */
 
 .container-contenu {
@@ -220,6 +236,6 @@ a {
 
 .section-contenu p {
     color: #fff;
-    font-size: 20px;
+    font-size: 30px;
     margin: 0;
 }
