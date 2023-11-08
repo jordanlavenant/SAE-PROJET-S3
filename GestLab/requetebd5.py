@@ -35,7 +35,7 @@ def ajoute_materiel(cnx, reFerenceMateriel, nomMateriel, idCategorie, seuilAlert
 
 def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
     try:
-        if seuilAlerte == '' :
+        if seuilAlerte == '':
             seuilAlerte = "NULL"
         cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
         cnx.commit()
@@ -489,13 +489,19 @@ def nb_alert_par_materiel_dict(cnx):
     except: 
         raise
 
-def get_all_information_to_alert_MaterielUnique(cnx, id):
+def nb_alert_par_materielUnique_dict(cnx):
     try:
-        result = cnx.execute(text("select *  from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMaterielUnique =" + str(id) + ";"))
+        dict = {}
+        result = cnx.execute(text("select idMaterielUnique,idMaterielUnique from ALERTESENCOURS natural join MATERIELUNIQUE;"))
         for row in result:
-            return row
-    except:
-        print("erreur de l'id")
+            if row[0] in dict:
+                dict[row[0]] += 1
+            else:
+                dict[row[0]] = 1
+
+        print(dict)
+        return dict
+    except: 
         raise
 
 #marche BD 5
@@ -642,3 +648,14 @@ def recuperation_de_mot_de_passe(cnx, email):
     except:
         print("erreur de mise a jour du mdp")
         return False
+
+def get_info_rechercheMateriel(cnx):
+    try:
+        result =  cnx.execute(text("select * from RECHERCHEMATERIELS;"))
+        list = []
+        for row in result:
+            list.append(row[0])
+        return list
+    except Exception as e:
+        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+        raise

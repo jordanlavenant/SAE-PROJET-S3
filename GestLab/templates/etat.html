@@ -8,6 +8,7 @@
 <div class="state-container">
     <p class="{{ items_unique[1] }}" id="lenItem" style="display: none"></p>
     {% for item in items_unique[0] %}
+        <p>{{ item[5] }}</p>
         <div class="item-card" id="{{ item[0] }}">
             <div class="item-properties">
                 <div class="header-container">
@@ -54,13 +55,17 @@
                     {% endif %}
                 </div>
                 <div class="footer-state">
-                    <div class="alerts-state">
-                        <img id="attention-rouge" src="{{ url_for('static',filename='./images/attention-rouge.png') }}" alt="attention-rouge">
-                        <div class="alerts-statement">
-                            <p class="{{  }} alerts_count"></p>
-                            <p class="texte_rouge">Alertes</p>
+                    {% if item[0] in alertes.keys() %}
+                        <div class="alerts-state">
+                            <img id="attention-rouge" src="{{ url_for('static',filename='./images/attention-rouge.png') }}" alt="attention-rouge">
+                            <div class="alerts-statement">
+                                <p class="{{ alertes[item[0]] }} alerts_count">{{ alertes[item[0]] }}</p>
+                                <p class="texte_rouge">Alertes</p>
+                            </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <div></div>
+                    {% endif %}
                     <a id="btn-redirect-order" href="#">Commander</a>
                 </div>
             </div>
