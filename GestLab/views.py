@@ -256,8 +256,8 @@ def bon_commande(idDemande):
         infoCommande = info_commande,
         longeur = len(info_commande),
         categories = get_domaine(get_cnx()),
-        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
-        chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de commande')]
+        title = "bon de commande",
+        chemin = [("base", "Accueil"), ("commander", "Commander"), ('demandes', 'Bon de commande')]
     )
 
 @app.route("/alertes/")

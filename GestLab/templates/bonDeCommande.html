@@ -6,7 +6,7 @@
 {% block content %}
 <div class="header-container">
     <div class="container-top">
-        <a class="lien-item" href="{{ url_for('demandes') }}"><button id="btn-retour">retour</button></a>
+        <a class="lien-item" href="{{ url_for('commander') }}"><button id="btn-retour">retour</button></a>
     </div>
     <div class="search-content">
         <input type="text" id="search-bar" placeholder="Chercher un matériel">
@@ -25,21 +25,24 @@
     </div>
 </div>
 <div class="container-valider">
-    <button id="btn-pdf">générer un bon de commande</button>
+    <button id="btn-pdf">générer le bon de commande</button>
     <a id="btn-valider" href="#">Valider la commande</a>
 </div>
 {% for i in range(0, longeur) %}
-<div id="container-objet">
+<section class="section-contenu">
     <div id="info">
         <p class="texte_blanc"> {{infoCommande[i][3]}}</p>
         <div class="container-qte">
-            <p class="texte_blanc"> Quantité: {{infoCommande[i][2]}} </p>
-            <button id="btn-moins">-</button>
-            <p>0</p>
-            <button id="btn-plus">+</button>
+            <p class="texte_blanc"> Quantité :</p>
+            <button class="bouton-moins">-</button>
+            <p class="nb-choisit">0</p>
+            <button class="bouton-plus">+</button>
         </div>
     </div>
     <a id="btn-voir" href="#">supprimer</a>
-</div>
+</section>
 {%endfor%}
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='./js/ajusterVal.js') }}"></script>
 {% endblock %}

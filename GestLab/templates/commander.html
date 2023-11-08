@@ -56,13 +56,16 @@
             <h3>{{ item[6] }}</h3>
             <h3>{{ item[7] }}</h3>
             <div class="choisir-item">
-                <button id="bouton-moins">-</button>
-                <p>0</p>
-                <button id="bouton-plus">+</button>
+                <button class="bouton-moins">-</button>
+                <p class="nb-choisit">0</p>
+                <button class="bouton-plus">+</button>
             </div>
             <button id="ajouter-commande">ajouter à la commande</button>
         </section>
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='./js/ajusterVal.js') }}"></script>
 {% endblock %}
