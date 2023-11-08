@@ -17,6 +17,25 @@ cnx = ouvrir_connexion()
 def get_cnx():
     return cnx
 
+def get_id_utilisateur_from_email(cnx, email) :
+    try:
+        result = cnx.execute(text("SELECT idUtilisateur FROM UTILISATEUR WHERE email = '" + email + "';"))
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération de l'id de l'utilisateur")
+        raise
+    
+def ajout_gest_into_boncommande(cnx,id):
+    try:
+        etat = 1
+        cnx.execute(text("insert into BONCOMMANDETEST (idEtat,idUtilisateur ) values (" + str(etat) + ", " + str(id) + ");"))
+        cnx.commit()
+        print("bon de commande ajouté")
+    except:
+        print("erreur d'ajout du bon de commande")
+        raise
+    
 #marche BD 5
 def get_nom_dom_cat_materiel_with_id(cnx, id):
     try:
@@ -161,11 +180,14 @@ def ajout_gestionnaire(cnx, nom, prenom, email):
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
         create_qr_code_nouvel_utlisateur(email, mdpRandom)
+        id = get_id_with_email(cnx, email)
+        ajout_gest_into_boncommande(cnx,id)
         print("utilisateur ajouté")
+        
         return True
     except:
         print("erreur d'ajout de l'utilisateur")
-        return False
+        return False    
     
 def ajout_administrateur(cnx, nom, prenom, email):
     try:
@@ -690,3 +712,59 @@ def supprimer_materiel_unique_bdd(cnx, id_materiel_unique) :
     except:
         print("Erreur lors de la suppression du matériel unique")
         raise
+    
+
+def get_id_bonCommande_actuel(cnx, idut):
+    try:
+        result = cnx.execute(text("SELECT idBonCommande FROM BONCOMMANDETEST WHERE idUtilisateur = " + str(idut) + " AND idEtat = 1;")) #enlever  AND idEtat = 1 si on delete le bon de commande validée
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération de l'id du bon de commande")
+        raise
+
+
+#faire trigger before insert pour que si on ajoute un materiel deja dans la commande, on update la quantite
+def ajout_materiel_in_commandeTest(cnx, idmat, idut, quantite):
+    try:
+        idbc = get_id_bonCommande_actuel(cnx, idut)
+        cnx.execute(text("INSERT INTO COMMANDETEST (idBonCommande, idMateriel, quantite) VALUES (" + str(idbc) + ", " + str(idmat) + ", " + str(quantite) + ");"))
+        cnx.commit()
+    except:
+        print("Erreur lors de l'ajout du matériel dans la commande")
+        raise
+    
+def get_materiel_in_bonDeCommande(cnx,idut):
+    try:
+        idbc = get_id_bonCommande_actuel(cnx, idut)
+        result = cnx.execute(text("SELECT idMateriel, nomMateriel,referenceMateriel, quantite FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+        liste = []
+        for row in result:
+            print(row)
+            liste.append(row)
+        return liste
+    except:
+        print("Erreur lors de la récupération du matériel dans la commande")
+        raise
+    
+
+def delete_all_materiel_in_commande(cnx, idut):
+    try:
+        idbc = get_id_bonCommande_actuel(cnx, idut)
+        cnx.execute(text("DELETE FROM COMMANDETEST WHERE idBonCommande = " + str(idbc) + ";"))
+        cnx.commit()
+    except:
+        print("Erreur lors de la suppression du matériel dans la commande")
+        raise
+
+def changer_etat_bonCommande(cnx, idut):
+    try:
+        idetat = 2
+        idbc = get_id_bonCommande_actuel(cnx, idut)
+        cnx.execute(text("UPDATE BONCOMMANDETEST SET idEtat = " + str(idetat) + " WHERE idBonCommande = " + str(idbc) + ";"))
+        cnx.commit()
+    except:
+        print("Erreur lors du changement d'état du bon de commande")
+        raise
+    
+        
