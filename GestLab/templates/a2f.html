@@ -9,7 +9,7 @@
     <div class="container-form-code">
       <div id="code-box">
         <h2 class="element">Entrer votre code d'authentification</h2>
-        <form class="form-horizontal" role="form" method="POST", action="{{ url_for('a2f', id=id, mail=mail, oldMdp=oldMdp, newMdp=newMdp, newMail=newMail, mdp=mdp) }}">
+        <form class="form-horizontal" role="form" method="POST", action="{{ url_for('a2f', id=id, mail=mail, oldMdp=oldMdp, newMdp=newMdp, newMail=newMail, oldMail=oldMail, mdp=mdp) }}">
             {{ A2FForm.hidden_tag() }}
           <div class="user-box">
             {{ A2FForm.code(size=50, class_="form-control element", placeholder="Votre code d'authentification") }}

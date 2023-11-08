@@ -186,10 +186,12 @@ def a2f(mail, id):
     oldMdp = request.args.get('oldMdp')
     newMdp = request.args.get('newMdp')
     newMail = request.args.get('newMail')
+    oldMail = request.args.get('oldMail')
     mdp = request.args.get('mdp')
     print(oldMdp)
     print(newMdp)
     print(newMail)
+    print(oldMail)
     print(mdp)
     f = A2FForm()
     if f.validate_on_submit():
@@ -209,7 +211,7 @@ def a2f(mail, id):
                     print("erreur de changement de mdp")
                     return redirect(url_for('login'))
             if id == 3:
-                res = update_email_utilisateur(cnx, newMail, session['utilisateur'][0], mdp)
+                res = update_email_utilisateur(cnx, newMail, session['utilisateur'][0], mdp, oldMail)
                 print(newMail, session['utilisateur'][0], mdp)
                 if res:
                     session.pop('utilisateur', None)
@@ -225,6 +227,7 @@ def a2f(mail, id):
         oldMdp=oldMdp,
         newMdp=newMdp,
         newMail=newMail,
+        oldMail=oldMail,
         mdp=mdp,
         A2FForm=f,
     )
@@ -518,7 +521,7 @@ def changerMDP():
         ancienMDP, nouveauMDP, confirmerMDP = f.get_full_mdp()
         if ancienMDP != None and nouveauMDP != None and confirmerMDP != None:
             if nouveauMDP == confirmerMDP:
-                return redirect('/a2f/'+session['utilisateur'][2]+'/2?oldMdp='+ancienMDP+'&newMdp='+nouveauMDP+'&newMail=rien&mdp=rien')
+                return redirect('/a2f/'+session['utilisateur'][2]+'/2?oldMdp='+ancienMDP+'&newMdp='+nouveauMDP+'&newMail=rien&oldMail=rien&mdp=rien')
     return render_template(
         "login.html",
         fromChangerMDP=f)
@@ -530,7 +533,7 @@ def changerMail():
         ancienMail, nouveauMail, confirmerMail, mdp = f.get_full_mail()
         if ancienMail != None and nouveauMail != None and confirmerMail != None and mdp != None:
             if nouveauMail == confirmerMail and ancienMail == session['utilisateur'][2]:
-                return redirect('/a2f/'+session['utilisateur'][2]+'/3?oldMdp=rien&newMdp=rien&newMail='+nouveauMail+'&mdp='+mdp)
+                return redirect('/a2f/'+session['utilisateur'][2]+'/3?oldMdp=rien&newMdp=rien&newMail='+nouveauMail+'&oldMail='+ancienMail+'&mdp='+mdp)
     return render_template(
         "login.html",
         fromChangerMail=f)

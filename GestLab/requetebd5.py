@@ -224,9 +224,10 @@ def update_email_utilisateur(cnx,new_email,nom,mdp, old_email):
         update_email_utilisateur_in_ut(cnx, new_email, nom, mdp)
         update_email_utilisateur_in_2fa(cnx, old_email,new_email)
         print("email mis a jour")
+        return True
     except:
         print("erreur de mise a jour de l'email")
-        raise
+        return False
 
 
 def update_email_utilisateur_in_ut(cnx, new_email, nom, mdp):
