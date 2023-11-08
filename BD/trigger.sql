@@ -28,26 +28,17 @@ end |
 delimiter ;
 
 delimiter |
-create or replace TRIGGER emailUtilisateurUniqueUpdate before update on UTILISATEUR for each row
+create or replace TRIGGER emailUtilisateurUniqueUpdate before update on UTILISATEUR for each row 
 begin
     declare compteur int;
     declare mes varchar(255);
     SELECT COUNT(*) INTO compteur from UTILISATEUR WHERE email = new.email;
     if compteur > 0 then
-        set mes = concat("L'email ", new.email, " est déjà utilisé.");
+        if old.email <> new.email then 
+            set mes = concat("L'email ", new.email, " est déjà utilisé.");
         signal SQLSTATE '45000' set MESSAGE_TEXT = mes;
+        end if;
     end if;
-end |
-delimiter ;
-
-
-
-delimiter |
-CREATE OR REPLACE function recupereStockLabo(idM int) returns int
-BEGIN
-declare stock float;
-SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM ;
-return stock;
 end |
 delimiter ;
 
@@ -80,6 +71,30 @@ begin
 end |
 delimiter ;
 
+delimiter |
+create or replace FUNCTION nombreDemandesEnAttente() returns varchar(255)
+begin
+    declare id int ;
+    declare listeDemandes varchar(255) default '';
+    declare fini boolean default false ;
+
+    declare idDemandes cursor for 
+        SELECT COUNT(DEMANDE.idDemande) FROM DEMANDE JOIN BONCOMMANDE ON DEMANDE.idDemande = BONCOMMANDE.idDemande WHERE BONCOMMANDE.idEtat = 1 ;
+
+    declare continue handler for not found set fini = true ;
+    open idDemandes ;
+    while not fini do
+        fetch idDemandes into id ;
+        if not fini then 
+            SET listeDemandes = id ;
+        end if ;
+    end while ;
+    close idDemandes ;
+
+    return listeDemandes ;
+end |
+delimiter ;
+
 
 delimiter |
 CREATE OR REPLACE function recupereidMateriel(idMU int) returns int
@@ -90,71 +105,230 @@ return idM;
 end |
 delimiter ;
 
-
 delimiter |
-create or replace TRIGGER modificationStockLaboInsert after insert on BONCOMMANDE for each row
+CREATE OR REPLACE function recupereStockLabo(idM int) returns int
 BEGIN
-    declare idMU int ;
-    declare idM int ;
-    declare qte int ;
-    declare prixIndividuel float;
-    declare fini boolean default false ;
-    declare etat int ;
-    declare stock int ;
-       
-    declare produits cursor for 
-        SELECT idMaterielUnique FROM RESERVELABORATOIRE ;
-
-    declare continue handler for not found set fini = true ;
-
-    open produits ;
-    while not fini do
-        fetch produits into idMU ;
-        if not fini then
-            SELECT recupereidMateriel(idMU) into idM ;
-            SELECT recupereStockLabo(idM) into stock ;
-            if stock is null then
-                INSERT INTO STOCKLABORATOIRE VALUES (idM, qte) ;
-            else 
-                UPDATE STOCKLABORATOIRE set quantiteLaboratoire = stock + qte WHERE idMateriel = idM ;
-            end if ;
-        end if ;
-    end while ;
-    close produits ;
+declare stock float;
+SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM ;
+return stock;
 end |
 delimiter ;
 
 delimiter |
-create or replace TRIGGER modificationStockLaboUpdate after update on BONCOMMANDE for each row
+create or replace procedure alertesPeremption() 
 BEGIN
-    declare idM int ;
-    declare qte int ;
-    declare prixIndividuel float;
     declare fini boolean default false ;
-    declare etat int ;
-    declare stock int ;
-       
-    declare produits cursor for 
-        SELECT idMateriel, quantite FROM AJOUTERMATERIEL WHERE idDemande = new.idDemande;
+    declare idMu int ;
+
+    declare idMateriels cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE datePeremption <= CURDATE() ;
+
+    declare continue handler for not found set fini = true ;
+    
+    open idMateriels ;
+    while not fini do
+        fetch idMateriels into idMu ;
+        if not fini then 
+            INSERT INTO ALERTESENCOURS VALUES(1, idMu) ;
+        end if ;
+    end while ;
+    close idMateriels ;
+end |
+delimiter ;
+
+
+delimiter |
+create or replace procedure alertesPeremptionDixJours() 
+BEGIN
+    declare fini boolean default false ;
+    declare idMu int ;
+
+    declare idMateriels cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE datePeremption > CURDATE() AND datePeremption <= CURDATE() + INTERVAL 10 DAY ;
+
+    declare continue handler for not found set fini = true ;
+    
+    open idMateriels ;
+    while not fini do
+        fetch idMateriels into idMu ;
+        if not fini then 
+            INSERT INTO ALERTESENCOURS VALUES(2, idMu) ;
+        end if ;
+    end while ;
+    close idMateriels ;
+end |
+delimiter ;
+
+delimiter |
+create or replace procedure alertesQuantiteSeuil() 
+BEGIN
+    declare fini boolean default false ;
+    declare idMu int ;
+
+    declare idMateriels cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE NATURAL JOIN MATERIEL WHERE quantiteApproximative <= (seuilAlerte/4) ;
+
+    declare continue handler for not found set fini = true ;
+    
+    open idMateriels ;
+    while not fini do
+        fetch idMateriels into idMu ;
+        if not fini then 
+            INSERT INTO ALERTESENCOURS VALUES(3, idMu) ;
+        end if ;
+    end while ;
+    close idMateriels ;
+end |
+delimiter ;
+
+delimiter |
+create or replace procedure alertesQuantiteAZero() 
+BEGIN
+    declare fini boolean default false ;
+    declare idMu int ;
+
+    declare idMateriels cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE NATURAL JOIN MATERIEL WHERE quantiteApproximative > (seuilAlerte/4) AND quantiteApproximative = 0 ;
+    declare continue handler for not found set fini = true ;
+    
+    open idMateriels ;
+    while not fini do
+        fetch idMateriels into idMu ;
+        if not fini then 
+            INSERT INTO ALERTESENCOURS VALUES(4, idMu) ;
+        end if ;
+    end while ;
+    close idMateriels ;
+end |
+delimiter ;
+
+delimiter |
+create or replace procedure gestionAlertes() 
+BEGIN
+    DELETE FROM ALERTESENCOURS ;
+    call alertesPeremption() ;
+    call alertesPeremptionDixJours() ;
+    call alertesQuantiteAZero() ;
+    call alertesQuantiteSeuil() ;
+end |
+delimiter ;
+
+SELECT COUNT(*) FROM ALERTESENCOURS ;
+
+
+delimiter |
+create or replace EVENT insereAlertesAuto ON SCHEDULE EVERY 1 minute DO
+BEGIN
+    DELETE FROM ALERTESENCOURS ;
+    INSERT INTO debug VALUES ("test") ;
+    call alertesPeremption() ;
+    call alertesPeremptionDixJours() ;
+    call alertesQuantiteAZero() ;
+    call alertesQuantiteSeuil() ;
+end |
+delimiter ;
+
+delimiter |
+create or replace TRIGGER empecheSuppressionsStockLaboratoire before delete on STOCKLABORATOIRE for each row
+begin
+    declare mes varchar(255);
+
+    set mes = concat("Les suppressions ne sont pas autorisés sur la table STOCKLABORATOIRE. Si un objet n'est plus en stock, veuillez mettre sa quantité à 0.");
+    signal SQLSTATE '45000' set MESSAGE_TEXT = mes;
+end |
+delimiter ;
+
+
+delimiter |
+CREATE OR REPLACE TRIGGER modificationStockLaboInsert AFTER INSERT ON RESERVELABORATOIRE FOR EACH ROW
+BEGIN
+    declare idM INT;
+    declare stock INT;
+    declare fini BOOLEAN default false;
+
+    declare curseur cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMaterielUnique = new.idMaterielUnique;
 
     declare continue handler for not found set fini = true ;
 
-    SELECT idEtat INTO etat FROM BONCOMMANDE WHERE idBonCommande = new.idBonCommande ;
+    open curseur;
 
-    if etat = 3 then 
-        open produits ;
-        while not fini do
-            fetch produits into idM, qte ;
-            if not fini then
-                SELECT recupereStockLabo(idM) into stock ;
-                if stock is null then
-                    INSERT INTO STOCKLABORATOIRE VALUES (idM, qte) ;
-                else 
-                    UPDATE STOCKLABORATOIRE set quantiteLaboratoire = stock + qte WHERE idMateriel = idM ;
-                end if ;
-            end if ;
-        end while ;
-        close produits ;
-    end if;
+    boucle: loop
+        fetch curseur into idM;
+        if fini then
+            LEAVE boucle;
+        end if;
+
+        SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM;
+
+        if stock is null then
+            INSERT INTO STOCKLABORATOIRE (idMateriel, quantiteLaboratoire) VALUES (idM, 1);
+        else
+            UPDATE STOCKLABORATOIRE SET quantiteLaboratoire = stock + 1 WHERE idMateriel = idM;
+        end if;
+    end loop;
+    close curseur;
+end |
+delimiter ;
+
+delimiter |
+CREATE OR REPLACE TRIGGER modificationStockLaboUpdate AFTER UPDATE ON RESERVELABORATOIRE FOR EACH ROW
+BEGIN
+    declare idM INT;
+    declare stock INT;
+    declare fini BOOLEAN default false;
+
+    declare curseur cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMaterielUnique = new.idMaterielUnique;
+
+    declare continue handler for not found set fini = true ;
+
+    open curseur;
+
+    boucle: loop
+        fetch curseur into idM;
+        if fini then
+            LEAVE boucle;
+        end if;
+
+        SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM;
+
+        if stock is null then
+            INSERT INTO STOCKLABORATOIRE (idMateriel, quantiteLaboratoire) VALUES (idM, 1);
+        else
+            UPDATE STOCKLABORATOIRE SET quantiteLaboratoire = stock + 1 WHERE idMateriel = idM;
+        end if;
+    end loop;
+    close curseur;
+end |
+delimiter ;
+
+delimiter |
+CREATE OR REPLACE TRIGGER modificationStockLaboDelete AFTER DELETE ON RESERVELABORATOIRE FOR EACH ROW
+BEGIN
+    declare idM INT;
+    declare stock INT;
+    declare fini BOOLEAN default false;
+
+    declare curseur cursor for
+        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMaterielUnique = old.idMaterielUnique;
+
+    declare continue handler for not found set fini = true ;
+
+    open curseur;
+
+    boucle: loop
+        fetch curseur into idM;
+        if fini then
+            LEAVE boucle;
+        end if;
+
+        SELECT quantiteLaboratoire INTO stock FROM STOCKLABORATOIRE WHERE idMateriel = idM;
+
+        if stock - 1 > 0 then
+            UPDATE STOCKLABORATOIRE SET quantiteLaboratoire = stock - 1 WHERE idMateriel = idM;
+        end if;
+    end loop;
+    close curseur;
 end |
 delimiter ;

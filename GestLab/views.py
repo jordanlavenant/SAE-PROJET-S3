@@ -1,15 +1,16 @@
 from .app import app #, db
-from flask import render_template, url_for, redirect, request, session
+from flask import render_template, url_for, redirect, request, session, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField
+from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField
 from wtforms.validators import DataRequired
 from wtforms import PasswordField
 from hashlib import sha256
 from .requetebd5 import *
 from .connexionPythonSQL import *
 from .models import *
+import time
 
 
 cnx = get_cnx()
@@ -89,7 +90,75 @@ class CommentaireForm(FlaskForm):
         gest = self.gestionnaires.data
         text = self.text.data
         return text, gest
+    
+class MdpOublierForm(FlaskForm):
+    email = StringField('email', validators=[DataRequired()])
+    submit = SubmitField('Recevoir un nouveau mot de passe')
 
+    def get_email(self):
+        email = self.email.data
+        return email
+
+class AjouterMaterielForm(FlaskForm):
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
+    submit = SubmitField('Submit')
+    nom = StringField('nom', validators=[DataRequired()])
+    reference = StringField('reference')
+    date_reception = DateField('date_reception')
+    date_peremption = DateField('date_peremption')
+    caracteristiques = StringField('caracteristiques')
+    infossup = StringField('infossup')
+    quantite = StringField('quantite')
+    seuilalerte  = StringField('seuilalerte')
+    next = HiddenField()
+
+    def get_full_materiel(self):
+        domaine = self.domaine.data
+        print("domaine + " + str(domaine))
+        categorie = self.categorie.data
+        nom = self.nom.data
+        reference = self.reference.data
+        caracteristiques = self.caracteristiques.data
+        infossup = self.infossup.data
+        seuilalerte = self.seuilalerte.data
+        return (domaine, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+
+def get_domaine_choices():
+    query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
+    result = cnx.execute(query)
+    domaines =  [(str(id_), name) for name, id_ in result]
+    domaines.insert(0, ("", "Choisir un domaine"))
+    return domaines
+
+@app.route('/get_categorie_choices', methods=['GET'])
+def get_categorie_choices():
+    selected_domain_id = request.args.get('domaine_id')
+    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
+    categories = {str(id_): name for name, id_ in result}
+    return jsonify(categories)
+
+
+@app.route("/ajouter-materiel/")
+def ajouter_materiel():
+    f = AjouterMaterielForm()
+    f.domaine.choices = get_domaine_choices() 
+    if f.validate_on_submit():
+        selected_domain_id = f.domaine.data
+        f.categorie.choices = get_categorie_choices(selected_domain_id)
+    return render_template(
+    "ajouterMateriel.html",
+    title="Ajouter un matériel",
+    AjouterMaterielForm=f,
+    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    )
+class A2FForm(FlaskForm):
+    code = StringField('code', validators=[DataRequired()])
+    submit = SubmitField('Valider')
+
+    def get_code(self):
+        code = self.code.data
+        return code
 
 @app.route("/")
 def base():
@@ -100,6 +169,67 @@ def base():
     alertes=str(nb_alertes),
     demandes=str(nb_demandes),
     title="votre chemin vers la facilité"
+    )
+
+@app.route("/motdepasseoublie/", methods=("GET","POST",))
+def mot_de_passe_oublier():
+    f = MdpOublierForm()
+    if f.validate_on_submit():
+        email = f.get_email()
+        return redirect(url_for('a2f', mail=email, id=1))
+    return render_template(
+        "login.html",
+        MdpOublierForm=f)
+
+@app.route("/a2f/<string:mail>/<int:id>", methods=("GET","POST",))
+def a2f(mail, id):
+    oldMdp = request.args.get('oldMdp')
+    newMdp = request.args.get('newMdp')
+    newMail = request.args.get('newMail')
+    oldMail = request.args.get('oldMail')
+    mdp = request.args.get('mdp')
+    print(oldMdp)
+    print(newMdp)
+    print(newMail)
+    print(oldMail)
+    print(mdp)
+    f = A2FForm()
+    if f.validate_on_submit():
+        code = f.get_code()
+        uri = get_uri_with_email(cnx, mail)
+        if verify(uri, code):
+            if id == 1:
+                recuperation_de_mot_de_passe(cnx, mail)
+                print("code valide")
+                return redirect(url_for('login'))
+            if id == 2:
+                res = update_mdp_utilisateur(cnx, session['utilisateur'][2], oldMdp, newMdp)
+                if res:
+                    session.pop('utilisateur', None)
+                    return redirect(url_for('login'))
+                else:
+                    print("erreur de changement de mdp")
+                    return redirect(url_for('login'))
+            if id == 3:
+                res = update_email_utilisateur(cnx, newMail, session['utilisateur'][0], mdp, oldMail)
+                print(newMail, session['utilisateur'][0], mdp)
+                if res:
+                    session.pop('utilisateur', None)
+                    return redirect(url_for('login'))
+                else:
+                    print("erreur de changement de mail")
+                    return redirect(url_for('login'))
+    return render_template(
+        "a2f.html",
+        title="A2F - "+mail,
+        mail=mail,
+        id=id,
+        oldMdp=oldMdp,
+        newMdp=newMdp,
+        newMail=newMail,
+        oldMail=oldMail,
+        mdp=mdp,
+        A2FForm=f,
     )
 
 @app.route("/commander/")
@@ -269,6 +399,7 @@ def modifier_utilisateur(id):
     f = AjouterUtilisateurForm()
     if f.validate_on_submit():
         nom, prenom, email, statut = f.get_full_user()
+        print(statut)
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
                 res = update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
@@ -343,6 +474,7 @@ def commentaire():
         if text != None and gest != None:
             mail = session['utilisateur'][2]
             envoyer_mail_commentaire(gest, mail, text)
+            time.sleep(.5)
             return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
@@ -357,6 +489,7 @@ def login():
     f = LoginForm ()
     changerMDP = ChangerMDPForm()
     changerMail = ChangerMailForm()
+    mdpOublier = MdpOublierForm()
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
@@ -372,11 +505,12 @@ def login():
         title="Profil",
         form=f,
         fromChangerMDP=changerMDP,
-        fromChangerMail=changerMail)
+        fromChangerMail=changerMail,
+        MdpOublierForm=mdpOublier
+        )
 
 @app.route("/logout/")
 def logout():
-    #logout_user()
     session.pop('utilisateur', None)
     return redirect(url_for('base'))
 
@@ -387,13 +521,7 @@ def changerMDP():
         ancienMDP, nouveauMDP, confirmerMDP = f.get_full_mdp()
         if ancienMDP != None and nouveauMDP != None and confirmerMDP != None:
             if nouveauMDP == confirmerMDP:
-                res = update_mdp_utilisateur(cnx, session['utilisateur'][2], ancienMDP, nouveauMDP)
-                if res:
-                    session.pop('utilisateur', None)
-                    return redirect(url_for('login'))
-                else:
-                    print("erreur de changement de mdp")
-                    return redirect(url_for('login'))
+                return redirect('/a2f/'+session['utilisateur'][2]+'/2?oldMdp='+ancienMDP+'&newMdp='+nouveauMDP)
     return render_template(
         "login.html",
         fromChangerMDP=f)
@@ -405,14 +533,7 @@ def changerMail():
         ancienMail, nouveauMail, confirmerMail, mdp = f.get_full_mail()
         if ancienMail != None and nouveauMail != None and confirmerMail != None and mdp != None:
             if nouveauMail == confirmerMail and ancienMail == session['utilisateur'][2]:
-                res = update_email_utilisateur(cnx, nouveauMail, session['utilisateur'][0], mdp)
-                print(nouveauMail, session['utilisateur'][0], mdp)
-                if res:
-                    session.pop('utilisateur', None)
-                    return redirect(url_for('login'))
-                else:
-                    print("erreur de changement de mail")
-                    return redirect(url_for('login'))
+                return redirect('/a2f/'+session['utilisateur'][2]+'/3?newMail='+nouveauMail+'&oldMail='+ancienMail+'&mdp='+mdp)
     return render_template(
         "login.html",
         fromChangerMail=f)
@@ -447,11 +568,3 @@ def ajouterUtilisateur():
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)
-
-@app.route("/ajouter-materiel/")
-def ajouter_materiel():
-    return render_template(
-    "ajouterMateriel.html",
-    title="Ajouter un Matériel",
-    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
-    )
