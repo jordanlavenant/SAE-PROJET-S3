@@ -253,4 +253,68 @@ def envoyer_mail_signalement(mailreceveur, mailenvoyeur, text, objet):
         smtp.send_message(msg)
         print("Mail envoyé")
 
-envoyer_mail_signalement("colin.pilet1@gmail.com", "test@mail.com", "sdtfhjkygjcgfhdgfhgjhj", "test")
+def envoyer_mail_mdp_oublie(mailreceveur, mdp):
+    json_file = open('GestLab/static/data/configEmail.json')
+    gmail_config = json.load(json_file)
+
+    msg = EmailMessage()
+    msg['Subject'] = 'A2F - Création de compte GestLab - Email automatique ne pas répondre !'
+    msg['From'] = gmail_config["email"]
+    msg['To'] = mailreceveur
+
+    # Utilisation de balises HTML pour incorporer l'image dans le corps du message
+    text_with_image = f'''
+    <html>
+    <head>
+        <style>
+            a{{
+                text-decoration: none;
+            }}
+
+            p,li {{
+                font-size: 20px;
+            }}
+
+            .alert {{
+                font-size: 25px;
+                color: red;
+            }}
+
+            img {{
+                width: 300px;
+                height: 300px;
+            }}
+
+            .logo {{
+                width: 100px;
+                height: 100px;
+            }}
+        </style>
+    </head>
+    <body>
+        <p class='alert'>Pour des raisons de sécurité veillez à ne pas partager ces informations !</p>
+        <p>Votre compte a été récuperer avec succès voici les informations correspondants :</p>
+        <ul>
+            <li>Voici le login: {mailreceveur}</li>
+            <li>Voici le mot de passe temporaire: {mdp}</li>
+        </ul>
+    </body>
+    <footer>
+        <br>
+        <p>Si vous n'avez pas demandé de récuperation de compte veuillez ignorer ce mail.</p>
+        <img class="logo" src="https://cdn.discordapp.com/attachments/1171757951124525127/1171757962973429780/logo-GestLab.png?ex=655dd7a4&is=654b62a4&hm=457ba97c61b08dcb5941590e280bf720a72dba79dc96c86680d3005ff6160121&">
+    </footer>
+    </html>
+    '''
+    msg.add_alternative(text_with_image, subtype='html')
+    
+    # Image à ajouter en tant que pièce jointe et incorporée dans le corps
+    image_path = './qrcode.png'
+    with open(image_path, 'rb') as image_file:
+        image_data = image_file.read()
+        msg.add_attachment(image_data, maintype='image', subtype='jpg', filename='image.jpg', cid='image1')
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', gmail_config["port"]) as smtp:
+        smtp.login(gmail_config["email"], gmail_config["password"])
+        smtp.send_message(msg)
+        print("Mail envoyé")
