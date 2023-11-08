@@ -99,7 +99,7 @@ class AjouterMaterielForm(FlaskForm):
         infossup = self.infossup.data
         seuilalerte = self.seuilalerte.data
         return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
-    
+
 @app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
 def modifier_materiel(id):
     print("hee hee")
@@ -108,17 +108,15 @@ def modifier_materiel(id):
                          
     idDomaine = get_id_domaine_from_categorie(cnx, idCategorie)
     f = AjouterMaterielForm()
-    print(f.get_full_materiel())
     f.nom.default = nomMateriel
     f.reference.default = referenceMateriel
     f.caracteristiques.default = caracteristiquesCompelmentaires
     f.infossup.default = informationsComplementairesEtSecurite
     f.seuilalerte.default = str(seuilAlerte)
-    print(f.get_full_materiel())
-
-    print(get_domaine_choices())
     f.domaine.choices = get_domaine_choices() 
     f.domaine.default = str(idDomaine)
+    f.categorie.choices = get_categorie_choices_modifier_materiel(idDomaine)
+    f.categorie.default = str(idCategorie)
     f.process()
     print(f.domaine.data)
 
@@ -509,6 +507,12 @@ def get_domaine_choices():
     domaines =  [(str(id_), name) for name, id_ in result]
     domaines.insert(0, ("", "Choisir un domaine"))
     return domaines
+
+def get_categorie_choices_modifier_materiel(idDomaine):
+    query = text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine =" + str(idDomaine) )
+    result = cnx.execute(query)
+    categories = [(str(id_), name) for name, id_ in result]
+    return categories
 
 @app.route('/get_categorie_choices', methods=['GET'])
 def get_categorie_choices():
