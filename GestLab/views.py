@@ -495,7 +495,7 @@ def modifier_materiel(id):
 def supprimer_materiel_unique(id):
     id_materiel = get_id_materiel_from_id_materiel_unique(cnx, id)
     supprimer_materiel_unique_bdd(cnx, id)
-    return redirect(url_for('inventaire'))
+    return redirect(url_for('etat', id=id_materiel))
 
 @app.route("/demandes/")
 def demandes():
