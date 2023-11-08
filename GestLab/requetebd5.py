@@ -763,6 +763,7 @@ def changer_etat_bonCommande(cnx, idut):
         idbc = get_id_bonCommande_actuel(cnx, idut)
         cnx.execute(text("UPDATE BONCOMMANDETEST SET idEtat = " + str(idetat) + " WHERE idBonCommande = " + str(idbc) + ";"))
         cnx.commit()
+        ajout_gest_into_boncommande(cnx,idut)
     except:
         print("Erreur lors du changement d'état du bon de commande")
         raise
