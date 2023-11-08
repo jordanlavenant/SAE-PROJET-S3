@@ -234,14 +234,20 @@ def a2f(mail, id):
 
 @app.route("/commander/")
 def commander():
+    nb_alertes = get_nb_alert(cnx)
+    nb_demandes = get_nb_demande(cnx)
     return render_template(
-    "commander.html",
-    title="Commander",
-    chemin = [("base", "Accueil"), ("commander", "Commander")]
+        "commander.html",
+        title="Commander du Matériel",
+        categories = get_domaine(get_cnx()),
+        alertes=str(nb_alertes),
+        demandes=str(nb_demandes),
+        liste_materiel = get_info_rechercheMateriel(get_cnx()),
+        chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
-@app.route("/bonDeCommande/<int:idDemande>")
-def bonDeCommande(idDemande):
+@app.route("/bon-commande/<int:idDemande>")
+def bon_commande(idDemande):
     info_commande = get_info_demande_with_id(get_cnx(), idDemande)
     print(info_commande)
     return render_template(
@@ -251,20 +257,6 @@ def bonDeCommande(idDemande):
         len = len(info_commande),
         title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
         chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
-    )
-
-@app.route("/commander-materiel/")
-def commander_materiel():
-    nb_alertes = get_nb_alert(cnx)
-    nb_demandes = get_nb_demande(cnx)
-    return render_template(
-        "commanderMateriel.html",
-        title="Commander du Matériel",
-        categories = get_domaine(get_cnx()),
-        alertes=str(nb_alertes),
-        demandes=str(nb_demandes),
-        liste_materiel = get_info_rechercheMateriel(get_cnx()),
-        chemin = [("base", "Accueil"), ("commander", "Commander"), ("commander_materiel", "Commander du Matériel")]
     )
 
 @app.route("/alertes/")
