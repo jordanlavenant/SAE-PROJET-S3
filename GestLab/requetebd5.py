@@ -767,4 +767,15 @@ def changer_etat_bonCommande(cnx, idut):
         print("Erreur lors du changement d'état du bon de commande")
         raise
     
-        
+
+def afficher_table(cnx, table):
+    try:
+        list = []
+        result = cnx.execute(text("SELECT * FROM " + table + ";"))
+        for row in result:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("Erreur lors de l'affichage de la table")
+        raise

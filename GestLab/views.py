@@ -268,7 +268,7 @@ def commander():
         categories = get_domaine(get_cnx()),
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
-        liste_materiel = get_info_rechercheMateriel(get_cnx()),
+        liste_materiel = afficher_table(get_cnx(), "MATERIEL"),
         chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
@@ -280,9 +280,10 @@ def bon_commande(idDemande):
         "bonDeCommande.html",
         idDemande = idDemande,
         infoCommande = info_commande,
-        len = len(info_commande),
-        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
-        chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
+        longeur = len(info_commande),
+        categories = get_domaine(get_cnx()),
+        title = "bon de commande",
+        chemin = [("base", "Accueil"), ("commander", "Commander"), ('demandes', 'Bon de commande')]
     )
 
 @app.route("/alertes/")
@@ -505,6 +506,19 @@ def demandes():
     nb_demande = int(get_nb_demande(cnx)),
     info_demande = get_info_demande(cnx),
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
+    )
+
+@app.route("/demande/<int:idDemande>")
+def demande(idDemande):
+    info_commande = get_info_demande_with_id(get_cnx(), idDemande)
+    print(info_commande)
+    return render_template(
+        "demande.html",
+        idDemande = idDemande,
+        infoCommande = info_commande,
+        longeur = len(info_commande),
+        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
+        chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Demande')]
     )
 
 @app.route("/inventaire/")
