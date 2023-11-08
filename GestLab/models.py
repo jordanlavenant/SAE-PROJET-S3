@@ -241,6 +241,8 @@ def envoyer_mail_signalement(mailreceveur, mailenvoyeur, text, objet):
         <p>Votre compte a été crée avec succès voici les informations correspondants :</p>
         <p>Voici le signalement de la part de : {mailenvoyeur}</p>
         <p>Voici l'objet concerné : {objet}</p>
+        <p>Voici le commentaire evec le sognalement : {text}</p>
+        <p>{text}</p>
     </body>
     <footer>
         <img class="logo" src="https://cdn.discordapp.com/attachments/1171757951124525127/1171757962973429780/logo-GestLab.png?ex=655dd7a4&is=654b62a4&hm=457ba97c61b08dcb5941590e280bf720a72dba79dc96c86680d3005ff6160121&">
