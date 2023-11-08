@@ -6,7 +6,7 @@
 {% block content %}
 <div class="comment-container">
     {% if materiel != None %}
-    <form class="form-horizontal" role="form" method="POST" action ="{{ url_for('commentaire') }}">
+    <form class="form-horizontal" role="form" method="POST" action ="/commentaire?materiel={{ materiel }}">
         {{ CommentaireForm.hidden_tag() }}
         <div class="destinataire">
             <p>à :</p>
@@ -39,6 +39,7 @@
     <div class="popup-content">
         <h2>Confirmation</h2>
         <p>Votre commentaire a bien été envoyé !</p>
+        <p>Vous allez être rediriger dans quelque instant</p>
     </div>
 </div>
 {% endblock %}

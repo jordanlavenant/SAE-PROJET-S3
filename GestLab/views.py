@@ -473,9 +473,9 @@ def commentaire():
                 return redirect(url_for('base'))
             else:
                 mail = session['utilisateur'][2]
-                envoyer_mail_commentaire(gest, mail, text)
+                envoyer_mail_signalement(gest, mail, text, materiel)
                 time.sleep(.5)
-                return redirect(url_for('etat', id=materiel))
+                return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
     users = users,
