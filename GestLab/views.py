@@ -100,32 +100,33 @@ class MdpOublierForm(FlaskForm):
         return email
 
 class AjouterMaterielForm(FlaskForm):
-    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
-    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
-    nom = StringField('nom')
-    reference = StringField('reference')
-    date_reception = DateField('date_reception')
-    date_peremption = DateField('date_peremption')
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
+    nom = StringField('nom', validators=[DataRequired()])
+    reference = StringField('reference', validators=[DataRequired()])
     caracteristiques = TextAreaField('caracteristiques')
     infossup = TextAreaField('infossup')
-    quantite = StringField('quantite')
     seuilalerte  = StringField('seuilalerte')
-    submit = SubmitField('submit')
     next = HiddenField()
 
     def get_full_materiel(self):
-        domaine = self.domaine.data
         categorie = self.categorie.data
         nom = self.nom.data
         reference = self.reference.data
-        date_reception = self.date_reception.data
-        date_peremption = self.date_peremption.data
         caracteristiques = self.caracteristiques.data
         infossup = self.infossup.data
-        quantite = self.quantite.data
         seuilalerte = self.seuilalerte.data
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+    
+    def get_full_materiel_requestform(self):
+        categorie = request.form['categorie']
+        nom = request.form['nom']
+        reference = request.form['reference']
+        caracteristiques = request.form['caracteristiques']
+        infossup = request.form['infossup']
+        seuilalerte = request.form['seuilalerte']
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
 
-        return (domaine, categorie, nom, reference, date_reception, date_peremption, caracteristiques, infossup, quantite, seuilalerte)
 
 def get_domaine_choices():
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
@@ -134,7 +135,7 @@ def get_domaine_choices():
     domaines.insert(0, ("", "Choisir un domaine"))
     return domaines
 
-@app.route('/get_categorie_choices', methods=['GET'])
+@app.route('/get_categorie_choices/', methods=['GET'])
 def get_categorie_choices():
     selected_domain_id = request.args.get('domaine_id')
     result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
@@ -154,12 +155,16 @@ def ajouter_materiel():
         else:
             print("Erreur lors de l'insertion du matériel")
             return redirect(url_for('ajouter_materiel'))
+    else :
+        print("Erreur lors de la validation du formulaire")
+        print(f.errors)
     return render_template(
     "ajouterMateriel.html",
     title="Ajouter un matériel",
     AjouterMaterielForm=f,
     chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
     )
+
 class A2FForm(FlaskForm):
     code = StringField('code', validators=[DataRequired()])
     submit = SubmitField('Valider')
