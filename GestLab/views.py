@@ -294,8 +294,8 @@ def etat(id):
     "etat.html",
     id=id,
     title="Etat",
-    item_properties=get_all_information_to_Materiel_with_id(cnx, id),
-    items_unique=get_all_information_to_MaterielUnique_with_id(cnx, id),
+    item_properties = get_all_information_to_Materiel_with_id(cnx, id),
+    items_unique = get_all_information_to_MaterielUnique_with_id(cnx, id),
     alertes = nb_alert_par_materielUnique_dict(cnx),
     chemin = [("base", "Accueil"), ("inventaire", "Inventaire"), ("inventaire", "Etat")]
     )

@@ -6,18 +6,35 @@
 {% block content %}
 <a id="btn-back" href="{{ url_for('inventaire') }}">Retour</a>
 
-
-<div class="recap-item">
-    <div class="text">
-        {{ item_properties[1] }}
-    </div>
-    <div class="text">
-        <p>Domaine : </p>
-        <p>{{ item_properties[5] }}</p>
-    </div>
-    <div class="text">
-        <p>Catégorie : </p>
-        <p>{{ item_properties[3] }}</p>
+<div class="recap-container">
+    <div class="recap-item">
+        <div class="text">
+            {{ item_properties[1] }}
+        </div>
+        <div class="text">
+            <p>Domaine : </p>
+            <p>{{ item_properties[5] }}</p>
+        </div>
+        <div class="text">
+            <p>Catégorie : </p>
+            <p>{{ item_properties[3] }}</p>
+        </div>
+        <div class="text">
+            <p>Quantité : </p>
+            <p>{{ items_unique[1] }}</p>
+        </div>
+        <div class="text">
+            <p>Seuil alerte : </p>
+            <p>{{ item_properties[-4] }}</p>
+        </div>
+        <div class="text">
+            <p>Caractéristiques complémentaires : </p>
+            <p>{{ item_properties[-3] }}</p>
+        </div>
+        <div class="text">
+            <p>Informations complémentaires et sécurité : </p>
+            <p>{{ item_properties[-2] }}</p>
+        </div>
     </div>
 </div>
 
@@ -28,7 +45,6 @@
         <div class="item-card" id="{{ item[0] }}">
             <div class="item-properties">
                 <div class="header-container">
-                    <h2>{{ item_properties[1] }}</h2>
                     <a href="{{ url_for('commentaire') }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
                 </div>
                 <div class="date-reception">
@@ -53,14 +69,6 @@
                     {% else %}
                         <p class="quantite-content">-</p>
                     {% endif %}
-                </div>
-                <div class="categorie-container">
-                    <p class="categorie-label">Catégorie : </p>
-                    <p class="categorie-content">{{ item_properties[3] }}</p>
-                </div>
-                <div class="domaine-container">
-                    <p class="domaine-label">Domaine : </p>
-                    <p class="domaine-content">{{ item_properties[5] }}</p>
                 </div>
                 <div class="comment-container">
                     <p class="comment-label">Commentaire : </p>

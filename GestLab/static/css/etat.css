@@ -28,17 +28,39 @@ a {
     cursor: pointer;
 }
 
+.recap-container {
+    display: flex;
+    padding: 0 10%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .recap-item {
-    background-color: #384274;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 1% 3%;
+    border-radius: 20px;
+    border: #384274 1px solid;
+    gap: 30px;
+    margin-top: 30px;
 }
 
 .text {
     display: flex;
     gap: 10px;
-    color: white;
-    font-size: 25px;
+    color: #384274;
+    font-size: 35px;
     margin: 0;
     padding: 0;
+}
+
+.text:nth-of-type(1) {
+    font-weight: bold;
+}
+
+.text > p:nth-of-type(2) {
+    font-weight: bold;
 }
 
 .header-container {
