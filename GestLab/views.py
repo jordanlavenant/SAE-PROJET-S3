@@ -459,19 +459,28 @@ def demander():
 
 @app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():
+    materiel = request.args.get('materiel')
+    print(materiel)
     users = get_user_with_statut(get_cnx(), "Gestionnaire")
     f = CommentaireForm()
     if f.validate_on_submit():
         text, gest = f.get_text()
         if text != None and gest != None:
-            mail = session['utilisateur'][2]
-            envoyer_mail_commentaire(gest, mail, text)
-            time.sleep(.5)
-            return redirect(url_for('base'))
+            if materiel == None:
+                mail = session['utilisateur'][2]
+                envoyer_mail_commentaire(gest, mail, text)
+                time.sleep(.5)
+                return redirect(url_for('base'))
+            else:
+                mail = session['utilisateur'][2]
+                envoyer_mail_commentaire(gest, mail, text)
+                time.sleep(.5)
+                return redirect(url_for('etat', id=materiel))
     return render_template(
     "commentaire.html",
     users = users,
     title ="envoyer un commentaire",
+    materiel = materiel,
     chemin = [("base", "Accueil"), ("commentaire", "envoyer un commentaire")],
     CommentaireForm=f
     )
