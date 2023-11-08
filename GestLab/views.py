@@ -101,7 +101,7 @@ class MdpOublierForm(FlaskForm):
 class AjouterMaterielForm(FlaskForm):
     domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
     categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
-    nom = StringField('nom', validators=[DataRequired()])
+    nom = StringField('nom')
     reference = StringField('reference')
     date_reception = DateField('date_reception')
     date_peremption = DateField('date_peremption')
@@ -141,19 +141,23 @@ def get_categorie_choices():
     return jsonify(categories)
 
 
-@app.route("/ajouter-materiel/", methods=('GET','POST',))
+@app.route("/ajouter-materiel/", methods=("GET","POST",))
 def ajouter_materiel():
     f = AjouterMaterielForm()
     f.domaine.choices = get_domaine_choices() 
-    if f.validate_on_submit():
-        selected_domain_id = f.domaine.data
-        f.categorie.choices = get_categorie_choices(selected_domain_id)
-        # print(f.get_full_materiel())
+    if f.validate_on_submit() :
+        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
+        res = insere_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de l'insertion du matériel")
+            return redirect(url_for('ajouter_materiel'))
     return render_template(
     "ajouterMateriel.html",
     title="Ajouter un matériel",
     AjouterMaterielForm=f,
-    chemin = [("base", "Accueil"), ("ajouter_materiel", "    un Matériel")]
+    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
     )
 
 @app.route("/")

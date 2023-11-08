@@ -34,6 +34,20 @@ def ajoute_materiel(cnx, reFerenceMateriel, nomMateriel, idCategorie, seuilAlert
         print("erreur d'ajout du materiel")
         raise
 
+def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
+    try:
+        if seuilAlerte == '' :
+            seuilAlerte = "NULL"
+        cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
+        cnx.commit()
+        return True
+    except sqlalchemy.exc.OperationalError as e:
+        print(f"SQL OperationalError: {e}")
+        return False
+    except sqlalchemy.exc.IntegrityError as e:
+        print(f"SQL IntegrityError: {e}")
+        return False
+
 
 #marche BD 5
 # est ce que pour ajouter du materiel on est obliger de passer par materiel unique ?

@@ -6,7 +6,7 @@
 {% block content %}
 <a id="btn-back" href="{{ url_for('consulter_utilisateur') }}">retour</a>
 <div class="ajouterMateriel-container">
-    <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('ajouter_materiel', id=id) }}">
+    <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('ajouter_materiel') }}">
         {{ AjouterMaterielForm.hidden_tag() }}
 
         <div class="left-side-info">
