@@ -28,6 +28,17 @@ a {
     cursor: pointer;
 }
 
+.recap-item {
+    background-color: #384274;
+}
+
+.text {
+    color: white;
+    font-size: 25px;
+    margin: 0;
+    padding: 0;
+}
+
 .header-container {
     color: #fff;
     display: flex;
