@@ -125,6 +125,18 @@ a {
     max-height: 50px;
 }
 
+.alerts-statement {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.alerts_count{
+    color: #d35252;
+    align-items: center;
+    margin: 0;
+}
+
 .texte_rouge{
     color: #d35252;
     align-items: center;

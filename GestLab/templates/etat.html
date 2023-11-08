@@ -5,10 +5,16 @@
 {% endblock %}
 {% block content %}
 <a id="btn-back" href="{{ url_for('inventaire') }}">Retour</a>
+
+
+<div class="recap-item">
+    {{ item_properties[1] }}
+</div>
+
+
 <div class="state-container">
     <p class="{{ items_unique[1] }}" id="lenItem" style="display: none"></p>
     {% for item in items_unique[0] %}
-        <p>{{ item[5] }}</p>
         <div class="item-card" id="{{ item[0] }}">
             <div class="item-properties">
                 <div class="header-container">
