@@ -4,16 +4,64 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/commander.css') }}">
 {% endblock %}
 {% block content %}
-<div class="container-main">
-    <a href="{{ url_for('commander_materiel') }}">
-        <section class="carte-lien">
-            <h2>COMMANDER PAR MOI MÊME</h2>
+<div class="commander-container-overall">
+    <div class="header-container">
+        <div class="container-top">
+            <a class="lien-item" href="{{ url_for('base') }}"><button id="btn-retour">retour</button></a>
+            <div class="container-alertes-demandes">
+                <section class="section-alertes">
+                    {% if alertes|int > 0 %}
+                        <img src="../static/images/attention-rouge.png" alt="logo alertes">
+                        {% if alertes|int == 1 %}
+                        <p>{{ alertes }} Alerte</p>
+                        {% else %}
+                        <p>{{ alertes }} Alertes</p>
+                        {% endif %}
+                        <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
+                    {% endif %}
+                </section>
+                <section class="section-demandes">
+                    {% if demandes|int > 0 %}
+                        <img src="../static/images/attention-orange.png" alt="logo demandes">
+                        {% if demandes|int == 1 %}
+                        <p>{{ demandes }} Demande</p>
+                        {% else %}
+                        <p>{{ demandes }} Demandes</p>
+                        {% endif %}
+                        <a href="{{ url_for('demandes') }}">Consulter les demandes ></a>
+                    {% endif %}
+                </section>
+            </div>
+            <a class="lien-item" href="{{ url_for('bon_commande', idDemande=1) }}"><button id="btn-retour">Voir le bon de commande</button></a>
+        </div>
+        <div class="search-content">
+            <input type="text" id="search-bar" placeholder="Chercher un matériel">
+            <button id="btn-search">Rechercher</button>
+        </div>
+        <div class="filter-container">
+            <p>trier par : </p>
+            <form action="/traiter" method="post">
+                <select name="cat" id="categorie-select">
+                    <option value="aucun-tri">aucun tri</option>
+                    {% for categorie in categories %}
+                        <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+    <div class="container-contenu">
+        {% for item in liste_materiel %}
+        <section class="section-contenu">
+            <h3>{{ item }}</h3>
+            <div class="choisir-item">
+                <button id="bouton-moins">-</button>
+                <p>0</p>
+                <button id="bouton-plus">+</button>
+            </div>
+            <button id="ajouter-commande">ajouter à la commande</button>
         </section>
-    </a>
-    <a href="{{ url_for('bon_commande') }}">
-        <section class="carte-lien">
-            <h2>VOIR LES BONS DE COMMANDES</h2>
-        </section>
-    </a>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

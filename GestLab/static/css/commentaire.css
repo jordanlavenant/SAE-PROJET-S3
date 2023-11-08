@@ -96,5 +96,7 @@ a {
     background: #384274;
     padding: 20px;
     border: none;
+    border-radius: 20px;
+    text-align: center;
 }
 

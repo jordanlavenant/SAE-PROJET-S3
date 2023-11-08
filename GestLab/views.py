@@ -234,14 +234,20 @@ def a2f(mail, id):
 
 @app.route("/commander/")
 def commander():
+    nb_alertes = get_nb_alert(cnx)
+    nb_demandes = get_nb_demande(cnx)
     return render_template(
-    "commander.html",
-    title="Commander",
-    chemin = [("base", "Accueil"), ("commander", "Commander")]
+        "commander.html",
+        title="Commander du Matériel",
+        categories = get_domaine(get_cnx()),
+        alertes=str(nb_alertes),
+        demandes=str(nb_demandes),
+        liste_materiel = get_info_rechercheMateriel(get_cnx()),
+        chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
-@app.route("/bonDeCommande/<int:idDemande>")
-def bonDeCommande(idDemande):
+@app.route("/bon-commande/<int:idDemande>")
+def bon_commande(idDemande):
     info_commande = get_info_demande_with_id(get_cnx(), idDemande)
     print(info_commande)
     return render_template(
@@ -251,20 +257,6 @@ def bonDeCommande(idDemande):
         len = len(info_commande),
         title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
         chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
-    )
-
-@app.route("/commander-materiel/")
-def commander_materiel():
-    nb_alertes = get_nb_alert(cnx)
-    nb_demandes = get_nb_demande(cnx)
-    return render_template(
-        "commanderMateriel.html",
-        title="Commander du Matériel",
-        categories = get_domaine(get_cnx()),
-        alertes=str(nb_alertes),
-        demandes=str(nb_demandes),
-        liste_materiel = get_info_rechercheMateriel(get_cnx()),
-        chemin = [("base", "Accueil"), ("commander", "Commander"), ("commander_materiel", "Commander du Matériel")]
     )
 
 @app.route("/alertes/")
@@ -467,19 +459,28 @@ def demander():
 
 @app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():
+    materiel = request.args.get('materiel')
+    print(materiel)
     users = get_user_with_statut(get_cnx(), "Gestionnaire")
     f = CommentaireForm()
     if f.validate_on_submit():
         text, gest = f.get_text()
         if text != None and gest != None:
-            mail = session['utilisateur'][2]
-            envoyer_mail_commentaire(gest, mail, text)
-            time.sleep(.5)
-            return redirect(url_for('base'))
+            if materiel == None:
+                mail = session['utilisateur'][2]
+                envoyer_mail_commentaire(gest, mail, text)
+                time.sleep(.5)
+                return redirect(url_for('base'))
+            else:
+                mail = session['utilisateur'][2]
+                envoyer_mail_signalement(gest, mail, text, materiel)
+                time.sleep(.5)
+                return redirect(url_for('base'))
     return render_template(
     "commentaire.html",
     users = users,
     title ="envoyer un commentaire",
+    materiel = materiel,
     chemin = [("base", "Accueil"), ("commentaire", "envoyer un commentaire")],
     CommentaireForm=f
     )

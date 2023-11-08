@@ -572,7 +572,7 @@ def get_info_demande(cnx):
 
 def get_domaine(cnx):
     try:
-        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
+        result = cnx.execute(text("SELECT * from DOMAINE;"))
         info_commande = []
         for row in result:
             info_commande.append(row)
@@ -613,9 +613,22 @@ def recuperation_de_mot_de_passe(cnx, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("update UTILISATEUR set motDePasse = '" + mdphash + "' where email = '" + email + "';"))
         cnx.commit()
-        envoyer_mail_nouveau_compte(email, mdpRandom)
+        envoyer_mail_mdp_oublie(email, mdpRandom)
         print("mdp mis a jour")
         return True
     except:
         print("erreur de mise a jour du mdp")
         return False
+
+
+def get_info_rechercheMateriel(cnx):
+    try:
+        result =  cnx.execute(text("select * from RECHERCHEMATERIELS;"))
+        list = []
+        for row in result:
+            list.append(row[0])
+        return list
+    except Exception as e:
+        print("Erreur lors de la récupération des informations sur les commandes :", str(e))
+        raise
+
