@@ -258,16 +258,31 @@ def a2f(mail, id):
         A2FForm=f,
     )
 
+@app.route("/reinitialiser-bon-commande/<int:id>", methods=("GET","POST",))
+def reinitialiser_bon_commande(id):
+    delete_all_materiel_in_commande(cnx, id)
+    return redirect(url_for('commander'))
+
+@app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
+def ajouter_materiel_unique(id):
+    idMat = request.args.get('idMat')
+    qte = request.args.get('qte')
+    ajout_materiel_in_commandeTest(cnx, idMat, id, qte)
+    return redirect(url_for('commander'))
+
 @app.route("/commander/")
 def commander():
     nb_alertes = get_nb_alert(cnx)
     nb_demandes = get_nb_demande(cnx)
+    idUser = get_id_with_email(cnx, session['utilisateur'][2])
     return render_template(
         "commander.html",
         title="Commander du Matériel",
         categories = get_domaine(get_cnx()),
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
+        idUser = idUser,
+        qte = 0,
         liste_materiel = afficher_table(get_cnx(), "MATERIEL"),
         chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
