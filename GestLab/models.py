@@ -258,7 +258,7 @@ def envoyer_mail_mdp_oublie(mailreceveur, mdp):
     gmail_config = json.load(json_file)
 
     msg = EmailMessage()
-    msg['Subject'] = 'A2F - Création de compte GestLab - Email automatique ne pas répondre !'
+    msg['Subject'] = 'Récuperation de compte GestLab - Email automatique ne pas répondre !'
     msg['From'] = gmail_config["email"]
     msg['To'] = mailreceveur
 
@@ -308,12 +308,6 @@ def envoyer_mail_mdp_oublie(mailreceveur, mdp):
     '''
     msg.add_alternative(text_with_image, subtype='html')
     
-    # Image à ajouter en tant que pièce jointe et incorporée dans le corps
-    image_path = './qrcode.png'
-    with open(image_path, 'rb') as image_file:
-        image_data = image_file.read()
-        msg.add_attachment(image_data, maintype='image', subtype='jpg', filename='image.jpg', cid='image1')
-
     with smtplib.SMTP_SSL('smtp.gmail.com', gmail_config["port"]) as smtp:
         smtp.login(gmail_config["email"], gmail_config["password"])
         smtp.send_message(msg)
