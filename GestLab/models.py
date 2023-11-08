@@ -301,7 +301,7 @@ def envoyer_mail_mdp_oublie(mailreceveur, mdp):
     </body>
     <footer>
         <br>
-        <p>Si vous n'avez pas demandé de récuperation de compte veuillez ignorer ce mail.</p>
+        <p>Si vous n'avez pas demandé de récuperation de compte veuillez contacter un administrateur.</p>
         <img class="logo" src="https://cdn.discordapp.com/attachments/1171757951124525127/1171757962973429780/logo-GestLab.png?ex=655dd7a4&is=654b62a4&hm=457ba97c61b08dcb5941590e280bf720a72dba79dc96c86680d3005ff6160121&">
     </footer>
     </html>

@@ -615,7 +615,7 @@ def recuperation_de_mot_de_passe(cnx, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("update UTILISATEUR set motDePasse = '" + mdphash + "' where email = '" + email + "';"))
         cnx.commit()
-        envoyer_mail_nouveau_compte(email, mdpRandom)
+        envoyer_mail_mdp_oublie(email, mdpRandom)
         print("mdp mis a jour")
         return True
     except:
