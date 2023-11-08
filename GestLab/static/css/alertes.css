@@ -1,11 +1,11 @@
-a {
+#btn-consulter {
     color: #384274;
     font-variant: small-caps;
     transition: 0.2s;
     font-size: 20px;
 }
 
-a:hover {
+#btn-consulter:hover {
     color: #384274;
     transition: 0.2s;
     font-size: 21px;

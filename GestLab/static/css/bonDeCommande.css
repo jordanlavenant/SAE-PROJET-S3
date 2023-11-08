@@ -1,9 +1,11 @@
-#info {
-    margin-left: 30vw;
-    margin-right: 30vw;
-    margin-bottom: 1em;
-    padding: 1em 0 0 1em;
+#container-objet {
+    margin: 3% 30vw 3% 30vw;
+    padding: 1em;
     background-color: #384274;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .texte_blanc {
@@ -27,6 +29,22 @@
     color: white;
     background-color: #009af0;
     box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#btn-voir {
+    margin-right: 1%;
+    background-color: white;
+    border-radius: 25px;
+    padding: 14px 40px;
+    transition: 0.2s;
+}
+
+#btn-voir:hover {
+    background-color: white;
+    box-shadow: 0 0 15px white;
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;

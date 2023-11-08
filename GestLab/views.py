@@ -140,12 +140,12 @@ def commander_materiel():
 @app.route("/alertes/")
 def alertes():
     nb_alertes = get_nb_alert(cnx)
-    nom_materiel = get_info_materiel_alert(cnx)
+    info_materiel = get_info_materiel_alert(cnx)
     return render_template(
     "alertes.html",
     alertes = str(nb_alertes),
     nb_alerte = nb_alertes,
-    nom_materiels = nom_materiel,
+    info_materiels = info_materiel,
     title="Alertes",
     chemin = [("base", "Accueil"), ("alertes", "Alertes")]
     )
