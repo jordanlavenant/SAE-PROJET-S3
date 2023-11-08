@@ -217,10 +217,32 @@ def get_MATERIEL(cnx):
         print(row[0])
 
 #marche BD 5
-def update_email_utilisateur(cnx, new_email, nom, mdp):
+
+def update_email_utilisateur(cnx,new_email,nom,mdp, old_email):
+    try:
+
+        update_email_utilisateur_in_ut(cnx, new_email, nom, mdp)
+        update_email_utilisateur_in_2fa(cnx, old_email,new_email)
+        print("email mis a jour")
+    except:
+        print("erreur de mise a jour de l'email")
+        raise
+
+
+def update_email_utilisateur_in_ut(cnx, new_email, nom, mdp):
     try:
         mdp_hash = hasher_mdp(mdp)
         cnx.execute(text("update UTILISATEUR set email = '" + new_email + "' where nom = '" + nom + "' and motDePasse = '" + mdp_hash + "';"))
+        cnx.commit()
+        print("email mis a jour")
+        return True
+    except:
+        print("erreur de mise a jour de l'email")
+        return False
+
+def update_email_utilisateur_in_2fa(cnx, old_email,new_email,):
+    try:
+        cnx.execute(text("update 2FA set email = '" + new_email + "' where email = '" + old_email + "';"))
         cnx.commit()
         print("email mis a jour")
         return True
