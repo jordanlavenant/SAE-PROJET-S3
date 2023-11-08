@@ -99,6 +99,15 @@ class AjouterMaterielForm(FlaskForm):
         infossup = self.infossup.data
         seuilalerte = self.seuilalerte.data
         return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+    
+    def get_full_materiel_requestform(self):
+        categorie = request.form['categorie']
+        nom = request.form['nom']
+        reference = request.form['reference']
+        caracteristiques = request.form['caracteristiques']
+        infossup = request.form['infossup']
+        seuilalerte = request.form['seuilalerte']
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
 
 class CommentaireForm(FlaskForm):
     text = TextAreaField('text', validators=[DataRequired()])
@@ -322,6 +331,43 @@ def modifier_utilisateur(id):
     chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs"), ("consulter_utilisateur", "Modifier un Utilisateur")] 
     )
 
+@app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
+def modifier_materiel(id):
+    print("hee hee")
+    materiel = get_materiel(cnx, id)
+    idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
+                         
+    idDomaine = get_id_domaine_from_categorie(cnx, idCategorie)
+    f = AjouterMaterielForm()
+    f.nom.default = nomMateriel
+    f.reference.default = referenceMateriel
+    f.caracteristiques.default = caracteristiquesCompelmentaires
+    f.infossup.default = informationsComplementairesEtSecurite
+    f.seuilalerte.default = str(seuilAlerte)
+    f.domaine.choices = get_domaine_choices() 
+    f.domaine.default = str(idDomaine)
+    f.categorie.choices = get_categorie_choices_modifier_materiel(idDomaine)
+    f.categorie.default = str(idCategorie)
+    f.process()
+
+    if f.validate_on_submit() :
+        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel_requestform()
+        res = modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de la modification du matériel")
+            return redirect(url_for('inventaire'))
+    else :
+        print("Erreur lors de la validation du formulaire")
+        print(f.errors)
+    return render_template(
+    "modifierMateriel.html",
+    title="Modifier un matériel",
+    AjouterMaterielForm=f,
+    id = idMateriel,
+    chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
+    )
 
 @app.route("/demandes/")
 def demandes():
@@ -471,6 +517,12 @@ def get_domaine_choices():
     domaines.insert(0, ("", "Choisir un domaine"))
     return domaines
 
+def get_categorie_choices_modifier_materiel(idDomaine):
+    query = text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine =" + str(idDomaine) )
+    result = cnx.execute(query)
+    categories = [(str(id_), name) for name, id_ in result]
+    return categories
+
 @app.route('/get_categorie_choices', methods=['GET'])
 def get_categorie_choices():
     selected_domain_id = request.args.get('domaine_id')
@@ -496,3 +548,4 @@ def ajouter_materiel():
     AjouterMaterielForm=f,
     chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
     )
+

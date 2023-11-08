@@ -465,3 +465,33 @@ def get_all_user(cnx, idStatut=None):
         print(row)
         liste.append((row[1],row[0],row[2],row[3],row[4]))
     return (liste, len(liste))
+
+def get_materiel(cnx, idMateriel) :
+    try:
+        materiel = []
+        result = cnx.execute(text("SELECT * FROM MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
+        for row in result:
+            materiel.append(row)
+        return materiel
+    except:
+        print("Erreur lors de la récupération du matériel")
+        raise
+
+def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
+    try:
+        if seuilalerte is None or seuilalerte == "None" :
+            seuilalerte = "NULL"
+        cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
+        cnx.commit()
+    except:
+        print("Erreur lors de la modification du matériel")
+        raise
+
+def get_id_domaine_from_categorie(cnx, id_categorie) :
+    try:
+        result = cnx.execute(text("SELECT idDomaine FROM CATEGORIE WHERE idCategorie = " + str(id_categorie) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération du domaine")
+        raise
