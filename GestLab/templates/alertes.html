@@ -4,17 +4,24 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/alertes.css') }}">
 {% endblock %}
 {% block content %}
-    <section>
-        <div id="info">
-            <img id="attention-rouge" src="../static/images/attention-rouge.png" alt="attention-rouge">
-            <p class="texte_rouge">{{alertes}} Alertes</p>
-        </div>
-        {% for i in range(nb_alerte) %}
+<a id="btn-back" href="{{ url_for('base') }}">Retour</a>
+<section>
+    <div id="info">
+        <img id="attention-rouge" src="../static/images/attention-rouge.png" alt="attention-rouge">
+        <p class="texte_rouge">{{alertes}} Alertes</p>
+    </div>
+    {% for i in range(nb_alerte) %}
+    <div class="container-objet">
         <div class="container-alerte">
-            <!-- a changer par le type d'alerte exacte -->
-            <p class="texte_rouge">Alerte de péremption:</p> 
-            <p class="texte_bleu">{{nom_materiels[i][0]}} - <a href="{{ url_for('etat',id=nom_materiels[i][1])}}">Consulter l'état</a></p>
+            {% if info_materiels[i][14] <= 2 %}
+            <p class="texte_rouge">Alerte de péremption:</p>
+            {% else %}
+            <p class="texte_rouge">Alerte de quantité:</p>
+            {% endif %}
+            <p class="texte_bleu">{{info_materiels[i][4]}} -</p>
         </div>
-        {%endfor%}
-    </section>
+        <a id="btn-consulter" href="{{ url_for('etat',id=info_materiels[i][1])}}">Consulter l'état ></a>
+    </div>
+    {%endfor%}
+</section>
 {% endblock %}
