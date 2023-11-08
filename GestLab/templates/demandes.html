@@ -13,7 +13,7 @@
         {% for i in range(nb_demande) %}
         <div class="container-demande">
             <p class="texte_bleu">{{info_demande[i][1]}} {{info_demande[i][2]}}</p>
-            <p><a href="{{ url_for('bon_commande',idDemande=info_demande[i][0] ) }}">Consulter la demande ></a></p>
+            <p><a href="{{ url_for('bon_commande',idDemande=info_demande[i][0] ) }}" id="btn-consulter">Consulter la demande ></a></p>
         </div>
         {%endfor%}
 </section>

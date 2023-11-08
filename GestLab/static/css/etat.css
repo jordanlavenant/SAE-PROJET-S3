@@ -48,6 +48,7 @@ a {
 
 .text {
     display: flex;
+    align-items: center;
     gap: 10px;
     color: #384274;
     font-size: 35px;
@@ -55,8 +56,9 @@ a {
     padding: 0;
 }
 
-.text:nth-of-type(1) {
+.recap-item > .text:nth-of-type(1) {
     font-weight: bold;
+    font-size: 50px;
 }
 
 .text > p:nth-of-type(2) {
@@ -66,6 +68,8 @@ a {
 .header-container {
     color: #fff;
     display: flex;
+    flex-direction: row-reverse;
+    margin: 2% 0;
     justify-content: space-between;
 }
 
@@ -193,4 +197,11 @@ a {
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
+}
+
+@media screen and (max-width: 1100px) {
+    .hard-recap-item > .text {
+        flex-direction: column;
+    }
+    
 }
