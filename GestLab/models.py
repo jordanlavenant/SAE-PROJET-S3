@@ -1,7 +1,7 @@
 #from .app import db
 from flask_login import UserMixin
-from app import login_manager
-from connexionPythonSQL import *
+from .app import login_manager
+from .connexionPythonSQL import *
 import smtplib
 import json
 from email.message import EmailMessage
@@ -81,7 +81,7 @@ def envoyer_mail(mailreceveur, mdp, key):
     gmail_config = json.load(json_file)
 
     msg = EmailMessage()
-    msg['Subject'] = 'A2F - Création de compte GestLab - Email automatique ne pas répondre !!'
+    msg['Subject'] = 'A2F - Création de compte GestLab - Email automatique ne pas répondre !'
     msg['From'] = gmail_config["email"]
     msg['To'] = mailreceveur
 
@@ -159,7 +159,7 @@ def envoyer_mail_commentaire(mailreceveur, mailenvoyeur, text):
     gmail_config = json.load(json_file)
 
     msg = EmailMessage()
-    msg['Subject'] = "Commantaire"
+    msg['Subject'] = "Commentaire"
 
     #email de l'envoyeur
     msg['From'] = gmail_config["email"]
@@ -189,7 +189,6 @@ def envoyer_mail_commentaire(mailreceveur, mailenvoyeur, text):
         </style>
     </head>
     <body>
-        <p>Votre compte a été crée avec succès voici les informations correspondants :</p>
         <p>Voici le commentaire de la part de : {mailenvoyeur}</p>
         <p>{text}</p>
     </body>
