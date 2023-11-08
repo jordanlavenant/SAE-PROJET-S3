@@ -2,13 +2,13 @@
     color: #384274;
     font-variant: small-caps;
     transition: 0.2s;
-    font-size: 20px;
+    font-size: 30px;
 }
 
 #btn-consulter:hover {
     color: #384274;
     transition: 0.2s;
-    font-size: 21px;
+    font-size: 31px;
     cursor: pointer;
 }
 
@@ -52,7 +52,6 @@ main > section {
 }
 
 p {
-    font-size: 20px;
     margin: 0;
     font-weight: bold;
 }
