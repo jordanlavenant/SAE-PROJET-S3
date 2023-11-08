@@ -122,12 +122,17 @@ def modifier_materiel(id):
 
     if f.validate_on_submit() :
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
+        print(f.get_full_materiel())
         res = modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
         if res:
             return redirect(url_for('inventaire'))
         else:
             print("Erreur lors de la modification du matériel")
             return redirect(url_for('inventaire'))
+    else :
+        print(f.get_full_materiel())
+        print("Erreur lors de la validation du formulaire")
+        print(f.errors)
     return render_template(
     "modifierMateriel.html",
     title="Modifier un matériel",

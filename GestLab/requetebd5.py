@@ -479,6 +479,8 @@ def get_materiel(cnx, idMateriel) :
 
 def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
     try:
+        if seuilalerte is None or seuilalerte == "None" :
+            seuilalerte = "NULL"
         cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))
         cnx.commit()
         print("Materiel modifié")
