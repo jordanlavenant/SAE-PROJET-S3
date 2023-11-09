@@ -60,6 +60,24 @@ def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteris
     except sqlalchemy.exc.IntegrityError as e:
         print(f"SQL IntegrityError: {e}")
         return False
+    
+
+def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative):
+    try:
+        print(date_reception)
+        if date_peremption is None or date_peremption == 'None' :
+            date_peremption = "NULL"
+        else :
+            date_peremption = str(date_peremption)
+        cnx.execute(text("insert into MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) values ('" + str(id_materiel) + "', '" + position + "', '" + str(date_reception) + "', '" + date_peremption + "', '" + commentaire + "',  "+ str(quantite_approximative) + ");"))
+        cnx.commit()
+        return True
+    except sqlalchemy.exc.OperationalError as e:
+        print(f"SQL OperationalError: {e}")
+        return False
+    except sqlalchemy.exc.IntegrityError as e:
+        print(f"SQL IntegrityError: {e}")
+        return False
 
 #marche BD 5
 # est ce que pour ajouter du materiel on est obliger de passer par materiel unique ?
@@ -707,6 +725,7 @@ def get_id_domaine_from_categorie(cnx, id_categorie) :
             return row[0]
     except:
         print("Erreur lors de la récupération du domaine")
+
         raise
 
 def get_id_materiel_from_id_materiel_unique(cnx, id_materiel_unique) :
@@ -902,4 +921,3 @@ def set_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajouter
     except:
         print("Erreur lors de la mise à jour de la quantité dans la demande")
         raise
-set_quantite_from_ajouterMat_to_boncommande(cnx, 1,65,True)

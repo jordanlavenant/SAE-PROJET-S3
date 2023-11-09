@@ -7,10 +7,15 @@ DROP TABLE IF EXISTS AJOUTERMATERIEL;
 DROP TABLE IF EXISTS RECHERCHEMATERIELS;
 DROP TABLE IF EXISTS ALERTESENCOURS ;
 DROP TABLE IF EXISTS MATERIELUNIQUE;
+DROP TABLE IF EXISTS COMMANDE;
+DROP TABLE IF EXISTS BONCOMMANDETEST;
 DROP TABLE IF EXISTS MATERIEL;
 DROP TABLE IF EXISTS ARCHIVECOMMANDE;
+DROP TABLE IF EXISTS ARCHIVEBONCOMMANDE;
+DROP TABLE IF EXISTS ARCHIVECOMMANDEANCIEN;
 DROP TABLE IF EXISTS FOURNISSEUR;
 DROP TABLE IF EXISTS RANGEMENT;
+DROP TABLE IF EXISTS ENDROIT;
 DROP TABLE IF EXISTS CATEGORIE;
 DROP TABLE IF EXISTS DOMAINE;
 DROP TABLE IF EXISTS RISQUE;
@@ -18,10 +23,9 @@ DROP TABLE IF EXISTS FDS;
 DROP TABLE IF EXISTS BONCOMMANDE;
 DROP TABLE IF EXISTS DEMANDE;
 DROP TABLE IF EXISTS ETATCOMMANDE;
-DROP TABLE IF EXISTS UTILISATEUR;
+--DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
 DROP TABLE IF EXISTS TYPESALERTES;
-DROP TABLE IF EXISTS debug;
 
 create table STATUT(
     idStatut int not null,
@@ -72,11 +76,17 @@ create table RISQUES(
     primary key(idFDS, idRisque)
 );
 
+create table ENDROIT(
+    idEndroit int not null auto_increment,
+    endroit varchar(50) not null,
+    unique(endroit),
+    primary key(idEndroit)
+);
+
 create table RANGEMENT(
     idRangement int not null auto_increment,
-    endroit varchar(50) not null,
-    position varchar(50),
-    unique(endroit),
+    idEndroit int not null references ENDROIT,
+    position varchar(50) not null,
     primary key(idRangement)
 );
 
@@ -151,10 +161,31 @@ create table ETATCOMMANDE(
 
 create table BONCOMMANDE(
     idBonCommande int not null auto_increment,
-    idDemande int not null references DEMANDE,
     idEtat int not null references ETATCOMMANDE,
-    dateCommande datetime not null,
+    idUtilisateur int not null references UTILISATEUR,
     primary key(idBonCommande)
+);
+
+create table COMMANDE(
+    idBonCommande int not null references BONCOMMANDE,
+    idMateriel int not null references MATERIEL,
+    quantite int not null,
+    primary key(idBonCommande,idMateriel)
+);
+
+create table ARCHIVEBONCOMMANDE(
+    idArchiveBonCommande int not null auto_increment,
+    idBonCommande int  not null,
+    idEtat int not null,
+    idUtilisateur int not null,
+    primary key(idArchiveBonCommande)
+);
+
+create table ARCHIVECOMMANDE(
+    idArchiveBonCommande int not null references ARCHIVEBONCOMMANDE,
+    idMateriel int not null,
+    quantite int not null,
+    primary key(idArchiveBonCommande, idMateriel)
 );
 
 create table SUIVICOMMANDE(
@@ -182,7 +213,7 @@ CREATE TABLE TYPESALERTES (
     primary key (idAlerte)
 );
 
-create table ARCHIVECOMMANDE(
+create table ARCHIVECOMMANDEANCIEN(
     numColis int not null,
     idFournisseur int not null,
     nomFournisseur varchar(50) not null,
@@ -198,8 +229,3 @@ CREATE TABLE ALERTESENCOURS(
     idMaterielUnique int not null references MATERIELUNIQUE,
     primary key(idAlerte, idMaterielUnique)
 );
-
-CREATE TABLE debug(
-    test varchar(50),
-    primary key(test)
-) ;

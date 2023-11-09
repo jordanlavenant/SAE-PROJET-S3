@@ -38,6 +38,8 @@
             <p>Informations complémentaires et sécurité : </p>
             <p>{{ item_properties[-2] }}</p>
         </div>
+        <a id="btn-modifier" href="{{ url_for('modifier_materiel', id=item_properties[0]) }}">Modifier les propriétés de ce matériel</a>
+        <a id="btn-ajouter" href="{{ url_for('ajouter_materiel_unique', id=item_properties[0]) }}">Ajouter</a>
     </div>
     <div class="hard-recap-item">
        
