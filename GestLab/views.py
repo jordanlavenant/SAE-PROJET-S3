@@ -81,6 +81,34 @@ class AjouterUtilisateurForm(FlaskForm):
         statut = self.statut.data
         return (nom, prenom, email, statut)
 
+class AjouterMaterielForm(FlaskForm):
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
+    nom = StringField('nom', validators=[DataRequired()])
+    reference = StringField('reference', validators=[DataRequired()])
+    caracteristiques = StringField('caracteristiques')
+    infossup = StringField('infossup')
+    seuilalerte  = StringField('seuilalerte')
+    next = HiddenField()
+
+    def get_full_materiel(self):
+        categorie = self.categorie.data
+        nom = self.nom.data
+        reference = self.reference.data
+        caracteristiques = self.caracteristiques.data
+        infossup = self.infossup.data
+        seuilalerte = self.seuilalerte.data
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+    
+    def get_full_materiel_requestform(self):
+        categorie = request.form['categorie']
+        nom = request.form['nom']
+        reference = request.form['reference']
+        caracteristiques = request.form['caracteristiques']
+        infossup = request.form['infossup']
+        seuilalerte = request.form['seuilalerte']
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+
 class CommentaireForm(FlaskForm):
     gestionnaires = SelectField('ComboBox', choices=get_user_with_statut(get_cnx(), "Gestionnaire"))
     text = TextAreaField('text', validators=[DataRequired()])
@@ -99,7 +127,7 @@ class MdpOublierForm(FlaskForm):
         email = self.email.data
         return email
 
-class AjouterMaterielForm(FlaskForm):
+class AjouterMaterielFormUnique(FlaskForm):
     domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
     categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
     submit = SubmitField('Submit')
@@ -131,27 +159,25 @@ def get_domaine_choices():
     domaines.insert(0, ("", "Choisir un domaine"))
     return domaines
 
-@app.route('/get_categorie_choices', methods=['GET'])
-def get_categorie_choices():
-    selected_domain_id = request.args.get('domaine_id')
-    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
-    categories = {str(id_): name for name, id_ in result}
-    return jsonify(categories)
-
-
-@app.route("/ajouter-materiel/")
+@app.route("/ajouter-materiel/", methods=("GET","POST",))
 def ajouter_materiel():
     f = AjouterMaterielForm()
     f.domaine.choices = get_domaine_choices() 
-    if f.validate_on_submit():
-        selected_domain_id = f.domaine.data
-        f.categorie.choices = get_categorie_choices(selected_domain_id)
+    if f.validate_on_submit() :
+        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
+        res = insere_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de l'insertion du matériel")
+            return redirect(url_for('ajouter_materiel'))
     return render_template(
     "ajouterMateriel.html",
     title="Ajouter un matériel",
     AjouterMaterielForm=f,
     chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
     )
+
 class A2FForm(FlaskForm):
     code = StringField('code', validators=[DataRequired()])
     submit = SubmitField('Valider')
@@ -232,32 +258,64 @@ def a2f(mail, id):
         A2FForm=f,
     )
 
+@app.route("/reinitialiser-bon-commande/<int:id>", methods=("GET","POST",))
+def reinitialiser_bon_commande(id):
+    delete_all_materiel_in_commande(cnx, id)
+    return redirect(url_for('commander'))
+
+@app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
+def ajouter_materiel_unique(id):
+    idMat = request.args.get('idMat')
+    qte = request.args.get('qte')
+    ajout_materiel_in_commandeTest(cnx, idMat, id, qte)
+    return redirect(url_for('commander'))
+
 @app.route("/commander/")
 def commander():
     nb_alertes = get_nb_alert(cnx)
     nb_demandes = get_nb_demande(cnx)
+    idUser = get_id_with_email(cnx, session['utilisateur'][2])
+    idbc = get_id_bonCommande_actuel(cnx, idUser)
     return render_template(
         "commander.html",
         title="Commander du Matériel",
         categories = get_domaine(get_cnx()),
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
-        liste_materiel = get_info_rechercheMateriel(get_cnx()),
+        idUser = idUser,
+        qte = 0,
+        idbc = idbc,
+        liste_materiel = afficher_table(get_cnx(), "MATERIEL"),
         chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
-@app.route("/bon-commande/<int:idDemande>")
-def bon_commande(idDemande):
-    info_commande = get_info_demande_with_id(get_cnx(), idDemande)
-    print(info_commande)
+@app.route("/bon-commande/<int:id>")
+def bon_commande(id):
+    idUser = get_id_with_email(cnx, session['utilisateur'][2])
+    liste_materiel = get_materiel_commande(cnx, id)
     return render_template(
         "bonDeCommande.html",
-        idDemande = idDemande,
-        infoCommande = info_commande,
-        len = len(info_commande),
-        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
-        chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
+        id = id,
+        categories = get_domaine(get_cnx()),
+        idUser = idUser,
+        liste_materiel = liste_materiel,
+        longueur = len(liste_materiel),
+        title = "bon de commande",
+        chemin = [("base", "Accueil"), ("commander", "Commander"), ('demandes', 'Bon de commande')]
     )
+
+@app.route("/delete-materiel/<int:idbc>/<int:idMat>", methods=("GET","POST",))
+def delete_materiel(idbc, idMat):
+    delete_materiel_in_BonCommande_whith_id(cnx, idMat, idbc)
+    return redirect(url_for('bon_commande', id=idbc))
+
+@app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
+def valider_bon_commande(id):
+    changer_etat_bonCommande(cnx, id)
+     # Utilisation d'une boucle infinie pour l'attente
+    while True:
+        pass  # Cette boucle ne se termine jamais
+    return redirect(url_for('base'))
 
 @app.route("/alertes/")
 def alertes():
@@ -427,6 +485,49 @@ def modifier_utilisateur(id):
     chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs"), ("consulter_utilisateur", "Modifier un Utilisateur")] 
     )
 
+@app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
+def modifier_materiel(id):
+    print("hee hee")
+    materiel = get_materiel(cnx, id)
+    idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
+                         
+    idDomaine = get_id_domaine_from_categorie(cnx, idCategorie)
+    f = AjouterMaterielForm()
+    f.nom.default = nomMateriel
+    f.reference.default = referenceMateriel
+    f.caracteristiques.default = caracteristiquesCompelmentaires
+    f.infossup.default = informationsComplementairesEtSecurite
+    f.seuilalerte.default = str(seuilAlerte)
+    f.domaine.choices = get_domaine_choices() 
+    f.domaine.default = str(idDomaine)
+    f.categorie.choices = get_categorie_choices_modifier_materiel(idDomaine)
+    f.categorie.default = str(idCategorie)
+    f.process()
+
+    if f.validate_on_submit() :
+        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel_requestform()
+        res = modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de la modification du matériel")
+            return redirect(url_for('inventaire'))
+    else :
+        print("Erreur lors de la validation du formulaire")
+        print(f.errors)
+    return render_template(
+    "modifierMateriel.html",
+    title="Modifier un matériel",
+    AjouterMaterielForm=f,
+    id = idMateriel,
+    chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
+    )
+
+@app.route("/supprimer-materiel-unique/<int:id>", methods=("GET","POST",))
+def supprimer_materiel_unique(id):
+    id_materiel = get_id_materiel_from_id_materiel_unique(cnx, id)
+    supprimer_materiel_unique_bdd(cnx, id)
+    return redirect(url_for('etat', id=id_materiel))
 
 @app.route("/demandes/")
 def demandes():
@@ -436,6 +537,19 @@ def demandes():
     nb_demande = int(get_nb_demande(cnx)),
     info_demande = get_info_demande(cnx),
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
+    )
+
+@app.route("/demande/<int:idDemande>")
+def demande(idDemande):
+    info_commande = get_info_demande_with_id(get_cnx(), idDemande)
+    print(info_commande)
+    return render_template(
+        "demande.html",
+        idDemande = idDemande,
+        infoCommande = info_commande,
+        longeur = len(info_commande),
+        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
+        chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Demande')]
     )
 
 @app.route("/inventaire/")
@@ -569,3 +683,23 @@ def ajouterUtilisateur():
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)
+
+def get_domaine_choices():
+    query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
+    result = cnx.execute(query)
+    domaines =  [(str(id_), name) for name, id_ in result]
+    domaines.insert(0, ("", "Choisir un domaine"))
+    return domaines
+
+def get_categorie_choices_modifier_materiel(idDomaine):
+    query = text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine =" + str(idDomaine) )
+    result = cnx.execute(query)
+    categories = [(str(id_), name) for name, id_ in result]
+    return categories
+
+@app.route('/get_categorie_choices/', methods=['GET'])
+def get_categorie_choices():
+    selected_domain_id = request.args.get('domaine_id')
+    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
+    categories = {str(id_): name for name, id_ in result}
+    return jsonify(categories)
