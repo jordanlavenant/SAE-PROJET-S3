@@ -603,8 +603,21 @@ def demander():
     return render_template(
     "demander.html",
     title="Demander",
+    liste_materiel = get_all_information_to_Materiel_suggestions(get_cnx()),
+    categories = get_domaine(get_cnx()),
+    idUser = get_id_with_email(cnx, session['utilisateur'][2]),
     chemin = [("base", "Accueil"), ("demander", "Demander")]
     )
+
+@app.route("/ajouter-demande/<int:id>", methods=("GET","POST",))
+def ajouter_demande(id):
+    idMat = request.args.get('idMat')
+    qte = request.args.get('qte')
+
+    print("demande ajouter")
+    
+    return redirect(url_for('demander'))
+
 
 @app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():

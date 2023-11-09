@@ -56,8 +56,8 @@
     <div class="container-contenu">
         {% for item in liste_materiel %}
             <section class="section-contenu">
-                <h3>{{ item[2] }} - {{ item[3] }}</h3>
-                <h3>{{ item[5] }}</h3> 
+                <h3>{{ item[1] }} - {{ item[3] }}</h3>
+                <h3>{{ item[5] }}</h3>
                 <div class="choisir-item">
                     <button class="bouton-moins">-</button>
                     <p class="nb-choisit">{{ item[4] }}</p>
@@ -74,5 +74,5 @@
 </div>
 {% endblock %}
 {% block scripts %}
-<script src="{{ url_for('static', filename='./js/ajusterVal.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/ajusterValCommander.js') }}"></script>
 {% endblock %}
