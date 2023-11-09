@@ -39,8 +39,7 @@
         </div>
     </div>
 </div>
-
-
+<a id="btn-edit-materiel" href="{{ url_for('modifier_materiel', id=item_properties[0]) }}">Modifier</a>
 
 <div class="state-container">
     {% for item in items_unique[0] %}
@@ -96,9 +95,12 @@
                     {% else %}
                         <div></div>
                     {% endif %}
+                </div>
+                <div class="btns">
+                    <a id="btn-redirect-order" href="#">Modifier</a>
                     <a id="btn-redirect-order" href="#">Commander</a>
                     <a id="btn-redirect-order" href="{{ url_for('supprimer_materiel_unique', id=item[3]) }}">Supprimer</a>
-                </div>
+                
             </div>
         </div>
     {% endfor %}
