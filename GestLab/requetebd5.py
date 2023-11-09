@@ -866,3 +866,20 @@ def delete_demande(idDemande):
     except:
         print("Erreur lors de la suppression de la demande")
         raise
+
+def delete_materiel_unique_in_demande(cnx, idDemande, idMaterielUnique):
+    try:
+        cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMaterielUnique = " + str(idMaterielUnique) + ";"))
+        cnx.commit()
+    except:
+        print("Erreur lors de la suppression du matériel unique dans la demande")
+        raise
+
+def get_nb_materiel_unique_in_demande(cnx, idDemande):
+    try:
+        result = cnx.execute(text("SELECT COUNT(*) FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération du nombre de matériel unique dans la demande")
+        raise
