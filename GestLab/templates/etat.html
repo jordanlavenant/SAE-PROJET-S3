@@ -43,9 +43,9 @@
 
 
 <div class="state-container">
-    <p class="{{ items_unique[1] }}" id="lenItem" style="display: none"></p>
+    <!-- <p class="{{ items_unique }}" id="items" style="display: none"></p> -->
     {% for item in items_unique[0] %}
-        <div class="item-card" id="{{ item[0] }}">
+        <div class="item-card" id="{{ item[3] }}">
             <div class="item-properties">
                 <div class="header-container">
                     <a href="{{ url_for('commentaire') }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
@@ -82,12 +82,16 @@
                     {% endif %}
                 </div>
                 <div class="footer-state">
-                    {% if item[0] in alertes.keys() %}
+                    {% if item[3] in alertes.keys() %}
                         <div class="alerts-state">
                             <img id="attention-rouge" src="{{ url_for('static',filename='./images/attention-rouge.png') }}" alt="attention-rouge">
                             <div class="alerts-statement">
-                                <p class="{{ alertes[item[0]] }} alerts_count">{{ alertes[item[0]] }}</p>
-                                <p class="texte_rouge">Alertes</p>
+                                <p class="{{ alertes[item[0]] }} alerts_count" id="alerts_count_{{ item[3] }}">{{ alertes[item[3]] }}</p>
+                                {% if alertes[item[3]] > 1 %}
+                                    <p class="texte_rouge">Alertes</p>
+                                {% else %}
+                                    <p class="texte_rouge">Alerte</p>
+                                {% endif %}
                             </div>
                         </div>
                     {% else %}
@@ -99,4 +103,7 @@
         </div>
     {% endfor %}
 </div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='./js/etat.js') }}"></script>
 {% endblock %}
