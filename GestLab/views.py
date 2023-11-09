@@ -290,6 +290,7 @@ def commander():
 @app.route("/bon-commande/<int:idDemande>")
 def bon_commande(idDemande):
     info_commande = get_info_demande_with_id(get_cnx(), idDemande)
+    idUser = get_id_with_email(cnx, session['utilisateur'][2])
     print(info_commande)
     return render_template(
         "bonDeCommande.html",
@@ -297,9 +298,15 @@ def bon_commande(idDemande):
         infoCommande = info_commande,
         longeur = len(info_commande),
         categories = get_domaine(get_cnx()),
+        idUser = idUser,
         title = "bon de commande",
         chemin = [("base", "Accueil"), ("commander", "Commander"), ('demandes', 'Bon de commande')]
     )
+
+@app.route("/valider_bon_commande/<int:id>", methods=("GET","POST",))
+def valider_bon_commande(id):
+    changer_etat_bonCommande(cnx, id)
+    return redirect(url_for('base'))
 
 @app.route("/alertes/")
 def alertes():

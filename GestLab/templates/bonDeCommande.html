@@ -26,7 +26,7 @@
 </div>
 <div class="container-valider">
     <button id="btn-pdf">générer le bon de commande</button>
-    <a id="btn-valider" href="#">Valider la commande</a>
+    <a id="btn-valider" href="{{ url_for('valider_bon_commande', id=idUser) }}">Valider la commande</a>
 </div>
 {% for i in range(0, longeur) %}
 <section class="section-contenu">
