@@ -801,3 +801,4 @@ def delete_materiel_in_BonCommande_whith_id(cnx, idMateriel, idbc):
     except:
         print("Erreur lors de la suppression du matériel dans la commande")
         raise
+        

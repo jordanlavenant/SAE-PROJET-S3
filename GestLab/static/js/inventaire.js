@@ -1,8 +1,7 @@
 const item = document.getElementById("lenItem");
 const value = parseInt(item.className)
 
-for (var i=1;i<value;i++) {
-    console.log(i)
+for (let i=1;i<value;i++) {
     const item = document.getElementById(`${i}`);
     const alert = document.getElementById(`alerts_count_${i}`);
     console.log(alert)
