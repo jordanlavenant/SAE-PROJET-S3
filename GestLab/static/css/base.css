@@ -240,3 +240,18 @@ header {
         gap: 30px;
     }
 }
+
+/* fleche pour remonter en haut */
+
+.fleche_haut {
+    position: fixed;
+    width: 25px;
+    height: 25px;
+    bottom: 50px;
+    right: 30px;
+}
+
+.fleche_haut img {
+    width: 40px;
+    cursor: pointer;
+}

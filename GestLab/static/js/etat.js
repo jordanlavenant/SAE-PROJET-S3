@@ -1,11 +1,14 @@
-const item = document.getElementById("lenItem");
-const value = parseInt(item.className)
+const parent = document.getElementsByClassName("item-card")
 
-for (var i=1;i<value;i++) {
-    const item = document.getElementById(`${i}`);
-    const alert = document.getElementById(`alerts_count_${i}`);
-    console.log(alert)
-    // const alertsValue = document.getElementById(`alerts_count_2`);
+id_array = []
+
+for (let i = 0; i < parent.length; i++) {
+    id_array.push(parseInt(parent[i].id));
+}
+
+for (id in id_array) {
+    let item = document.getElementById(`${id_array[id]}`);
+    let alert = document.getElementById(`alerts_count_${id_array[id]}`);
     if (alert == null) {
         item.style.borderLeft = "#2EDD94 solid 15px";
     } else {

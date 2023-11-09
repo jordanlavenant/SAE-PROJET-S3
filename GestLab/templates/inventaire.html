@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/inventaire.css') }}">
 {% endblock %}
 {% block content %}
+<a id="btn-back" href="{{ url_for('base') }}">Retour</a>
 <div class="inventaire-container-overall">
     <div class="header-container">
         <div class="search-content">
@@ -38,7 +39,11 @@
                                 <img id="attention-rouge" src="{{ url_for('static',filename='./images/attention-rouge.png') }}" alt="attention-rouge">
                                 <div class="alerts-statement">
                                     <p class="{{ alertes[item[0]] }} alerts_count" id="alerts_count_{{ item[0] }}">{{ alertes[item[0]] }}</p>
-                                    <p class="texte_rouge">Alertes</p>
+                                    {% if alertes[item[0]] > 1%}
+                                        <p class="texte_rouge">Alertes</p>
+                                    {% else %}
+                                        <p class="texte_rouge">Alerte</p>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% else %}

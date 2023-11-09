@@ -81,6 +81,34 @@ class AjouterUtilisateurForm(FlaskForm):
         statut = self.statut.data
         return (nom, prenom, email, statut)
 
+class AjouterMaterielForm(FlaskForm):
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
+    nom = StringField('nom', validators=[DataRequired()])
+    reference = StringField('reference', validators=[DataRequired()])
+    caracteristiques = StringField('caracteristiques')
+    infossup = StringField('infossup')
+    seuilalerte  = StringField('seuilalerte')
+    next = HiddenField()
+
+    def get_full_materiel(self):
+        categorie = self.categorie.data
+        nom = self.nom.data
+        reference = self.reference.data
+        caracteristiques = self.caracteristiques.data
+        infossup = self.infossup.data
+        seuilalerte = self.seuilalerte.data
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+    
+    def get_full_materiel_requestform(self):
+        categorie = request.form['categorie']
+        nom = request.form['nom']
+        reference = request.form['reference']
+        caracteristiques = request.form['caracteristiques']
+        infossup = request.form['infossup']
+        seuilalerte = request.form['seuilalerte']
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+
 class CommentaireForm(FlaskForm):
     gestionnaires = SelectField('ComboBox', choices=get_user_with_statut(get_cnx(), "Gestionnaire"))
     text = TextAreaField('text', validators=[DataRequired()])
@@ -350,32 +378,80 @@ def a2f(mail, id):
         A2FForm=f,
     )
 
+@app.route("/reinitialiser-bon-commande/<int:id>", methods=("GET","POST",))
+def reinitialiser_bon_commande(id):
+    delete_all_materiel_in_commande(cnx, id)
+    return redirect(url_for('commander'))
+
+@app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
+def ajouter_materiel_unique(id):
+    idMat = request.args.get('idMat')
+    qte = request.args.get('qte')
+    ajout_materiel_in_commandeTest(cnx, idMat, id, qte)
+    return redirect(url_for('commander'))
+
 @app.route("/commander/")
 def commander():
     nb_alertes = get_nb_alert(cnx)
     nb_demandes = get_nb_demande(cnx)
+    idUser = get_id_with_email(cnx, session['utilisateur'][2])
+    idbc = get_id_bonCommande_actuel(cnx, idUser)
+    liste_materiel = afficher_bon_commande(cnx, idUser)
+    print(liste_materiel)
     return render_template(
         "commander.html",
         title="Commander du Matériel",
         categories = get_domaine(get_cnx()),
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
-        liste_materiel = get_info_rechercheMateriel(get_cnx()),
+        idUser = idUser,
+        idbc = idbc,
+        liste_materiel = liste_materiel,
         chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
-@app.route("/bon-commande/<int:idDemande>")
-def bon_commande(idDemande):
-    info_commande = get_info_demande_with_id(get_cnx(), idDemande)
-    print(info_commande)
+@app.route("/bon-commande/<int:id>")
+def bon_commande(id):
+    idUser = get_id_with_email(cnx, session['utilisateur'][2])
+    liste_materiel = get_materiel_commande(cnx, id)
     return render_template(
         "bonDeCommande.html",
-        idDemande = idDemande,
-        infoCommande = info_commande,
-        len = len(info_commande),
-        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
-        chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Bon de Commande')]
+        id = id,
+        categories = get_domaine(get_cnx()),
+        idUser = idUser,
+        liste_materiel = liste_materiel,
+        longueur = len(liste_materiel),
+        title = "bon de commande",
+        chemin = [("base", "Accueil"), ("commander", "Commander"), ('demandes', 'Bon de commande')]
     )
+@app.route("/consulterBonCommande/")
+def consulter_bon_commande():
+    info_bon_commande = afficher_table(get_cnx(), "BONCOMMANDETEST")
+    liste_info_user = []
+    for info in info_bon_commande:
+        info_user = get_all_information_utilisateur_with_id(get_cnx(), info[2])
+        liste_info_user.append(info_user)
+    return render_template(
+        "consulterBonCommande.html",
+        title="Consultation des Bon de Commande",
+        len = len(info_bon_commande),
+        bonCommande = info_bon_commande,
+        infoUser = liste_info_user,
+        chemin = [("base", "Accueil"), ('consulter_bon_commande', 'Consulter bon de commande')]
+    )
+
+@app.route("/delete-materiel/<int:idbc>/<int:idMat>", methods=("GET","POST",))
+def delete_materiel(idbc, idMat):
+    delete_materiel_in_BonCommande_whith_id(cnx, idMat, idbc)
+    return redirect(url_for('bon_commande', id=idbc))
+
+@app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
+def valider_bon_commande(id):
+    changer_etat_bonCommande(cnx, id)
+     # Utilisation d'une boucle infinie pour l'attente
+    while True:
+        pass  # Cette boucle ne se termine jamais
+    return redirect(url_for('base'))
 
 @app.route("/alertes/")
 def alertes():
@@ -546,6 +622,51 @@ def modifier_utilisateur(id):
     chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs"), ("consulter_utilisateur", "Modifier un Utilisateur")] 
     )
 
+@app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
+def modifier_materiel(id):
+    materiel = get_materiel(cnx, id)
+    idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
+                         
+    idDomaine = get_id_domaine_from_categorie(cnx, idCategorie)
+    f = AjouterMaterielForm()
+    f.nom.default = nomMateriel
+    f.reference.default = referenceMateriel
+    f.caracteristiques.default = caracteristiquesCompelmentaires
+    f.infossup.default = informationsComplementairesEtSecurite
+    f.seuilalerte.default = str(seuilAlerte)
+    f.domaine.choices = get_domaine_choices() 
+    f.domaine.default = str(idDomaine)
+    f.categorie.choices = get_categorie_choices_modifier_materiel(idDomaine)
+    f.categorie.default = str(idCategorie)
+    f.process()
+
+    if f.validate_on_submit() :
+        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel_requestform()
+        res = modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de la modification du matériel")
+            return redirect(url_for('inventaire'))
+    else :
+        print("Erreur lors de la validation du formulaire")
+        print(f.errors)
+    return render_template(
+    "modifierMateriel.html",
+    title="Modifier un matériel",
+    AjouterMaterielForm=f,
+    id = idMateriel,
+    chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
+    )
+
+@app.route("/supprimer-materiel-unique/<int:id>", methods=("GET","POST",))
+def supprimer_materiel_unique(id):
+    print(1)
+    id_materiel = get_id_materiel_from_id_materiel_unique(cnx, id)
+    print(2)
+    supprimer_materiel_unique_bdd(cnx, id)
+    print(3)
+    return redirect(url_for('etat', id=id_materiel))
 
 @app.route("/demandes/")
 def demandes():
@@ -555,6 +676,21 @@ def demandes():
     nb_demande = int(get_nb_demande(cnx)),
     info_demande = get_info_demande(cnx),
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
+    )
+
+@app.route("/demande/<int:idDemande>")
+def demande(idDemande):
+    id_user = get_id_with_email(cnx, session['utilisateur'][2])
+    info_commande = get_info_demande_with_id(get_cnx(), idDemande)
+    print(info_commande)
+    return render_template(
+        "demande.html",
+        idDemande = idDemande,
+        infoCommande = info_commande,
+        longeur = len(info_commande),
+        idUser = id_user,
+        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
+        chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Demande')]
     )
 
 @app.route("/inventaire/")
@@ -573,8 +709,21 @@ def demander():
     return render_template(
     "demander.html",
     title="Demander",
+    liste_materiel = get_all_information_to_Materiel_suggestions(get_cnx()),
+    categories = get_domaine(get_cnx()),
+    idUser = get_id_with_email(cnx, session['utilisateur'][2]),
     chemin = [("base", "Accueil"), ("demander", "Demander")]
     )
+
+@app.route("/ajouter-demande/<int:id>", methods=("GET","POST",))
+def ajouter_demande(id):
+    idMat = request.args.get('idMat')
+    qte = request.args.get('qte')
+
+    print("demande ajouter")
+    
+    return redirect(url_for('demander'))
+
 
 @app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():
@@ -688,3 +837,16 @@ def ajouterUtilisateur():
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)
+
+def get_domaine_choices():
+    query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
+    result = cnx.execute(query)
+    domaines =  [(str(id_), name) for name, id_ in result]
+    domaines.insert(0, ("", "Choisir un domaine"))
+    return domaines
+
+def get_categorie_choices_modifier_materiel(idDomaine):
+    query = text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine =" + str(idDomaine) )
+    result = cnx.execute(query)
+    categories = [(str(id_), name) for name, id_ in result]
+    return categories

@@ -44,6 +44,7 @@
 
                 <!-- gestionnaire -->
                 {% if session['utilisateur'][1] == 4 %}
+                <li><a href="{{ url_for('consulter_bon_commande') }}">consulter bon de commande</a></li>
                 <li><a href="{{ url_for('commander') }}">commander</a></li>
                 <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
                 <li><a href="{{ url_for('alertes') }}">alertes</a></li>
@@ -68,6 +69,11 @@
     <main>
         {% block content %}
         {% endblock %}
+        <div class="fleche_haut">
+            <a class="fleche_haut_button">
+                <img src="{{  url_for('static',filename='./images/fleche-haut.png') }}" alt="fleche haut">
+            </a>
+        </div>
     </main>
     <footer class="footer">
         <div class="footer-haut">
@@ -139,6 +145,7 @@
             <p>© 2023 - gestlab - tous droits réservés</p>
         </div>
     </footer>
+    <script src="{{ url_for('static',filename='./js/flecheRemonter.js') }}"></script>
     {% block scripts %}
         <!-- Optional JavaScript -->
     {% endblock %}

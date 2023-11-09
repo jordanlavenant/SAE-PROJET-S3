@@ -12,29 +12,29 @@
         <div class="left-side-info">
 
             <div class="user-box domaine-container">
-                <p>Domaine : </p>
+                <label for="domaine">Domaine : </label>
                 <div>{{ AjouterMaterielForm.domaine(size=auto, class_="comboBox dom-select") }}</div>
             </div>
 
             <div class="user-box categorie-container">
-                <p>Catégorie : </p>
+                <label for="categorie">Catégorie : </label>
                 <div>{{ AjouterMaterielForm.categorie(size=auto, class_="comboBox cat-select") }}</div>
             </div>
 
             <div class="pair-info">
                 <div class="user-box name-container">
-                    <p>Nom : </p>
+                    <label for="nom">Nom : </label>
                     <div>{{ AjouterMaterielForm.nom(size=40, class_="form-control element", placeholder="Nom", value=nom) }}</div>
                 </div>
             </div>
         
             <div class="pair-info">
                 <div class="user-box reference-container">
-                    <p>Référence : </p>
+                    <label for="reference">Référence : </label>
                     <div>{{ AjouterMaterielForm.reference(size=15, class_="form-control element", placeholder="Rèf.", value=reference) }}</div>
                 </div>
                 <div class="user-box seuil-alerte-container">
-                    <p>Seuil de quantité : </p>
+                    <label for="seuilalerte">Seuil de quantité : </label>
                     <div>{{ AjouterMaterielForm.seuilalerte(size=15 , class_="form-control element", placeholder="Quantité minimale", value=seuilalerte) }}</div>
                 </div>
             </div>
@@ -54,9 +54,8 @@
             <div class="valid-container">
                 <input type="submit" value="Ajouter matériel" class="element submit">
             </div>
-            <!--ajouter une façon d'uploader une fds ???-->        
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 <script>
