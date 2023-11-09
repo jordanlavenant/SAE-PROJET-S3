@@ -1,0 +1,55 @@
+#btn-back {
+    margin-left: 10vw;
+    color: white;
+    background-color: #384274;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-back:hover {
+    color: white;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.info {
+    margin-left: 26vw;
+    margin-right: 30vw;
+    margin-bottom: 3%;
+    margin-top: 3%;
+    border-radius: 1em;
+    width: 50%;
+    border: solid #384274 2px;
+    padding:  1%;
+}
+
+.info-bon {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.info-user {
+    font-weight: bold;
+    width: 10vw;
+}
+
+.para {
+    margin: 0;
+}
+
+#statut {
+    width: 10%;
+    background-color: #384274;
+    border-radius: 1em;
+}
+
+.btn-consulter {
+    color: #384274;
+}
