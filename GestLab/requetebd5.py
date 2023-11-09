@@ -29,7 +29,7 @@ def get_id_utilisateur_from_email(cnx, email) :
 def ajout_gest_into_boncommande(cnx,id):
     try:
         etat = 1
-        cnx.execute(text("insert into BONCOMMANDETEST (idEtat,idUtilisateur ) values (" + str(etat) + ", " + str(id) + ");"))
+        cnx.execute(text("insert into BONCOMMANDE (idEtat,idUtilisateur ) values (" + str(etat) + ", " + str(id) + ");"))
         cnx.commit()
         print("bon de commande ajouté")
     except:
@@ -205,8 +205,8 @@ def ajout_gestionnaire(cnx, nom, prenom, email):
         return True
     except:
         print("erreur d'ajout de l'utilisateur")
-        return False    
-    
+        return False  
+ 
 def ajout_administrateur(cnx, nom, prenom, email):
     try:
         idStatut = 1
@@ -652,6 +652,7 @@ def get_info_demande_with_id(cnx, idDemande):
         result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel, idBonCommande from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL natural join BONCOMMANDE where idDemande =" + str(idDemande) + ";"))
         info_demande = []
         for row in result:
+            print(row)
             info_demande.append(row)
         return info_demande
     except Exception as e:
@@ -750,7 +751,7 @@ def supprimer_materiel_unique_bdd(cnx, id_materiel_unique) :
 
 def get_id_bonCommande_actuel(cnx, idut):
     try:
-        result = cnx.execute(text("SELECT idBonCommande FROM BONCOMMANDETEST WHERE idUtilisateur = " + str(idut) + " AND idEtat = 1;")) #enlever  AND idEtat = 1 si on delete le bon de commande validée
+        result = cnx.execute(text("SELECT idBonCommande FROM BONCOMMANDE WHERE idUtilisateur = " + str(idut) + " AND idEtat = 1;")) #enlever  AND idEtat = 1 si on delete le bon de commande validée
         for row in result:
             return row[0]
     except:
@@ -759,24 +760,26 @@ def get_id_bonCommande_actuel(cnx, idut):
 
 
 #faire trigger before insert pour que si on ajoute un materiel deja dans la commande, on update la quantite
-def ajout_materiel_in_commandeTest(cnx, idmat, idut, quantite, boolajouterMat):
+def ajout_materiel_in_commande(cnx, idmat, idut, quantite, boolajouterMat):
     try:
         idbc = get_id_bonCommande_actuel(cnx, idut)
-        result = cnx.execute(text("select idMateriel from COMMANDETEST where idBonCommande = " + str(idbc)+ ";"))
-        query = text("INSERT INTO COMMANDETEST (idBonCommande, idMateriel, quantite) VALUES (" + str(idbc) + ", " + str(idmat) + ", " + str(quantite) + ");")
-        for mat in result:
-            print(int(mat[0]) == int(idmat))
-            if int(mat[0]) == int(idmat) :
-                if int(quantite) == 0 :
-                    query = text("DELETE FROM COMMANDETEST WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(idmat) + ";")
-                else :
-                    print(boolajouterMat)
-                    if boolajouterMat is False :
-                        query = text("UPDATE COMMANDETEST SET quantite = " + str(quantite) + " WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(idmat) + ";")
-                    else:
-                        query = text("UPDATE COMMANDETEST SET quantite = quantite + " + str(quantite) + " WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(idmat) + ";")
-        cnx.execute(query)
-        cnx.commit()
+        result = cnx.execute(text("select idMateriel from COMMANDE where idBonCommande = " + str(idbc)+ ";"))
+        if quantite != 0 :
+            query = text("INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES (" + str(idbc) + ", " + str(idmat) + ", " + str(quantite) + ");")
+            for mat in result:
+                if int(mat[0]) == int(idmat) :
+                    if int(quantite) == 0 :
+                        query = text("DELETE FROM COMMANDE WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(idmat) + ";")
+                    else :
+                        if boolajouterMat is False :
+                            query = text("UPDATE COMMANDE SET quantite = " + str(quantite) + " WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(idmat) + ";")
+                        else:
+                            query = text("UPDATE COMMANDE SET quantite = quantite + " + str(quantite) + " WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(idmat) + ";")
+            cnx.execute(query)
+            cnx.commit()
+        else:
+            cnx.execute(text("DELETE FROM COMMANDE WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(idmat) + ";"))
+            cnx.commit()
     except:
         print("Erreur lors de l'ajout du matériel dans la commande")
         raise
@@ -784,7 +787,7 @@ def ajout_materiel_in_commandeTest(cnx, idmat, idut, quantite, boolajouterMat):
 def get_materiel_in_bonDeCommande(cnx,idut):
     try:
         idbc = get_id_bonCommande_actuel(cnx, idut)
-        result = cnx.execute(text("SELECT idMateriel, nomMateriel,referenceMateriel, quantite FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+        result = cnx.execute(text("SELECT idMateriel, nomMateriel,referenceMateriel, quantite FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
         liste = []
         for row in result:
             liste.append(row)
@@ -797,7 +800,7 @@ def get_materiel_in_bonDeCommande(cnx,idut):
 def delete_all_materiel_in_commande(cnx, idut):
     try:
         idbc = get_id_bonCommande_actuel(cnx, idut)
-        cnx.execute(text("DELETE FROM COMMANDETEST WHERE idBonCommande = " + str(idbc) + ";"))
+        cnx.execute(text("DELETE FROM COMMANDE WHERE idBonCommande = " + str(idbc) + ";"))
         cnx.commit()
     except:
         print("Erreur lors de la suppression du matériel dans la commande")
@@ -807,7 +810,7 @@ def changer_etat_bonCommande(cnx, idut):
     try:
         idetat = 2
         idbc = get_id_bonCommande_actuel(cnx, idut)
-        cnx.execute(text("UPDATE BONCOMMANDETEST SET idEtat = " + str(idetat) + " WHERE idBonCommande = " + str(idbc) + ";"))
+        cnx.execute(text("UPDATE BONCOMMANDE SET idEtat = " + str(idetat) + " WHERE idBonCommande = " + str(idbc) + ";"))
         cnx.commit()
         ajout_gest_into_boncommande(cnx,idut)
     except:
@@ -829,7 +832,7 @@ def afficher_table(cnx, table):
 
 def get_materiel_commande(cnx,idbc):
     try:
-        result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite,referenceMateriel, idFDS, idBonCommande,quantite FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+        result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite,referenceMateriel, idFDS, idBonCommande,quantite FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
         liste = []
         for row in result:
             print(row)
@@ -841,7 +844,7 @@ def get_materiel_commande(cnx,idbc):
 
 def delete_materiel_in_BonCommande_whith_id(cnx, idMateriel, idbc):
     try:
-        cnx.execute(text("DELETE FROM COMMANDETEST WHERE idMateriel = " + str(idMateriel) + " AND idBonCommande = " + str(idbc) + ";"))
+        cnx.execute(text("DELETE FROM COMMANDE WHERE idMateriel = " + str(idMateriel) + " AND idBonCommande = " + str(idbc) + ";"))
         cnx.commit()
     except:
         print("Erreur lors de la suppression du matériel dans la commande")
@@ -868,8 +871,8 @@ def recherche_materiel_commander_search(cnx, search):
 def afficher_bon_commande(cnx, idut):
     try:
         idbc = get_id_bonCommande_actuel(cnx, idut)
-        result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
-        result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ");"))
+        result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+        result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ");"))
         liste = []
         for row in result:
             print(row)
@@ -882,6 +885,7 @@ def afficher_bon_commande(cnx, idut):
         print("Erreur lors de l'affichage de la table")
         raise
 
+#marche / tester
 def delete_demande(idDemande):
     try:
         cnx.execute(text("DELETE FROM DEMANDE WHERE idDemande = " + str(idDemande) + ";"))
@@ -890,34 +894,35 @@ def delete_demande(idDemande):
         print("Erreur lors de la suppression de la demande")
         raise
 
-def delete_materiel_unique_in_demande(cnx, idDemande, idMaterielUnique):
+#marche / tester
+def delete_materiel_unique_in_demande(cnx, idDemande, idMateriel):
     try:
-        cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMaterielUnique = " + str(idMaterielUnique) + ";"))
+        cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idMateriel) + ";"))
         cnx.commit()
     except:
         print("Erreur lors de la suppression du matériel unique dans la demande")
         raise
-
+    
+#marche / tester
 def get_nb_materiel_unique_in_demande(cnx, idDemande):
     try:
-        result = cnx.execute(text("SELECT COUNT(*) FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + ";"))
+        result = cnx.execute(text("SELECT COUNT(*) FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) +  ";"))
         for row in result:
             return row[0]
     except:
         print("Erreur lors de la récupération du nombre de matériel unique dans la demande")
         raise
-
-def set_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajouterMat=False):
+    
+#marche / tester
+def set_all_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajouterMat=False):
     try:
         result = cnx.execute(text("SELECT idMateriel,quantite from AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + ";"))
         for row in result:
-            print(row)
-            ajout_materiel_in_commandeTest(cnx, row[0], idut, row[1], boolajouterMat)
+            ajout_materiel_in_commande(cnx, row[0], idut, row[1], boolajouterMat)
+            delete_materiel_unique_in_demande(cnx, idDemande, row[0])
         nbmat_in_demande = get_nb_materiel_unique_in_demande(cnx, idDemande)
         if nbmat_in_demande == 0:
             delete_demande(idDemande)
-        else:
-            delete_materiel_unique_in_demande(cnx, idDemande, row[0])
     except:
         print("Erreur lors de la mise à jour de la quantité dans la demande")
         raise
