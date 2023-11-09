@@ -10,7 +10,11 @@
     <div class="info-bon">
         <p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p>
         <p class="para">date</p>
-        <select name="" id="statut"></select>
+        <select name="" id="statut">
+            <option value="">En cours de traitement</option>
+            <option value="">Expediée</option>
+            <option value="">Validé</option>
+        </select>
         <a class="btn-consulter" href="{{ url_for('bon_commande', id=bonCommande[i][0]) }}">Consulter le bon ></a>
     </div>
     {% endfor %}

@@ -31,6 +31,7 @@
 
 .info-bon {
     display: flex;
+    margin: 1%;
     flex-wrap: nowrap;
     justify-content: space-between;
 }
@@ -42,10 +43,12 @@
 
 .para {
     margin: 0;
+    color: #384274;
 }
 
 #statut {
-    width: 10%;
+    width: 15%;
+    color: white;
     background-color: #384274;
     border-radius: 1em;
 }
