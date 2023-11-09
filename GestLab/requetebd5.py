@@ -416,7 +416,7 @@ def get_all_information_to_MaterielUnique_with_id(cnx, id):
         for row in result:
             print(row)
             list.append(row)
-        return list
+        return list, len(list)
     except:
         print("erreur de l'id")
         raise
@@ -498,6 +498,21 @@ def nb_alert_par_materiel_dict(cnx):
     try:
         dict = {}
         result = cnx.execute(text("select idMateriel,idMaterielUnique from ALERTESENCOURS natural join MATERIELUNIQUE;"))
+        for row in result:
+            if row[0] in dict:
+                dict[row[0]] += 1
+            else:
+                dict[row[0]] = 1
+
+        print(dict)
+        return dict
+    except: 
+        raise
+
+def nb_alert_par_materielUnique_dict(cnx):
+    try:
+        dict = {}
+        result = cnx.execute(text("select idMaterielUnique,idMaterielUnique from ALERTESENCOURS natural join MATERIELUNIQUE;"))
         for row in result:
             if row[0] in dict:
                 dict[row[0]] += 1

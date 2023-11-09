@@ -540,8 +540,11 @@ def modifier_materiel(id):
 
 @app.route("/supprimer-materiel-unique/<int:id>", methods=("GET","POST",))
 def supprimer_materiel_unique(id):
+    print(1)
     id_materiel = get_id_materiel_from_id_materiel_unique(cnx, id)
+    print(2)
     supprimer_materiel_unique_bdd(cnx, id)
+    print(3)
     return redirect(url_for('etat', id=id_materiel))
 
 @app.route("/demandes/")
