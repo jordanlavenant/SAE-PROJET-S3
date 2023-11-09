@@ -559,6 +559,7 @@ def demandes():
 
 @app.route("/demande/<int:idDemande>")
 def demande(idDemande):
+    id_user = get_id_with_email(cnx, session['utilisateur'][2])
     info_commande = get_info_demande_with_id(get_cnx(), idDemande)
     print(info_commande)
     return render_template(
@@ -566,6 +567,7 @@ def demande(idDemande):
         idDemande = idDemande,
         infoCommande = info_commande,
         longeur = len(info_commande),
+        idUser = id_user,
         title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
         chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Demande')]
     )

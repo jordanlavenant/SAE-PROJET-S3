@@ -8,8 +8,12 @@ a {
     align-items: center;
 }
 
+.btns-header {
+    display: flex;
+    justify-content: space-around;
+}
+
 #btn-back {
-    margin-left: 10vw;
     color: white;
     background-color: #384274;
     padding: 14px 40px;
