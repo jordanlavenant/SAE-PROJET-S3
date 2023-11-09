@@ -859,7 +859,7 @@ def afficher_bon_commande(cnx, idut):
         print("Erreur lors de l'affichage de la table")
         raise
 
-def delete_demande(idDemande):
+def delete_demande(cnx, idDemande):
     try:
         cnx.execute(text("DELETE FROM DEMANDE WHERE idDemande = " + str(idDemande) + ";"))
         cnx.commit()

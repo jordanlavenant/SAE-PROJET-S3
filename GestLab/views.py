@@ -284,6 +284,14 @@ def ajouter_materiel_unique(id):
     ajout_materiel_in_commandeTest(cnx, idMat, id, qte)
     return redirect(url_for('commander'))
 
+@app.route("/commander-materiel-unique/<int:id>/<int:idDemande>", methods=("GET","POST",))
+def commander_materiel_unique(id, idDemande):
+    idMat = request.args.get('idMat')
+    qte = request.args.get('qte')
+    ajout_materiel_in_commandeTest(cnx, idMat, id, qte)
+    # delete_demande(cnx, idDemande)
+    return redirect(url_for('commander'))
+
 @app.route("/commander/")
 def commander():
     nb_alertes = get_nb_alert(cnx)
