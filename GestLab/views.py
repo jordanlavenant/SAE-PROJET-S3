@@ -290,6 +290,8 @@ def commander():
     nb_demandes = get_nb_demande(cnx)
     idUser = get_id_with_email(cnx, session['utilisateur'][2])
     idbc = get_id_bonCommande_actuel(cnx, idUser)
+    liste_materiel = afficher_bon_commande(cnx, idUser)
+    print(liste_materiel)
     return render_template(
         "commander.html",
         title="Commander du Matériel",
@@ -297,9 +299,8 @@ def commander():
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
         idUser = idUser,
-        qte = 0,
         idbc = idbc,
-        liste_materiel = afficher_table(get_cnx(), "MATERIEL"),
+        liste_materiel = liste_materiel,
         chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 

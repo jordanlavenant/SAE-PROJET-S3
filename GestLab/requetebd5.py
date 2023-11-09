@@ -755,7 +755,6 @@ def get_materiel_in_bonDeCommande(cnx,idut):
         result = cnx.execute(text("SELECT idMateriel, nomMateriel,referenceMateriel, quantite FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
         liste = []
         for row in result:
-            print(row)
             liste.append(row)
         return liste
     except:
@@ -789,7 +788,6 @@ def afficher_table(cnx, table):
         list = []
         result = cnx.execute(text("SELECT * FROM " + table + ";"))
         for row in result:
-            print(row)
             list.append(row)
         return list
     except:
@@ -817,3 +815,37 @@ def delete_materiel_in_BonCommande_whith_id(cnx, idMateriel, idbc):
         print("Erreur lors de la suppression du matériel dans la commande")
         raise
         
+
+def recherche_materiel_commander_search(cnx, search):
+    try:
+        list = []
+        result = cnx.execute(text("select idMateriel,nomMateriel,referenceMateriel,idFDS,idFDS,seuilAlerte,caracteristiquesComplementaires,caracteristiquesComplementaires from MATERIEL where nomMateriel like '%" + search + "%' ;"))
+        result1 = cnx.execute(text("select idMateriel,nomMateriel,referenceMateriel,idFDS,idFDS,seuilAlerte,caracteristiquesComplementaires,caracteristiquesComplementaires from MATERIEL where referenceMateriel like '%" + search + "%' ;"))
+        for row in result:
+            print(row)
+            list.append(row)
+        for row in result1:
+            print(row)
+            list.append(row)
+        return list
+    except:
+        print("erreur de recherche")
+        raise
+
+
+def afficher_bon_commande(cnx, idut):
+    try:
+        idbc = get_id_bonCommande_actuel(cnx, idut)
+        result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+        result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ");"))
+        liste = []
+        for row in result:
+            print(row)
+            liste.append(row)
+        for row in result2:
+            print(row)
+            liste.append(row)
+        return liste
+    except:
+        print("Erreur lors de l'affichage de la table")
+        raise

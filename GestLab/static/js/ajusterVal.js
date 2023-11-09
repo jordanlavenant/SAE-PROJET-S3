@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const liens = section.querySelector('a');
         let classes = liens.classList;
         let idMat = classes[0];
-        let valeur = 0; 
+        let valeur = classes[1];; 
+        console.log(maVariableJavaScript);
 
         boutonAjout.addEventListener("click", function() {
             url = `/ajouter-materiel-unique/${idUser}?idMat=${idMat}&qte=${maVariableJavaScript}`;
