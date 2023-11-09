@@ -127,30 +127,34 @@ class MdpOublierForm(FlaskForm):
         email = self.email.data
         return email
 
-class AjouterMaterielFormUnique(FlaskForm):
-    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine")
-    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie")
-    submit = SubmitField('Submit')
+class AjouterMaterielForm(FlaskForm):
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
     nom = StringField('nom', validators=[DataRequired()])
-    reference = StringField('reference')
-    date_reception = DateField('date_reception')
-    date_peremption = DateField('date_peremption')
-    caracteristiques = StringField('caracteristiques')
-    infossup = StringField('infossup')
-    quantite = StringField('quantite')
+    reference = StringField('reference', validators=[DataRequired()])
+    caracteristiques = TextAreaField('caracteristiques')
+    infossup = TextAreaField('infossup')
     seuilalerte  = StringField('seuilalerte')
     next = HiddenField()
 
     def get_full_materiel(self):
-        domaine = self.domaine.data
-        print("domaine + " + str(domaine))
         categorie = self.categorie.data
         nom = self.nom.data
         reference = self.reference.data
         caracteristiques = self.caracteristiques.data
         infossup = self.infossup.data
         seuilalerte = self.seuilalerte.data
-        return (domaine, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+    
+    def get_full_materiel_requestform(self):
+        categorie = request.form['categorie']
+        nom = request.form['nom']
+        reference = request.form['reference']
+        caracteristiques = request.form['caracteristiques']
+        infossup = request.form['infossup']
+        seuilalerte = request.form['seuilalerte']
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+
 
 def get_domaine_choices():
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
@@ -158,6 +162,13 @@ def get_domaine_choices():
     domaines =  [(str(id_), name) for name, id_ in result]
     domaines.insert(0, ("", "Choisir un domaine"))
     return domaines
+
+@app.route('/get_categorie_choices/', methods=['GET'])
+def get_categorie_choices():
+    selected_domain_id = request.args.get('domaine_id')
+    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
+    categories = {str(id_): name for name, id_ in result}
+    return jsonify(categories)
 
 @app.route("/ajouter-materiel/", methods=("GET","POST",))
 def ajouter_materiel():
@@ -171,6 +182,9 @@ def ajouter_materiel():
         else:
             print("Erreur lors de l'insertion du matériel")
             return redirect(url_for('ajouter_materiel'))
+    else :
+        print("Erreur lors de la validation du formulaire")
+        print(f.errors)
     return render_template(
     "ajouterMateriel.html",
     title="Ajouter un matériel",
@@ -336,8 +350,9 @@ def etat(id):
     "etat.html",
     id=id,
     title="Etat",
-    item_properties=get_all_information_to_Materiel_with_id(cnx, id),
-    items_unique=get_all_information_to_MaterielUnique_with_id(cnx, id),
+    item_properties = get_all_information_to_Materiel_with_id(cnx, id),
+    items_unique = get_all_information_to_MaterielUnique_with_id(cnx, id),
+    alertes = nb_alert_par_materielUnique_dict(cnx),
     chemin = [("base", "Accueil"), ("inventaire", "Inventaire"), ("inventaire", "Etat")]
     )
 
@@ -696,10 +711,3 @@ def get_categorie_choices_modifier_materiel(idDomaine):
     result = cnx.execute(query)
     categories = [(str(id_), name) for name, id_ in result]
     return categories
-
-@app.route('/get_categorie_choices/', methods=['GET'])
-def get_categorie_choices():
-    selected_domain_id = request.args.get('domaine_id')
-    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
-    categories = {str(id_): name for name, id_ in result}
-    return jsonify(categories)
