@@ -11,6 +11,8 @@ DROP TABLE IF EXISTS COMMANDE;
 DROP TABLE IF EXISTS BONCOMMANDETEST;
 DROP TABLE IF EXISTS MATERIEL;
 DROP TABLE IF EXISTS ARCHIVECOMMANDE;
+DROP TABLE IF EXISTS ARCHIVEBONCOMMANDE;
+DROP TABLE IF EXISTS ARCHIVEBONCOMMANDEANCIEN;
 DROP TABLE IF EXISTS FOURNISSEUR;
 DROP TABLE IF EXISTS RANGEMENT;
 DROP TABLE IF EXISTS ENDROIT;
@@ -171,6 +173,21 @@ create table COMMANDE(
     primary key(idBonCommandeTest,idMateriel)
 );
 
+create table ARCHIVEBONCOMMANDE(
+    idArchiveBonCommande int not null auto_increment,
+    idBonCommandeTest int  not null,
+    idEtat int not null,
+    idUtilisateur int not null,
+    primary key(idArchiveBonCommande)
+);
+
+create table ARCHIVECOMMANDE(
+    idArchiveBonCommande int not null references ARCHIVEBONCOMMANDE,
+    idMateriel int not null,
+    quantite int not null,
+    primary key(idArchiveBonCommande, idMateriel)
+);
+
 create table BONCOMMANDE(
     idBonCommande int not null auto_increment,
     idDemande int not null references DEMANDE,
@@ -204,7 +221,7 @@ CREATE TABLE TYPESALERTES (
     primary key (idAlerte)
 );
 
-create table ARCHIVECOMMANDE(
+create table ARCHIVECOMMANDEANCIEN(
     numColis int not null,
     idFournisseur int not null,
     nomFournisseur varchar(50) not null,

@@ -72,6 +72,34 @@ end |
 delimiter ;
 
 delimiter |
+create or replace FUNCTION demandesEnAttenteNul() returns varchar(255)
+begin
+    declare id int ;
+    declare listeDemandes varchar(255) default '';
+    declare fini boolean default false ;
+
+    declare idDemandes cursor for 
+        SELECT DEMANDE.idDemande FROM DEMANDE ;
+
+    declare continue handler for not found set fini = true ;
+    open idDemandes ;
+    while not fini do
+        fetch idDemandes into id ;
+        if not fini then 
+            if listeDemandes = '' then 
+                SET listeDemandes = id ;
+            else 
+                SET listeDemandes = concat(listeDemandes, ", ", id) ;
+            end if ;
+        end if ;
+    end while ;
+    close idDemandes ;
+
+    return listeDemandes ;
+end |
+delimiter ;
+
+delimiter |
 create or replace FUNCTION nombreDemandesEnAttente() returns varchar(255)
 begin
     declare id int ;
@@ -95,6 +123,77 @@ begin
 end |
 delimiter ;
 
+delimiter |
+create or replace FUNCTION nombreDemandesEnAttenteNul() returns varchar(255)
+begin
+    declare id int ;
+    declare listeDemandes varchar(255) default '';
+    declare fini boolean default false ;
+
+    declare idDemandes cursor for 
+        SELECT COUNT(DEMANDE.idDemande) FROM DEMANDE ;
+
+    declare continue handler for not found set fini = true ;
+    open idDemandes ;
+    while not fini do
+        fetch idDemandes into id ;
+        if not fini then 
+            SET listeDemandes = id ;
+        end if ;
+    end while ;
+    close idDemandes ;
+
+    return listeDemandes ;
+end |
+delimiter ;
+
+
+delimiter |
+CREATE OR REPLACE TRIGGER archivageBonCommande AFTER UPDATE ON BONCOMMANDETEST FOR EACH ROW
+BEGIN 
+    declare idBC int;
+    declare idE int ;
+    declare idU int ;
+    declare fini BOOLEAN default false;
+
+    declare infosBonCommande cursor for
+        SELECT * FROM BONCOMMANDETEST WHERE idBonCommandeTest = new.idBonCommandeTest and idEtat = 4 ;
+    
+    declare continue handler for not found set fini = true ;
+    open infosBonCommande ;
+    while not fini do
+        fetch infosBonCommande into idBC, idE, idU ;
+        if not fini then
+            INSERT INTO ARCHIVEBONCOMMANDE (idBonCommandeTest, idEtat, idUtilisateur) VALUES (idBC, idE, idU) ;
+        end if ;
+    end while ;
+    close infosBonCommande ;
+end |
+delimiter ;
+
+delimiter |
+CREATE OR REPLACE TRIGGER archivageCommandes AFTER UPDATE ON BONCOMMANDETEST FOR EACH ROW
+BEGIN 
+    declare idA int ;
+    declare idBC int;
+    declare idM int ;
+    declare qte int ;
+    declare fini BOOLEAN default false;
+
+    declare infosCommandes cursor for
+        SELECT idArchiveBonCommande, idBonCommandeTest, idMateriel, quantite FROM COMMANDE NATURAL JOIN BONCOMMANDETEST NATURAL JOIN ARCHIVEBONCOMMANDEWHERE WHERE idBonCommandeTest = new.idBonCommandeTest and idEtat = 4 ;
+    
+    declare continue handler for not found set fini = true ;
+    open infosCommandes ;
+    while not fini do
+        fetch infosCommandes into idA, idBC, idM, qte ;
+        if not fini then
+            INSERT INTO ARCHIVECOMMANDE (idArchiveBonCommande, idBonCommandeTest, idMateriel, quantite) VALUES (idA, idBC, idM, qte) ;
+        end if ;
+    end while ;
+    close infosCommandes ;
+end |
+delimiter ;
 
 delimiter |
 CREATE OR REPLACE function recupereidMateriel(idMU int) returns int
@@ -332,3 +431,4 @@ BEGIN
     close curseur;
 end |
 delimiter ;
+
