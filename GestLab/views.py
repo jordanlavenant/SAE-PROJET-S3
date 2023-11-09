@@ -11,7 +11,7 @@ from .requetebd5 import *
 from .connexionPythonSQL import *
 from .models import *
 import time
-
+from .genererpdf import *
 
 cnx = get_cnx()
 
@@ -22,12 +22,10 @@ class LoginForm(FlaskForm):
 
     def get_authenticated_user(self):
         user = get_nom_and_statut_and_email(cnx, self.email.data)
+        print(user)
         mdp = get_password_with_email(cnx, self.email.data)
         if user is None:
             return None
-        # m = sha256()
-        # m.update(self.password.data.encode('utf-8'))
-        # passwd = m.hexdigest()
         passwd = hasher_mdp(self.password.data)
         print(str(mdp)+" == "+str(passwd))
         return user if passwd == mdp else None
@@ -410,8 +408,11 @@ def delete_materiel(idbc, idMat):
 
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
+    idCommande = request.args.get('idCommande')
     changer_etat_bonCommande(cnx, id)
-     # Utilisation d'une boucle infinie pour l'attente
+    liste_materiel = []
+    print(liste_materiel)
+    genererpdf(session['utilisateur'][0], session['utilisateur'][3], liste_materiel, str(idCommande))
     while True:
         pass  # Cette boucle ne se termine jamais
     return redirect(url_for('base'))

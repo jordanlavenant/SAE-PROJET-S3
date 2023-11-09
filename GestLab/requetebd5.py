@@ -348,10 +348,10 @@ def update_prenom_utilisateur(cnx, email, new_prenom):
 
 #marche BD 5
 def get_nom_and_statut_and_email(cnx, email):
-    result = cnx.execute(text("select nom, idStatut from UTILISATEUR where email = '" + email + "';"))
+    result = cnx.execute(text("select nom, idStatut, prenom from UTILISATEUR where email = '" + email + "';"))
     for row in result:
-        print(row[0], row[1])
-        return (row[0], row[1], email)
+        print(row[0], row[1], row[2], email)
+        return (row[0], row[1], email, row[2])
 
 #marche BD 5
 def get_user_with_statut(cnx, nomStatut):

@@ -26,7 +26,7 @@
     </div>
 </div>
 <div class="container-valider">
-    <a id="btn-valider" href="{{ url_for('valider_bon_commande', id=idUser) }}">Valider la commande</a>
+    <a id="btn-valider" href="/valider-bon-commande/{{ idUser }}?idCommande={{ id }}">Valider la commande</a>
 </div>
 {% for item in liste_materiel %}
 <section class="section-contenu">
@@ -49,7 +49,7 @@
         <p>Veuillez télécharger le pdf ci dessous</p>
         <div class="container-pdf">
             <a class="btn-retour-popup" href="{{ url_for('base') }}">Retour accueil</a>
-            <a href="#"><button id="btn-pdf">Télécharger PDF</button></a>
+            <a href="{{ url_for('static',filename='./data/bonCommande.pdf') }}"><button id="btn-pdf">Télécharger PDF</button></a>
         </div>
     </div>
 </div>
