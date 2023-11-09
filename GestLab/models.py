@@ -241,7 +241,7 @@ def envoyer_mail_signalement(mailreceveur, mailenvoyeur, text, objet):
         <p>Votre compte a été crée avec succès voici les informations correspondants :</p>
         <p>Voici le signalement de la part de : {mailenvoyeur}</p>
         <p>Voici l'objet concerné : {objet}</p>
-        <p>Voici le commentaire evec le sognalement : {text}</p>
+        <p>Voici le commentaire evec le signalement sur l'objet : {objet}</p>
         <p>{text}</p>
     </body>
     <footer>
@@ -314,3 +314,84 @@ def envoyer_mail_mdp_oublie(mailreceveur, mdp):
         smtp.login(gmail_config["email"], gmail_config["password"])
         smtp.send_message(msg)
         print("Mail envoyé")
+        
+        
+def envoyer_mail_etat_demande(mailreceveur ,etat, liste_produit):
+    json_file = open('GestLab/static/data/configEmail.json')
+    gmail_config = json.load(json_file)
+
+    msg = EmailMessage()
+    msg['Subject'] = 'Etat de votre demande - Email automatique ne pas répondre !'
+    msg['From'] = gmail_config["email"]
+    msg['To'] = mailreceveur
+
+    liste_de_produit = f'''
+    '''
+    
+    for produit in liste_produit:
+        liste_de_produit += f'''
+        <ul>
+            <li>Le produit {produit[0]}, demandé avec {produit[1]} unitée(s)</li>
+        </ul>
+        '''    
+
+    # Utilisation de balises HTML pour incorporer l'image dans le corps du message
+    text_with_image = f'''
+    <html>
+    <head>
+        <style>
+            a{{
+                text-decoration: none;
+            }}
+
+            p,li {{
+                font-size: 20px;
+            }}
+
+            .alert {{
+                font-size: 25px;
+                color: red;
+            }}
+
+            img {{
+                width: 300px;
+                height: 300px;
+            }}
+
+            .logo {{
+                width: 100px;
+                height: 100px;
+            }}
+            
+            .etat-commande {{
+                color: red;
+                font-size: 25px;
+                text-decoration: underline;
+                text-decoration-color: red;
+            }}
+            
+        </style>
+    </head>
+    <body>
+        <p>Votre demande a été traité avec succès voici les informations correspondants :</p>
+        <ul>
+            <li>Voici l'état de votre demande:  <p class="etat-commande"> {etat}</p></li>
+        </ul>
+    
+        <p>Voici la liste des produits que vous avez demandé :</p>
+        {liste_de_produit}
+    </body>
+    <footer>
+        <br>
+        <img class="logo" src="https://cdn.discordapp.com/attachments/1171757951124525127/1171757962973429780/logo-GestLab.png?ex=655dd7a4&is=654b62a4&hm=457ba97c61b08dcb5941590e280bf720a72dba79dc96c86680d3005ff6160121&">
+    </footer>
+    </html>
+    '''
+    msg.add_alternative(text_with_image, subtype='html')
+    
+    with smtplib.SMTP_SSL('smtp.gmail.com', gmail_config["port"]) as smtp:
+        smtp.login(gmail_config["email"], gmail_config["password"])
+        smtp.send_message(msg)
+        print("Mail envoyé")
+        
+envoyer_mail_etat_demande("erwan.blandeau28@gmail.com", "En cours de traitement", [("test", 2), ("test2", 3), ("test3", 4), ("test4", 5), ("test5", 6)])
