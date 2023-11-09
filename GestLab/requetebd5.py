@@ -743,7 +743,16 @@ def get_id_bonCommande_actuel(cnx, idut):
 def ajout_materiel_in_commandeTest(cnx, idmat, idut, quantite):
     try:
         idbc = get_id_bonCommande_actuel(cnx, idut)
-        cnx.execute(text("INSERT INTO COMMANDETEST (idBonCommande, idMateriel, quantite) VALUES (" + str(idbc) + ", " + str(idmat) + ", " + str(quantite) + ");"))
+        result = cnx.execute(text("select idMateriel from COMMANDETEST where idBonCommande = " + str(idbc)+ ";"))
+        query = text("INSERT INTO COMMANDETEST (idBonCommande, idMateriel, quantite) VALUES (" + str(idbc) + ", " + str(idmat) + ", " + str(quantite) + ");")
+        for mat in result:
+            print(int(mat[0]) == int(idmat))
+            if int(mat[0]) == int(idmat) :
+                if int(quantite) == 0 :
+                    query = text("DELETE FROM COMMANDETEST WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(idmat) + ";")
+                else :
+                    query = text("UPDATE COMMANDETEST SET quantite = " + str(quantite) + " WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(idmat) + ";")
+        cnx.execute(query)
         cnx.commit()
     except:
         print("Erreur lors de l'ajout du matériel dans la commande")
