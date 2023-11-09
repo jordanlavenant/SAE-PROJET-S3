@@ -223,3 +223,12 @@ a {
     transform: scale(1.1);
     cursor: pointer;
 }
+
+
+/* si ya r */
+
+.p-rien {
+    text-align: center;
+    margin: 3em;
+    font-size: 40px;
+}

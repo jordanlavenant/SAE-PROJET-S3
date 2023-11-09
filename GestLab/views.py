@@ -299,6 +299,7 @@ def bon_commande(id):
         categories = get_domaine(get_cnx()),
         idUser = idUser,
         liste_materiel = liste_materiel,
+        longueur = len(liste_materiel),
         title = "bon de commande",
         chemin = [("base", "Accueil"), ("commander", "Commander"), ('demandes', 'Bon de commande')]
     )

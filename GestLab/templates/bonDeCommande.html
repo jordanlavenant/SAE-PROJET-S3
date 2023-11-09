@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/bonDeCommande.css') }}">
 {% endblock %}
 {% block content %}
+{% if longueur > 0 %}
 <div class="header-container">
     <div class="container-top">
         <a class="lien-item" href="{{ url_for('commander') }}"><button id="btn-retour">retour</button></a>
@@ -41,6 +42,9 @@
     <a id="btn-voir" href="{{ url_for('delete_materiel', idMat=item[0], idbc=item[6]) }}">supprimer</a>
 </section>
 {%endfor%}
+{% else %}
+<p class="p-rien">Vous n'avez aucun materiel a commander</p>
+{% endif %}
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='./js/ajusterVal.js') }}"></script>
