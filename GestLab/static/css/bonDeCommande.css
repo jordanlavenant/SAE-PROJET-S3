@@ -162,6 +162,7 @@ a {
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
+    gap: 10px;
 }
 
 .container-qte p {
@@ -180,6 +181,7 @@ a {
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
+    border-radius: 10px;
 }
 
 .texte_blanc {
