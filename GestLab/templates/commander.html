@@ -32,36 +32,42 @@
                     {% endif %}
                 </section>
             </div>
-            <a class="lien-item" href="{{ url_for('bon_commande', idDemande=1) }}"><button id="btn-retour">Voir le bon de commande</button></a>
+            <a class="lien-item" href="{{ url_for('bon_commande', id=idbc) }}"><button id="btn-retour">Voir le bon de commande</button></a>
         </div>
         <div class="search-content">
             <input type="text" id="search-bar" placeholder="Chercher un matériel">
             <button id="btn-search">Rechercher</button>
         </div>
         <div class="filter-container">
-            <p>trier par : </p>
-            <form action="/traiter" method="post">
-                <select name="cat" id="categorie-select">
-                    <option value="aucun-tri">aucun tri</option>
-                    {% for categorie in categories %}
-                        <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
-                    {% endfor %}
-                </select>
-            </form>
-            <button id="btn-reset">reinitialiser le bon de commande</button>
+            <div class="filter-sous-container">
+                <p>trier par : </p>
+                <form action="/traiter" method="post">
+                    <select name="cat" id="categorie-select">
+                        <option value="aucun-tri">aucun tri</option>
+                        {% for categorie in categories %}
+                            <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+            <a href="{{ url_for('reinitialiser_bon_commande', id=idUser) }}"><button id="btn-reset">reinitialiser le bon de commande</button></a>
         </div>
     </div>
     <div class="container-contenu">
         {% for item in liste_materiel %}
         <section class="section-contenu">
             <h3>{{ item[6] }} -  {{ item[1] }}</h3>
-            <h3>{{ item[7] }}</h3>
+            <h3>{{ item[7] }}</h3> 
             <div class="choisir-item">
                 <button class="bouton-moins">-</button>
-                <p class="nb-choisit">0</p>
+                <p class="nb-choisit">{{ qte }}</p>
                 <button class="bouton-plus">+</button>
             </div>
-            <button id="ajouter-commande">ajouter à la commande</button>
+            <a class="{{ item[0] }}" href="#"><button class="ajouter-commande" id="ajouter-commande">ajouter à la commande</button></a>
+            <script>
+                var maVariableJavaScript = "{{ qte }}"; 
+                var idUser = "{{ idUser }}"; 
+            </script>
         </section>
         {% endfor %}
     </div>

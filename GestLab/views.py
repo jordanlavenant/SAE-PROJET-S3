@@ -258,33 +258,60 @@ def a2f(mail, id):
         A2FForm=f,
     )
 
+@app.route("/reinitialiser-bon-commande/<int:id>", methods=("GET","POST",))
+def reinitialiser_bon_commande(id):
+    delete_all_materiel_in_commande(cnx, id)
+    return redirect(url_for('commander'))
+
+@app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
+def ajouter_materiel_unique(id):
+    idMat = request.args.get('idMat')
+    qte = request.args.get('qte')
+    ajout_materiel_in_commandeTest(cnx, idMat, id, qte)
+    return redirect(url_for('commander'))
+
 @app.route("/commander/")
 def commander():
     nb_alertes = get_nb_alert(cnx)
     nb_demandes = get_nb_demande(cnx)
+    idUser = get_id_with_email(cnx, session['utilisateur'][2])
+    idbc = get_id_bonCommande_actuel(cnx, idUser)
     return render_template(
         "commander.html",
         title="Commander du Matériel",
         categories = get_domaine(get_cnx()),
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
+        idUser = idUser,
+        qte = 0,
+        idbc = idbc,
         liste_materiel = afficher_table(get_cnx(), "MATERIEL"),
         chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
-@app.route("/bon-commande/<int:idDemande>")
-def bon_commande(idDemande):
-    info_commande = get_info_demande_with_id(get_cnx(), idDemande)
-    print(info_commande)
+@app.route("/bon-commande/<int:id>")
+def bon_commande(id):
+    idUser = get_id_with_email(cnx, session['utilisateur'][2])
+    liste_materiel = get_materiel_commande(cnx, id)
     return render_template(
         "bonDeCommande.html",
-        idDemande = idDemande,
-        infoCommande = info_commande,
-        longeur = len(info_commande),
+        id = id,
         categories = get_domaine(get_cnx()),
+        idUser = idUser,
+        liste_materiel = liste_materiel,
         title = "bon de commande",
         chemin = [("base", "Accueil"), ("commander", "Commander"), ('demandes', 'Bon de commande')]
     )
+
+@app.route("/delete-materiel/<int:idbc>/<int:idMat>", methods=("GET","POST",))
+def delete_materiel(idbc, idMat):
+    delete_materiel_in_BonCommande_whith_id(cnx, idMat, idbc)
+    return redirect(url_for('bon_commande', id=idbc))
+
+@app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
+def valider_bon_commande(id):
+    changer_etat_bonCommande(cnx, id)
+    return redirect(url_for('base'))
 
 @app.route("/alertes/")
 def alertes():

@@ -69,7 +69,6 @@ a {
 }
 
 #btn-reset {
-    margin-left: 30vw;
     color: #fff;
     background-color: #384274;
     padding: 10px 20px;
@@ -88,17 +87,21 @@ a {
 
 .filter-container {
     display: flex;
-    flex-direction: row;
-    gap: 25px;
-    margin-bottom: 25px;
     align-items: center;
+    justify-content: space-between;
 }
 
-.filter-container > p {
+.filter-sous-container > p {
     color: #384274;
     font-size: 40px;
     margin: 0;
     padding: 0;
+}
+
+.filter-sous-container {
+    display: flex;
+    gap: 25px;
+    align-items: center;
 }
 
 #categorie-select {

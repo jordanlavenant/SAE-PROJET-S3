@@ -763,6 +763,7 @@ def changer_etat_bonCommande(cnx, idut):
         idbc = get_id_bonCommande_actuel(cnx, idut)
         cnx.execute(text("UPDATE BONCOMMANDETEST SET idEtat = " + str(idetat) + " WHERE idBonCommande = " + str(idbc) + ";"))
         cnx.commit()
+        ajout_gest_into_boncommande(cnx,idut)
     except:
         print("Erreur lors du changement d'état du bon de commande")
         raise
@@ -778,4 +779,25 @@ def afficher_table(cnx, table):
         return list
     except:
         print("Erreur lors de l'affichage de la table")
+        raise
+
+
+def get_materiel_commande(cnx,idbc):
+    try:
+        result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite,referenceMateriel, idFDS, idBonCommande,quantite FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+        liste = []
+        for row in result:
+            print(row)
+            liste.append(row)
+        return liste
+    except:
+        print("Erreur lors de la récupération du matériel dans la commande")
+        raise
+
+def delete_materiel_in_BonCommande_whith_id(cnx, idMateriel, idbc):
+    try:
+        cnx.execute(text("DELETE FROM COMMANDETEST WHERE idMateriel = " + str(idMateriel) + " AND idBonCommande = " + str(idbc) + ";"))
+        cnx.commit()
+    except:
+        print("Erreur lors de la suppression du matériel dans la commande")
         raise
