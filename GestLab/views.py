@@ -502,7 +502,6 @@ def modifier_utilisateur(id):
 
 @app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
 def modifier_materiel(id):
-    print("hee hee")
     materiel = get_materiel(cnx, id)
     idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
                          
