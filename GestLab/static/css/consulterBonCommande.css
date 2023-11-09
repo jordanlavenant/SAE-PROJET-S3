@@ -41,6 +41,10 @@
     width: 10vw;
 }
 
+.btn-consulter {
+    color: #384274;
+}
+
 .para {
     margin: 0;
     color: #384274;
@@ -53,6 +57,3 @@
     border-radius: 1em;
 }
 
-.btn-consulter {
-    color: #384274;
-}
