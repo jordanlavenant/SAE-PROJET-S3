@@ -34,9 +34,9 @@
         <p class="texte_blanc">{{ item[2] }}</p>
         <div class="container-qte">
             <p class="texte_blanc"> Quantité :</p>
-            <button class="bouton-moins">-</button>
+            <!-- <button class="bouton-moins">-</button> -->
             <p class="nb-choisit">{{ item[7] }}</p>
-            <button class="bouton-plus">+</button>
+            <!-- <button class="bouton-plus">+</button> -->
         </div>
     </div>
     <a id="btn-voir" href="{{ url_for('delete_materiel', idMat=item[0], idbc=item[6]) }}">supprimer</a>

@@ -290,6 +290,8 @@ def commander():
     nb_demandes = get_nb_demande(cnx)
     idUser = get_id_with_email(cnx, session['utilisateur'][2])
     idbc = get_id_bonCommande_actuel(cnx, idUser)
+    liste_materiel = afficher_bon_commande(cnx, idUser)
+    print(liste_materiel)
     return render_template(
         "commander.html",
         title="Commander du Matériel",
@@ -297,9 +299,8 @@ def commander():
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
         idUser = idUser,
-        qte = 0,
         idbc = idbc,
-        liste_materiel = afficher_table(get_cnx(), "MATERIEL"),
+        liste_materiel = liste_materiel,
         chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
 
@@ -517,7 +518,6 @@ def modifier_utilisateur(id):
 
 @app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
 def modifier_materiel(id):
-    print("hee hee")
     materiel = get_materiel(cnx, id)
     idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
                          
@@ -555,8 +555,11 @@ def modifier_materiel(id):
 
 @app.route("/supprimer-materiel-unique/<int:id>", methods=("GET","POST",))
 def supprimer_materiel_unique(id):
+    print(1)
     id_materiel = get_id_materiel_from_id_materiel_unique(cnx, id)
+    print(2)
     supprimer_materiel_unique_bdd(cnx, id)
+    print(3)
     return redirect(url_for('etat', id=id_materiel))
 
 @app.route("/demandes/")
@@ -571,6 +574,7 @@ def demandes():
 
 @app.route("/demande/<int:idDemande>")
 def demande(idDemande):
+    id_user = get_id_with_email(cnx, session['utilisateur'][2])
     info_commande = get_info_demande_with_id(get_cnx(), idDemande)
     print(info_commande)
     return render_template(
@@ -578,6 +582,7 @@ def demande(idDemande):
         idDemande = idDemande,
         infoCommande = info_commande,
         longeur = len(info_commande),
+        idUser = id_user,
         title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
         chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Demande')]
     )

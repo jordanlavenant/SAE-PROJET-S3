@@ -8,8 +8,12 @@ a {
     align-items: center;
 }
 
+.btns-header {
+    display: flex;
+    justify-content: space-around;
+}
+
 #btn-back {
-    margin-left: 10vw;
     color: white;
     background-color: #384274;
     padding: 14px 40px;
@@ -81,6 +85,26 @@ a {
 .header-container a {
     display: flex;
     color: #2EDD94;
+}
+
+#btn-edit-materiel {
+    margin-left: 10vw;
+    color: white;
+    background-color: #384274;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-edit-materiel:hover {
+    color: white;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 #report-redirect-img {
@@ -181,11 +205,17 @@ a {
     align-items: center;
 }
 
+.btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 #btn-redirect-order {
     color: #384274;
     background-color: white;
-    padding: 14px 40px;
-    border-radius: 25px;
+    padding: 10px 20px;
+    border-radius: 20px;
     font-size: 25px;
     border: none;
     transition: 0.2s;
