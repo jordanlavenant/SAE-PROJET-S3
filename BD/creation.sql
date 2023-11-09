@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS BONCOMMANDETEST;
 DROP TABLE IF EXISTS MATERIEL;
 DROP TABLE IF EXISTS ARCHIVECOMMANDE;
 DROP TABLE IF EXISTS ARCHIVEBONCOMMANDE;
-DROP TABLE IF EXISTS ARCHIVEBONCOMMANDEANCIEN;
+DROP TABLE IF EXISTS ARCHIVECOMMANDEANCIEN;
 DROP TABLE IF EXISTS FOURNISSEUR;
 DROP TABLE IF EXISTS RANGEMENT;
 DROP TABLE IF EXISTS ENDROIT;
@@ -159,23 +159,23 @@ create table ETATCOMMANDE(
     primary key(idEtat)
 );
 
-create table BONCOMMANDETEST(
-    idBonCommandeTest int not null auto_increment,
+create table BONCOMMANDE(
+    idBonCommande int not null auto_increment,
     idEtat int not null references ETATCOMMANDE,
     idUtilisateur int not null references UTILISATEUR,
-    primary key(idBonCommandeTest)
+    primary key(idBonCommande)
 );
 
 create table COMMANDE(
-    idBonCommandeTest int not null references BONCOMMANDETEST,
+    idBonCommande int not null references BONCOMMANDE,
     idMateriel int not null references MATERIEL,
     quantite int not null,
-    primary key(idBonCommandeTest,idMateriel)
+    primary key(idBonCommande,idMateriel)
 );
 
 create table ARCHIVEBONCOMMANDE(
     idArchiveBonCommande int not null auto_increment,
-    idBonCommandeTest int  not null,
+    idBonCommande int  not null,
     idEtat int not null,
     idUtilisateur int not null,
     primary key(idArchiveBonCommande)
@@ -186,14 +186,6 @@ create table ARCHIVECOMMANDE(
     idMateriel int not null,
     quantite int not null,
     primary key(idArchiveBonCommande, idMateriel)
-);
-
-create table BONCOMMANDE(
-    idBonCommande int not null auto_increment,
-    idDemande int not null references DEMANDE,
-    idEtat int not null references ETATCOMMANDE,
-    dateCommande datetime not null,
-    primary key(idBonCommande)
 );
 
 create table SUIVICOMMANDE(

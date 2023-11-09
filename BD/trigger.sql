@@ -44,7 +44,7 @@ delimiter ;
 
 
 delimiter |
-create or replace FUNCTION demandesEnAttente() returns varchar(255)
+create or replace FUNCTION demandesEnAttenteAncien() returns varchar(255)
 begin
     declare id int ;
     declare listeDemandes varchar(255) default '';
@@ -72,7 +72,7 @@ end |
 delimiter ;
 
 delimiter |
-create or replace FUNCTION demandesEnAttenteNul() returns varchar(255)
+create or replace FUNCTION demandesEnAttente() returns varchar(255)
 begin
     declare id int ;
     declare listeDemandes varchar(255) default '';
@@ -100,7 +100,7 @@ end |
 delimiter ;
 
 delimiter |
-create or replace FUNCTION nombreDemandesEnAttente() returns varchar(255)
+create or replace FUNCTION nombreDemandesEnAttenteAncien() returns varchar(255)
 begin
     declare id int ;
     declare listeDemandes varchar(255) default '';
@@ -124,7 +124,7 @@ end |
 delimiter ;
 
 delimiter |
-create or replace FUNCTION nombreDemandesEnAttenteNul() returns varchar(255)
+create or replace FUNCTION nombreDemandesEnAttente() returns varchar(255)
 begin
     declare id int ;
     declare listeDemandes varchar(255) default '';
@@ -149,7 +149,7 @@ delimiter ;
 
 
 delimiter |
-CREATE OR REPLACE TRIGGER archivageBonCommande AFTER UPDATE ON BONCOMMANDETEST FOR EACH ROW
+CREATE OR REPLACE TRIGGER archivageBonCommande AFTER UPDATE ON BONCOMMANDE FOR EACH ROW
 BEGIN 
     declare idBC int;
     declare idE int ;
@@ -157,14 +157,14 @@ BEGIN
     declare fini BOOLEAN default false;
 
     declare infosBonCommande cursor for
-        SELECT * FROM BONCOMMANDETEST WHERE idBonCommandeTest = new.idBonCommandeTest and idEtat = 4 ;
+        SELECT * FROM BONCOMMANDE WHERE idBonCommande = new.idBonCommande and idEtat = 4 ;
     
     declare continue handler for not found set fini = true ;
     open infosBonCommande ;
     while not fini do
         fetch infosBonCommande into idBC, idE, idU ;
         if not fini then
-            INSERT INTO ARCHIVEBONCOMMANDE (idBonCommandeTest, idEtat, idUtilisateur) VALUES (idBC, idE, idU) ;
+            INSERT INTO ARCHIVEBONCOMMANDE (idBonCommande, idEtat, idUtilisateur) VALUES (idBC, idE, idU) ;
         end if ;
     end while ;
     close infosBonCommande ;
@@ -172,7 +172,7 @@ end |
 delimiter ;
 
 delimiter |
-CREATE OR REPLACE TRIGGER archivageCommandes AFTER UPDATE ON BONCOMMANDETEST FOR EACH ROW
+CREATE OR REPLACE TRIGGER archivageCommandes AFTER UPDATE ON BONCOMMANDE FOR EACH ROW
 BEGIN 
     declare idA int ;
     declare idBC int;
@@ -181,14 +181,14 @@ BEGIN
     declare fini BOOLEAN default false;
 
     declare infosCommandes cursor for
-        SELECT idArchiveBonCommande, idBonCommandeTest, idMateriel, quantite FROM COMMANDE NATURAL JOIN BONCOMMANDETEST NATURAL JOIN ARCHIVEBONCOMMANDEWHERE WHERE idBonCommandeTest = new.idBonCommandeTest and idEtat = 4 ;
+        SELECT idArchiveBonCommande, idBonCommande, idMateriel, quantite FROM COMMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ARCHIVEBONCOMMANDEWHERE WHERE idBonCommande = new.idBonCommande and idEtat = 4 ;
     
     declare continue handler for not found set fini = true ;
     open infosCommandes ;
     while not fini do
         fetch infosCommandes into idA, idBC, idM, qte ;
         if not fini then
-            INSERT INTO ARCHIVECOMMANDE (idArchiveBonCommande, idBonCommandeTest, idMateriel, quantite) VALUES (idA, idBC, idM, qte) ;
+            INSERT INTO ARCHIVECOMMANDE (idArchiveBonCommande, idBonCommande, idMateriel, quantite) VALUES (idA, idBC, idM, qte) ;
         end if ;
     end while ;
     close infosCommandes ;

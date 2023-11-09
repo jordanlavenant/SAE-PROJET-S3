@@ -124,15 +124,11 @@ INSERT INTO ETATCOMMANDE (nomEtat) VALUES
 ('Expédiée'),
 ('Livrée');
 
-INSERT INTO BONCOMMANDE (idDemande, idEtat, dateCommande) VALUES
-(1, 1, '2023-10-26 13:00:00'),
-(2, 2, '2023-10-26 14:00:00');
-
-INSERT INTO BONCOMMANDETEST (idEtat, idUtilisateur) VALUES
+INSERT INTO BONCOMMANDE (idEtat, idUtilisateur) VALUES
 (1, 1),
 (2, 1);
 
-INSERT INTO COMMANDE (idBonCommandeTest, idMateriel, quantite) VALUES
+INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES
 (1, 1, 2),
 (1, 2, 5);
 
