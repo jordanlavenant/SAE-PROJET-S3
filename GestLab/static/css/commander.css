@@ -213,6 +213,7 @@ a {
     background-color: #384274;
     margin-bottom: 10px;
     border-radius: 10px;
+    padding: 1%;
 }
 
 .section-contenu h3 {
@@ -220,10 +221,14 @@ a {
     font-size: 30px;
     font-weight: 500;
     flex-basis: 100%;
-    text-align: center;
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.section-contenu h3 {
+    font-weight: bold;
+}
+
 
 .choisir-item {
     display: flex;

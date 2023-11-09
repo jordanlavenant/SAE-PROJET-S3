@@ -1,0 +1,212 @@
+.header {
+    margin-bottom: 1em !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+.demander-container-overall {
+    margin: 10vh 5vw;
+}
+
+.header-container {
+    margin: 5vh 10vw;
+}
+
+.search-content {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+#search-bar {
+    flex-basis: 80%;
+    width: calc(100% - 60px);
+    height: 50px;
+    border-radius: 20px;
+    border: none;
+    padding: 0 30px;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+#btn-search {
+    flex-basis: 20%;
+    max-height: 50px;
+    color: #fff;
+    background-color: #384274;
+    padding: 0px 0px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-search:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#btn-retour {
+    color: #fff;
+    background-color: #384274;
+    padding: 10px 20px;
+    margin: 10px 0px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-retour:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#btn-reset {
+    color: #fff;
+    background-color: #384274;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-reset:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-sous-container > p {
+    color: #384274;
+    font-size: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+.filter-sous-container {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+#categorie-select {
+    color: #fff;
+    background-color: #384274;
+    border-radius: 20px;
+    font-size: 20px;
+    padding: 10px 60px;
+    border: none;
+}
+
+#categorie-select {
+    cursor: pointer;
+    padding: 10px 60px;
+}
+
+.container-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
+.bouton-moins {
+    margin-left: 1em;
+    margin-right: 5px;
+    color: #fff;
+    background-color: #384274;
+    border: none;
+}
+
+.bouton-plus {
+    margin-left: 5px;
+    color: #fff;
+    background-color: #384274;
+    border: none;
+}
+
+
+
+/* partie item */
+
+.container-contenu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.section-contenu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    flex-basis: 40%;
+    background-color: #384274;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    padding: 1%;
+}
+
+.section-contenu h3 {
+    color: #fff;
+    font-size: 30px;
+    font-weight: 500;
+    flex-basis: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.section-contenu h3 {
+    font-weight: bold;
+}
+
+.choisir-item {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.section-contenu button {
+    border: none;
+    background-color: transparent;
+    color: #fff;
+    cursor: pointer;
+}
+
+#ajouter-demande {
+    margin-bottom: 10px;
+    color: #384274;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 8px 30px;
+    transition: 0.2s;
+}
+
+#ajouter-demande:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    cursor: pointer;
+    color: #fff;
+}
+
+.section-contenu p {
+    color: #fff;
+    font-size: 30px;
+    margin: 0;
+}
