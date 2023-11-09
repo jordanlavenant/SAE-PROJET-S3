@@ -858,3 +858,11 @@ def afficher_bon_commande(cnx, idut):
     except:
         print("Erreur lors de l'affichage de la table")
         raise
+
+def delete_demande(idDemande):
+    try:
+        cnx.execute(text("DELETE FROM DEMANDE WHERE idDemande = " + str(idDemande) + ";"))
+        cnx.commit()
+    except:
+        print("Erreur lors de la suppression de la demande")
+        raise
