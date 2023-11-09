@@ -44,6 +44,7 @@
 
                 <!-- gestionnaire -->
                 {% if session['utilisateur'][1] == 4 %}
+                <li><a href="{{ url_for('consulter_bon_commande') }}">consulter bon de commande</a></li>
                 <li><a href="{{ url_for('commander') }}">commander</a></li>
                 <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
                 <li><a href="{{ url_for('alertes') }}">alertes</a></li>

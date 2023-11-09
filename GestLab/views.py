@@ -318,6 +318,21 @@ def bon_commande(id):
         title = "bon de commande",
         chemin = [("base", "Accueil"), ("commander", "Commander"), ('demandes', 'Bon de commande')]
     )
+@app.route("/consulterBonCommande/")
+def consulter_bon_commande():
+    info_bon_commande = afficher_table(get_cnx(), "BONCOMMANDETEST")
+    liste_info_user = []
+    for info in info_bon_commande:
+        info_user = get_all_information_utilisateur_with_id(get_cnx(), info[2])
+        liste_info_user.append(info_user)
+    return render_template(
+        "consulterBonCommande.html",
+        title="Consultation des Bon de Commande",
+        len = len(info_bon_commande),
+        bonCommande = info_bon_commande,
+        infoUser = liste_info_user,
+        chemin = [("base", "Accueil"), ('consulter_bon_commande', 'Consulter bon de commande')]
+    )
 
 @app.route("/delete-materiel/<int:idbc>/<int:idMat>", methods=("GET","POST",))
 def delete_materiel(idbc, idMat):
