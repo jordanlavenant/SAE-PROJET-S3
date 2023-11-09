@@ -288,8 +288,7 @@ def ajouter_materiel_unique(id):
 def commander_materiel_unique(id, idDemande):
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
-    ajout_materiel_in_commandeTest(cnx, idMat, id, qte)
-    # delete_demande(cnx, idDemande)
+    set_quantite_from_ajouterMat_to_boncommande(cnx, idDemande, id, False)
     return redirect(url_for('commander'))
 
 @app.route("/commander/")
@@ -557,10 +556,14 @@ def supprimer_materiel_unique(id):
 
 @app.route("/demandes/")
 def demandes():
+    print(get_nb_demande(cnx))
+    print(get_info_demande(cnx))
+
     return render_template(
     "demandes.html",
     title="Demandes",
     nb_demande = int(get_nb_demande(cnx)),
+    
     info_demande = get_info_demande(cnx),
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
     )

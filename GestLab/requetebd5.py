@@ -1,6 +1,6 @@
 import random
 import string
-import pyotp
+# import pyotp
 from sqlalchemy import text
 from .connexionPythonSQL import *
 from hashlib import sha256
@@ -444,13 +444,14 @@ def get_info_materiel_alert(cnx):
 
 def get_nb_demande(cnx):
     try:
-        result = cnx.execute(text("select nombreDemandesEnAttente();"))
+        result = cnx.execute(text("select nombreDemandesEnAttenteNul();"))
         for row in result:
             return row[0]
     except Exception as e:
         print("Erreur lors de la récupération du nombre de demandes :", str(e))
         raise
 
+get_nb_demande(cnx)
 #marhce BD 5
 def get_all_information_utilisateur_with_id(cnx,id):
     try:
@@ -589,7 +590,7 @@ def get_all_info_from_domaine(cnx):
 
 def get_info_demande(cnx):
     try:         
-        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
+        result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDETEST;"))
         info_commande = []
         for row in result:
             info_commande.append(row)
@@ -631,7 +632,7 @@ def get_domaine(cnx):
 
 def get_info_demande_with_id(cnx, idDemande):
     try:
-        result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel, idBonCommande from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL natural join BONCOMMANDE where idDemande =" + str(idDemande) + ";"))
+        result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel, idBonCommande from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL natural join BONCOMMANDETEST where idDemande =" + str(idDemande) + ";"))
         info_demande = []
         for row in result:
             info_demande.append(row)
@@ -871,9 +872,9 @@ def delete_demande(cnx, idDemande):
         print("Erreur lors de la suppression de la demande")
         raise
 
-def delete_materiel_unique_in_demande(cnx, idDemande, idMaterielUnique):
+def delete_materiel_unique_in_demande(cnx, idDemande, idMateriel):
     try:
-        cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMaterielUnique = " + str(idMaterielUnique) + ";"))
+        cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idMateriel) + ";"))
         cnx.commit()
     except:
         print("Erreur lors de la suppression du matériel unique dans la demande")
@@ -896,9 +897,11 @@ def set_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajouter
             ajout_materiel_in_commandeTest(cnx, row[0], idut, row[1], boolajouterMat)
         nbmat_in_demande = get_nb_materiel_unique_in_demande(cnx, idDemande)
         if nbmat_in_demande == 0:
-            delete_demande(idDemande)
+            delete_demande(cnx, idDemande)
         else:
             delete_materiel_unique_in_demande(cnx, idDemande, row[0])
+            if nbmat_in_demande == 0:
+                delete_demande(cnx, idDemande)
     except:
         print("Erreur lors de la mise à jour de la quantité dans la demande")
         raise
