@@ -632,9 +632,11 @@ def get_domaine(cnx):
 
 def get_info_demande_with_id(cnx, idDemande):
     try:
-        result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel, idBonCommande from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL natural join BONCOMMANDETEST where idDemande =" + str(idDemande) + ";"))
+        idetat = 1
+        result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel, idBonCommande from UTILISATEUR natural join BONCOMMANDETEST  natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL where idDemande = " + str(idDemande) + " and idEtat = " + str(idetat) + ";"))
         info_demande = []
         for row in result:
+            print(row)
             info_demande.append(row)
         return info_demande
     except Exception as e:
@@ -889,20 +891,30 @@ def get_nb_materiel_unique_in_demande(cnx, idDemande):
         print("Erreur lors de la récupération du nombre de matériel unique dans la demande")
         raise
 
+def set_tout_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajouterMat=False):
+    try:
+        result = cnx.execute(text("SELECT idMateriel,quantite from AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + ";"))
+        for row in result:
+            ajout_materiel_in_commandeTest(cnx, row[0], idut, row[1], boolajouterMat)
+            delete_materiel_unique_in_demande(cnx, idDemande, row[0])
+        nbmat_in_demande = get_nb_materiel_unique_in_demande(cnx, idDemande)
+        if nbmat_in_demande == 0:
+            delete_demande(cnx, idDemande)
+    except:
+        print("Erreur lors de la mise à jour de la quantité dans la demande")
+        raise
+
+
 def set_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajouterMat=False):
     try:
         result = cnx.execute(text("SELECT idMateriel,quantite from AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + ";"))
         for row in result:
-            print(row)
             ajout_materiel_in_commandeTest(cnx, row[0], idut, row[1], boolajouterMat)
+            delete_materiel_unique_in_demande(cnx, idDemande, row[0])
         nbmat_in_demande = get_nb_materiel_unique_in_demande(cnx, idDemande)
         if nbmat_in_demande == 0:
             delete_demande(cnx, idDemande)
-        else:
-            delete_materiel_unique_in_demande(cnx, idDemande, row[0])
-            if nbmat_in_demande == 0:
-                delete_demande(cnx, idDemande)
     except:
         print("Erreur lors de la mise à jour de la quantité dans la demande")
         raise
-set_quantite_from_ajouterMat_to_boncommande(cnx, 1,65,True)
+    
