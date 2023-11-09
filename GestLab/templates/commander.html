@@ -54,22 +54,22 @@
         </div>
     </div>
     <div class="container-contenu">
-            {% for item in liste_materiel %}
-                <section class="section-contenu">
-                    <h3>{{ item[2] }} - {{ item[3] }}</h3>
-                    <h3>{{ item[5] }}</h3> 
-                    <div class="choisir-item">
-                        <button class="bouton-moins">-</button>
-                        <p class="nb-choisit">{{ item[4] }}</p>
-                        <button class="bouton-plus">+</button>
-                    </div>
-                    <a class="{{ item[0] }} {{ item[4] }}" href="#"><button class="ajouter-commande" id="ajouter-commande">ajouter à la commande</button></a>
-                    <script>
-                        var maVariableJavaScript = "{{ item[4] }}"; 
-                        var idUser = "{{ idUser }}"; 
-                    </script>
-                </section>
-            {% endfor %}
+        {% for item in liste_materiel %}
+            <section class="section-contenu">
+                <h3>{{ item[2] }} - {{ item[3] }}</h3>
+                <h3>{{ item[5] }}</h3> 
+                <div class="choisir-item">
+                    <button class="bouton-moins">-</button>
+                    <p class="nb-choisit">{{ item[4] }}</p>
+                    <button class="bouton-plus">+</button>
+                </div>
+                <a class="{{ item[0] }} {{ item[4] }}" href="#"><button class="ajouter-commande" id="ajouter-commande">ajouter à la commande</button></a>
+                <script>
+                    var maVariableJavaScript = "{{ item[4] }}"; 
+                    var idUser = "{{ idUser }}"; 
+                </script>
+            </section>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
