@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS MATERIEL;
 DROP TABLE IF EXISTS ARCHIVECOMMANDE;
 DROP TABLE IF EXISTS FOURNISSEUR;
 DROP TABLE IF EXISTS RANGEMENT;
+DROP TABLE IF EXISTS ENDROIT;
 DROP TABLE IF EXISTS CATEGORIE;
 DROP TABLE IF EXISTS DOMAINE;
 DROP TABLE IF EXISTS RISQUE;
@@ -21,7 +22,6 @@ DROP TABLE IF EXISTS ETATCOMMANDE;
 DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
 DROP TABLE IF EXISTS TYPESALERTES;
-DROP TABLE IF EXISTS debug;
 
 create table STATUT(
     idStatut int not null,
@@ -72,11 +72,17 @@ create table RISQUES(
     primary key(idFDS, idRisque)
 );
 
+create table ENDROIT(
+    idEndroit int not null auto_increment,
+    endroit varchar(50) not null,
+    unique(endroit),
+    primary key(idEndroit)
+);
+
 create table RANGEMENT(
     idRangement int not null auto_increment,
-    endroit varchar(50) not null,
-    position varchar(50),
-    unique(endroit),
+    idEndroit int not null references ENDROIT,
+    position varchar(50) not null,
     primary key(idRangement)
 );
 
@@ -198,8 +204,3 @@ CREATE TABLE ALERTESENCOURS(
     idMaterielUnique int not null references MATERIELUNIQUE,
     primary key(idAlerte, idMaterielUnique)
 );
-
-CREATE TABLE debug(
-    test varchar(50),
-    primary key(test)
-) ;

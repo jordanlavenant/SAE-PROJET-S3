@@ -127,6 +127,30 @@ class AjouterMaterielForm(FlaskForm):
         seuilalerte = request.form['seuilalerte']
         return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
 
+class AjouterMaterielUniqueForm(FlaskForm):
+    endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
+    position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
+    date_reception = DateField('date_reception', validators=[DataRequired()])
+    date_peremption = DateField('date_peremption')
+    commentaire = TextAreaField('commentaire')
+    quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
+    next = HiddenField()
+
+    def get_full_materiel_unique(self):
+        position = self.position.data
+        date_reception = self.date_reception.data
+        date_peremption = self.date_peremption.data
+        commentaire = self.commentaire.data
+        quantite_approximative = self.quantite_approximative.data
+        return (position, date_reception, date_peremption, commentaire, quantite_approximative)
+    
+    def get_full_materiel_unique_requestform(self):
+        position = request.form['position']     
+        date_reception = request.form['date_reception'] 
+        date_peremption = request.form['date_peremption']
+        commentaire = request.form['commentaire']
+        quantite_approximative = request.form['quantite_approximative']
+        return (position, date_reception, date_peremption, commentaire, quantite_approximative)
 
 def get_domaine_choices():
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
@@ -142,6 +166,12 @@ def get_categorie_choices():
     categories = {str(id_): name for name, id_ in result}
     return jsonify(categories)
 
+
+def get_categorie_choices_modifier_materiel(idDomaine):
+    query = text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine =" + str(idDomaine) )
+    result = cnx.execute(query)
+    categories = [(str(id_), name) for name, id_ in result]
+    return categories
 
 @app.route("/ajouter-materiel/", methods=("GET","POST",))
 def ajouter_materiel():
@@ -163,6 +193,81 @@ def ajouter_materiel():
     title="Ajouter un matériel",
     AjouterMaterielForm=f,
     chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    )
+
+def get_endroit_choices():
+    query = text("SELECT endroit, idEndroit FROM ENDROIT;")
+    result = cnx.execute(query)
+    endroits =  [(str(id_), name) for name, id_ in result]
+    endroits.insert(0, ("", "Choisir un endroit de rangement"))
+    return endroits
+
+@app.route('/get_position_choices/', methods=['GET'])
+def get_position_choices():
+    selected_endroit_id = request.args.get('endroit_id')
+    result = cnx.execute(text("SELECT position, idRangement FROM RANGEMENT WHERE idEndroit = " + str(selected_endroit_id)))
+    positions = {str(id_): name for name, id_ in result}
+    return jsonify(positions)
+
+@app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
+def ajouter_materiel_unique(id):
+    f = AjouterMaterielUniqueForm()
+    f.endroit.choices = get_endroit_choices() 
+    if f.validate_on_submit() :
+        position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique()
+        res = insere_materiel_unique(cnx, id, position, date_reception, date_peremption, commentaire, quantite_approximative)
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de l'insertion du matériel")
+            return redirect(url_for('ajouter_materiel'))
+    else :
+        print("Erreur lors de la validation du formulaire")
+        print(f.errors)
+    return render_template(
+    "ajouterMaterielUnique.html",
+    title="Ajouter un matériel au stock",
+    AjouterMaterielUniqueForm=f,
+    id = id,
+    chemin = [("base", "Accueil")]
+    )
+
+@app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
+def modifier_materiel(id):
+    print("hee hee")
+    materiel = get_materiel(cnx, id)
+    idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
+                         
+    idDomaine = get_id_domaine_from_categorie(cnx, idCategorie)
+    f = AjouterMaterielForm()
+    f.nom.default = nomMateriel
+    f.reference.default = referenceMateriel
+    f.caracteristiques.default = caracteristiquesCompelmentaires
+    f.infossup.default = informationsComplementairesEtSecurite
+    f.seuilalerte.default = str(seuilAlerte)
+    f.domaine.choices = get_domaine_choices() 
+    f.domaine.default = str(idDomaine)
+    f.categorie.choices = get_categorie_choices_modifier_materiel(idDomaine)
+    f.categorie.default = str(idCategorie)
+    f.process()
+
+    if f.validate_on_submit() :
+        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel_requestform()
+        res = modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de la modification du matériel")
+            return redirect(url_for('inventaire'))
+    else :
+        print("Erreur lors de la validation du formulaire")
+        print(f.errors)
+    return render_template(
+    "modifierMateriel.html",
+    title="Modifier un matériel",
+    AjouterMaterielForm=f,
+    id = idMateriel,
+    chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
     )
 
 class A2FForm(FlaskForm):

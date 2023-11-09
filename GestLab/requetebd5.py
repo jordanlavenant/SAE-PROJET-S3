@@ -46,6 +46,24 @@ def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteris
     except sqlalchemy.exc.IntegrityError as e:
         print(f"SQL IntegrityError: {e}")
         return False
+    
+
+def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative):
+    try:
+        print(date_reception)
+        if date_peremption is None or date_peremption == 'None' :
+            date_peremption = "NULL"
+        else :
+            date_peremption = str(date_peremption)
+        cnx.execute(text("insert into MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) values ('" + str(id_materiel) + "', '" + position + "', '" + str(date_reception) + "', '" + date_peremption + "', '" + commentaire + "',  "+ str(quantite_approximative) + ");"))
+        cnx.commit()
+        return True
+    except sqlalchemy.exc.OperationalError as e:
+        print(f"SQL OperationalError: {e}")
+        return False
+    except sqlalchemy.exc.IntegrityError as e:
+        print(f"SQL IntegrityError: {e}")
+        return False
 
 
 #marche BD 5
@@ -661,3 +679,33 @@ def get_info_rechercheMateriel(cnx):
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
 
+
+def get_materiel(cnx, idMateriel) :
+    try:
+        materiel = []
+        result = cnx.execute(text("SELECT * FROM MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
+        for row in result:
+            materiel.append(row)
+        return materiel
+    except:
+        print("Erreur lors de la récupération du matériel")
+        raise
+
+def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
+    try:
+        if seuilalerte is None or seuilalerte == "None" :
+            seuilalerte = "NULL"
+        cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
+        cnx.commit()
+    except:
+        print("Erreur lors de la modification du matériel")
+        raise
+
+def get_id_domaine_from_categorie(cnx, id_categorie) :
+    try:
+        result = cnx.execute(text("SELECT idDomaine FROM CATEGORIE WHERE idCategorie = " + str(id_categorie) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération du domaine")
+        raise

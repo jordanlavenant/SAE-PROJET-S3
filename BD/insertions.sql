@@ -64,10 +64,18 @@ INSERT INTO RISQUES (idFDS, idRisque) VALUES
 (2, 2),
 (3, 3);
 
-INSERT INTO RANGEMENT (endroit, position) VALUES
-('Étagère 1', 'haut'),
-('Étagère 2', 'bas'),
-('Armoire 1', 'gauche');
+INSERT INTO ENDROIT (endroit) VALUES
+('Étagère 1'),
+('Étagère 2'),
+('Armoire 1');
+
+INSERT INTO RANGEMENT (idEndroit, position) VALUES
+(1, 'haut'),
+(2, 'bas'),
+(3, 'gauche'),
+(2, 'droite'),
+(1, 'milieu'),
+(3, 'milieu');
 
 INSERT INTO MATERIEL (referenceMateriel, seuilAlerte, idFDS, nomMateriel, idCategorie, caracteristiquesComplementaires, informationsComplementairesEtSecurite) VALUES
 ('REF123', 1, 1, 'Microscope électronique', 1, 'Microscope électronique haute résolution', "Utilisé pour observer des échantillons à l'échelle microscopique."),
