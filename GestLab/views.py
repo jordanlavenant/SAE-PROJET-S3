@@ -711,10 +711,3 @@ def get_categorie_choices_modifier_materiel(idDomaine):
     result = cnx.execute(query)
     categories = [(str(id_), name) for name, id_ in result]
     return categories
-
-@app.route('/get_categorie_choices/', methods=['GET'])
-def get_categorie_choices():
-    selected_domain_id = request.args.get('domaine_id')
-    result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
-    categories = {str(id_): name for name, id_ in result}
-    return jsonify(categories)
