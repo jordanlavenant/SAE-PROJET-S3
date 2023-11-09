@@ -68,6 +68,11 @@
     <main>
         {% block content %}
         {% endblock %}
+        <div class="fleche_haut">
+            <a class="fleche_haut_button">
+                <img src="{{  url_for('static',filename='./images/fleche-haut.png') }}" alt="fleche haut">
+            </a>
+        </div>
     </main>
     <footer class="footer">
         <div class="footer-haut">
@@ -139,6 +144,7 @@
             <p>© 2023 - gestlab - tous droits réservés</p>
         </div>
     </footer>
+    <script src="{{ url_for('static',filename='./js/flecheRemonter.js') }}"></script>
     {% block scripts %}
         <!-- Optional JavaScript -->
     {% endblock %}

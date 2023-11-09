@@ -43,7 +43,6 @@
 
 
 <div class="state-container">
-    <!-- <p class="{{ items_unique }}" id="items" style="display: none"></p> -->
     {% for item in items_unique[0] %}
         <div class="item-card" id="{{ item[3] }}">
             <div class="item-properties">
@@ -98,6 +97,7 @@
                         <div></div>
                     {% endif %}
                     <a id="btn-redirect-order" href="#">Commander</a>
+                    <a id="btn-redirect-order" href="{{ url_for('supprimer_materiel_unique', id=item[3]) }}">Supprimer</a>
                 </div>
             </div>
         </div>
