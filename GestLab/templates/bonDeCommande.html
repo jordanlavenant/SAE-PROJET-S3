@@ -4,14 +4,61 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/bonDeCommande.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('demandes') }}">Retour</a>
-{% for i in range(0, len) %}
-<div id="container-objet">
-    <div id="info">
-        <p class="texte_blanc"> {{infoCommande[i][3]}}</p>
-        <p class="texte_blanc"> Quantité: {{infoCommande[i][2]}}</p>
+{% if longueur > 0 %}
+<div class="header-container">
+    <div class="container-top">
+        <a class="lien-item" href="{{ url_for('commander') }}"><button id="btn-retour">retour</button></a>
     </div>
-    <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}">Voir le stock ></a>
+    <div class="search-content">
+        <input type="text" id="search-bar" placeholder="Chercher un matériel">
+        <button id="btn-search">Rechercher</button>
+    </div>
+    <div class="filter-container">
+        <p>trier par : </p>
+        <form action="/traiter" method="post">
+            <select name="cat" id="categorie-select">
+                <option value="aucun-tri">aucun tri</option>
+                {% for categorie in categories %}
+                    <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
 </div>
+<div class="container-valider">
+    <a id="btn-valider" href="{{ url_for('valider_bon_commande', id=idUser) }}">Valider la commande</a>
+</div>
+{% for item in liste_materiel %}
+<section class="section-contenu">
+    <div id="info">
+        <p class="texte_blanc">{{ item[2] }}</p>
+        <div class="container-qte">
+            <p class="texte_blanc"> Quantité :</p>
+            <button class="bouton-moins">-</button>
+            <p class="nb-choisit">{{ item[7] }}</p>
+            <button class="bouton-plus">+</button>
+        </div>
+    </div>
+    <a id="btn-voir" href="{{ url_for('delete_materiel', idMat=item[0], idbc=item[6]) }}">supprimer</a>
+</section>
 {%endfor%}
+<div class="popup" id="myPopup">
+    <div class="popup-content">
+        <h2>Confirmation</h2>
+        <p>Votre bon de commande a bien été envoyé !</p>
+        <p>Veuillez télécharger le pdf ci dessous</p>
+        <div class="container-pdf">
+            <a class="btn-retour-popup" href="{{ url_for('base') }}">Retour accueil</a>
+            <a href="#"><button id="btn-pdf">Télécharger PDF</button></a>
+        </div>
+    </div>
+</div>
+{% else %}
+<a id="btn-retour-rien" href="{{ url_for('commander') }}">retour</a>
+<p class="p-rien">Vous n'avez aucun materiel a commander</p>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='./js/ajusterVal.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/popup.js') }}"></script>
 {% endblock %}

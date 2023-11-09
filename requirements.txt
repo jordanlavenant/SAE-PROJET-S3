@@ -13,3 +13,4 @@
 # Werkzeug==2.2.2
 # WTForms==3.0.1
 # pip install pyotp
+# pip install pyqrcode

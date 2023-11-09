@@ -5,12 +5,48 @@
 {% endblock %}
 {% block content %}
 <a id="btn-back" href="{{ url_for('inventaire') }}">Retour</a>
+
+<div class="recap-container">
+    <div class="recap-item">
+        <div class="text">
+            {{ item_properties[1] }}
+        </div>
+        <div class="text">
+            <p>Domaine : </p>
+            <p>{{ item_properties[5] }}</p>
+        </div>
+        <div class="text">
+            <p>Catégorie : </p>
+            <p>{{ item_properties[3] }}</p>
+        </div>
+        <div class="text">
+            <p>Quantité : </p>
+            <p>{{ items_unique[1] }}</p>
+        </div>
+        <div class="text">
+            <p>Seuil alerte : </p>
+            <p>{{ item_properties[-4] }}</p>
+        </div>
+    </div>
+    <div class="hard-recap-item">
+        <div class="text">
+            <p>Caractéristiques complémentaires : </p>
+            <p>{{ item_properties[-3] }}</p>
+        </div>
+        <div class="text">
+            <p>Informations complémentaires et sécurité : </p>
+            <p>{{ item_properties[-2] }}</p>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="state-container">
-    {% for item in items_unique %}
-        <div class="item-card">
+    {% for item in items_unique[0] %}
+        <div class="item-card" id="{{ item[3] }}">
             <div class="item-properties">
                 <div class="header-container">
-                    <h2>{{ item_properties[1] }}</h2>
                     <a href="{{ url_for('commentaire') }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
                 </div>
                 <div class="date-reception">
@@ -36,14 +72,6 @@
                         <p class="quantite-content">-</p>
                     {% endif %}
                 </div>
-                <div class="categorie-container">
-                    <p class="categorie-label">Catégorie : </p>
-                    <p class="categorie-content">{{ item_properties[3] }}</p>
-                </div>
-                <div class="domaine-container">
-                    <p class="domaine-label">Domaine : </p>
-                    <p class="domaine-content">{{ item_properties[5] }}</p>
-                </div>
                 <div class="comment-container">
                     <p class="comment-label">Commentaire : </p>
                     {% if item[6] != None %}
@@ -53,14 +81,29 @@
                     {% endif %}
                 </div>
                 <div class="footer-state">
-                    <div class="alerts-state">
-                        <img id="attention-rouge" src="{{ url_for('static',filename='./images/attention-rouge.png') }}" alt="attention-rouge">
-                        <p class="texte_rouge">1 Alertes</p>
-                    </div>
+                    {% if item[3] in alertes.keys() %}
+                        <div class="alerts-state">
+                            <img id="attention-rouge" src="{{ url_for('static',filename='./images/attention-rouge.png') }}" alt="attention-rouge">
+                            <div class="alerts-statement">
+                                <p class="{{ alertes[item[0]] }} alerts_count" id="alerts_count_{{ item[3] }}">{{ alertes[item[3]] }}</p>
+                                {% if alertes[item[3]] > 1 %}
+                                    <p class="texte_rouge">Alertes</p>
+                                {% else %}
+                                    <p class="texte_rouge">Alerte</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div></div>
+                    {% endif %}
                     <a id="btn-redirect-order" href="#">Commander</a>
+                    <a id="btn-redirect-order" href="{{ url_for('supprimer_materiel_unique', id=item[3]) }}">Supprimer</a>
                 </div>
             </div>
         </div>
     {% endfor %}
 </div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='./js/etat.js') }}"></script>
 {% endblock %}
