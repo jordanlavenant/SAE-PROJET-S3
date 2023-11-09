@@ -7,6 +7,8 @@ DROP TABLE IF EXISTS AJOUTERMATERIEL;
 DROP TABLE IF EXISTS RECHERCHEMATERIELS;
 DROP TABLE IF EXISTS ALERTESENCOURS ;
 DROP TABLE IF EXISTS MATERIELUNIQUE;
+DROP TABLE IF EXISTS COMMANDE;
+DROP TABLE IF EXISTS BONCOMMANDETEST;
 DROP TABLE IF EXISTS MATERIEL;
 DROP TABLE IF EXISTS ARCHIVECOMMANDE;
 DROP TABLE IF EXISTS FOURNISSEUR;
@@ -19,7 +21,7 @@ DROP TABLE IF EXISTS FDS;
 DROP TABLE IF EXISTS BONCOMMANDE;
 DROP TABLE IF EXISTS DEMANDE;
 DROP TABLE IF EXISTS ETATCOMMANDE;
-DROP TABLE IF EXISTS UTILISATEUR;
+--DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
 DROP TABLE IF EXISTS TYPESALERTES;
 
@@ -153,6 +155,20 @@ create table ETATCOMMANDE(
     idEtat int not null auto_increment,
     nomEtat varchar(50) not null,
     primary key(idEtat)
+);
+
+create table BONCOMMANDETEST(
+    idBonCommandeTest int not null auto_increment,
+    idEtat int not null references ETATCOMMANDE,
+    idUtilisateur int not null references UTILISATEUR,
+    primary key(idBonCommandeTest)
+);
+
+create table COMMANDE(
+    idBonCommandeTest int not null references BONCOMMANDETEST,
+    idMateriel int not null references MATERIEL,
+    quantite int not null,
+    primary key(idBonCommandeTest,idMateriel)
 );
 
 create table BONCOMMANDE(

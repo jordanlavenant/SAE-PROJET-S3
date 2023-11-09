@@ -119,7 +119,7 @@ INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES
 --(1, 2, 5),
 
 INSERT INTO ETATCOMMANDE (nomEtat) VALUES
-('En attente'),
+('En attente de la validation du Gestionnaire'),
 ('En cours de traitement'),
 ('Expédiée'),
 ('Livrée');
@@ -127,6 +127,14 @@ INSERT INTO ETATCOMMANDE (nomEtat) VALUES
 INSERT INTO BONCOMMANDE (idDemande, idEtat, dateCommande) VALUES
 (1, 1, '2023-10-26 13:00:00'),
 (2, 2, '2023-10-26 14:00:00');
+
+INSERT INTO BONCOMMANDETEST (idEtat, idUtilisateur) VALUES
+(1, 1),
+(2, 1);
+
+INSERT INTO COMMANDE (idBonCommandeTest, idMateriel, quantite) VALUES
+(1, 1, 2),
+(1, 2, 5);
 
 INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
 (1, 'Entrepôt 1', 12345),
