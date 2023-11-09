@@ -260,43 +260,6 @@ def ajouter_materiel_unique(id):
     chemin = [("base", "Accueil")]
     )
 
-@app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
-def modifier_materiel(id):
-    print("hee hee")
-    materiel = get_materiel(cnx, id)
-    idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
-                         
-    idDomaine = get_id_domaine_from_categorie(cnx, idCategorie)
-    f = AjouterMaterielForm()
-    f.nom.default = nomMateriel
-    f.reference.default = referenceMateriel
-    f.caracteristiques.default = caracteristiquesCompelmentaires
-    f.infossup.default = informationsComplementairesEtSecurite
-    f.seuilalerte.default = str(seuilAlerte)
-    f.domaine.choices = get_domaine_choices() 
-    f.domaine.default = str(idDomaine)
-    f.categorie.choices = get_categorie_choices_modifier_materiel(idDomaine)
-    f.categorie.default = str(idCategorie)
-    f.process()
-
-    if f.validate_on_submit() :
-        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel_requestform()
-        res = modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
-        if res:
-            return redirect(url_for('inventaire'))
-        else:
-            print("Erreur lors de la modification du matériel")
-            return redirect(url_for('inventaire'))
-    else :
-        print("Erreur lors de la validation du formulaire")
-        print(f.errors)
-    return render_template(
-    "modifierMateriel.html",
-    title="Modifier un matériel",
-    AjouterMaterielForm=f,
-    id = idMateriel,
-    chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
-    )
 
 class A2FForm(FlaskForm):
     code = StringField('code', validators=[DataRequired()])
@@ -383,11 +346,11 @@ def reinitialiser_bon_commande(id):
     delete_all_materiel_in_commande(cnx, id)
     return redirect(url_for('commander'))
 
-@app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
-def ajouter_materiel_unique(id):
+@app.route("/commander-materiel-unique/<int:id>", methods=("GET","POST",))
+def commander_materiel_unique(id):
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
-    ajout_materiel_in_commandeTest(cnx, idMat, id, qte)
+    ajout_materiel_in_commandeTest(cnx, idMat, id, qte, False)
     return redirect(url_for('commander'))
 
 @app.route("/commander/")

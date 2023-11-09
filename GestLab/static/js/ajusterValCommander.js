@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(maVariableJavaScript);
 
         boutonAjout.addEventListener("click", function() {
-            url = `/ajouter-materiel-unique/${idUser}?idMat=${idMat}&qte=${maVariableJavaScript}`;
+            url = `/commander-materiel-unique/${idUser}?idMat=${idMat}&qte=${maVariableJavaScript}`;
             window.location.href = url;
         });
 
