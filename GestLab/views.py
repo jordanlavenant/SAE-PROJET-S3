@@ -312,6 +312,9 @@ def delete_materiel(idbc, idMat):
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
     changer_etat_bonCommande(cnx, id)
+     # Utilisation d'une boucle infinie pour l'attente
+    while True:
+        pass  # Cette boucle ne se termine jamais
     return redirect(url_for('base'))
 
 @app.route("/alertes/")

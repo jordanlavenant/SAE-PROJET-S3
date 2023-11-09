@@ -42,10 +42,23 @@
     <a id="btn-voir" href="{{ url_for('delete_materiel', idMat=item[0], idbc=item[6]) }}">supprimer</a>
 </section>
 {%endfor%}
+<div class="popup" id="myPopup">
+    <div class="popup-content">
+        <h2>Confirmation</h2>
+        <p>Votre bon de commande a bien été envoyé !</p>
+        <p>Veuillez télécharger le pdf ci dessous</p>
+        <div class="container-pdf">
+            <a class="btn-retour-popup" href="{{ url_for('base') }}">Retour accueil</a>
+            <a href="#"><button id="btn-pdf">Télécharger PDF</button></a>
+        </div>
+    </div>
+</div>
 {% else %}
+<a id="btn-retour-rien" href="{{ url_for('commander') }}">retour</a>
 <p class="p-rien">Vous n'avez aucun materiel a commander</p>
 {% endif %}
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='./js/ajusterVal.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/popup.js') }}"></script>
 {% endblock %}
