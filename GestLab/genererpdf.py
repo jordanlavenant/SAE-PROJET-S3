@@ -48,8 +48,8 @@ class PDF(FPDF):
         self.cell(38, 10, "Nom", border=True, align="C")
         self.cell(38, 10, "Quantité", border=True, align="C")
         self.cell(38, 10, "Réference", border=True, align="C")
-        self.cell(38, 10, "Domaine", border=True, align="C")
         self.cell(38, 10, "Categorie", border=True, align="C")
+        self.cell(38, 10, "Domaine", border=True, align="C")
         self.ln(10)
         print(liste_materiel)
         for materiel in liste_materiel:
