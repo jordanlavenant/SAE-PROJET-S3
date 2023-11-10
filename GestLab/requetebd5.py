@@ -828,6 +828,17 @@ def afficher_table(cnx, table):
         print("Erreur lors de l'affichage de la table")
         raise
 
+def consulter_bon_commande_without_table(cnx):
+    try:
+        idetat = 1
+        list = []
+        result = cnx.execute(text(" SELECT * FROM BONCOMMANDE WHERE idEtat != " + str(idetat) + ";"))
+        for row in result:
+            list.append(row)
+        return list
+    except:
+        print("Erreur lors de la récupération des commandes")
+        raise
 
 def get_materiel_commande(cnx,idbc):
     try:
@@ -883,6 +894,8 @@ def afficher_bon_commande(cnx, idut):
     except:
         print("Erreur lors de l'affichage de la table")
         raise
+
+    
 
 #marche / tester
 def get_bon_commande_with_id(cnx, idbc):

@@ -411,7 +411,7 @@ def bon_commande(id):
     )
 @app.route("/consulterBonCommande/")
 def consulter_bon_commande():
-    info_bon_commande = afficher_table(get_cnx(), "BONCOMMANDE")
+    info_bon_commande = consulter_bon_commande_without_table(cnx)
     liste_info_user = []
     for info in info_bon_commande:
         info_user = get_all_information_utilisateur_with_id(get_cnx(), info[2])
