@@ -974,3 +974,14 @@ def get_all_materiel_for_pdf_in_bon_commande(cnx, idut):
     except:
         print("Erreur lors de la récupération du matériel dans la commande")
         raise
+
+def get_all_materiel_for_pdf_in_bon_commande_after(cnx, idbc):
+    try:
+        result = cnx.execute(text("SELECT nomMateriel, referenceMateriel, nomDomaine,nomCategorie, quantite from COMMANDE NATURAL JOIN MATERIEL NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE WHERE idBonCommande = " + str(idbc) + ";"))
+        liste = []
+        for row in result:
+            liste.append(row)
+        return liste
+    except:
+        print("Erreur lors de la récupération du matériel dans la commande")
+        raise
