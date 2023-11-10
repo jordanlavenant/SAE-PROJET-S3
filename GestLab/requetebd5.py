@@ -962,3 +962,23 @@ def get_all_materiel_for_pdf_in_bon_commande( cnx, idut):
     except:
         print("Erreur lors de la récupération du matériel dans la commande")
         raise
+
+def get_statut_from_commande_with_id(cnx, id_etat):
+    try:
+        result = cnx.execute(text("SELECT nomEtat FROM ETATCOMMANDE WHERE idEtat = " + str(id_etat) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération du statut de la commande")
+        raise
+
+def get_statut_from_commande(cnx):
+    try:
+        result = cnx.execute(text("SELECT * FROM ETATCOMMANDE;"))
+        liste = []
+        for row in result:
+            liste.append(row)
+        return liste
+    except:
+        print("Erreur lors de la récupération du statut de la commande")
+        raise
