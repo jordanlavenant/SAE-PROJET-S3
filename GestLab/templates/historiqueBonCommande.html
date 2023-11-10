@@ -1,23 +1,18 @@
 {% extends 'base.html' %}
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static',filename='./css/bonDeCommande.css') }}">
+<link rel="stylesheet" href="{{ url_for('static',filename='./css/historiqueBonCommande.css') }}">
 {% endblock %}
 {% block content %}
-<div class="container-valider">
-    <a id="btn-valider" href="#">Generer le bon de commande</a>
-</div>
-{% for item in liste_materiel %}
-<section class="section-contenu">
-    <div id="info">
-        <p class="texte_blanc">{{ item[2] }}</p>
-        <div class="container-qte">
-            <p class="texte_blanc"> Quantité :</p>
-            <p class="nb-choisit">{{ item[4] }}</p>
-        </div>
+<a id="btn-back" href="{{ url_for('consulter_bon_commande') }}">Retour</a>
+<section class="info">
+    {% for i in range(0, len) %}
+    <div class="info-bon">
+        <p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p>
+        <p class="para">date</p>
+        <p class="statut">Livrée</p>
+        <a class="btn-consulter" href="/historique_bon_commande/?idbc={{ bonCommande[i][0] }}">Consulter le bon ></a>
     </div>
+    {% endfor %}
 </section>
-{%endfor%}
-{% endblock %}
-{% block scripts %}
 {% endblock %}
