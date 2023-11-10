@@ -130,7 +130,6 @@ def get_uri_with_email(cnx, email):
 def get_id_with_email(cnx, email):
     result = cnx.execute(text("select idUtilisateur from UTILISATEUR where email = '" + email + "';"))
     for row in result:
-        print(row[0])
         return row[0]
 
 def random_key():
@@ -197,9 +196,9 @@ def ajout_gestionnaire(cnx, nom, prenom, email):
         mdphash = hasher_mdp(mdpRandom)
         cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
         cnx.commit()
-        create_qr_code_nouvel_utlisateur(email, mdpRandom)
         id = get_id_with_email(cnx, email)
         ajout_gest_into_boncommande(cnx,id)
+        create_qr_code_nouvel_utlisateur(email, mdpRandom)
         print("utilisateur ajouté")
         
         return True
