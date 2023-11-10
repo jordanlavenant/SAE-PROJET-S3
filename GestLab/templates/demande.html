@@ -11,7 +11,7 @@
         <p class="texte_blanc"> {{infoCommande[i][3]}} - {{ infoCommande[i][5] }}</p>
         <p class="texte_blanc"> Quantité: {{infoCommande[i][2]}}</p>
     </div>
-    <a id="btn-voir" href="/commander-materiel-unique/{{ idUser }}?idMat={{ infoCommande[i][4] }}&qte={{ infoCommande[i][2] }}">Commander</a>
+    <a id="btn-voir" href="/commander-materiel-unique/{{ idUser }}?idMat={{ infoCommande[i][4] }}&qte={{ infoCommande[i][2] }}&idDemande={{ idDemande }}">Commander</a>
     <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}">Voir le stock</a>
 </div>
 {%endfor%}

@@ -888,7 +888,7 @@ def afficher_bon_commande(cnx, idut):
 #marche / tester
 def get_bon_commande_with_id(cnx, idbc):
     try:
-        result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires,referenceMateriel, quantite, informationsComplementairesEtSecurite, idFDS, idBonCommande FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+        result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires,referenceMateriel, quantite, informationsComplementairesEtSecurite, idFDS, idBonCommande FROM COMMANDE NATURAL JOIN MATERIEL natural join BONCOMMANDE WHERE idBonCommande = " + str(idbc) + " and idEtat != 1;"))
         liste = []
         for row in result:
             print(row)
@@ -898,8 +898,9 @@ def get_bon_commande_with_id(cnx, idbc):
         print("Erreur lors de la récupération du matériel dans la commande")
         raise
 
-def delete_demande(idDemande):
+def delete_demande(cnx,idDemande):
     try:
+        print("test")
         cnx.execute(text("DELETE FROM DEMANDE WHERE idDemande = " + str(idDemande) + ";"))
         cnx.commit()
     except:
@@ -911,6 +912,9 @@ def delete_materiel_unique_in_demande(cnx, idDemande, idMateriel):
     try:
         cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idMateriel) + ";"))
         cnx.commit()
+        nbmat_in_demande = get_nb_materiel_unique_in_demande(cnx, idDemande)
+        if nbmat_in_demande == 0:
+            delete_demande(cnx,idDemande)
     except:
         print("Erreur lors de la suppression du matériel unique dans la demande")
         raise
@@ -920,10 +924,19 @@ def get_nb_materiel_unique_in_demande(cnx, idDemande):
     try:
         result = cnx.execute(text("SELECT COUNT(*) FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) +  ";"))
         for row in result:
+            print(row[0])
+            print(row[0])
+            print(row[0])
+            print(row[0])
+            print(row[0])
+            print(row[0])
+            print(row[0])
             return row[0]
     except:
         print("Erreur lors de la récupération du nombre de matériel unique dans la demande")
         raise
+
+get_nb_materiel_unique_in_demande(cnx, 1)
     
 #marche / tester
 def set_all_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajouterMat=False):
@@ -932,9 +945,7 @@ def set_all_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajo
         for row in result:
             ajout_materiel_in_commande(cnx, row[0], idut, row[1], boolajouterMat)
             delete_materiel_unique_in_demande(cnx, idDemande, row[0])
-        nbmat_in_demande = get_nb_materiel_unique_in_demande(cnx, idDemande)
-        if nbmat_in_demande == 0:
-            delete_demande(idDemande)
+        
     except:
         print("Erreur lors de la mise à jour de la quantité dans la demande")
         raise
@@ -946,7 +957,6 @@ def get_all_materiel_for_pdf_in_bon_commande( cnx, idut):
         result = cnx.execute(text("SELECT nomMateriel, referenceMateriel, nomDomaine,nomCategorie, quantite from COMMANDE NATURAL JOIN MATERIEL NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE WHERE idBonCommande = " + str(idbc) + ";"))
         liste = []
         for row in result:
-            print(row)
             liste.append(row)
         return liste
     except:
