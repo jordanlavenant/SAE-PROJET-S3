@@ -344,12 +344,25 @@ def reinitialiser_bon_commande(id):
     delete_all_materiel_in_commande(cnx, id)
     return redirect(url_for('commander'))
 
+
+#manque id de la demande
 @app.route("/commander-materiel-unique/<int:id>", methods=("GET","POST",))
 def commander_materiel_unique(id):
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
-    ajout_materiel_in_commandeTest(cnx, idMat, id, qte, False)
+    ajout_materiel_in_commande(cnx, idMat, id, qte, False)
+    delete_materiel_unique_in_demande(cnx, idDemande, idMat)  #---------------------------------------------------LEO-----AIDE--------------------------------------# 
     return redirect(url_for('commander'))
+
+#Pour le bouton commander tout les materiels 
+
+# @app.route("/commander-all-materiel-unique/<int:id>", methods=("GET","POST",))
+# def commander_all_materiel_unique(id):
+#     idMat = request.args.get('idMat')
+#     qte = request.args.get('qte')
+#     ajout_materiel_in_commande(cnx, idMat, id, qte, False)
+#     set_all_quantite_from_ajouterMat_to_boncommande(cnx, idemande, id)  #---------------------------------------------------LEO-----AIDE--------------------------------------#  
+#     return redirect(url_for('commander'))
 
 @app.route("/commander/")
 def commander():
@@ -387,7 +400,7 @@ def bon_commande(id):
     )
 @app.route("/consulterBonCommande/")
 def consulter_bon_commande():
-    info_bon_commande = afficher_table(get_cnx(), "BONCOMMANDETEST")
+    info_bon_commande = afficher_table(get_cnx(), "BONCOMMANDE")
     liste_info_user = []
     for info in info_bon_commande:
         info_user = get_all_information_utilisateur_with_id(get_cnx(), info[2])
@@ -659,7 +672,7 @@ def demandes():
 def demande(idDemande):
     id_user = get_id_with_email(cnx, session['utilisateur'][2])
     info_commande = get_info_demande_with_id(get_cnx(), idDemande)
-    print(info_commande)
+
     return render_template(
         "demande.html",
         idDemande = idDemande,
