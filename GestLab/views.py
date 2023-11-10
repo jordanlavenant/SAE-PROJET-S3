@@ -1,5 +1,5 @@
 from .app import app #, db
-from flask import render_template, url_for, redirect, request, session, jsonify
+from flask import render_template, url_for, redirect, request, session, jsonify, send_file
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
@@ -452,6 +452,12 @@ def valider_bon_commande(id):
     while True:
         pass  # Cette boucle ne se termine jamais  
     return redirect(url_for('base'))
+
+@app.route("/valider-bon-commande-pdf/<int:id>", methods=("GET","POST",))
+def valider_bon_commande_pdf(id):
+    liste_materiel = get_all_materiel_for_pdf_in_bon_commande_after(cnx, id)
+    genererpdf(session['utilisateur'][0], session['utilisateur'][3], liste_materiel, str(id))
+    return send_file("static/data/bonCommande.pdf", as_attachment=True)
 
 @app.route("/alertes/")
 def alertes():
