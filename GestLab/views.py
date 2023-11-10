@@ -1,5 +1,5 @@
 from .app import app #, db
-from flask import render_template, url_for, redirect, request, session, jsonify
+from flask import render_template, url_for, redirect, request, session, jsonify, send_file
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
@@ -436,17 +436,13 @@ def delete_materiel(idbc, idMat):
 
 @app.route("/historique-bon-commande", methods=("GET","POST",))
 def historique_bon_commande():
-    info_bon_commande = afficher_table(get_cnx(), "BONCOMMANDE")
-    liste_info_user = []
-    for info in info_bon_commande:
-        info_user = get_all_information_utilisateur_with_id(get_cnx(), info[2])
-        liste_info_user.append(info_user)
+    idbc = request.args.get('idbc')
+    liste_materiel = get_bon_commande_with_id(cnx, idbc)
     return render_template(
         "historiqueBonCommande.html",
-        title="Historique des bons",
-        infoUser = liste_info_user,
-        bonCommande = info_bon_commande,
-        len = len(info_bon_commande),
+        liste_materiel = liste_materiel,
+        title="Bon de Commande N°"+str(idbc),
+        idbc = idbc,
         chemin = [("base", "Accueil"), ("consulter_bon_commande", "Consulter bon de commande"), ("historique_bon_commande", "Historique des Bon de Commande")]
     )
 
