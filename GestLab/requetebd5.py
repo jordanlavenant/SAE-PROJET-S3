@@ -49,9 +49,25 @@ def get_nom_dom_cat_materiel_with_id(cnx, id):
 #marche BD 5
 def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
     try:
-        if seuilAlerte == '' :
-            seuilAlerte = "NULL"
-        cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
+        if seuilAlerte == '':
+            seuilAlerte = None
+
+        cnx.execute(
+            text(
+                "INSERT INTO MATERIEL (idCategorie, nomMateriel, referenceMateriel, "
+                "caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) "
+                "VALUES (:idCategorie, :nomMateriel, :referenceMateriel, "
+                ":caracteristiquesComplementaires, :informationsComplementairesEtSecurite, :seuilAlerte);"
+            ),
+            {
+                "idCategorie": idCategorie,
+                "nomMateriel": nomMateriel,
+                "referenceMateriel": referenceMateriel,
+                "caracteristiquesComplementaires": caracteristiquesComplementaires,
+                "informationsComplementairesEtSecurite": informationsComplementairesEtSecurite,
+                "seuilAlerte": seuilAlerte,
+            },
+        )
         cnx.commit()
         return True
     except sqlalchemy.exc.OperationalError as e:
@@ -723,8 +739,28 @@ def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristique
     try:
         if seuilalerte is None or seuilalerte == "None" :
             seuilalerte = "NULL"
-        cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
+        
+        cnx.execute(
+            text(
+                "UPDATE MATERIEL SET idCategorie = :categorie, "
+                "nomMateriel = :nom, referenceMateriel = :reference, "
+                "caracteristiquesComplementaires = :caracteristiques, "
+                "informationsComplementairesEtSecurite = :infossup, "
+                "seuilAlerte = :seuilalerte WHERE idMateriel = :idMateriel;"
+            ),
+            {
+                "categorie": categorie,
+                "nom": nom,
+                "reference": reference,
+                "caracteristiques": caracteristiques,
+                "infossup": infossup,
+                "seuilalerte": seuilalerte,
+                "idMateriel": idMateriel,
+            },
+        )
         cnx.commit()
+        #cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
+        #cnx.commit()
     except:
         print("Erreur lors de la modification du matériel")
         raise
@@ -733,10 +769,26 @@ def modifie_materiel_unique(cnx, idMaterielUnique, idRangement, dateReception, d
     try:
         if datePeremption is None or datePeremption == 'None' or datePeremption == "" :
             datePeremption = "NULL"
-        else :
-            datePeremption = f"'{str(datePeremption)}'"
+        else:
+            datePeremption = str(datePeremption)
 
-        cnx.execute(text("UPDATE MATERIELUNIQUE SET idRangement = " + str(idRangement) + ", dateReception = '" + str(dateReception) + "', datePeremption = " + datePeremption + ", commentaireMateriel = '" + commentaireMateriel + "', quantiteApproximative = " + str(quantiteApproximative) + " WHERE idMaterielUnique = " + str(idMaterielUnique) + ";"))
+        cnx.execute(
+            text(
+                "UPDATE MATERIELUNIQUE SET idRangement = :idRangement, "
+                "dateReception = :dateReception, datePeremption = :datePeremption, "
+                "commentaireMateriel = :commentaireMateriel, "
+                "quantiteApproximative = :quantiteApproximative "
+                "WHERE idMaterielUnique = :idMaterielUnique;"
+            ),
+            {
+                "idRangement": idRangement,
+                "dateReception": dateReception,
+                "datePeremption": datePeremption,
+                "commentaireMateriel": commentaireMateriel,
+                "quantiteApproximative": quantiteApproximative,
+                "idMaterielUnique": idMaterielUnique,
+            },
+        )
         cnx.commit()
     except:
         print("Erreur lors de la modification du matériel unique")
