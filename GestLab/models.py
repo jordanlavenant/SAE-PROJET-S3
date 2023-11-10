@@ -394,4 +394,4 @@ def envoyer_mail_etat_demande(mailreceveur ,etat, liste_produit):
         smtp.send_message(msg)
         print("Mail envoyé")
         
-envoyer_mail_etat_demande("erwan.blandeau28@gmail.com", "En cours de traitement", [("test", 2), ("test2", 3), ("test3", 4), ("test4", 5), ("test5", 6)])
+#envoyer_mail_etat_demande("erwan.blandeau28@gmail.com", "En cours de traitement", [("test", 2), ("test2", 3), ("test3", 4), ("test4", 5), ("test5", 6)])

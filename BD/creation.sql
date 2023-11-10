@@ -23,9 +23,10 @@ DROP TABLE IF EXISTS FDS;
 DROP TABLE IF EXISTS BONCOMMANDE;
 DROP TABLE IF EXISTS DEMANDE;
 DROP TABLE IF EXISTS ETATCOMMANDE;
---DROP TABLE IF EXISTS UTILISATEUR;
+DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
 DROP TABLE IF EXISTS TYPESALERTES;
+DROP TABLE IF EXISTS 2FA;
 
 create table STATUT(
     idStatut int not null,
@@ -229,3 +230,10 @@ CREATE TABLE ALERTESENCOURS(
     idMaterielUnique int not null references MATERIELUNIQUE,
     primary key(idAlerte, idMaterielUnique)
 );
+
+CREATE TABLE 2FA(
+    email varchar(50) not null,
+    uri varchar(200) not null,
+    idUtilisateur int not null references UTILISATEUR,
+    primary key(email, idUtilisateur)
+) ;
