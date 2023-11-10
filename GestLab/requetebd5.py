@@ -759,8 +759,7 @@ def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristique
             },
         )
         cnx.commit()
-        #cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
-        #cnx.commit()
+        return True
     except:
         print("Erreur lors de la modification du matériel")
         raise

@@ -271,41 +271,6 @@ def ajouter_materiel_unique(id):
     chemin = [("base", "Accueil")]
     )
 
-@app.route("/modifier-materiel-unique/<int:id>", methods=("GET","POST",))
-def modifier_materiel_unique(id):
-    materiel = get_materiel_unique(cnx, id)
-    idMaterielUnique, idMateriel, idRangement, dateReception, commentaireMateriel, quantiteApproximative, datePeremption = materiel[0]
-    idEndroit = get_id_endroit_from_id_rangement(cnx, idRangement)
-    f = AjouterMaterielUniqueForm()
-    f.date_reception.default = dateReception
-    f.date_peremption.default = datePeremption
-    f.commentaire.default = commentaireMateriel
-    f.quantite_approximative.default = str(quantiteApproximative)
-    f.endroit.choices = get_endroit_choices() 
-    f.endroit.default = str(idRangement)
-    f.position.choices = get_position_choices_modifier_materiel(idRangement)
-    f.position.default = str(idEndroit)
-    f.process()
-
-    if f.validate_on_submit() :
-        position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique_requestform()
-        res = modifie_materiel_unique(cnx, id, position, date_reception, date_peremption, commentaire, quantite_approximative)
-        if res:
-            return redirect(url_for('etat', id=idMateriel))
-        else:
-            print("Erreur lors de l'insertion du matériel")
-            return redirect(url_for('etat', id=idMateriel))
-    else :
-        print("Erreur lors de la validation du formulaire")
-        print(f.errors)
-    return render_template(
-    "modifierMaterielUnique.html",
-    title="Modifier les informations d'un matériel en stock",
-    AjouterMaterielUniqueForm=f,
-    id=id,
-    chemin=[("base", "Accueil")]
-)
-
 class A2FForm(FlaskForm):
     code = StringField('code', validators=[DataRequired()])
     submit = SubmitField('Valider')
@@ -668,7 +633,7 @@ def modifier_materiel(id):
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel_requestform()
         res = modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
         if res:
-            return redirect(url_for('inventaire'))
+            return redirect(url_for('etat', id=idMateriel))
         else:
             print("Erreur lors de la modification du matériel")
             return redirect(url_for('inventaire'))
@@ -682,6 +647,41 @@ def modifier_materiel(id):
     id = idMateriel,
     chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
     )
+
+@app.route("/modifier-materiel-unique/<int:id>", methods=("GET","POST",))
+def modifier_materiel_unique(id):
+    materiel = get_materiel_unique(cnx, id)
+    idMaterielUnique, idMateriel, idRangement, dateReception, commentaireMateriel, quantiteApproximative, datePeremption = materiel[0]
+    idEndroit = get_id_endroit_from_id_rangement(cnx, idRangement)
+    f = AjouterMaterielUniqueForm()
+    f.date_reception.default = dateReception
+    f.date_peremption.default = datePeremption
+    f.commentaire.default = commentaireMateriel
+    f.quantite_approximative.default = str(quantiteApproximative)
+    f.endroit.choices = get_endroit_choices() 
+    f.endroit.default = str(idRangement)
+    f.position.choices = get_position_choices_modifier_materiel(idRangement)
+    f.position.default = str(idEndroit)
+    f.process()
+
+    if f.validate_on_submit() :
+        position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique_requestform()
+        res = modifie_materiel_unique(cnx, id, position, date_reception, date_peremption, commentaire, quantite_approximative)
+        if res:
+            return redirect(url_for('etat', id=idMateriel))
+        else:
+            print("Erreur lors de l'insertion du matériel")
+            return redirect(url_for('etat', id=idMateriel))
+    else :
+        print("Erreur lors de la validation du formulaire")
+        print(f.errors)
+    return render_template(
+    "modifierMaterielUnique.html",
+    title="Modifier les informations d'un matériel en stock",
+    AjouterMaterielUniqueForm=f,
+    id=id,
+    chemin=[("base", "Accueil")]
+)
 
 @app.route("/supprimer-materiel-unique/<int:id>", methods=("GET","POST",))
 def supprimer_materiel_unique(id):
