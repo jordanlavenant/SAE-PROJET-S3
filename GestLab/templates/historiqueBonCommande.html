@@ -4,15 +4,5 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/historiqueBonCommande.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('consulter_bon_commande') }}">Retour</a>
-<section class="info">
-    {% for i in range(0, len) %}
-    <div class="info-bon">
-        <p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p>
-        <p class="para">date</p>
-        <p class="statut">Livrée</p>
-        <a class="btn-consulter" href="/historique_bon_commande/?idbc={{ bonCommande[i][0] }}">Consulter le bon ></a>
-    </div>
-    {% endfor %}
-</section>
+
 {% endblock %}
