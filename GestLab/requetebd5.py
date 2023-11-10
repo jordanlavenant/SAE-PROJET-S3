@@ -963,7 +963,7 @@ def set_all_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajo
         raise
     
 
-def get_all_materiel_for_pdf_in_bon_commande( cnx, idut):
+def get_all_materiel_for_pdf_in_bon_commande(cnx, idut):
     try:
         idbc = get_id_bonCommande_actuel(cnx, idut)
         result = cnx.execute(text("SELECT nomMateriel, referenceMateriel, nomDomaine,nomCategorie, quantite from COMMANDE NATURAL JOIN MATERIEL NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE WHERE idBonCommande = " + str(idbc) + ";"))

@@ -445,12 +445,12 @@ def historique_bon_commande():
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
     idCommande = request.args.get('idCommande')
-    changer_etat_bonCommande(cnx, id)
     liste_materiel = get_all_materiel_for_pdf_in_bon_commande(cnx, id)
     print(liste_materiel)
+    changer_etat_bonCommande(cnx, id)
     genererpdf(session['utilisateur'][0], session['utilisateur'][3], liste_materiel, str(idCommande))
     while True:
-        pass  # Cette boucle ne se termine jamais
+        pass  # Cette boucle ne se termine jamais  
     return redirect(url_for('base'))
 
 @app.route("/alertes/")
