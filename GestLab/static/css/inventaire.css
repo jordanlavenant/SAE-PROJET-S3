@@ -2,8 +2,29 @@ a {
     text-decoration: none;
 }
 
+#btn-back {
+    color: white;
+    background-color: #384274;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+    margin: 10vh 10vw;
+}
+
+#btn-back:hover {
+    color: white;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+
 .inventaire-container-overall {
-    margin: 15vh 5vw;
+    margin: 5vh 5vw;
 }
 
 .header-container {
@@ -23,7 +44,7 @@ a {
     border-radius: 20px;
     border: none;
     padding: 0 30px;
-    font-size: 20px;
+    font-size: 25px;
     margin-bottom: 10px;
 }
 
@@ -34,7 +55,7 @@ a {
     background-color: #384274;
     padding: 0px 0px;
     border-radius: 20px;
-    font-size: 20px;
+    font-size: 25px;
     border: none;
     transition: 0.2s;
 }
@@ -65,8 +86,9 @@ a {
 #categorie-select {
     color: #fff;
     background-color: #384274;
+    font-family: 'Alumni Sans', sans-serif;
     border-radius: 20px;
-    font-size: 20px;
+    font-size: 25px;
     padding: 10px 60px;
     border: none;
 }
@@ -102,7 +124,7 @@ a {
 .item-properties {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     flex-basis: 100%;
     padding: 1% 5%;
 }
@@ -118,7 +140,7 @@ a {
     flex-direction: row;
     justify-content: space-between;
     color: white;
-    font-size: 30px;
+    font-size: 25px;
 }
 
 .quantity-container > p {
@@ -130,20 +152,15 @@ a {
     flex-direction: row;
     justify-content: space-between;
     color: white;
-    font-size: 30px;
+    font-size: 25px;
 }
-
-/* .btn-container {
-    display: flex;
-    flex-direction: row-reverse;
-} */
 
 #btn-redirect-item {
     color: #384274;
     background-color: white;
     padding: 14px 40px;
     border-radius: 25px;
-    font-size: 20px;
+    font-size: 25px;
     border: none;
     transition: 0.2s;
 }
@@ -154,6 +171,35 @@ a {
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
+}
+
+.alerts-state {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#attention-rouge{
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.alerts-statement {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.alerts_count{
+    color: #d35252;
+    align-items: center;
+    margin: 0;
+}
+
+.texte_rouge{
+    color: #d35252;
+    align-items: center;
+    margin: 0;
 }
 
 @media screen and (max-width: 1000px) {

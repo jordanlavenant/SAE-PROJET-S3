@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='./css/base.css') }}">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static',filename='./images/favicon/apple-touch-icon') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static',filename='./images/favicon/favicon-32x32') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='./images/favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static',filename='./images/favicon/site.webmanifest') }}">
     {% block styles %}
     <!-- css -->
     {% endblock %}
@@ -22,29 +27,31 @@
                 <!-- admin -->
                 {% if session['utilisateur'][1] == 1 %} 
                 <li><a href="{{ url_for('utilisateurs') }}">utilisateurs</a></li>
+                <li><a href="{{ url_for('ajouter_utilisateur') }}">ajouter utilisateur</a></li>
                 {% endif %}
 
                 <!-- professeur -->
                 {% if session['utilisateur'][1] == 2 %}
-                <li><a href="{{ url_for('demander') }}">demander</a></li>
                 <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
-                <li><a href="{{ url_for('commentaire') }}">Signaler des alertes</a></li>
+                <li><a href="{{ url_for('commentaire') }}">envoyer commentaire</a></li>
+                {% endif %}
+
+                <!-- laborantin -->
+                {% if session['utilisateur'][1] == 3 %}
+                <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
+                <li><a href="{{ url_for('demander') }}">demander</a></li>
+                <li><a href="{{ url_for('ajouter_materiel') }}">ajouter materiel</a></li>
                 {% endif %}
 
                 <!-- gestionnaire -->
-                {% if session['utilisateur'][1] == 3 %}
+                {% if session['utilisateur'][1] == 4 %}
+                <li><a href="{{ url_for('consulter_bon_commande') }}">consulter bon de commande</a></li>
                 <li><a href="{{ url_for('commander') }}">commander</a></li>
                 <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
                 <li><a href="{{ url_for('alertes') }}">alertes</a></li>
                 <li><a href="{{ url_for('demandes') }}">demandes</a></li>
                 {% endif %}
 
-                <!-- laborantin -->
-                {% if session['utilisateur'][1] == 4 %}
-                <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
-                <li><a href="{{ url_for('demander') }}">demander</a></li>
-                <li><a href="{{ url_for('ajouter_materiel') }}">ajouter materiel</a></li>
-                {% endif %}
 
                 {% endif %}
                 <li><a class="profil" href="{{ url_for('login') }}"><img src="{{ url_for('static',filename='./images/compte.png') }}" alt="logo compte"></a></li>
@@ -63,16 +70,81 @@
     <main>
         {% block content %}
         {% endblock %}
+        <div class="fleche_haut">
+            <a class="fleche_haut_button">
+                <img src="{{  url_for('static',filename='./images/fleche-haut.png') }}" alt="fleche haut">
+            </a>
+        </div>
     </main>
     <footer class="footer">
         <div class="footer-haut">
-            <img class="logo-academie" src="{{ url_for('static',filename='./images/Logo_Academie-Orleans-Tours.png') }}" alt="logo lycée François Villon">
-            
+            <div class="images">
+                <img src="{{ url_for('static',filename='./images/republique_francaise.png') }}" alt="république française" id="republique_francaise_banner">
+                <img src="{{ url_for('static',filename='./images/Logo_Academie-Orleans-Tours.png') }}" alt="" id="academie_orleans_tours">
+            </div>
+            {% if 'utilisateur' in session %}
+            <div class="plan-du-site">
+                <h4>Plan du site : </h4>
+                <!-- Admin -->
+                {% if session['utilisateur'][1] == 1 %}
+                <ul>
+                    <li><a href="{{ url_for('utilisateurs') }}">Utilisateurs</a></li>
+                </ul>
+                {% endif %}
+                
+                <!-- Professeur -->
+                {% if session['utilisateur'][1] == 2 %}
+                <ul>
+                    <li><a href="{{ url_for('inventaire') }}, target=_blank">Inventaire</a></li>
+                    <li><a href="{{ url_for('commentaire') }}">Commentaire</a></li>
+                </ul>
+                {% endif %}
+
+                <!-- Gestionnaire -->
+                {% if session['utilisateur'][1] == 3 %}
+                <ul>
+                    <li><a href="commander">Commander</a></li>
+                    <li><a href="inventaire">Inventaire</a></li>
+                    <li><a href="alertes">Alertes</a></li>
+                    <li><a href="demandes">Demandes</a></li>
+                </ul>
+                {% endif %}
+
+                <!-- Laborantin -->
+                {% if session['utilisateur'][1] == 4 %}
+                <ul>
+                    <li><a href="demander">Demander</a></li>
+                    <li><a href="inventaire">Inventaire</a></li>
+                    <li><a href="ajouter_materiel">Ajouter</a></li>
+                    <li><a href="commentaire">Commentaire</a></li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+            <div class="utilitaires">
+                <h4>Utilitaires : </h3>
+                <ul>
+                    <li><a href="https://www.legtfrancoisvillon.fr/v3/">Lycée François Villon</a></li>                    
+                    <li><a href="https://ent.netocentre.fr/cas/login?service=https://lycees.netocentre.fr/portail/Login%3FrefUrl%3D%2Fportail%2Ff%2Faccueil%2Fnormal%2Frender.uP&token=020e78251cdefbdfe0365d73cad6a32e">ENT</a></li>                    
+                </ul>
+            </div>
+
+            <div class="workers">
+                <h4>Réalisé par : </h3>
+                <ul>
+                    <li>BLANDEAU Erwan</li>
+                    <li>LALLIER Anna</li>
+                    <li>LAVENANT Jordan</li>
+                    <li>LUCIDOR Léo</li>
+                    <li>PILET Colin</li>
+                </ul>
+            </div>
         </div>
         <div class="footer-bas">
             <p>© 2023 - gestlab - tous droits réservés</p>
         </div>
     </footer>
+    <script src="{{ url_for('static',filename='./js/flecheRemonter.js') }}"></script>
     {% block scripts %}
         <!-- Optional JavaScript -->
     {% endblock %}

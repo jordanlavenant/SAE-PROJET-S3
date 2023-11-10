@@ -1,0 +1,98 @@
+#btn-back {
+    color: white;
+    background-color: #384274;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-back:hover {
+    color: white;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#btn-redirect-history {
+    margin-left: 10vw;
+    color: white;
+    background-color: #384274;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-redirect-history:hover {
+    color: white;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.btns-header {
+    display: flex;
+    justify-content: space-around;
+}
+
+.info {
+    margin-left: 26vw;
+    margin-right: 30vw;
+    margin-bottom: 3%;
+    margin-top: 3%;
+    border-radius: 1em;
+    width: 50%;
+    border: solid #384274 2px;
+    padding:  1%;
+}
+
+.info-bon {
+    display: flex;
+    margin: 1%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.info-user {
+    font-weight: bold;
+    width: 12vw;
+}
+
+.btn-consulter {
+    color: #384274;
+    transition: .2s;
+}
+
+.btn-consulter:hover {
+    color: #384274;
+    transform: scale(1.1);
+    transition: .2s;
+}
+
+.btn-consulter {
+    color: #384274;
+}
+
+.para {
+    margin: 0;
+    color: #384274;
+    font-variant: small-caps;
+}
+
+#statut {
+    width: 15%;
+    color: white;
+    background-color: #384274;
+    border-radius: 1em;
+    border: none;
+    padding: 1% 3%;
+
+}
+

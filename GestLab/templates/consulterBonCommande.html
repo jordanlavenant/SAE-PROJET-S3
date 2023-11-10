@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static',filename='./css/consulterBonCommande.css') }}">
+{% endblock %}
+{% block content %}
+<div class="btns-header">
+    <a id="btn-back" href="{{ url_for('base') }}">Retour</a>
+    <a id="btn-redirect-history" href="{{ url_for('historique_bon_commande') }}">Historique des bons</a>
+</div>
+<section class="info">
+    {% for i in range(0, len) %}
+    <div class="info-bon">
+        <p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p>
+        <p class="para">Date</p>
+        <select name="" id="statut">
+            {% for statut in statutsCommande %}
+                {% if listeEtat[i][0] == statut[0] %}
+                    <option selected="selected" value="{{ statut[0] }}">{{ statut[1] }}</option>
+                {% else %}
+                    <option value="{{ statut[0] }}">{{ statut[1] }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <a class="btn-consulter" href="/historique-bon-commande?idbc={{ bonCommande[i][0] }}">Consulter le bon ></a>
+    </div>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/inventaire.css') }}">
 {% endblock %}
 {% block content %}
+<a id="btn-back" href="{{ url_for('base') }}">Retour</a>
 <div class="inventaire-container-overall">
     <div class="header-container">
         <div class="search-content">
@@ -23,16 +24,31 @@
         </div>
     </div>
     <div class="item-container">
-        {% for item in items %}
-            <div class="item">
+        <p id="lenItem" class="{{ items[1] }}" style="display: none;"></p>
+        {% for (item,count) in items[0] %}
+            <div class="item" id="{{ item[0] }}">
                 <div class="item-properties">
                     <h2>{{ item[1] }}</h2>
                     <div class="quantity-container">
                         <p class="quantity-label">Quantité : </p>
-                        <p class="quantity">{{ item[6] }} unités</p>
+                        <p class="quantity">{{ count }} unités</p>
                     </div>
                     <div class="footer-properties">
-                        <div>azklejrk</div>
+                        {% if item[0] in alertes.keys() %}
+                            <div class="alerts-state">
+                                <img id="attention-rouge" src="{{ url_for('static',filename='./images/attention-rouge.png') }}" alt="attention-rouge">
+                                <div class="alerts-statement">
+                                    <p class="{{ alertes[item[0]] }} alerts_count" id="alerts_count_{{ item[0] }}">{{ alertes[item[0]] }}</p>
+                                    {% if alertes[item[0]] > 1%}
+                                        <p class="texte_rouge">Alertes</p>
+                                    {% else %}
+                                        <p class="texte_rouge">Alerte</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div></div>
+                        {% endif %}
                         <a id="btn-redirect-item" href="{{ url_for('etat',id=item[0]) }}">Détails</a>
                     </div>
                 </div>
@@ -40,4 +56,7 @@
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='./js/inventaire.js') }}"></script>
 {% endblock %}

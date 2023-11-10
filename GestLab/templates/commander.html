@@ -4,16 +4,75 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/commander.css') }}">
 {% endblock %}
 {% block content %}
-<div class="container-main">
-    <a href="{{ url_for('commander_materiel') }}">
-        <section class="carte-lien">
-            <h2>COMMANDER PAR MOI MÊME</h2>
-        </section>
-    </a>
-    <a href="{{ url_for('bon_commande') }}">
-        <section class="carte-lien">
-            <h2>VOIR LES BONS DE COMMANDES</h2>
-        </section>
-    </a>
+<div class="commander-container-overall">
+    <div class="header-container">
+        <div class="container-top">
+            <a class="lien-item" href="{{ url_for('base') }}"><button id="btn-retour">retour</button></a>
+            <div class="container-alertes-demandes">
+                <section class="section-alertes">
+                    {% if alertes|int > 0 %}
+                        <img src="../static/images/attention-rouge.png" alt="logo alertes">
+                        {% if alertes|int == 1 %}
+                        <p>{{ alertes }} Alerte</p>
+                        {% else %}
+                        <p>{{ alertes }} Alertes</p>
+                        {% endif %}
+                        <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
+                    {% endif %}
+                </section>
+                <section class="section-demandes">
+                    {% if demandes|int > 0 %}
+                        <img src="../static/images/attention-orange.png" alt="logo demandes">
+                        {% if demandes|int == 1 %}
+                        <p>{{ demandes }} Demande</p>
+                        {% else %}
+                        <p>{{ demandes }} Demandes</p>
+                        {% endif %}
+                        <a href="{{ url_for('demandes') }}">Consulter les demandes ></a>
+                    {% endif %}
+                </section>
+            </div>
+            <a class="lien-item" href="{{ url_for('bon_commande', id=idbc) }}"><button id="btn-retour">Voir le bon de commande</button></a>
+        </div>
+        <div class="search-content">
+            <input type="text" id="search-bar" placeholder="Chercher un matériel">
+            <button id="btn-search">Rechercher</button>
+        </div>
+        <div class="filter-container">
+            <div class="filter-sous-container">
+                <p>trier par : </p>
+                <form action="/traiter" method="post">
+                    <select name="cat" id="categorie-select">
+                        <option value="aucun-tri">aucun tri</option>
+                        {% for categorie in categories %}
+                            <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+            <a href="{{ url_for('reinitialiser_bon_commande', id=idUser) }}"><button id="btn-reset">réinitialiser le bon de commande</button></a>
+        </div>
+    </div>
+    <div class="container-contenu">
+        {% for item in liste_materiel %}
+            <section class="section-contenu">
+                <h3>{{ item[1] }} - {{ item[3] }}</h3>
+                <h3>{{ item[5] }}</h3>
+                <div class="choisir-item">
+                    <button class="bouton-moins">-</button>
+                    <p class="nb-choisit">{{ item[4] }}</p>
+                    <button class="bouton-plus">+</button>
+                </div>
+                <a class="{{ item[0] }} {{ item[4] }}" href="#"><button class="ajouter-commande" id="ajouter-commande">ajouter à la commande</button></a>
+                <script>
+                    var maVariableJavaScript = "{{ item[4] }}"; 
+                    var idUser = "{{ idUser }}"; 
+                </script>
+            </section>
+        {% endfor %}
+    </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='./js/ajusterValCommander.js') }}"></script>
 {% endblock %}

@@ -4,7 +4,7 @@
 
 ## Versions
 
-* Version actuelle : v1.0 le 27/10/2023
+* Version actuelle : v2.0 le 10/11/2023
 
 ## Membres 
 
@@ -27,6 +27,9 @@ LAVENANT Jordan
     pip install flask-wtf
     pip install flask-login
     pip install werkzeug
+    pip install fpdf
+    pip install qrcode
+    pip install pyotp
 
 ## Démarrage de l'application
 
@@ -71,27 +74,41 @@ Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée
 - Création des fonctions pour hash les mots de passe 24/10/2023
 - Creation des procedures et triggers à partir du 24/10/2023
 - Création des maquettes à partir du 24/10/2023
-- Création des fonctions requêtes afin de rendre l'implémentation du site fonctionnelle (tout au long de la semaine)
+- Création des fonctions requêtes afin de rendre l'implémentation du site fonctionnelle (tout au long des semaines)
 - Début de l'implémentation des maquettes à partir du 24/10/2023
+- Harmonisation des maquettes et de l'implémentation des vues (tout au long de la deuxieme semaine)
+- Authentification à 2 facteurs via l'api de Google (07/11/2023)
+- Génération d'un fichier PDF récapitulatif d'un bon de commande (09/11/2023)
+- Gestions des stocks (insertions, modifications, suppresions)
+- Gestions des demandes, commandes et bons de commandes
+- Gestions des alertes
+- Gestions des signalement sur des matériels
+- Gestion des commantaires 
+- Gestion de l'adresse mail de l'application
+
 
 ## Problèmes rencontrés
 
 - Mauvaise compréhension de certaines notions du sujet qui nous ont mener à avancer dans la mauvaise direction, dû à un manque de renseignement de notre part
+- Redirections entres les vues parfois très complexes, et peu rigoureux
+- Factorisation du modèles et des contrôleurs très imparfaites
+- Possibilités de modifier le mot de passe de tous les utilisateurs si on avait leur adresse-mail correspondante => Authentification à 2 facteurs
 
 ## Identifiants pour se connecter
 
 Compte adminitrateur  
-> ``leo@``  
-``leo``
+
+> ``erwan.blandeau28@gmail.com``  
+``erwan``
 
 Compte gestionnaire 
-> ``gest@``  
-``gest``
+> ``leo.lucidor@gmail.com``  
+``leo``
 
 Compte professeur  
-> ``proff@``  
-``proff``  
+> ``anna.lallier@gmail.com``  
+``anna``  
 
 Compte laborantin  
-> ``labo@``  
-``labo``
+> ``jordan.lavenant@laposte.net``  
+``jordan``

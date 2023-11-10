@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterMaterielUnique.css') }}">
+{% endblock %}
+{% block content %}
+<a id="btn-back" href="{{ url_for('consulter_utilisateur') }}">retour</a>
+<div class="ajouterMateriel-container">
+    <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('ajouter_materiel_unique', id=id) }}">
+        {{ AjouterMaterielUniqueForm.hidden_tag() }}
+
+        <div class="left-side-info">
+
+            <div class="user-box domaine-container">
+                <p>Emplacement : </p>
+                <div>{{ AjouterMaterielUniqueForm.endroit(size=auto, class_="comboBox dom-select") }}</div>
+            </div>
+
+            <div class="user-box categorie-container">
+                <p>Position : </p>
+                <div>{{ AjouterMaterielUniqueForm.position(size=auto, class_="comboBox cat-select") }}</div>
+            </div>
+
+            <div class="pair-info">
+                <div class="user-box date-reception-container">
+                    <p>Date de réception : </p>
+                    <div>{{ AjouterMaterielUniqueForm.date_reception(size=10, class_="form-control element", placeholder="Date de réception") }}</div>
+                </div>
+
+                <div class="user-box date-peremption-container">
+                    <p>Date de péremption / étalonnage : </p>
+                    <div>{{ AjouterMaterielUniqueForm.date_peremption(size=10, class_="form-control element", placeholder="Date de péremption / étalonnage") }}</div>
+                </div>
+            </div>
+        
+            <div class="pair-info">
+                <div class="user-box quantite-container">
+                    <p>Quantité Approximative : </p>
+                    <div>{{ AjouterMaterielUniqueForm.quantite_approximative(size=10, class_="form-control element", placeholder="Quantité Approximative", value=quantite_approximative) }}</div>
+                </div>
+            </div>
+        
+        </div>
+
+        <div class="right-side-info">
+
+            <div class="user-box description-container">
+                <div>{{ AjouterMaterielUniqueForm.commentaire(size=20, class_="form-control text-area", placeholder="Commentaire", value=commentaire,cols="30", rows="10") }}</div> 
+            </div>
+
+            <div class="valid-container">
+                <input type="submit" value="Ajouter matériel" class="element submit">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const endroitSelect = document.getElementById("endroit");
+        const positionSelect = document.getElementById("position");
+
+        endroitSelect.addEventListener("change", function() {
+            const selectedDomaine = endroitSelect.value;
+            fetch(`/get_position_choices?endroit_id=${selectedDomaine}`)
+                .then(response => response.json())
+                .then(data => {
+                    positionSelect.innerHTML = '';
+                    for (const [key, value] of Object.entries(data)) {
+                        const option = document.createElement("option");
+                        option.value = key;
+                        option.text = value;
+                        positionSelect.appendChild(option);
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+    });
+</script>
+{% endblock %}

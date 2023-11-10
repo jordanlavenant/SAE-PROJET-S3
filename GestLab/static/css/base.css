@@ -20,7 +20,7 @@ input {
 
 a {
     text-decoration: none;
-    font-size: 25px;
+    /* font-size: 25px; */
 }
 
 ul {
@@ -30,6 +30,11 @@ ul {
 header {
     position: relative;
     margin-bottom: 2em;
+}
+
+::selection {
+    background-color: #FFFF00; /* Jaune */
+    color: #384274; /* Couleur du texte en surbrillance */
 }
 
 /* titre */
@@ -146,6 +151,72 @@ header {
 
 .footer-haut {
     background-color: #384274;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 1% 3%;
+    justify-content: space-between;
+    color: #fff;
+}
+
+.footer-haut > * {
+    padding: 3%;
+}
+
+.footer-haut a {
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    transition: 0.2s;
+}
+
+.footer-haut a:hover {
+    margin: 0;
+    padding: 0;
+    color: #009AF0;
+}
+
+.footer-haut h4 {
+    margin: 0;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.footer-haut ul {
+    padding: 0;
+    margin-left: 20px;
+}
+
+.images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+}
+
+#republique_francaise_banner, 
+#academie_orleans_tours {
+    max-width: 150px;
+    height: auto;
+}
+
+.utilitaires {
+    display: flex;
+    flex-direction: column;
+}
+
+.workers {
+    display: flex;
+    flex-direction: column;
+}
+
+.plan-du-site ul, 
+.utilitaires ul, 
+.workers ul {
+    font-size: 25px;
+    padding: 0;
+    margin: 0;
 }
 
 .footer-bas {
@@ -162,4 +233,25 @@ header {
 .logo-academie {
     max-width: 200px;
     margin: 0 10px;
+}
+
+@media screen and (max-width: 741px) {
+    .footer-haut {
+        gap: 30px;
+    }
+}
+
+/* fleche pour remonter en haut */
+
+.fleche_haut {
+    position: fixed;
+    width: 25px;
+    height: 25px;
+    bottom: 50px;
+    right: 30px;
+}
+
+.fleche_haut img {
+    width: 40px;
+    cursor: pointer;
 }
