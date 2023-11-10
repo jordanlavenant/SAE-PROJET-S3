@@ -1,4 +1,4 @@
-from fpdf import FPDF
+from fpdf import FPDF #pip install fpdf
 import datetime
 
 title = "GestLab"
@@ -37,7 +37,12 @@ class PDF(FPDF):
         self.cell(0, 10, "Bon de commande n°"+numero_commande + " - " + date, ln=1, align="C")
         self.ln(10)
 
-
+    def cree_par(self, nom, prenom):
+        self.set_font('Arial', 'I', 12)
+        self.cell(0, 10, "Crée par le gestionnaire: " + nom + " " + prenom, ln=1, align="C")
+        self.ln(10)
+        
+        
     def affiche_materiel(self, liste_materiel):
         self.set_font('Arial', 'B', 10)
         self.cell(38, 10, "Nom", border=True, align="C")
@@ -46,13 +51,14 @@ class PDF(FPDF):
         self.cell(38, 10, "Domaine", border=True, align="C")
         self.cell(38, 10, "Categorie", border=True, align="C")
         self.ln(10)
+        print(liste_materiel)
         for materiel in liste_materiel:
             self.set_font('Arial', '', 8)
             self.cell(38, 10, materiel[0], border=True, align="C")
+            self.cell(38, 10, str(materiel[4]), border=True, align="C")
             self.cell(38, 10, materiel[1], border=True, align="C")
-            self.cell(38, 10, materiel[2], border=True, align="C")
             self.cell(38, 10, materiel[3], border=True, align="C")
-            self.cell(38, 10, materiel[4], border=True, align="C")
+            self.cell(38, 10, materiel[2], border=True, align="C")
             self.ln(10)
 
 
@@ -61,9 +67,7 @@ def genererpdf(nom,prenom,liste_materiel, numero_commande):
     my_pdf = PDF()
     my_pdf.add_page()
     my_pdf.afficher_numero_commande(numero_commande, datetime.datetime.now().strftime("%d/%m/%Y"))
+    my_pdf.cree_par(nom, prenom)
     my_pdf.affiche_materiel(liste_materiel)
     my_pdf.output("./GestLab/static/data/bonCommande.pdf")
 
-
-# liste_materiel = [["bouteillebouteillebouteilleeeeeeeeeef", "2", "ref1", "domaine1", "categorie1"], ["bouteille", "4", "ref1", "domaine1", "categorie1"], ["bouteille", "2", "ref1", "domaine1", "categorie1"], ["bouteille", "2", "ref1", "domaine1", "categorie1"], ["bouteille", "2", "ref1", "domaine1", "categorie1"], ["bouteille", "2", "ref1", "domaine1", "categorie1"], ["bouteille", "2", "ref1", "domaine1", "categorie1"], ["bouteille", "2", "ref1", "domaine1", "categorie1"], ["bouteille", "2", "ref1", "domaine1", "categorie1"]]
-# genererpdf("blandeau","erwan",liste_materiel, "1")

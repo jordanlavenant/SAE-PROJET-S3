@@ -828,6 +828,17 @@ def afficher_table(cnx, table):
         print("Erreur lors de l'affichage de la table")
         raise
 
+def consulter_bon_commande_without_table(cnx):
+    try:
+        idetat = 1
+        list = []
+        result = cnx.execute(text(" SELECT * FROM BONCOMMANDE WHERE idEtat != " + str(idetat) + ";"))
+        for row in result:
+            list.append(row)
+        return list
+    except:
+        print("Erreur lors de la récupération des commandes")
+        raise
 
 def get_materiel_commande(cnx,idbc):
     try:
@@ -883,6 +894,8 @@ def afficher_bon_commande(cnx, idut):
     except:
         print("Erreur lors de l'affichage de la table")
         raise
+
+    
 
 #marche / tester
 def get_bon_commande_with_id(cnx, idbc):
@@ -950,9 +963,20 @@ def set_all_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajo
         raise
     
 
-def get_all_materiel_for_pdf_in_bon_commande( cnx, idut):
+def get_all_materiel_for_pdf_in_bon_commande(cnx, idut):
     try:
         idbc = get_id_bonCommande_actuel(cnx, idut)
+        result = cnx.execute(text("SELECT nomMateriel, referenceMateriel, nomDomaine,nomCategorie, quantite from COMMANDE NATURAL JOIN MATERIEL NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE WHERE idBonCommande = " + str(idbc) + ";"))
+        liste = []
+        for row in result:
+            liste.append(row)
+        return liste
+    except:
+        print("Erreur lors de la récupération du matériel dans la commande")
+        raise
+
+def get_all_materiel_for_pdf_in_bon_commande_after(cnx, idbc):
+    try:
         result = cnx.execute(text("SELECT nomMateriel, referenceMateriel, nomDomaine,nomCategorie, quantite from COMMANDE NATURAL JOIN MATERIEL NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE WHERE idBonCommande = " + str(idbc) + ";"))
         liste = []
         for row in result:
