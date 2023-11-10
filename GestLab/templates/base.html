@@ -82,9 +82,8 @@
                 <img src="{{ url_for('static',filename='./images/republique_francaise.png') }}" alt="république française" id="republique_francaise_banner">
                 <img src="{{ url_for('static',filename='./images/Logo_Academie-Orleans-Tours.png') }}" alt="" id="academie_orleans_tours">
             </div>
+            {% if 'utilisateur' in session %}
             <div class="plan-du-site">
-                {% if 'utilisateur' in session %}
-
                 <h4>Plan du site : </h4>
                 <!-- Admin -->
                 {% if session['utilisateur'][1] == 1 %}
@@ -120,9 +119,8 @@
                     <li><a href="commentaire">Commentaire</a></li>
                 </ul>
                 {% endif %}
-
-                {% endif %}
             </div>
+            {% endif %}
             <div class="utilitaires">
                 <h4>Utilitaires : </h3>
                 <ul>
