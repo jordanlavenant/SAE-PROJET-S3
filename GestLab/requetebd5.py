@@ -48,6 +48,10 @@ def get_nom_dom_cat_materiel_with_id(cnx, id):
 
 def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
     try:
+        if seuilAlerte == '' :
+            seuilAlerte = "NULL"
+        cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
+        """
         if seuilAlerte == '':
             seuilAlerte = None
 
@@ -66,7 +70,7 @@ def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteris
                 "informationsComplementairesEtSecurite": informationsComplementairesEtSecurite,
                 "seuilAlerte": seuilAlerte,
             },
-        )
+        )"""
         cnx.commit()
         return True
     except sqlalchemy.exc.OperationalError as e:
@@ -736,8 +740,8 @@ def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristique
     try:
         if seuilalerte is None or seuilalerte == "None" :
             seuilalerte = "NULL"
-        
-        cnx.execute(
+        cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
+        """cnx.execute(
             text(
                 "UPDATE MATERIEL SET idCategorie = :categorie, "
                 "nomMateriel = :nom, referenceMateriel = :reference, "
@@ -754,7 +758,7 @@ def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristique
                 "seuilalerte": seuilalerte,
                 "idMateriel": idMateriel,
             },
-        )
+        )"""
         cnx.commit()
         return True
     except:
@@ -765,9 +769,11 @@ def modifie_materiel_unique(cnx, idMaterielUnique, idRangement, dateReception, d
     try:
         if datePeremption is None or datePeremption == 'None' or datePeremption == "" :
             datePeremption = "NULL"
-        else:
-            datePeremption = str(datePeremption)
+        else :
+            datePeremption = f"'{str(datePeremption)}'"
 
+        cnx.execute(text("UPDATE MATERIELUNIQUE SET idRangement = " + str(idRangement) + ", dateReception = '" + str(dateReception) + "', datePeremption = " + datePeremption + ", commentaireMateriel = '" + commentaireMateriel + "', quantiteApproximative = " + str(quantiteApproximative) + " WHERE idMaterielUnique = " + str(idMaterielUnique) + ";"))
+        """
         cnx.execute(
             text(
                 "UPDATE MATERIELUNIQUE SET idRangement = :idRangement, "
@@ -785,6 +791,7 @@ def modifie_materiel_unique(cnx, idMaterielUnique, idRangement, dateReception, d
                 "idMaterielUnique": idMaterielUnique,
             },
         )
+        """
         cnx.commit()
     except:
         print("Erreur lors de la modification du matériel unique")
@@ -1065,26 +1072,4 @@ def get_all_materiel_for_pdf_in_bon_commande_after(cnx, idbc):
         return liste
     except:
         print("Erreur lors de la récupération du matériel dans la commande")
-        raise
-
-def get_statut_from_commande_with_id(cnx, id_etat):
-    try:
-        result = cnx.execute(text("SELECT idEtat, nomEtat FROM ETATCOMMANDE WHERE idEtat = " + str(id_etat) + ";"))
-        liste = []
-        for row in result:
-            liste.append(row[0])
-        return liste
-    except:
-        print("Erreur lors de la récupération du statut de la commande")
-        raise
-
-def get_statut_from_commande(cnx):
-    try:
-        result = cnx.execute(text("SELECT * FROM ETATCOMMANDE;"))
-        liste = []
-        for row in result:
-            liste.append(row)
-        return liste
-    except:
-        print("Erreur lors de la récupération du statut de la commande")
         raise
