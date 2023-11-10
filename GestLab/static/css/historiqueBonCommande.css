@@ -1,4 +1,5 @@
 #btn-back {
+    margin-left: 10vw;
     color: white;
     background-color: #384274;
     padding: 14px 40px;
@@ -76,23 +77,15 @@
     transition: .2s;
 }
 
-.btn-consulter {
-    color: #384274;
-}
-
 .para {
     margin: 0;
     color: #384274;
-    font-variant: small-caps;
 }
 
-#statut {
-    width: 15%;
-    color: white;
+.statut {
     background-color: #384274;
+    color: white;
+    margin: 0;
+    padding: 0 3%;
     border-radius: 1em;
-    border: none;
-    padding: 1% 3%;
-
 }
-
