@@ -181,7 +181,7 @@ BEGIN
     declare fini BOOLEAN default false;
 
     declare infosCommandes cursor for
-        SELECT idArchiveBonCommande, idBonCommande, idMateriel, quantite FROM COMMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ARCHIVEBONCOMMANDEWHERE WHERE idBonCommande = new.idBonCommande and idEtat = 4 ;
+        SELECT idArchiveBonCommande, idBonCommande, idMateriel, quantite FROM COMMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ARCHIVEBONCOMMANDE WHERE idBonCommande = new.idBonCommande and idEtat = 4 ;
     
     declare continue handler for not found set fini = true ;
     open infosCommandes ;

@@ -46,12 +46,27 @@ def get_nom_dom_cat_materiel_with_id(cnx, id):
         print("erreur de l'id")
         raise
 
-#marche BD 5
 def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
     try:
-        if seuilAlerte == '' :
-            seuilAlerte = "NULL"
-        cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
+        if seuilAlerte == '':
+            seuilAlerte = None
+
+        cnx.execute(
+            text(
+                "INSERT INTO MATERIEL (idCategorie, nomMateriel, referenceMateriel, "
+                "caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) "
+                "VALUES (:idCategorie, :nomMateriel, :referenceMateriel, "
+                ":caracteristiquesComplementaires, :informationsComplementairesEtSecurite, :seuilAlerte);"
+            ),
+            {
+                "idCategorie": idCategorie,
+                "nomMateriel": nomMateriel,
+                "referenceMateriel": referenceMateriel,
+                "caracteristiquesComplementaires": caracteristiquesComplementaires,
+                "informationsComplementairesEtSecurite": informationsComplementairesEtSecurite,
+                "seuilAlerte": seuilAlerte,
+            },
+        )
         cnx.commit()
         return True
     except sqlalchemy.exc.OperationalError as e:
@@ -60,16 +75,15 @@ def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteris
     except sqlalchemy.exc.IntegrityError as e:
         print(f"SQL IntegrityError: {e}")
         return False
-    
 
 def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative):
     try:
-        print(date_reception)
-        if date_peremption is None or date_peremption == 'None' :
+        if date_peremption is None or date_peremption == 'None' or date_peremption == "" :
             date_peremption = "NULL"
         else :
-            date_peremption = str(date_peremption)
-        cnx.execute(text("insert into MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) values ('" + str(id_materiel) + "', '" + position + "', '" + str(date_reception) + "', '" + date_peremption + "', '" + commentaire + "',  "+ str(quantite_approximative) + ");"))
+            date_peremption = f"'{str(date_peremption)}'"
+
+        cnx.execute(text("insert into MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) values ('" + str(id_materiel) + "', '" + position + "', '" + str(date_reception) + "', " + date_peremption + ", '" + commentaire + "',  "+ str(quantite_approximative) + ");"))
         cnx.commit()
         return True
     except sqlalchemy.exc.OperationalError as e:
@@ -696,7 +710,6 @@ def get_info_rechercheMateriel(cnx):
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
 
-
 def get_materiel(cnx, idMateriel) :
     try:
         materiel = []
@@ -708,14 +721,82 @@ def get_materiel(cnx, idMateriel) :
         print("Erreur lors de la récupération du matériel")
         raise
 
+def get_materiel_unique(cnx, idMaterielUnique) :
+    try:
+        materiel = []
+        result = cnx.execute(text("SELECT * FROM MATERIELUNIQUE WHERE idMaterielUnique = " + str(idMaterielUnique) + " ;"))
+        for row in result:
+            materiel.append(row)
+        return materiel
+    except:
+        print("Erreur lors de la récupération du matériel unique")
+        raise
+
 def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
     try:
         if seuilalerte is None or seuilalerte == "None" :
             seuilalerte = "NULL"
-        cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
+        
+        cnx.execute(
+            text(
+                "UPDATE MATERIEL SET idCategorie = :categorie, "
+                "nomMateriel = :nom, referenceMateriel = :reference, "
+                "caracteristiquesComplementaires = :caracteristiques, "
+                "informationsComplementairesEtSecurite = :infossup, "
+                "seuilAlerte = :seuilalerte WHERE idMateriel = :idMateriel;"
+            ),
+            {
+                "categorie": categorie,
+                "nom": nom,
+                "reference": reference,
+                "caracteristiques": caracteristiques,
+                "infossup": infossup,
+                "seuilalerte": seuilalerte,
+                "idMateriel": idMateriel,
+            },
+        )
         cnx.commit()
+        return True
     except:
         print("Erreur lors de la modification du matériel")
+        raise
+
+def modifie_materiel_unique(cnx, idMaterielUnique, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) :
+    try:
+        if datePeremption is None or datePeremption == 'None' or datePeremption == "" :
+            datePeremption = "NULL"
+        else:
+            datePeremption = str(datePeremption)
+
+        cnx.execute(
+            text(
+                "UPDATE MATERIELUNIQUE SET idRangement = :idRangement, "
+                "dateReception = :dateReception, datePeremption = :datePeremption, "
+                "commentaireMateriel = :commentaireMateriel, "
+                "quantiteApproximative = :quantiteApproximative "
+                "WHERE idMaterielUnique = :idMaterielUnique;"
+            ),
+            {
+                "idRangement": idRangement,
+                "dateReception": dateReception,
+                "datePeremption": datePeremption,
+                "commentaireMateriel": commentaireMateriel,
+                "quantiteApproximative": quantiteApproximative,
+                "idMaterielUnique": idMaterielUnique,
+            },
+        )
+        cnx.commit()
+    except:
+        print("Erreur lors de la modification du matériel unique")
+        raise
+
+def get_id_endroit_from_id_rangement(cnx, idRangement) :
+    try:
+        result = cnx.execute(text("SELECT idEndroit FROM RANGEMENT WHERE idRangement = " + str(idRangement) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération de l'id de l'endroit")
         raise
 
 def get_id_domaine_from_categorie(cnx, id_categorie) :
