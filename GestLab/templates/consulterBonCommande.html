@@ -12,12 +12,14 @@
     {% for i in range(0, len) %}
     <div class="info-bon">
         <p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p>
-        <p class="para">date</p>
+        <p class="para">{{ listeEtat[i][0] }}</p>
         <select name="" id="statut">
             {% for statut in statutsCommande %}
-                {% if listeEtat[i] == statut[0] %}
+                {% if listeEtat[i][0] == statut[0] %}
+                    <script>console.log("oui");</script>
                     <option selected="selected" value="{{ statut[0] }}">{{ statut[1] }}</option>
                 {% else %}
+                    <script>console.log("non");</script>
                     <option value="{{ statut[0] }}">{{ statut[1] }}</option>
                 {% endif %}
             {% endfor %}
@@ -26,7 +28,4 @@
     </div>
     {% endfor %}
 </section>
-{% endblock %}
-{% block scripts %}
-<script src="{{ url_for('static', filename='./js/consulterBonCommande.js') }}"></script>
 {% endblock %}
