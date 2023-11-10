@@ -104,11 +104,11 @@
                 <div class="btns">
                     {% if session['utilisateur'][1] == 4 %}
                         <a id="btn-redirect-order" href="#">Commander</a>
-                        <a id="btn-redirect-order" href="#">Modifier</a>
+                        <a id="btn-redirect-order" href="{{ url_for('modifier_materiel_unique', id=item[3]) }}">Modifier</a>
                         <a id="btn-redirect-order" href="{{ url_for('supprimer_materiel_unique', id=item[3]) }}">Supprimer</a>
                     {% endif %}
                     {% if session['utilisateur'][1] == 3 %}
-                        <a id="btn-redirect-order" href="#">Modifier</a>
+                        <a id="btn-redirect-order" href="{{ url_for('modifier_materiel_unique', id=item[3]) }}">Modifier</a>
                         <a id="btn-redirect-order" href="{{ url_for('supprimer_materiel_unique', id=item[3]) }}">Supprimer</a>
                     {% endif %}
                 </div>

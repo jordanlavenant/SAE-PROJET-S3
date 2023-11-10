@@ -708,6 +708,17 @@ def get_materiel(cnx, idMateriel) :
         print("Erreur lors de la récupération du matériel")
         raise
 
+def get_materiel_unique(cnx, idMaterielUnique) :
+    try:
+        materiel = []
+        result = cnx.execute(text("SELECT * FROM MATERIELUNIQUE WHERE idMaterielUnique = " + str(idMaterielUnique) + " ;"))
+        for row in result:
+            materiel.append(row)
+        return materiel
+    except:
+        print("Erreur lors de la récupération du matériel unique")
+        raise
+
 def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
     try:
         if seuilalerte is None or seuilalerte == "None" :
@@ -716,6 +727,29 @@ def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristique
         cnx.commit()
     except:
         print("Erreur lors de la modification du matériel")
+        raise
+
+def modifie_materiel_unique(cnx, idMaterielUnique, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) :
+    try:
+        print("datepe")
+        print(datePeremption)
+        if datePeremption is None or datePeremption == 'None' or datePeremption == "" :
+            datePeremption = "NULL"
+        else :
+            datePeremption = f"'{str(datePeremption)}'"
+        cnx.execute(text("UPDATE MATERIELUNIQUE SET idRangement = " + str(idRangement) + ", dateReception = '" + str(dateReception) + "', datePeremption = " + datePeremption + ", commentaireMateriel = '" + commentaireMateriel + "', quantiteApproximative = " + str(quantiteApproximative) + " WHERE idMaterielUnique = " + str(idMaterielUnique) + ";"))
+        cnx.commit()
+    except:
+        print("Erreur lors de la modification du matériel unique")
+        raise
+
+def get_id_endroit_from_id_rangement(cnx, idRangement) :
+    try:
+        result = cnx.execute(text("SELECT idEndroit FROM RANGEMENT WHERE idRangement = " + str(idRangement) + ";"))
+        for row in result:
+            return row[0]
+    except:
+        print("Erreur lors de la récupération de l'id de l'endroit")
         raise
 
 def get_id_domaine_from_categorie(cnx, id_categorie) :
