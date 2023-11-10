@@ -345,14 +345,23 @@ def reinitialiser_bon_commande(id):
     return redirect(url_for('commander'))
 
 
-#manque id de la demande
 @app.route("/commander-materiel-unique/<int:id>", methods=("GET","POST",))
 def commander_materiel_unique(id):
     idDemande = request.args.get('idDemande')
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
     ajout_materiel_in_commande(cnx, idMat, id, qte, False)
-    delete_materiel_unique_in_demande(cnx, idDemande, idMat)  #---------------------------------------------------LEO-----AIDE--------------------------------------# 
+    # delete_materiel_unique_in_demande(cnx, idDemande, idMat)
+    set
+    return redirect(url_for('commander'))
+
+@app.route("/commander-demande-materiel-unique/<int:id>", methods=("GET","POST",))
+def commander_demande_materiel_unique(id):
+    idDemande = request.args.get('idDemande')
+    idMat = request.args.get('idMat')
+    qte = request.args.get('qte')
+    ajout_materiel_in_commande(cnx, idMat, id, qte, True)
+    delete_materiel_unique_in_demande(cnx, idDemande, idMat)
     set
     return redirect(url_for('commander'))
 
