@@ -64,12 +64,12 @@ def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteris
 
 def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative):
     try:
-        print(date_reception)
-        if date_peremption is None or date_peremption == 'None' :
+        if date_peremption is None or date_peremption == 'None' or date_peremption == "" :
             date_peremption = "NULL"
         else :
-            date_peremption = str(date_peremption)
-        cnx.execute(text("insert into MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) values ('" + str(id_materiel) + "', '" + position + "', '" + str(date_reception) + "', '" + date_peremption + "', '" + commentaire + "',  "+ str(quantite_approximative) + ");"))
+            date_peremption = f"'{str(date_peremption)}'"
+
+        cnx.execute(text("insert into MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) values ('" + str(id_materiel) + "', '" + position + "', '" + str(date_reception) + "', " + date_peremption + ", '" + commentaire + "',  "+ str(quantite_approximative) + ");"))
         cnx.commit()
         return True
     except sqlalchemy.exc.OperationalError as e:
@@ -731,12 +731,11 @@ def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristique
 
 def modifie_materiel_unique(cnx, idMaterielUnique, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) :
     try:
-        print("datepe")
-        print(datePeremption)
         if datePeremption is None or datePeremption == 'None' or datePeremption == "" :
             datePeremption = "NULL"
         else :
             datePeremption = f"'{str(datePeremption)}'"
+
         cnx.execute(text("UPDATE MATERIELUNIQUE SET idRangement = " + str(idRangement) + ", dateReception = '" + str(dateReception) + "', datePeremption = " + datePeremption + ", commentaireMateriel = '" + commentaireMateriel + "', quantiteApproximative = " + str(quantiteApproximative) + " WHERE idMaterielUnique = " + str(idMaterielUnique) + ";"))
         cnx.commit()
     except:

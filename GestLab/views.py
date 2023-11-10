@@ -4,7 +4,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
 from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Optional
 from wtforms import PasswordField
 from hashlib import sha256
 from .requetebd5 import *
@@ -12,6 +12,7 @@ from .connexionPythonSQL import *
 from .models import *
 import time
 from .genererpdf import *
+import datetime
 
 cnx = get_cnx()
 
@@ -156,8 +157,8 @@ class AjouterMaterielForm(FlaskForm):
 class AjouterMaterielUniqueForm(FlaskForm):
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
     position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
-    date_reception = DateField('date_reception', validators=[DataRequired()])
-    date_peremption = DateField('date_peremption')
+    date_reception = DateField('date_reception', validators=[DataRequired()], default =  datetime.datetime.now().date())
+    date_peremption = DateField('date_peremption', validators=[Optional()])
     commentaire = TextAreaField('commentaire')
     quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
     next = HiddenField()
@@ -245,15 +246,21 @@ def get_position_choices_modifier_materiel(idEndroit):
 def ajouter_materiel_unique(id):
     f = AjouterMaterielUniqueForm()
     f.endroit.choices = get_endroit_choices() 
+
     if f.validate_on_submit() :
         position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique()
+        print("datepppppppp")
+        print(date_peremption)
         res = insere_materiel_unique(cnx, id, position, date_reception, date_peremption, commentaire, quantite_approximative)
         if res:
-            return redirect(url_for('inventaire'))
+            return redirect(url_for('etat', id=id))
         else:
             print("Erreur lors de l'insertion du matériel")
             return redirect(url_for('ajouter_materiel'))
     else :
+        position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique()
+        print("datepppppppp")
+        print(date_peremption)
         print("Erreur lors de la validation du formulaire")
         print(f.errors)
     return render_template(
@@ -268,7 +275,6 @@ def ajouter_materiel_unique(id):
 def modifier_materiel_unique(id):
     materiel = get_materiel_unique(cnx, id)
     idMaterielUnique, idMateriel, idRangement, dateReception, commentaireMateriel, quantiteApproximative, datePeremption = materiel[0]
-    
     idEndroit = get_id_endroit_from_id_rangement(cnx, idRangement)
     f = AjouterMaterielUniqueForm()
     f.date_reception.default = dateReception
