@@ -348,10 +348,10 @@ def update_prenom_utilisateur(cnx, email, new_prenom):
 
 #marche BD 5
 def get_nom_and_statut_and_email(cnx, email):
-    result = cnx.execute(text("select nom, idStatut from UTILISATEUR where email = '" + email + "';"))
+    result = cnx.execute(text("select nom, idStatut, prenom from UTILISATEUR where email = '" + email + "';"))
     for row in result:
-        print(row[0], row[1])
-        return (row[0], row[1], email)
+        print(row[0], row[1], row[2], email)
+        return (row[0], row[1], email, row[2])
 
 #marche BD 5
 def get_user_with_statut(cnx, nomStatut):
@@ -886,6 +886,18 @@ def afficher_bon_commande(cnx, idut):
         raise
 
 #marche / tester
+def get_bon_commande_with_id(cnx, idbc):
+    try:
+        result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires,referenceMateriel, quantite, informationsComplementairesEtSecurite, idFDS, idBonCommande FROM COMMANDETEST NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+        liste = []
+        for row in result:
+            print(row)
+            liste.append(row)
+        return liste
+    except:
+        print("Erreur lors de la récupération du matériel dans la commande")
+        raise
+
 def delete_demande(idDemande):
     try:
         cnx.execute(text("DELETE FROM DEMANDE WHERE idDemande = " + str(idDemande) + ";"))
@@ -927,6 +939,7 @@ def set_all_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajo
         print("Erreur lors de la mise à jour de la quantité dans la demande")
         raise
     
+
 def get_all_materiel_for_pdf_in_bon_commande( cnx, idut):
     try:
         idbc = get_id_bonCommande_actuel(cnx, idut)

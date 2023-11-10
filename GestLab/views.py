@@ -11,7 +11,7 @@ from .requetebd5 import *
 from .connexionPythonSQL import *
 from .models import *
 import time
-
+from .genererpdf import *
 
 cnx = get_cnx()
 
@@ -22,12 +22,10 @@ class LoginForm(FlaskForm):
 
     def get_authenticated_user(self):
         user = get_nom_and_statut_and_email(cnx, self.email.data)
+        print(user)
         mdp = get_password_with_email(cnx, self.email.data)
         if user is None:
             return None
-        # m = sha256()
-        # m.update(self.password.data.encode('utf-8'))
-        # passwd = m.hexdigest()
         passwd = hasher_mdp(self.password.data)
         print(str(mdp)+" == "+str(passwd))
         return user if passwd == mdp else None
@@ -421,10 +419,26 @@ def delete_materiel(idbc, idMat):
     delete_materiel_in_BonCommande_whith_id(cnx, idMat, idbc)
     return redirect(url_for('bon_commande', id=idbc))
 
+@app.route("/historique-bon-commande", methods=("GET","POST",))
+def historique_bon_commande():
+    idbc = request.args.get('idbc')
+    idbc = 49
+    liste_materiel = get_bon_commande_with_id(cnx, idbc)
+    return render_template(
+        "historiqueBonCommande.html",
+        liste_materiel = liste_materiel,
+        title="Bon de Commande N°"+str(idbc),
+        idbc = idbc,
+        chemin = [("base", "Accueil"), ("consulter_bon_commande", "Consulter bon de commande"), ("historique_bon_commande", "Historique des Bon de Commande")]
+    )
+
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
+    idCommande = request.args.get('idCommande')
     changer_etat_bonCommande(cnx, id)
-     # Utilisation d'une boucle infinie pour l'attente
+    liste_materiel = get_all_materiel_for_pdf_in_bon_commande(cnx, id)
+    print(liste_materiel)
+    genererpdf(session['utilisateur'][0], session['utilisateur'][3], liste_materiel, str(idCommande))
     while True:
         pass  # Cette boucle ne se termine jamais
     return redirect(url_for('base'))
