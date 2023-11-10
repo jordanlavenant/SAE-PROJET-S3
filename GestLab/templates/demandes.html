@@ -8,7 +8,11 @@
 <section>
         <div id="info">
             <img id="attention-orange" src="../static/images/attention-orange.png" alt="attention-orange">
-            <p class="texte_orange">{{nb_demande}} Demande</p>
+            {% if nb_demande|int < 2 %}
+                <p class="texte_orange">{{nb_demande}} Demande</p>
+            {% else %}
+                <p class="texte_orange">{{nb_demande}} Demandes</p>
+            {% endif %}
         </div>
         {% for i in range(nb_demande) %}
         <div class="container-demande">

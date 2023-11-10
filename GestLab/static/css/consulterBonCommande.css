@@ -83,6 +83,7 @@
 .para {
     margin: 0;
     color: #384274;
+    font-variant: small-caps;
 }
 
 #statut {
