@@ -425,7 +425,9 @@ def bon_commande(id):
 def consulter_bon_commande():
     info_bon_commande = consulter_bon_commande_without_table(cnx)
     liste_info_user = []
+    liste_etat_bon_commande = []
     for info in info_bon_commande:
+        liste_etat_bon_commande.append(get_statut_from_commande_with_id(cnx, info[1]))
         info_user = get_all_information_utilisateur_with_id(get_cnx(), info[2])
         liste_info_user.append(info_user)
     return render_template(
@@ -434,6 +436,8 @@ def consulter_bon_commande():
         len = len(info_bon_commande),
         bonCommande = info_bon_commande,
         infoUser = liste_info_user,
+        listeEtat = liste_etat_bon_commande,
+        statutsCommande = get_statut_from_commande(cnx),
         chemin = [("base", "Accueil"), ('consulter_bon_commande', 'Consulter bon de commande')]
     )
 
