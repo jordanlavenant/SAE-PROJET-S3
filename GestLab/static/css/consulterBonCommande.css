@@ -67,6 +67,17 @@
 
 .btn-consulter {
     color: #384274;
+    transition: .2s;
+}
+
+.btn-consulter:hover {
+    color: #384274;
+    transform: scale(1.1);
+    transition: .2s;
+}
+
+.btn-consulter {
+    color: #384274;
 }
 
 .para {

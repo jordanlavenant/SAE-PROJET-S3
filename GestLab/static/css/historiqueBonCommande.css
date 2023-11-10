@@ -73,7 +73,7 @@
 
 .btn-consulter:hover {
     color: #384274;
-    scale: transform(1.1);
+    transform: scale(1.1);
     transition: .2s;
 }
 
@@ -86,6 +86,6 @@
     background-color: #384274;
     color: white;
     margin: 0;
-    padding: 1%;
+    padding: 0 3%;
     border-radius: 1em;
 }

@@ -427,7 +427,7 @@ def delete_materiel(idbc, idMat):
 
 @app.route("/historique-bon-commande", methods=("GET","POST",))
 def historique_bon_commande():
-    info_bon_commande = afficher_table(get_cnx(), "BONCOMMANDETEST")
+    info_bon_commande = afficher_table(get_cnx(), "BONCOMMANDE")
     liste_info_user = []
     for info in info_bon_commande:
         info_user = get_all_information_utilisateur_with_id(get_cnx(), info[2])
