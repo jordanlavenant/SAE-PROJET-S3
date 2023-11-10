@@ -406,11 +406,24 @@ def delete_materiel(idbc, idMat):
     delete_materiel_in_BonCommande_whith_id(cnx, idMat, idbc)
     return redirect(url_for('bon_commande', id=idbc))
 
+@app.route("/historique-bon-commande", methods=("GET","POST",))
+def historique_bon_commande():
+    idbc = request.args.get('idbc')
+    idbc = 49
+    liste_materiel = get_bon_commande_with_id(cnx, idbc)
+    return render_template(
+        "historiqueBonCommande.html",
+        liste_materiel = liste_materiel,
+        title="Bon de Commande N°"+str(idbc),
+        idbc = idbc,
+        chemin = [("base", "Accueil"), ("consulter_bon_commande", "Consulter bon de commande"), ("historique_bon_commande", "Historique des Bon de Commande")]
+    )
+
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
     idCommande = request.args.get('idCommande')
     changer_etat_bonCommande(cnx, id)
-    liste_materiel = []
+    liste_materiel = get_all_materiel_for_pdf_in_bon_commande(cnx, id)
     print(liste_materiel)
     genererpdf(session['utilisateur'][0], session['utilisateur'][3], liste_materiel, str(idCommande))
     while True:
