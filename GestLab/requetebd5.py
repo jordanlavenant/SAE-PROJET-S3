@@ -19,7 +19,9 @@ def get_cnx():
 
 
 class Table:
+    
     class Get:
+        
         def afficher_table(cnx, table):
             try:
                 list = []
@@ -32,6 +34,7 @@ class Table:
                 raise
 
 class Utilisateur:
+    
     class Get :
 
         def get_nom_whith_email(cnx, email):
@@ -99,11 +102,9 @@ class Utilisateur:
             except:
                 print("erreur de l'id")
                 raise
-        
-
-
-            
+           
     class Update:
+        
         def update_email_utilisateur(cnx,new_email,nom,mdp, old_email):
             try:
 
@@ -196,6 +197,7 @@ class Utilisateur:
             except:
                 print("erreur de l'id")
                 return False
+            
     class Insert:
 
         def ajout_fournisseur(cnx, nom, adresse,mail, tel):
@@ -216,6 +218,7 @@ class Utilisateur:
             except:
                 print("erreur d'ajout du bon de commande")
                 raise
+            
         def ajout_professeur(cnx, nom, prenom, email):
             try:
                 idStatut = 2
@@ -288,6 +291,7 @@ class Utilisateur:
     
 
 class Materiel:
+    
     class Get :
 
         def get_all_information_to_Materiel_cat_com(cnx):
@@ -529,6 +533,7 @@ class Materiel:
                 raise
     
 class MaterielUnique:
+    
     class Get:
         
         def get_materiel_unique(cnx, idMaterielUnique) :
@@ -585,6 +590,18 @@ class MaterielUnique:
                 print("Erreur lors de la suppression du matériel unique dans la demande")
                 raise
             
+        def supprimer_materiel_unique_bdd(cnx, id_materiel_unique) :
+            try :
+                cnx.execute(text("DELETE FROM ALERTESENCOURS WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
+                cnx.execute(text("DELETE FROM RESERVELABORATOIRE WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
+                cnx.execute(text("DELETE FROM MATERIELUNIQUE WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel unique")
+                raise
+            
+            
+    class Update:
         def modifie_materiel_unique(cnx, idMaterielUnique, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) :
             try:
                 if datePeremption is None or datePeremption == 'None' or datePeremption == "" :
@@ -617,17 +634,9 @@ class MaterielUnique:
                 print("Erreur lors de la modification du matériel unique")
                 raise
 
-        def supprimer_materiel_unique_bdd(cnx, id_materiel_unique) :
-            try :
-                cnx.execute(text("DELETE FROM ALERTESENCOURS WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
-                cnx.execute(text("DELETE FROM RESERVELABORATOIRE WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
-                cnx.execute(text("DELETE FROM MATERIELUNIQUE WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
-                cnx.commit()
-            except:
-                print("Erreur lors de la suppression du matériel unique")
-                raise
+        
             
-    class Inserer:
+    class Insert:
                 
         def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative):
             try:
@@ -724,7 +733,6 @@ class Mots_de_passe:
 
 class Authentification:
     
-
     def random_key():
         return pyotp.random_base32()
 
@@ -760,6 +768,7 @@ class Authentification:
 
 
 class Alert:
+    
     def get_nb_alert_id(cnx):
         try:
             list = []
@@ -827,7 +836,9 @@ class Alert:
 
 
 class Demande : 
+    
     class Get:
+        
         def get_nb_demande(cnx):
             try:
                 result = cnx.execute(text("select nombreDemandesEnAttente();"))
@@ -873,6 +884,7 @@ class Demande :
 
         
 class Categories:
+    
     def get_categories(cnx):
         liste = []
         result = cnx.execute(text("select * from CATEGORIE;"))
@@ -882,6 +894,7 @@ class Categories:
     
     
 class Domaine: 
+    
     def get_all_info_from_domaine(cnx):
         try:
             list = []
@@ -970,6 +983,7 @@ class Bon_commande:
                 raise
             
     class Update:
+        
         def changer_etat_bonCommande(cnx, idut):
             try:
                 idetat = 2
@@ -982,6 +996,7 @@ class Bon_commande:
                 raise
 
 class Suggestion_materiel:
+    
     def get_all_information_to_Materiel_suggestions(cnx):
         try:
             list = []
@@ -998,6 +1013,7 @@ class Suggestion_materiel:
             raise
 
 class Recherche_materiel:
+    
     def get_MATERIEL(cnx):
         result = cnx.execute(text("select * from RECHERCHEMATERIELS;"))
         for row in result:
@@ -1027,6 +1043,10 @@ class Rangement:
                 print("Erreur lors de la récupération de l'id de l'endroit")
                 raise
 
+
+class Commande :
+    class Get:
+        pass
 
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
