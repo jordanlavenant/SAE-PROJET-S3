@@ -17,26 +17,414 @@ cnx = ouvrir_connexion()
 def get_cnx():
     return cnx
 
-def get_id_utilisateur_from_email(cnx, email) :
-    try:
-        result = cnx.execute(text("SELECT idUtilisateur FROM UTILISATEUR WHERE email = '" + email + "';"))
-        for row in result:
+
+class Table:
+    class Get:
+        def afficher_table(cnx, table):
+            try:
+                list = []
+                result = cnx.execute(text("SELECT * FROM " + table + ";"))
+                for row in result:
+                    list.append(row)
+                return list
+            except:
+                print("Erreur lors de l'affichage de la table")
+                raise
+
+class Utilisateur:
+    class Get :
+
+        def get_nom_whith_email(cnx, email):
+            result = cnx.execute(text("select nom from UTILISATEUR where email = '" + email + "';"))
+            for row in result:
+                print(row[0])
             return row[0]
-    except:
-        print("Erreur lors de la récupération de l'id de l'utilisateur")
-        raise
+
+        def get_id_utilisateur_from_email(cnx, email) :
+            try:
+                result = cnx.execute(text("SELECT idUtilisateur FROM UTILISATEUR WHERE email = '" + email + "';"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de l'id de l'utilisateur")
+                raise
+
+        def get_password_with_email(cnx, email):
+            result = cnx.execute(text("select motDePasse from UTILISATEUR where email = '" + email + "';"))
+            for row in result:
+                return row[0]
+            
+        def get_nom_and_statut_and_email(cnx, email):
+            result = cnx.execute(text("select nom, idStatut, prenom from UTILISATEUR where email = '" + email + "';"))
+            for row in result:
+                print(row[0], row[1], row[2], email)
+                return (row[0], row[1], email, row[2])
+
+ 
+        def get_user_with_statut(cnx, nomStatut):
+            liste = []
+            result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where nomStatut = '" + str(nomStatut) + "';"))
+            for row in result:
+                liste.append((row[4]))
+            return liste
+
+         
+        def get_all_user(cnx, idStatut=None):
+            liste = []
+            if idStatut is None:
+                result = cnx.execute(text("select * from UTILISATEUR where idStatut != 1;"))
+            else:
+                result = cnx.execute(text("select * from UTILISATEUR where idStatut = '" + str(idStatut) + "';"))
+            for row in result:
+                liste.append((row[1],row[0],row[2],row[3],row[4]))
+            return (liste, len(liste))
+        
+        def get_uri_with_email(cnx, email):
+            result = cnx.execute(text("select uri from 2FA where email = '" + email + "';"))
+            for row in result:
+                print(row[0])
+                return row[0]
+            
+        def get_id_with_email(cnx, email):
+            result = cnx.execute(text("select idUtilisateur from UTILISATEUR where email = '" + email + "';"))
+            for row in result:
+                return row[0]
+            
+        def get_all_information_utilisateur_with_id(cnx,id):
+            try:
+                result = cnx.execute(text("select nom,prenom,email,nomStatut from UTILISATEUR natural join STATUT where idUtilisateur = " + str(id) + ";"))
+                for row in result:
+                    print(row)
+                    return row
+            except:
+                print("erreur de l'id")
+                raise
+        
+
+
+            
+    class Update:
+        def update_email_utilisateur(cnx,new_email,nom,mdp, old_email):
+            try:
+
+                update_email_utilisateur_in_ut(cnx, new_email, nom, mdp)
+                update_email_utilisateur_in_2fa(cnx, old_email,new_email)
+                print("email mis a jour")
+                return True
+            except:
+                print("erreur de mise a jour de l'email")
+                return False
+
+
+        def update_email_utilisateur_in_ut(cnx, new_email, nom, mdp):
+            try:
+                mdp_hash = hasher_mdp(mdp)
+                cnx.execute(text("update UTILISATEUR set email = '" + new_email + "' where nom = '" + nom + "' and motDePasse = '" + mdp_hash + "';"))
+                cnx.commit()
+                print("email mis a jour")
+                return True
+            except:
+                print("erreur de mise a jour de l'email")
+                return False
+
+        def update_email_utilisateur_in_2fa(cnx, old_email,new_email,):
+            try:
+                cnx.execute(text("update 2FA set email = '" + new_email + "' where email = '" + old_email + "';"))
+                cnx.commit()
+                print("email mis a jour")
+                return True
+            except:
+                print("erreur de mise a jour de l'email")
+                return False
+
+
+        # le trigger  "emailUtilisateurUniqueUpdate" bloque les updates vers Utilisateur comme si dessous >>> voir Anna
+
+         
+        def modification_droit_utilisateur(cnx, idut, idSt):
+            try:
+                cnx.execute(text(  "update UTILISATEUR set idStatut = '" + str(idSt) + "' where idUtilisateur = '" + str(idut) + "';"))
+                cnx.commit()
+                print("droit mis a jour")
+            except:
+                print("erreur de mise a jour du droit")
+                raise
+
+        def update_mdp_utilisateur(cnx, email,mdp, new_mdp):
+            try:
+                init_mdp = hasher_mdp(mdp)
+                new_mdp_hash = hasher_mdp(new_mdp)
+                mdp_get = get_password_with_email(cnx, email)
+                if mdp_get != init_mdp:
+                    print("mdp incorrect")
+                    return False
+                else:
+                    cnx.execute(text("update UTILISATEUR set motDePasse = '" + new_mdp_hash + "' where email = '" + email + "' and motDePasse = '" + init_mdp + "'"))
+                    cnx.commit()
+                    print("mdp mis a jour")
+                    return True
+            except:
+                print("erreur de mise a jour du mdp")
+                return None        
+
+         
+        def update_nom_utilisateur(cnx, email, new_nom):
+            try:
+                cnx.execute(text("update UTILISATEUR set nom = '" + new_nom + "' where email = '" + email + "';"))
+                cnx.commit()
+                print("nom mis a jour")
+            except:
+                print("erreur de mise a jour du nom")
+                raise
+
+         
+        def update_prenom_utilisateur(cnx, email, new_prenom):
+            try:
+                cnx.execute(text("update UTILISATEUR set prenom = '" + new_prenom + "' where email = '" + email + "';"))
+                cnx.commit()
+                print("prenom mis a jour")
+            except:
+                print("erreur de mise a jour du prenom")
+                raise
+
+        def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email):
+            try:
+                cnx.execute(text("update UTILISATEUR set idStatut = '" + str(idStatut) + "', nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "' where idUtilisateur = '" + str(id) + "';"))
+                cnx.commit()
+                print("utilisateur mis a jour")
+                return True
+            except:
+                print("erreur de l'id")
+                return False
+    class Insert:
+
+        def ajout_fournisseur(cnx, nom, adresse,mail, tel):
+            try:
+                cnx.execute(text( "insert into FOURNISSEUR (nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur) values ('" + nom + "', '" + adresse + "', '" + mail + "', '" + tel + "');"))
+                cnx.commit()
+                print("fournisseur ajouté")
+            except:
+                print("erreur d'ajout du fournisseur")
+                raise
+
+        def ajout_gest_into_boncommande(cnx,id):
+            try:
+                etat = 1
+                cnx.execute(text("insert into BONCOMMANDE (idEtat,idUtilisateur ) values (" + str(etat) + ", " + str(id) + ");"))
+                cnx.commit()
+                print("bon de commande ajouté")
+            except:
+                print("erreur d'ajout du bon de commande")
+                raise
+        def ajout_professeur(cnx, nom, prenom, email):
+            try:
+                idStatut = 2
+                mdpRandom = generer_mot_de_passe()
+                # envoyer mail avec mdpRandom
+                print(mdpRandom)
+                mdphash = hasher_mdp(mdpRandom)
+                cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
+                cnx.commit()
+                create_qr_code_nouvel_utlisateur(email, mdpRandom)
+                print("utilisateur ajouté")
+                return True
+            except:
+                print("erreur d'ajout de l'utilisateur")
+                return False
+
+        def ajout_gestionnaire(cnx, nom, prenom, email):
+            
+            try:
+                idStatut = 4
+                mdpRandom = generer_mot_de_passe()
+                print(mdpRandom)
+                mdphash = hasher_mdp(mdpRandom)
+                cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
+                cnx.commit()
+                id = get_id_with_email(cnx, email)
+                ajout_gest_into_boncommande(cnx,id)
+                create_qr_code_nouvel_utlisateur(email, mdpRandom)
+                print("utilisateur ajouté")
+                
+                return True
+            except:
+                print("erreur d'ajout de l'utilisateur")
+                return False  
+        
+        def ajout_administrateur(cnx, nom, prenom, email):
+            try:
+                idStatut = 1
+                mdpRandom = generer_mot_de_passe()
+                # envoyer mail avec mdpRandom
+                print(mdpRandom)
+                mdphash = hasher_mdp(mdpRandom)
+                cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
+                cnx.commit()
+                create_qr_code_nouvel_utlisateur(email, mdpRandom)
+                print("utilisateur ajouté")
+                return True
+            except:
+                print("erreur d'ajout de l'utilisateur")
+                return False
+
+
+        def ajout_laborantin(cnx, nom, prenom, email):
+            
+            try:
+                idStatut = 3
+                mdpRandom = generer_mot_de_passe()
+                # envoyer mail avec mdpRandom
+                print(mdpRandom)
+                mdphash = hasher_mdp(mdpRandom)
+                cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
+                cnx.commit()
+                create_qr_code_nouvel_utlisateur(email, mdpRandom)
+                print("utilisateur ajouté")
+                return True
+            except:
+                print("erreur d'ajout de l'utilisateur")
+                return False
+
     
-def ajout_gest_into_boncommande(cnx,id):
-    try:
-        etat = 1
-        cnx.execute(text("insert into BONCOMMANDE (idEtat,idUtilisateur ) values (" + str(etat) + ", " + str(id) + ");"))
-        cnx.commit()
-        print("bon de commande ajouté")
-    except:
-        print("erreur d'ajout du bon de commande")
-        raise
-    
-#marche BD 5
+
+class Materiel:
+    class Get :
+
+        def get_all_information_to_Materiel_with_id(cnx, id):
+            try:
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE WHERE idMateriel = " + str(id) + ";"))
+                for row in result:
+                    return row
+            except:
+                print("erreur de l'id")
+                raise
+
+        def get_all_information_to_Materiel(cnx):
+            try:
+                list = []
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE ;"))
+                for row in result:
+                    id = row[0]
+                    result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+                    for row_count in result_count:
+                        print((row_count[1]))
+                        list.append((row,row_count[1]))
+                return list, len(list)
+            except:
+                print("erreur de l'id")
+                raise
+
+
+        def get_materiel_commande(cnx,idbc):
+            try:
+                result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite,referenceMateriel, idFDS, idBonCommande,quantite FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+                liste = []
+                for row in result:
+                    print(row)
+                    liste.append(row)
+                return liste
+            except:
+                print("Erreur lors de la récupération du matériel dans la commande")
+                raise
+
+        def get_id_materiel_from_id_materiel_unique(cnx, id_materiel_unique) :
+            try:
+                result = cnx.execute(text("SELECT idMateriel FROM MATERIELUNIQUE NATURAL JOIN MATERIEL WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de l'id du matériel")
+                raise
+            
+        def get_materiel(cnx, idMateriel) :
+            try:
+                materiel = []
+                result = cnx.execute(text("SELECT * FROM MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
+                for row in result:
+                    materiel.append(row)
+                return materiel
+            except:
+                print("Erreur lors de la récupération du matériel")
+                raise
+
+    class Delete:
+
+        def delete_materiel_in_BonCommande_whith_id(cnx, idMateriel, idbc):
+            try:
+                cnx.execute(text("DELETE FROM COMMANDE WHERE idMateriel = " + str(idMateriel) + " AND idBonCommande = " + str(idbc) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel dans la commande")
+                raise
+
+    class Update:
+
+        def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
+            try:
+                if seuilalerte is None or seuilalerte == "None" :
+                    seuilalerte = "NULL"
+                cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
+                """cnx.execute(
+                    text(
+                        "UPDATE MATERIEL SET idCategorie = :categorie, "
+                        "nomMateriel = :nom, referenceMateriel = :reference, "
+                        "caracteristiquesComplementaires = :caracteristiques, "
+                        "informationsComplementairesEtSecurite = :infossup, "
+                        "seuilAlerte = :seuilalerte WHERE idMateriel = :idMateriel;"
+                    ),
+                    {
+                        "categorie": categorie,
+                        "nom": nom,
+                        "reference": reference,
+                        "caracteristiques": caracteristiques,
+                        "infossup": infossup,
+                        "seuilalerte": seuilalerte,
+                        "idMateriel": idMateriel,
+                    },
+                )"""
+                cnx.commit()
+                return True
+            except:
+                print("Erreur lors de la modification du matériel")
+                raise
+
+    class Insert: 
+
+        def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
+            try:
+                if seuilAlerte == '' :
+                    seuilAlerte = "NULL"
+                cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
+                """
+                if seuilAlerte == '':
+                    seuilAlerte = None
+
+                cnx.execute(
+                    text(
+                        "INSERT INTO MATERIEL (idCategorie, nomMateriel, referenceMateriel, "
+                        "caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) "
+                        "VALUES (:idCategorie, :nomMateriel, :referenceMateriel, "
+                        ":caracteristiquesComplementaires, :informationsComplementairesEtSecurite, :seuilAlerte);"
+                    ),
+                    {
+                        "idCategorie": idCategorie,
+                        "nomMateriel": nomMateriel,
+                        "referenceMateriel": referenceMateriel,
+                        "caracteristiquesComplementaires": caracteristiquesComplementaires,
+                        "informationsComplementairesEtSecurite": informationsComplementairesEtSecurite,
+                        "seuilAlerte": seuilAlerte,
+                    },
+                )"""
+                cnx.commit()
+                return True
+            except sqlalchemy.exc.OperationalError as e:
+                print(f"SQL OperationalError: {e}")
+                return False
+            except sqlalchemy.exc.IntegrityError as e:
+                print(f"SQL IntegrityError: {e}")
+                return False
+
+
 def get_nom_dom_cat_materiel_with_id(cnx, id):
     try:
         result = cnx.execute(text("select nomDomaine,nomCategorie from MATERIEL natural join DOMAINE natural join CATEGORIE where idMateriel = " + str(id) + ";"))
@@ -46,39 +434,7 @@ def get_nom_dom_cat_materiel_with_id(cnx, id):
         print("erreur de l'id")
         raise
 
-def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
-    try:
-        if seuilAlerte == '' :
-            seuilAlerte = "NULL"
-        cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
-        """
-        if seuilAlerte == '':
-            seuilAlerte = None
 
-        cnx.execute(
-            text(
-                "INSERT INTO MATERIEL (idCategorie, nomMateriel, referenceMateriel, "
-                "caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) "
-                "VALUES (:idCategorie, :nomMateriel, :referenceMateriel, "
-                ":caracteristiquesComplementaires, :informationsComplementairesEtSecurite, :seuilAlerte);"
-            ),
-            {
-                "idCategorie": idCategorie,
-                "nomMateriel": nomMateriel,
-                "referenceMateriel": referenceMateriel,
-                "caracteristiquesComplementaires": caracteristiquesComplementaires,
-                "informationsComplementairesEtSecurite": informationsComplementairesEtSecurite,
-                "seuilAlerte": seuilAlerte,
-            },
-        )"""
-        cnx.commit()
-        return True
-    except sqlalchemy.exc.OperationalError as e:
-        print(f"SQL OperationalError: {e}")
-        return False
-    except sqlalchemy.exc.IntegrityError as e:
-        print(f"SQL IntegrityError: {e}")
-        return False
 
 def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative):
     try:
@@ -97,7 +453,7 @@ def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_pere
         print(f"SQL IntegrityError: {e}")
         return False
 
-#marche BD 5
+ 
 # est ce que pour ajouter du materiel on est obliger de passer par materiel unique ?
 
 # def ajout_quantite_with_id(cnx, idMateriel, quantite):
@@ -115,40 +471,17 @@ def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_pere
 #             print("erreur d'ajout de la quantité")
 #             raise
 
-
-#marche BD 5
-def ajout_fournisseur(cnx, nom, adresse,mail, tel):
-    try:
-        cnx.execute(text( "insert into FOURNISSEUR (nomFournisseur, adresseFournisseur, mailFournisseur, telFournisseur) values ('" + nom + "', '" + adresse + "', '" + mail + "', '" + tel + "');"))
-        cnx.commit()
-        print("fournisseur ajouté")
-    except:
-        print("erreur d'ajout du fournisseur")
-        raise
-
-#marche BD 5
 def generer_mot_de_passe():
     caracteres = string.ascii_letters + string.digits
     mot_de_passe = ''.join(random.choice(caracteres) for _ in range(10))
 
     return mot_de_passe
 
-#marche BD 5
+ 
 def hasher_mdp(mdp):
     m = sha256()
     m.update(mdp.encode("utf-8"))
     return m.hexdigest()
-
-def get_uri_with_email(cnx, email):
-    result = cnx.execute(text("select uri from 2FA where email = '" + email + "';"))
-    for row in result:
-        print(row[0])
-        return row[0]
-    
-def get_id_with_email(cnx, email):
-    result = cnx.execute(text("select idUtilisateur from UTILISATEUR where email = '" + email + "';"))
-    for row in result:
-        return row[0]
 
 def random_key():
     return pyotp.random_base32()
@@ -187,208 +520,13 @@ def verify(key, code):
     return pyotp.TOTP(key).verify(code)
 
 
-#marche BD 5
-def ajout_professeur(cnx, nom, prenom, email):
-    try:
-        idStatut = 2
-        mdpRandom = generer_mot_de_passe()
-        # envoyer mail avec mdpRandom
-        print(mdpRandom)
-        mdphash = hasher_mdp(mdpRandom)
-        cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
-        cnx.commit()
-        create_qr_code_nouvel_utlisateur(email, mdpRandom)
-        print("utilisateur ajouté")
-        return True
-    except:
-        print("erreur d'ajout de l'utilisateur")
-        return False
-
-#marche BD 5
-def ajout_gestionnaire(cnx, nom, prenom, email):
-    
-    try:
-        idStatut = 4
-        mdpRandom = generer_mot_de_passe()
-        print(mdpRandom)
-        mdphash = hasher_mdp(mdpRandom)
-        cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
-        cnx.commit()
-        id = get_id_with_email(cnx, email)
-        ajout_gest_into_boncommande(cnx,id)
-        create_qr_code_nouvel_utlisateur(email, mdpRandom)
-        print("utilisateur ajouté")
-        
-        return True
-    except:
-        print("erreur d'ajout de l'utilisateur")
-        return False  
- 
-def ajout_administrateur(cnx, nom, prenom, email):
-    try:
-        idStatut = 1
-        mdpRandom = generer_mot_de_passe()
-        # envoyer mail avec mdpRandom
-        print(mdpRandom)
-        mdphash = hasher_mdp(mdpRandom)
-        cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
-        cnx.commit()
-        create_qr_code_nouvel_utlisateur(email, mdpRandom)
-        print("utilisateur ajouté")
-        return True
-    except:
-        print("erreur d'ajout de l'utilisateur")
-        return False
-
-
-def ajout_laborantin(cnx, nom, prenom, email):
-    
-    try:
-        idStatut = 3
-        mdpRandom = generer_mot_de_passe()
-        # envoyer mail avec mdpRandom
-        print(mdpRandom)
-        mdphash = hasher_mdp(mdpRandom)
-        cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
-        cnx.commit()
-        create_qr_code_nouvel_utlisateur(email, mdpRandom)
-        print("utilisateur ajouté")
-        return True
-    except:
-        print("erreur d'ajout de l'utilisateur")
-        return False
-
-def get_nom_whith_email(cnx, email):
-    result = cnx.execute(text("select nom from UTILISATEUR where email = '" + email + "';"))
-    for row in result:
-        print(row[0])
-        return row[0]
-
-#marche BD 5
 def get_MATERIEL(cnx):
     result = cnx.execute(text("select * from RECHERCHEMATERIELS;"))
     for row in result:
         print(row[0])
 
-#marche BD 5
 
-def update_email_utilisateur(cnx,new_email,nom,mdp, old_email):
-    try:
-
-        update_email_utilisateur_in_ut(cnx, new_email, nom, mdp)
-        update_email_utilisateur_in_2fa(cnx, old_email,new_email)
-        print("email mis a jour")
-        return True
-    except:
-        print("erreur de mise a jour de l'email")
-        return False
-
-
-def update_email_utilisateur_in_ut(cnx, new_email, nom, mdp):
-    try:
-        mdp_hash = hasher_mdp(mdp)
-        cnx.execute(text("update UTILISATEUR set email = '" + new_email + "' where nom = '" + nom + "' and motDePasse = '" + mdp_hash + "';"))
-        cnx.commit()
-        print("email mis a jour")
-        return True
-    except:
-        print("erreur de mise a jour de l'email")
-        return False
-
-def update_email_utilisateur_in_2fa(cnx, old_email,new_email,):
-    try:
-        cnx.execute(text("update 2FA set email = '" + new_email + "' where email = '" + old_email + "';"))
-        cnx.commit()
-        print("email mis a jour")
-        return True
-    except:
-        print("erreur de mise a jour de l'email")
-        return False
-
-
-# le trigger  "emailUtilisateurUniqueUpdate" bloque les updates vers Utilisateur comme si dessous >>> voir Anna
-
-#marche BD 5
-def modification_droit_utilisateur(cnx, idut, idSt):
-    try:
-        cnx.execute(text(  "update UTILISATEUR set idStatut = '" + str(idSt) + "' where idUtilisateur = '" + str(idut) + "';"))
-        cnx.commit()
-        print("droit mis a jour")
-    except:
-        print("erreur de mise a jour du droit")
-        raise
-
-#marche BD 5
-def get_password_with_email(cnx, email):
-    result = cnx.execute(text("select motDePasse from UTILISATEUR where email = '" + email + "';"))
-    for row in result:
-        return row[0]
-    
-#marche BD 5
-def update_mdp_utilisateur(cnx, email,mdp, new_mdp):
-    try:
-        init_mdp = hasher_mdp(mdp)
-        new_mdp_hash = hasher_mdp(new_mdp)
-        mdp_get = get_password_with_email(cnx, email)
-        if mdp_get != init_mdp:
-            print("mdp incorrect")
-            return False
-        else:
-            cnx.execute(text("update UTILISATEUR set motDePasse = '" + new_mdp_hash + "' where email = '" + email + "' and motDePasse = '" + init_mdp + "'"))
-            cnx.commit()
-            print("mdp mis a jour")
-            return True
-    except:
-        print("erreur de mise a jour du mdp")
-        return None        
-
-#marche BD 5
-def update_nom_utilisateur(cnx, email, new_nom):
-    try:
-        cnx.execute(text("update UTILISATEUR set nom = '" + new_nom + "' where email = '" + email + "';"))
-        cnx.commit()
-        print("nom mis a jour")
-    except:
-        print("erreur de mise a jour du nom")
-        raise
-
-#marche BD 5
-def update_prenom_utilisateur(cnx, email, new_prenom):
-    try:
-        cnx.execute(text("update UTILISATEUR set prenom = '" + new_prenom + "' where email = '" + email + "';"))
-        cnx.commit()
-        print("prenom mis a jour")
-    except:
-        print("erreur de mise a jour du prenom")
-        raise
-
-
-#marche BD 5
-def get_nom_and_statut_and_email(cnx, email):
-    result = cnx.execute(text("select nom, idStatut, prenom from UTILISATEUR where email = '" + email + "';"))
-    for row in result:
-        print(row[0], row[1], row[2], email)
-        return (row[0], row[1], email, row[2])
-
-#marche BD 5
-def get_user_with_statut(cnx, nomStatut):
-    liste = []
-    result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where nomStatut = '" + str(nomStatut) + "';"))
-    for row in result:
-        liste.append((row[4]))
-    return liste
-
-#marche BD 5
-def get_all_user(cnx, idStatut=None):
-    liste = []
-    if idStatut is None:
-        result = cnx.execute(text("select * from UTILISATEUR where idStatut != 1;"))
-    else:
-        result = cnx.execute(text("select * from UTILISATEUR where idStatut = '" + str(idStatut) + "';"))
-    for row in result:
-        liste.append((row[1],row[0],row[2],row[3],row[4]))
-    return (liste, len(liste))
-
+ 
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
 #     if nomcat is None:
@@ -434,15 +572,8 @@ def get_nb_alert_id(cnx):
         print("Erreur lors de la récupération du nombre d'alertes :", str(e))
         raise
 
-#marche BD 5
-def get_all_information_to_Materiel_with_id(cnx, id):
-    try:
-        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE WHERE idMateriel = " + str(id) + ";"))
-        for row in result:
-            return row
-    except:
-        print("erreur de l'id")
-        raise
+ 
+
 
 def get_all_information_to_MaterielUnique_with_id(cnx, id):
     try:
@@ -487,15 +618,7 @@ def get_nb_demande(cnx):
         raise
 
 #marhce BD 5
-def get_all_information_utilisateur_with_id(cnx,id):
-    try:
-        result = cnx.execute(text("select nom,prenom,email,nomStatut from UTILISATEUR natural join STATUT where idUtilisateur = " + str(id) + ";"))
-        for row in result:
-            print(row)
-            return row
-    except:
-        print("erreur de l'id")
-        raise
+
 
 
 
@@ -514,20 +637,7 @@ def get_all_information_to_Materiel_suggestions(cnx):
         print("erreur de l'id")
         raise
 
-def get_all_information_to_Materiel(cnx):
-    try:
-        list = []
-        result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE ;"))
-        for row in result:
-            id = row[0]
-            result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
-            for row_count in result_count:
-                print((row_count[1]))
-                list.append((row,row_count[1]))
-        return list, len(list)
-    except:
-        print("erreur de l'id")
-        raise
+
 
 def nb_alert_par_materiel_dict(cnx):
     try:
@@ -559,7 +669,7 @@ def nb_alert_par_materielUnique_dict(cnx):
     except: 
         raise
 
-#marche BD 5
+ 
 def get_all_information_to_Materiel_cat_com(cnx):
     try:
         list = []
@@ -572,18 +682,10 @@ def get_all_information_to_Materiel_cat_com(cnx):
         print("erreur de l'id")
         raise
 
-#marche BD 5
-def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email):
-    try:
-        cnx.execute(text("update UTILISATEUR set idStatut = '" + str(idStatut) + "', nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "' where idUtilisateur = '" + str(id) + "';"))
-        cnx.commit()
-        print("utilisateur mis a jour")
-        return True
-    except:
-        print("erreur de l'id")
-        return False
+ 
 
-#marche BD 5
+
+ 
 def recherche_all_in_utilisateur_with_search(cnx, search):
     try:
         list = []
@@ -596,7 +698,7 @@ def recherche_all_in_utilisateur_with_search(cnx, search):
         print("erreur de recherche")
         raise
 
-#marche BD 5
+ 
 def recherche_all_in_materiel_with_search(cnx, search):
     try:
         list = []
@@ -676,16 +778,7 @@ def get_info_demande_with_id(cnx, idDemande):
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
 
-def get_all_user(cnx, idStatut=None):
-    liste = []
-    if idStatut is None:
-        result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where idStatut != 1;"))
-    else:
-        result = cnx.execute(text("select * from UTILISATEUR natural join STATUT where idStatut = '" + str(idStatut) + "';"))
-    for row in result:
-        print(row)
-        liste.append((row[1],row[0],row[2],row[3],row[4]))
-    return (liste, len(liste))
+
 
 
 def recuperation_de_mot_de_passe(cnx, email):
@@ -714,16 +807,7 @@ def get_info_rechercheMateriel(cnx):
         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
         raise
 
-def get_materiel(cnx, idMateriel) :
-    try:
-        materiel = []
-        result = cnx.execute(text("SELECT * FROM MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
-        for row in result:
-            materiel.append(row)
-        return materiel
-    except:
-        print("Erreur lors de la récupération du matériel")
-        raise
+
 
 def get_materiel_unique(cnx, idMaterielUnique) :
     try:
@@ -736,34 +820,7 @@ def get_materiel_unique(cnx, idMaterielUnique) :
         print("Erreur lors de la récupération du matériel unique")
         raise
 
-def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
-    try:
-        if seuilalerte is None or seuilalerte == "None" :
-            seuilalerte = "NULL"
-        cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
-        """cnx.execute(
-            text(
-                "UPDATE MATERIEL SET idCategorie = :categorie, "
-                "nomMateriel = :nom, referenceMateriel = :reference, "
-                "caracteristiquesComplementaires = :caracteristiques, "
-                "informationsComplementairesEtSecurite = :infossup, "
-                "seuilAlerte = :seuilalerte WHERE idMateriel = :idMateriel;"
-            ),
-            {
-                "categorie": categorie,
-                "nom": nom,
-                "reference": reference,
-                "caracteristiques": caracteristiques,
-                "infossup": infossup,
-                "seuilalerte": seuilalerte,
-                "idMateriel": idMateriel,
-            },
-        )"""
-        cnx.commit()
-        return True
-    except:
-        print("Erreur lors de la modification du matériel")
-        raise
+
 
 def modifie_materiel_unique(cnx, idMaterielUnique, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) :
     try:
@@ -816,14 +873,7 @@ def get_id_domaine_from_categorie(cnx, id_categorie) :
 
         raise
 
-def get_id_materiel_from_id_materiel_unique(cnx, id_materiel_unique) :
-    try:
-        result = cnx.execute(text("SELECT idMateriel FROM MATERIELUNIQUE NATURAL JOIN MATERIEL WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
-        for row in result:
-            return row[0]
-    except:
-        print("Erreur lors de la récupération de l'id du matériel")
-        raise
+
 
 def supprimer_materiel_unique_bdd(cnx, id_materiel_unique) :
     try :
@@ -905,16 +955,7 @@ def changer_etat_bonCommande(cnx, idut):
         raise
     
 
-def afficher_table(cnx, table):
-    try:
-        list = []
-        result = cnx.execute(text("SELECT * FROM " + table + ";"))
-        for row in result:
-            list.append(row)
-        return list
-    except:
-        print("Erreur lors de l'affichage de la table")
-        raise
+
 
 def consulter_bon_commande_without_table(cnx):
     try:
@@ -928,25 +969,7 @@ def consulter_bon_commande_without_table(cnx):
         print("Erreur lors de la récupération des commandes")
         raise
 
-def get_materiel_commande(cnx,idbc):
-    try:
-        result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite,referenceMateriel, idFDS, idBonCommande,quantite FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
-        liste = []
-        for row in result:
-            print(row)
-            liste.append(row)
-        return liste
-    except:
-        print("Erreur lors de la récupération du matériel dans la commande")
-        raise
 
-def delete_materiel_in_BonCommande_whith_id(cnx, idMateriel, idbc):
-    try:
-        cnx.execute(text("DELETE FROM COMMANDE WHERE idMateriel = " + str(idMateriel) + " AND idBonCommande = " + str(idbc) + ";"))
-        cnx.commit()
-    except:
-        print("Erreur lors de la suppression du matériel dans la commande")
-        raise
         
 
 def recherche_materiel_commander_search(cnx, search):
