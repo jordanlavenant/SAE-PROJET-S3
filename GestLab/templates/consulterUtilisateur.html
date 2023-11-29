@@ -6,7 +6,7 @@
 {% block content %}
 <div class="utilisateur-container-overall">
     <div class="header-container">
-        <a href="{{ url_for('utilisateurs') }}"><button id="btn-retour">retour</button></a>
+        <a href="{{ url_for('base') }}"><button id="btn-retour">retour</button></a>
             <form method="POST" action="{{ url_for('recherche_utilisateur') }}" role="search">
                 <div class="search-content">
                     {{ RechercherFrom.value(size=50, class_="form-control element", placeholder="Chercher un utilisateur") }}

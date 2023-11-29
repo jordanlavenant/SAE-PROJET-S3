@@ -14,9 +14,9 @@
         <!-- admin -->
         {% if session['utilisateur'][1] == 1 %}
 
-        <a href="{{ url_for('utilisateurs') }}">
+        <a href="{{ url_for('consulter_utilisateur') }}">
             <section class="carte-lien">
-                <h2>UTILISATEURS</h2>
+                <h2>CONSULTER UTILISATEURS</h2>
                 <p>ajouter un compte</p>
                 <p>modifier un compte</p>
                 <p>gesions des droits</p>

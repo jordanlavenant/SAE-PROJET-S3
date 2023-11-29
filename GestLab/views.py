@@ -409,7 +409,7 @@ def commander():
 @app.route("/bon-commande/<int:id>")
 def bon_commande(id):
     idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
-    liste_materiel = Materiel.get.get_materiel_commande(cnx, id)
+    liste_materiel = Materiel.Get.get_materiel_commande(cnx, id)
     return render_template(
         "bonDeCommande.html",
         id = id,
@@ -499,14 +499,6 @@ def etat(id):
     chemin = [("base", "Accueil"), ("inventaire", "Inventaire"), ("inventaire", "Etat")]
     )
 
-@app.route("/utilisateurs/")
-def utilisateurs():
-    return render_template(
-    "utilisateurs.html",
-    title="Utilisateurs",
-    chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs")]
-    )
-
 @app.route("/ajouter-utilisateur/")
 def ajouter_utilisateur():
     f = AjouterUtilisateurForm()
@@ -514,7 +506,7 @@ def ajouter_utilisateur():
     "ajouterUtilisateur.html",
     title="Ajouter un Utilisateur",
     AjouterUtilisateurForm=f,
-    chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("ajouter_utilisateur", "Ajouter un Utilisateur")]
+    chemin = [("base", "Accueil"), ("ajouter_utilisateur", "Ajouter un Utilisateur")]
     )
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
@@ -531,7 +523,7 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
-                chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+                chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
         elif selected_value == "Professeur":
             return render_template(
@@ -541,7 +533,7 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
-                chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+                chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
         elif selected_value == "Gestionnaire":
             return render_template(
@@ -551,7 +543,7 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
-                chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+                chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
         elif selected_value == "Laborantin":
             return render_template(
@@ -561,7 +553,7 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
                 RechercherFrom=f,
-                chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+                chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
 
     return render_template(
@@ -571,7 +563,7 @@ def consulter_utilisateur():
         categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
         title="Consulter les Utilisateurs",
         RechercherFrom=f,
-        chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+        chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
     )
 
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))

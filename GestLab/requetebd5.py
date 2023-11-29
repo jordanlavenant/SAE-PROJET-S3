@@ -1045,8 +1045,30 @@ class Rangement:
 
 
 class Commande :
+
     class Get:
-        pass
+        
+        def get_statut_from_commande_with_id(cnx, id_etat):
+            try:
+                result = cnx.execute(text("SELECT idEtat, nomEtat FROM ETATCOMMANDE WHERE idEtat = " + str(id_etat) + ";"))
+                liste = []
+                for row in result:
+                    liste.append(row[0])
+                return liste
+            except:
+                print("Erreur lors de la récupération du statut de la commande")
+                raise
+
+        def get_statut_from_commande(cnx):
+            try:
+                result = cnx.execute(text("SELECT * FROM ETATCOMMANDE;"))
+                liste = []
+                for row in result:
+                    liste.append(row)
+                return liste
+            except:
+                print("Erreur lors de la récupération du statut de la commande")
+                raise
 
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
