@@ -854,7 +854,7 @@ class Demande :
                 info_commande = []
                 for row in result:
                     info_commande.append(row)
-                return  info_commande
+                return info_commande
             except Exception as e:
                 print("Erreur lors de la récupération des informations sur les commandes :", str(e))
                 raise

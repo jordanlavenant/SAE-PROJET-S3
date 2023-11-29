@@ -726,10 +726,11 @@ def supprimer_materiel_unique(id):
 
 @app.route("/demandes/")
 def demandes():
+
     return render_template(
     "demandes.html",
     title="Demandes",
-    nb_demande = int(Demande.get_nb_demande(cnx)),
+    nb_demande = int(Demande.Get.get_nb_demande(cnx)),
     info_demande = Demande.Get.get_info_demande(cnx),
     chemin = [("base", "Accueil"), ("demandes", "Demandes")]
     )

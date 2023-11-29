@@ -7,12 +7,12 @@
     <!-- si l'utilisateur est connecter -->
     {% if 'utilisateur' in session %}
     <div class="container-main">
-    
+        
+        <!-- sous titre -->
+        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} {{ session['utilisateur'][3] }} !</h2>
+
         <!-- admin -->
         {% if session['utilisateur'][1] == 1 %}
-
-        <!-- sous titre -->
-        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
 
         <a href="{{ url_for('utilisateurs') }}">
             <section class="carte-lien">
@@ -32,8 +32,7 @@
 
         <!-- professeur -->
         {% if session['utilisateur'][1] == 2 %}
-        <!-- sous titre -->
-        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
+
         <a href="{{ url_for('inventaire') }}">
             <section class="carte-lien">
                 <h2>INVENTAIRE</h2>
@@ -51,8 +50,6 @@
 
         <!-- laborantin -->
         {% if session['utilisateur'][1] == 3 %}
-        <!-- sous titre -->
-        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
 
         <a href="{{ url_for('demander') }}">
             <section class="carte-lien">
@@ -108,9 +105,6 @@
                 <a href="{{ url_for('demandes') }}">Consulter les demandes ></a>
             {% endif %}
         </section>
-
-        <!-- sous titre -->
-        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
 
         <a href="{{ url_for('commander') }}">
             <section class="carte-lien">
