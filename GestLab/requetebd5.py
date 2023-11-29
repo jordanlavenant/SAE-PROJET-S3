@@ -861,7 +861,7 @@ class Demande :
             
         def get_info_demande_with_id(cnx, idDemande):
             try:
-                result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel, idBonCommande from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL natural join BONCOMMANDE where idDemande =" + str(idDemande) + ";"))
+                result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL where idDemande =" + str(idDemande) + ";"))
                 info_demande = []
                 for row in result:
                     print(row)

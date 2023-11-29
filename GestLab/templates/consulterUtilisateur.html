@@ -28,7 +28,10 @@
         {% for utilisateur in utilisateurs %}
             <section id="{{ utilisateur[0] }}" class="sous-container-info-utilisateur">
                 <p>{{ utilisateur[2] }} {{ utilisateur[3] }}</p>
-                <a href="{{ url_for('modifier_utilisateur', id=utilisateur[1]) }}"><button>modifier</button></a>
+                <div class="container-modification">
+                    <a href="{{ url_for('modifier_utilisateur', id=utilisateur[1]) }}"><button>modifier</button></a>
+                    <a href="{{ url_for('supprimer_utilisateur', id=utilisateur[1]) }}"><button>supprimer</button></a>
+                </div>
             </section>
         {% endfor %}
     </div>

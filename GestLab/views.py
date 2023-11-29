@@ -594,6 +594,11 @@ def recherche_utilisateur():
     chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
     )
 
+@app.route("/supprimer-utilisateur/<int:id>", methods=("GET","POST",))
+def supprimer_utilisateur(id):
+    print("supprimer utilisateur : "+str(id))
+    return redirect(url_for('consulter_utilisateur'))
+
 @app.route("/modifier-utilisateur/<int:id>/", methods=("GET","POST",))
 def modifier_utilisateur(id):
     f = AjouterUtilisateurForm()
