@@ -568,20 +568,18 @@ def consulter_utilisateur():
 
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
 def recherche_utilisateur():
-    f = RechercherFrom()
-    print("recherche utilisateur")
-    
+    f = RechercherFrom()    
     value = f.get_value()
     print("value : "+value)
     if value != None:
         return render_template(
-            "rechercheUtilisateur.html",
+            "consulterUtilisateur.html",
             utilisateurs = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[0],
             nbUser = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[1],
             categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
             title="Consulter les Utilisateurs",
             RechercherFrom=f,
-            chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+            chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
         )
 
     return render_template(
@@ -637,7 +635,7 @@ def modifier_utilisateur(id):
     email=email,
     statut=statut,
     id=id,
-    chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs"), ("consulter_utilisateur", "Modifier un Utilisateur")] 
+    chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs"), ("consulter_utilisateur", "Modifier un Utilisateur")] 
     )
 
 @app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))

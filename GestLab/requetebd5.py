@@ -679,7 +679,7 @@ class Recherche:
     def recherche_all_in_utilisateur_with_search(cnx, search):
         try:
             list = []
-            result = cnx.execute(text("select * from UTILISATEUR where nom like '%" + search + "%'" or " prenom like '%" + search + "%' ;"))
+            result = cnx.execute(text("select * from UTILISATEUR where idStatut != 1 and nom like '%" + search + "%'" or " prenom like '%" + search + "%' ;"))
             for row in result:
                 print(row)
                 list.append(row)
