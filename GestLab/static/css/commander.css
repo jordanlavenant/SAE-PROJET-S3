@@ -250,14 +250,22 @@ a {
     border-radius: 10px;
     padding: 8px 30px;
     transition: 0.2s;
+    pointer-events: none;
+    cursor: not-allowed; 
+    opacity: 0.5;
 }
 
 #ajouter-commande:hover {
     background-color: #009af0;
     box-shadow: 0 0 15px #009af0;
     transition: 0.2s;
-    cursor: pointer;
+    /* cursor: pointer; */
     color: #fff;
+}
+
+.section-contenu a {
+    pointer-events: none;
+    cursor: not-allowed; 
 }
 
 .section-contenu p {

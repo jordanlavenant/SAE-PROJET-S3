@@ -19,18 +19,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
         boutonMoins.addEventListener('click', function() {
             if (valeur > 0) {
+                // Appliquer les règles CSS
+                boutonAjout.style.pointerEvents = "all";
+                boutonAjout.style.cursor = "pointer";
+                boutonAjout.style.opacity = "1";
                 valeur--;
                 valeurParagraphe.textContent = valeur;
                 maVariableJavaScript = valeur;
                 console.log(maVariableJavaScript);
             }
+            if (valeur == 0) {
+                // Appliquer les règles CSS
+                boutonAjout.style.pointerEvents = "none";
+                boutonAjout.style.cursor = "not-allowed";
+                boutonAjout.style.opacity = "0.5";
+            }
         });
 
         boutonPlus.addEventListener('click', function() {
+            // Appliquer les règles CSS
+            boutonAjout.style.pointerEvents = "all";
+            boutonAjout.style.cursor = "pointer";
+            boutonAjout.style.opacity = "1";
             valeur++;
             valeurParagraphe.textContent = valeur;
             maVariableJavaScript = valeur;
             console.log(maVariableJavaScript);
+            if (valeur == 0) {
+                // Appliquer les règles CSS
+                boutonAjout.style.pointerEvents = "none";
+                boutonAjout.style.cursor = "not-allowed";
+                boutonAjout.style.opacity = "0.5";
+            }
         });
     });
 });
