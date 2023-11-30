@@ -850,7 +850,7 @@ class Demande :
             
         def get_info_demande(cnx):
             try:         
-                result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE natural join BONCOMMANDE;"))
+                result = cnx.execute(text("SELECT idDemande, nom, prenom from UTILISATEUR natural join DEMANDE;"))
                 info_commande = []
                 for row in result:
                     info_commande.append(row)
