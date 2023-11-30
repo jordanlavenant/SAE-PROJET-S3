@@ -277,16 +277,3 @@ a {
     
 }
 
-/* test repliable */
-
-/* Ajoutez du style pour masquer initialement le contenu */
-.item-properties {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-}
-
-/* Ajoutez une classe "collapsed" pour masquer le contenu */
-.item-properties.collapsed {
-    max-height: none; /* Permet à la transition de calculer la hauteur du contenu */
-}

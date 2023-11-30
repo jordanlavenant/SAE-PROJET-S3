@@ -47,6 +47,7 @@
         <div class="state-container">
             {% for item in items_unique[0] %}
                 <div class="item-card" id="{{ item[3] }}">
+                    {% if items_unique[1] > 1 %}
                     <script>
                         function toggleContent(button) {
                             var itemProperties = button.nextElementSibling; // Sélectionnez l'élément suivant, ici, la div avec la classe "item-properties"
@@ -55,10 +56,26 @@
                             itemProperties.classList.toggle("collapsed");
                     
                             // Mettez à jour le texte du bouton en conséquence
-                            button.textContent = itemProperties.classList.contains("collapsed") ? "Déplier" : "Replier";
+                            button.textContent = itemProperties.classList.contains("collapsed") ? "Replier" : "Déplier";
                         }
                     </script>
-                    <button class="toggle-button" onclick="toggleContent(this)">Toggle Content</button>
+
+                    <style>
+                        /* Ajoutez du style pour masquer initialement le contenu */
+                        .item-properties {
+                            max-height: 0;
+                            overflow: hidden;
+                            transition: max-height 0.3s ease-out;
+                        }
+                        
+                        /* Ajoutez une classe "collapsed" pour masquer le contenu */
+                        .item-properties.collapsed {
+                            max-height: none; /* Permet à la transition de calculer la hauteur du contenu */
+                        }
+                    </style>
+
+                    <button class="toggle-button" onclick="toggleContent(this)">Déplier</button>
+                    {% endif %}
                     <div class="item-properties">
                         <div class="header-container">
                             <a href="/commentaire?materiel={{ item_properties[1] }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
