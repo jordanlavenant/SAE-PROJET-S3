@@ -29,7 +29,7 @@ ul {
 
 header {
     position: relative;
-    margin-bottom: 2em;
+    margin-bottom: 0.5em;
 }
 
 ::selection {
@@ -44,6 +44,8 @@ header {
     text-align: center;
     font-size: 70px;
     font-weight: 700;
+    margin-top: 0px;
+    margin-bottom: 5px;
 }
 
 
@@ -119,7 +121,7 @@ header {
     display: flex; 
     flex-wrap: nowrap;
     align-items: center;
-    margin: 0.5em;
+    margin-top: 0.5em;
 }
 
 #fil-ariane li {
