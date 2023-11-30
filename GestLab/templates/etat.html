@@ -47,6 +47,18 @@
         <div class="state-container">
             {% for item in items_unique[0] %}
                 <div class="item-card" id="{{ item[3] }}">
+                    <script>
+                        function toggleContent(button) {
+                            var itemProperties = button.nextElementSibling; // Sélectionnez l'élément suivant, ici, la div avec la classe "item-properties"
+                    
+                            // Ajoute ou supprime la classe "collapsed" pour définir l'état déplié ou replié
+                            itemProperties.classList.toggle("collapsed");
+                    
+                            // Mettez à jour le texte du bouton en conséquence
+                            button.textContent = itemProperties.classList.contains("collapsed") ? "Déplier" : "Replier";
+                        }
+                    </script>
+                    <button class="toggle-button" onclick="toggleContent(this)">Toggle Content</button>
                     <div class="item-properties">
                         <div class="header-container">
                             <a href="/commentaire?materiel={{ item_properties[1] }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
