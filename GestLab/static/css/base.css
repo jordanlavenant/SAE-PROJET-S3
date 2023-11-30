@@ -122,6 +122,7 @@ header {
     flex-wrap: nowrap;
     align-items: center;
     margin-top: 0.5em;
+    margin-left: 10px;
 }
 
 #fil-ariane li {

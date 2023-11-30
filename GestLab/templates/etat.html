@@ -6,38 +6,33 @@
 {% block content %}
 <div class="container-all">
     <div class="container-left">
-        <div class="recap-container">
-            <div class="recap-item">
-                <div class="text">
-                    {{ item_properties[1] }}
-                </div>
-                <div class="text">
-                    <p>Domaine : </p>
-                    <p>{{ item_properties[5] }}</p>
-                </div>
-                <div class="text">
-                    <p>Catégorie : </p>
-                    <p>{{ item_properties[3] }}</p>
-                </div>
-                <div class="text">
-                    <p>Quantité : </p>
-                    <p>{{ items_unique[1] }}</p>
-                </div>
-                <div class="text">
-                    <p>Seuil alerte : </p>
-                    <p>{{ item_properties[-4] }}</p>
-                </div>
-                <div class="text">
-                    <p>Caractéristiques complémentaires : </p>
-                    <p>{{ item_properties[-3] }}</p>
-                </div>
-                <div class="text">
-                    <p>Informations complémentaires et sécurité : </p>
-                    <p>{{ item_properties[-2] }}</p>
-                </div>
+        <div class="recap-item">
+            <div class="text">
+                {{ item_properties[1] }}
             </div>
-            <div class="hard-recap-item">
-            
+            <div class="text">
+                <p>Domaine : </p>
+                <p>{{ item_properties[5] }}</p>
+            </div>
+            <div class="text">
+                <p>Catégorie : </p>
+                <p>{{ item_properties[3] }}</p>
+            </div>
+            <div class="text">
+                <p>Quantité : </p>
+                <p>{{ items_unique[1] }}</p>
+            </div>
+            <div class="text">
+                <p>Seuil alerte : </p>
+                <p>{{ item_properties[-4] }}</p>
+            </div>
+            <div class="text">
+                <p>Caractéristiques complémentaires : </p>
+                <p>{{ item_properties[-3] }}</p>
+            </div>
+            <div class="text">
+                <p>Informations complémentaires et sécurité : </p>
+                <p>{{ item_properties[-2] }}</p>
             </div>
         </div>
 
