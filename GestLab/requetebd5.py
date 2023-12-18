@@ -891,13 +891,14 @@ class Demande :
                 result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL where idDemande =" + str(idDemande) + ";"))
                 info_demande = []
                 for row in result:
-                    result1 = STOCKLABORATOIRE.Get.get_quantite_with_idMateriel(cnx, row[4])
+                    idMat = row[4]
+                    result1 = STOCKLABORATOIRE.Get.get_quantite_with_idMateriel(cnx, idMat)
                     if result1 == None:
                         result1 = 0
-                        info_demande.append(row + str(result1))
+                        info_demande.append(row + (result1,))
                     else:
                         for row1 in result1:
-                            info_demande.append(row + str(row1))
+                            info_demande.append(row + (row1,))
                 return info_demande
             except Exception as e:
                 print("Erreur lors de la récupération des informations sur les commandes :", str(e))
