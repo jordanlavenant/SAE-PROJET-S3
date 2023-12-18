@@ -4,15 +4,19 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/demande.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('demandes') }}">Retour</a>
+<a id="btn-back" href="{{ url_for('demandes') }}">retour</a>
 {% for i in range(0, longeur) %}
-<div id="container-objet">
-    <div id="info">
+<div class="container-objet">
+    <div class="info">
         <p class="texte_blanc"> {{infoCommande[i][3]}} - {{ infoCommande[i][5] }}</p>
         <p class="texte_blanc"> Quantité: {{infoCommande[i][2]}}</p>
     </div>
-    <a id="btn-voir" href="/commander-demande-materiel-unique/{{ idUser }}?idMat={{ infoCommande[i][4] }}&qte={{ infoCommande[i][2] }}&idDemande={{ idDemande }}">Commander</a>
-    <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}">Voir le stock</a>
+    <div class="btns-objet">
+        <a id="btn-voir" href="/commander-demande-materiel-unique/{{ idUser }}?idMat={{ infoCommande[i][4] }}&qte={{ infoCommande[i][2] }}&idDemande={{ idDemande }}">commander</a>
+        {% if infoCommande[i][4] %}
+        <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}" cursor="none" >voir le stock</a>
+        <a id="btn-voir" href="#">supprimer</a>
+    </div>
 </div>
 {%endfor%}
 {% endblock %}
