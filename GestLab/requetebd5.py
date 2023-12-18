@@ -891,10 +891,13 @@ class Demande :
                 result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL where idDemande =" + str(idDemande) + ";"))
                 info_demande = []
                 for row in result:
-                    idMat = row[4]
-                    result1 = STOCKLABORATOIRE.Get.get_quantite_with_idMateriel(cnx, idMat)
-                    for row1 in result1:
-                        info_demande.append(row + row1)
+                    result1 = STOCKLABORATOIRE.Get.get_quantite_with_idMateriel(cnx, row[4])
+                    if result1 == None:
+                        result1 = 0
+                        info_demande.append(row + result1)
+                    else:
+                        for row1 in result1:
+                            info_demande.append(row + row1)
                 return info_demande
             except Exception as e:
                 print("Erreur lors de la récupération des informations sur les commandes :", str(e))
@@ -1103,11 +1106,8 @@ class STOCKLABORATOIRE:
         def get_quantite_with_idMateriel(cnx, idMateriel):
             try:
                 result = cnx.execute(text("SELECT quantiteLaboratoire FROM STOCKLABORATOIRE natural join MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
-                if result is None:
-                    return 0
-                else:
-                    for row in result:
-                        return row[0]
+                for row in result:
+                    return row[0]
             except:
                 print("Erreur lors de la récupération de la quantité")
                 raise
