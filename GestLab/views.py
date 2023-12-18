@@ -499,6 +499,13 @@ def valider_bon_commande_pdf(id):
     PDF_BonCommande.genererpdfBonCommande(session['utilisateur'][0], session['utilisateur'][3], liste_materiel, str(id))
     return send_file("static/data/bonCommande.pdf", as_attachment=True)
 
+@app.route("/fusion-bon-commande")
+def fusion_bon_commande():
+    liste_bon_commande = Bon_commande.Get.get_bon_commande_with_statut_fusion(cnx, 2)
+    print(liste_bon_commande)
+    Bon_commande.Insert.fusion_bon_commande(cnx, liste_bon_commande, session['utilisateur'][4])
+    return redirect(url_for('consulter_bon_commande'))
+
 @app.route("/alertes/")
 def alertes():
     nb_alertes = Alert.get_nb_alert(cnx)
@@ -842,10 +849,12 @@ def login():
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
-        user = f.get_authenticated_user()
+        nom, idStatut, mail, prenom = f.get_authenticated_user()
+        user = nom, idStatut, mail, prenom
         if user != None:
             #login_user(user)
-            session['utilisateur'] = user
+            idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+            session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
             print("login : "+str(session['utilisateur']))
             next = f.next.data or url_for("base")
             return redirect(next)

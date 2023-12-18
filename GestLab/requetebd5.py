@@ -97,7 +97,6 @@ class Utilisateur:
             try:
                 result = cnx.execute(text("select nom,prenom,email,nomStatut from UTILISATEUR natural join STATUT where idUtilisateur = " + str(id) + ";"))
                 for row in result:
-                    print(row)
                     return row
             except:
                 print("erreur de l'id")
@@ -971,10 +970,8 @@ class Bon_commande:
                 result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ");"))
                 liste = []
                 for row in result:
-                    print(row)
                     liste.append(row)
                 for row in result2:
-                    print(row)
                     liste.append(row)
                 return liste
             except:
@@ -995,7 +992,6 @@ class Bon_commande:
                 result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires,referenceMateriel, quantite, informationsComplementairesEtSecurite, idFDS, idBonCommande FROM COMMANDE NATURAL JOIN MATERIEL natural join BONCOMMANDE WHERE idBonCommande = " + str(idbc) + " and idEtat != 1;"))
                 liste = []
                 for row in result:
-                    print(row)
                     liste.append(row)
                 return liste
             except:
@@ -1024,7 +1020,26 @@ class Bon_commande:
             except:
                 print("Erreur lors de la récupération des commandes")
                 raise
+
+        def get_bon_commande_with_statut_fusion(cnx, idetat):
+            try:
+                list = []
+                result = cnx.execute(text("SELECT * FROM BONCOMMANDE natural join COMMANDE WHERE idEtat = " + str(idetat) + ";"))
+                for row in result:
+                    list.append(row)
+                return list
+            except:
+                print("Erreur lors de la récupération des commandes")
+                raise
             
+        def get_max_id_bon_commande(cnx):
+            try:
+                result = cnx.execute(text("SELECT MAX(idBonCommande) FROM BONCOMMANDE;"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de l'id du bon de commande")
+                raise
             
     class Update:
         
@@ -1048,6 +1063,23 @@ class Bon_commande:
                 cnx.commit()
             except:
                 print("Erreur lors de la suppression du bon de commande")
+                raise
+
+    class Insert:
+
+        def fusion_bon_commande(cnx, liste_bon_commande, idUt):
+            try:
+                # partie bon commande
+                id_bon = Bon_commande.Get.get_max_id_bon_commande(cnx) + 1
+                cnx.execute(text("INSERT INTO BONCOMMANDE (idBonCommande, idEtat, idUtilisateur) VALUES ("+str(id_bon)+", 2, "+str(idUt)+");"))
+                cnx.commit()
+                # partie commande
+                for commande in liste_bon_commande:
+                    cnx.execute(text("INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES ("+str(id_bon)+", "+str(commande[3])+", "+str(commande[4])+");"))
+                    Bon_commande.Delete.delete_bonCommande_with_id(cnx, commande[0])
+                    cnx.commit()   
+            except:
+                print("Erreur lors de l'ajout du bon de commande")
                 raise
 
 class Suggestion_materiel:
