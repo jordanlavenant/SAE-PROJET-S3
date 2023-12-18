@@ -287,6 +287,25 @@ class Utilisateur:
             except:
                 print("erreur d'ajout de l'utilisateur")
                 return False
+    class Delete:
+            
+            def delete_utilisateur(cnx, idut):
+                try:
+                    cnx.execute(text("delete from UTILISATEUR where idUtilisateur = '" + str(idut) + "';"))
+                    cnx.commit()
+                    print("utilisateur supprimé")
+                except:
+                    print("erreur de suppression de l'utilisateur")
+                    raise
+    
+            def delete_utilisateur_with_email(cnx, email):
+                try:
+                    cnx.execute(text("delete from UTILISATEUR where email = '" + email + "';"))
+                    cnx.commit()
+                    print("utilisateur supprimé")
+                except:
+                    print("erreur de suppression de l'utilisateur")
+                    raise
 
     
 
@@ -578,6 +597,14 @@ class MaterielUnique:
             raise
 
     class Delete:
+
+        def delete_all_materiel_unique_with_idMateriel(cnx, idMateriel):
+            try:
+                cnx.execute(text("DELETE FROM MATERIELUNIQUE WHERE idMateriel = " + str(idMateriel) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression de tous les matériels uniques")
+                raise
 
         def delete_materiel_unique_in_demande(cnx, idDemande, idMateriel):
             try:

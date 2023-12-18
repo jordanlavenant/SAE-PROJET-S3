@@ -13,24 +13,44 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(maVariableJavaScript);
 
         boutonAjout.addEventListener("click", function() {
-            url = `/ajouter-demande/${idUser}?idMat=${idMat}&qte=${maVariableJavaScript}`;     
+            url = `/commander-materiel-unique/${idUser}?idMat=${idMat}&qte=${maVariableJavaScript}`;
             window.location.href = url;
         });
 
         boutonMoins.addEventListener('click', function() {
             if (valeur > 0) {
+                // Appliquer les règles CSS
+                boutonAjout.style.pointerEvents = "all";
+                boutonAjout.style.cursor = "pointer";
+                boutonAjout.style.opacity = "1";
                 valeur--;
                 valeurParagraphe.textContent = valeur;
                 maVariableJavaScript = valeur;
                 console.log(maVariableJavaScript);
             }
+            if (valeur == 0) {
+                // Appliquer les règles CSS
+                boutonAjout.style.pointerEvents = "none";
+                boutonAjout.style.cursor = "not-allowed";
+                boutonAjout.style.opacity = "0.5";
+            }
         });
 
         boutonPlus.addEventListener('click', function() {
+            // Appliquer les règles CSS
+            boutonAjout.style.pointerEvents = "all";
+            boutonAjout.style.cursor = "pointer";
+            boutonAjout.style.opacity = "1";
             valeur++;
             valeurParagraphe.textContent = valeur;
             maVariableJavaScript = valeur;
             console.log(maVariableJavaScript);
+            if (valeur == 0) {
+                // Appliquer les règles CSS
+                boutonAjout.style.pointerEvents = "none";
+                boutonAjout.style.cursor = "not-allowed";
+                boutonAjout.style.opacity = "0.5";
+            }
         });
     });
 });

@@ -52,20 +52,19 @@
                 <div class="item-card" id="{{ item[3] }}">
                     {% if items_unique[1] > 1 %}
                     <script>
-                        function toggleContent(button) {
-                            var itemProperties = button.nextElementSibling; // Sélectionnez l'élément suivant, ici, la div avec la classe "item-properties"
-                    
-                            // Ajoute ou supprime la classe "collapsed" pour définir l'état déplié ou replié
-                            itemProperties.classList.toggle("collapsed");
-                    
-                            // Mettez à jour le texte du bouton en conséquence
-                            button.textContent = itemProperties.classList.contains("collapsed") ? "Replier" : "Déplier";
+                        function toggleContent(button,id) {
+                            var element = document.getElementById("item_properties_" + id);
+                            var chevron = button.children[0];
+                            console.log(chevron);
+                            element.classList.toggle("collapsed");
+                            chevron.classList.toggle("rotate");
                         }
                     </script>
 
                     <style>
                         /* Ajoutez du style pour masquer initialement le contenu */
                         .item-properties {
+                            display: none;
                             max-height: 0;
                             overflow: hidden;
                             transition: max-height 0.3s ease-out;
@@ -73,13 +72,24 @@
                         
                         /* Ajoutez une classe "collapsed" pour masquer le contenu */
                         .item-properties.collapsed {
+                            display: inline-block;
                             max-height: none; /* Permet à la transition de calculer la hauteur du contenu */
                         }
                     </style>
-
-                    <button class="toggle-button" onclick="toggleContent(this)">Déplier</button>
+                    <div class="toggle-button-container">
+                        <button class="toggle-button" onclick="toggleContent(this,'{{ item[3] }}')">
+                            <img 
+                                src="{{ url_for('static',filename='./images/down-chevron.png') }}"
+                                alt="down-chevron"
+                                id="down-chevron"
+                                width="30"
+                                height="30"
+                            />
+                        </button>
+                        <p class="date-reception-toggle">{{ item[5] }}</p>
+                    </div>
                     {% endif %}
-                    <div class="item-properties">
+                    <div class="item-properties" id="item_properties_{{ item[3] }}">
                         <div class="header-container">
                             <a href="/commentaire?materiel={{ item_properties[1] }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
                         </div>
@@ -89,10 +99,10 @@
                         </div>
                         <div class="date-peremption">
                             <p class="date-peremption-label">Date de péremption : </p>
-                            {% if item[0] == 3 %}
+                            {% if item[1] == 3 %}
                                 <p class="date-peremption-content">{{ item[8] }}</p>
                             {% endif %}
-                            {% if item[0] == 5 %}
+                            {% if item[1] == 5 %}
                                 <p class="date-peremption-content">{{ item[8] }}</p>
                             {% else %}
                                 <p class="date-peremption-content">-</p>
@@ -100,7 +110,7 @@
                         </div>
                         <div class="quantite-container">
                             <p class="quantite-label">Quantité approx.: </p>
-                            {% if item[0] == 5%}
+                            {% if item[1] == 5 %}
                                 <p class="quantite-content">{{ item[7] }} L</p>
                             {% else %}
                                 <p class="quantite-content">-</p>

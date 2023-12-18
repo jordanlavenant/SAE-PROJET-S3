@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterMaterielUnique.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('consulter_utilisateur') }}">retour</a>
+<a id="btn-back" href="{{ url_for('inventaire') }}">retour</a>
 <div class="ajouterMateriel-container">
     <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('modifier_materiel_unique', id=id) }}">
         {{ AjouterMaterielUniqueForm.hidden_tag() }}
