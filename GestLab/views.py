@@ -566,6 +566,8 @@ def consulter_utilisateur():
         chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
     )
 
+
+
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
 def recherche_utilisateur():
     f = RechercherForm()    
@@ -748,12 +750,27 @@ def demande(idDemande):
 @app.route("/inventaire/")
 def inventaire():
     return render_template(
-    "inventaire.html",
-    categories = Categories.get_categories(get_cnx()),
-    items = Materiel.Get.get_all_information_to_Materiel(get_cnx()),
-    alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
-    title="Inventaire",
-    chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
+        "inventaire.html",
+        categories = Categories.get_categories(get_cnx()),
+        items = Materiel.Get.get_all_information_to_Materiel(get_cnx()),
+        alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
+        title="Inventaire",
+        chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
+    )
+
+@app.route("/rechercher-inventaire/", methods=("GET","POST",))
+def rechercher_inventaire():
+    f = RechercherForm()
+    value = f.get_value()
+    print("value : "+value)
+    return render_template(
+        "inventaire.html",
+        categories = Categories.get_categories(get_cnx()),
+        items = Materiel.Get.get_all_information_to_Materiel(get_cnx()),
+        alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
+        title="Inventaire",
+        RechercherForm = f,
+        chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
     )
 
 @app.route("/demander/")
