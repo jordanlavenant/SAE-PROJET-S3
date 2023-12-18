@@ -6,6 +6,9 @@
 {% block content %}
 <div class="btns-header">
     <a id="btn-back" href="{{ url_for('base') }}">Retour</a>
+    {% if len > 1 %}
+    <a id="btn-fusion" href="#">Fusionner les commandes similaires</a>
+    {% endif %}
     <a id="btn-redirect-history" href="{{ url_for('historique_bon_commande') }}">Historique des bons</a>
 </div>
 <section class="info">
