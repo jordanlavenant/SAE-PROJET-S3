@@ -423,9 +423,13 @@ def bon_commande(id):
 @app.route("/consulterBonCommande/")
 def consulter_bon_commande():
     info_bon_commande = Bon_commande.Get.consulter_bon_commande_without_table(cnx)
+    print(info_bon_commande)
     liste_info_user = []
     liste_etat_bon_commande = []
+    nb_bon_commande_attente = 0
     for info in info_bon_commande:
+        if info[1] == 2:
+            nb_bon_commande_attente += 1
         liste_etat_bon_commande.append(Commande.Get.get_statut_from_commande_with_id_etat(cnx, info[1]))
         info_user = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), info[2])
         liste_info_user.append(info_user)
@@ -433,12 +437,20 @@ def consulter_bon_commande():
         "consulterBonCommande.html",
         title="Consultation des Bon de Commande",
         len = len(info_bon_commande),
+        nb_bon_commande_attente = nb_bon_commande_attente,
         bonCommande = info_bon_commande,
         infoUser = liste_info_user,
         listeEtat = liste_etat_bon_commande,
         statutsCommande = Commande.Get.get_statut_from_commande(cnx),
         chemin = [("base", "Accueil"), ('consulter_bon_commande', 'Consulter bon de commande')]
     )
+
+@app.route("/changer-statut-bon-commande", methods=("GET","POST",))
+def changer_statut_bon_commande():
+    idbc = request.args.get('idbc')
+    idStatut = request.args.get('statut')
+    Bon_commande.Update.changer_etat_bonCommande_with_id(cnx, idbc, idStatut)
+    return redirect(url_for('consulter_bon_commande'))
 
 @app.route("/delete-materiel/<int:idbc>/<int:idMat>", methods=("GET","POST",))
 def delete_materiel(idbc, idMat):

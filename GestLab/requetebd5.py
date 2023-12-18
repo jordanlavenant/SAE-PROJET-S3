@@ -1053,6 +1053,14 @@ class Bon_commande:
                 print("Erreur lors du changement d'état du bon de commande")
                 raise
 
+        def changer_etat_bonCommande_with_id(cnx, idbc, idetat):
+            try:
+                cnx.execute(text("UPDATE BONCOMMANDE SET idEtat = " + str(idetat) + " WHERE idBonCommande = " + str(idbc) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors du changement d'état du bon de commande")
+                raise
+
     class Delete:
         
         def delete_bonCommande_with_id(cnx, idbc):

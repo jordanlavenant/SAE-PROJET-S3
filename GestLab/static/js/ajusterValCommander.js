@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const liens = section.querySelector('a');
         let classes = liens.classList;
         let idMat = classes[0];
-        let valeur = classes[1];; 
+        let valeur = classes[1];
         console.log(maVariableJavaScript);
 
         boutonAjout.addEventListener("click", function() {
