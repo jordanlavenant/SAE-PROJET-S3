@@ -1000,9 +1000,8 @@ class Bon_commande:
             
         def consulter_bon_commande_without_table(cnx):
             try:
-                idetat = 1
                 list = []
-                result = cnx.execute(text(" SELECT * FROM BONCOMMANDE WHERE idEtat != " + str(idetat) + ";"))
+                result = cnx.execute(text(" SELECT * FROM BONCOMMANDE WHERE idEtat != 1 and idEtat != 4;"))
                 for row in result:
                     list.append(row)
                 return list
@@ -1075,7 +1074,10 @@ class Bon_commande:
                 cnx.commit()
                 # partie commande
                 for commande in liste_bon_commande:
-                    cnx.execute(text("INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES ("+str(id_bon)+", "+str(commande[3])+", "+str(commande[4])+");"))
+                    if cnx.execute(text("SELECT * FROM COMMANDE WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[3])+";")).first() is None:
+                        cnx.execute(text("INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES ("+str(id_bon)+", "+str(commande[3])+", "+str(commande[4])+");"))
+                    else:
+                        cnx.execute(text("UPDATE COMMANDE SET quantite = quantite + "+str(commande[4])+" WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[3])+";"))
                     Bon_commande.Delete.delete_bonCommande_with_id(cnx, commande[0])
                     cnx.commit()   
             except:
