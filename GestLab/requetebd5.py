@@ -1080,7 +1080,7 @@ class Commande :
 
     class Get:
         
-        def get_statut_from_commande_with_id(cnx, id_boncommande):
+        def get_statut_from_commande_with_id_boncommande(cnx, id_boncommande):
             try:
                 result = cnx.execute(text("SELECT idEtat, nomEtat FROM ETATCOMMANDE NATURAL JOIN BONCOMMANDE WHERE idBonCommande = " + str(id_boncommande) + ";"))
                 liste = []
@@ -1090,8 +1090,8 @@ class Commande :
             except:
                 print("Erreur lors de la récupération du statut de la commande")
                 raise
-            
-        def get_statut_from_commande_with_id(cnx, id_etat):
+
+        def get_statut_from_commande_with_id_etat(cnx, id_etat):
             try:
                 result = cnx.execute(text("SELECT idEtat, nomEtat FROM ETATCOMMANDE WHERE idEtat = " + str(id_etat) + ";"))
                 liste = []
