@@ -17,6 +17,7 @@ a {
     margin-bottom: 2em;
     margin-left: 20px;
     margin-right: 20px;
+    gap: 5%;
 }
 
 .container-left {
@@ -46,7 +47,6 @@ a {
 
 .container-right {
     overflow: auto;
-    /* flex-basis: 40%; */
     flex-grow: 1;
     border-radius: 20px;
     border: #384274 1px solid;
@@ -182,10 +182,32 @@ a {
 
 .toggle-button-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
+    align-items: center;
     justify-content: space-between;
-    padding: 0 10px 0 0;
+    padding: 0 0 0 10px;
     color: white;
+    height: 50px;
+
+    & button {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        font-variant: small-caps;
+        background-color: #384274;
+        color: white;
+        border: none;
+
+        & #down-chevron {
+            transform: rotate(0deg);
+            transition: .5s;
+        }
+
+        & #down-chevron.rotate {
+            transform: rotate(180deg);
+            transition: .5s;
+        }
+    }
 }
 
 .item-card-toggle {

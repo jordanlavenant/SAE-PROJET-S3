@@ -54,8 +54,9 @@
                     <script>
                         function toggleContent(button,id) {
                             var element = document.getElementById("item_properties_" + id);
+                            var chevron = button.nextElementSibling;
                             element.classList.toggle("collapsed");
-                            button.textContent = element.classList.contains("collapsed") ? "Déplier" : "Replier";
+                            chevron.classList.toggle("rotate");
                         }
                     </script>
 
@@ -75,7 +76,15 @@
                         }
                     </style>
                     <div class="toggle-button-container">
-                        <button class="toggle-button" onclick="toggleContent(this,'{{ item[3] }}')">Déplier</button>
+                        <button class="toggle-button" onclick="toggleContent(this,'{{ item[3] }}')">
+                            <img 
+                                src="{{ url_for('static',filename='./images/down-chevron.png') }}"
+                                alt="down-chevron"
+                                id="down-chevron"
+                                width="30"
+                                height="30"
+                            />
+                        </button>
                         <p class="date-reception-toggle">{{ item[5] }}</p>
                     </div>
                     {% endif %}
