@@ -181,6 +181,17 @@ a {
     min-width: 450px; 
 }
 
+.item-card-toggle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 2px;
+
+    & .date-reception-content {
+        color: white;
+    }
+}
+
 .item-properties {
     padding: 5%;
 }
