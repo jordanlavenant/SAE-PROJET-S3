@@ -35,7 +35,9 @@
                 <p>{{ item_properties[-2] }}</p>
             </div>
         </div>
+    </div>
 
+    <div class="container-middle">
         <div class="btns-header">
             <a id="btn-back" href="{{ url_for('inventaire') }}">Retour</a>
             <a id="btn-edit-materiel" href="{{ url_for('modifier_materiel', id=item_properties[0]) }}">Modifier</a>
@@ -43,6 +45,7 @@
             <a id="btn-edit-materiel" href="#">Supprimer</a>
         </div>
     </div>
+
     <div class="container-right">
         <div class="state-container">
             {% for item in items_unique[0] %}
