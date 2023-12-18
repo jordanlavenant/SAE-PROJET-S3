@@ -448,35 +448,35 @@ class Materiel:
 
     class Update:
 
-        def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
+        def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte):
             try:
-                if seuilalerte is None or seuilalerte == "None" :
+                if seuilalerte is None or seuilalerte == "None":
                     seuilalerte = "NULL"
-                cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
-                """cnx.execute(
-                    text(
-                        "UPDATE MATERIEL SET idCategorie = :categorie, "
-                        "nomMateriel = :nom, referenceMateriel = :reference, "
-                        "caracteristiquesComplementaires = :caracteristiques, "
-                        "informationsComplementairesEtSecurite = :infossup, "
-                        "seuilAlerte = :seuilalerte WHERE idMateriel = :idMateriel;"
-                    ),
-                    {
-                        "categorie": categorie,
-                        "nom": nom,
-                        "reference": reference,
-                        "caracteristiques": caracteristiques,
-                        "infossup": infossup,
-                        "seuilalerte": seuilalerte,
-                        "idMateriel": idMateriel,
-                    },
-                )"""
+
+                query = (
+                    "UPDATE MATERIEL SET idCategorie = {}, "
+                    "nomMateriel = '{}', referenceMateriel = '{}', "
+                    "caracteristiquesComplementaires = '{}', "
+                    "informationsComplementairesEtSecurite = '{}', "
+                    "seuilAlerte = {} WHERE idMateriel = {};".format(
+                        categorie,
+                        nom.replace("'", "''"),  # Properly escape single quotes
+                        reference.replace("'", "''"),
+                        caracteristiques.replace("'", "''"),
+                        infossup.replace("'", "''"),
+                        seuilalerte,
+                        idMateriel,
+                    )
+                )
+
+                cnx.execute(text(query))
                 cnx.commit()
                 return True
-            except:
-                print("Erreur lors de la modification du matériel")
+            except Exception as e:
+                print("Erreur lors de la modification du matériel:", str(e))
                 raise
-            
+
+
         def set_all_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajouterMat=False):
             try:
                 result = cnx.execute(text("SELECT idMateriel,quantite from AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + ";"))
@@ -493,31 +493,28 @@ class Materiel:
 
     class Insert: 
 
-        def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
+        def insere_materiel(
+            cnx, idCategorie, nomMateriel, referenceMateriel,
+            caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte
+        ):
             try:
-                if seuilAlerte == '' :
-                    seuilAlerte = "NULL"
-                cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
-                """
                 if seuilAlerte == '':
-                    seuilAlerte = None
+                    seuilAlerte = "NULL"
 
-                cnx.execute(
-                    text(
-                        "INSERT INTO MATERIEL (idCategorie, nomMateriel, referenceMateriel, "
-                        "caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) "
-                        "VALUES (:idCategorie, :nomMateriel, :referenceMateriel, "
-                        ":caracteristiquesComplementaires, :informationsComplementairesEtSecurite, :seuilAlerte);"
-                    ),
-                    {
-                        "idCategorie": idCategorie,
-                        "nomMateriel": nomMateriel,
-                        "referenceMateriel": referenceMateriel,
-                        "caracteristiquesComplementaires": caracteristiquesComplementaires,
-                        "informationsComplementairesEtSecurite": informationsComplementairesEtSecurite,
-                        "seuilAlerte": seuilAlerte,
-                    },
-                )"""
+                query = (
+                    "INSERT INTO MATERIEL (idCategorie, nomMateriel, referenceMateriel, "
+                    "caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) "
+                    "VALUES ({}, '{}', '{}', '{}', '{}', {});".format(
+                        idCategorie,
+                        nomMateriel.replace("'", "''"),  # Properly escape single quotes
+                        referenceMateriel.replace("'", "''"),
+                        caracteristiquesComplementaires.replace("'", "''"),
+                        informationsComplementairesEtSecurite.replace("'", "''"),
+                        seuilAlerte
+                    )
+                )
+
+                cnx.execute(text(query))
                 cnx.commit()
                 return True
             except sqlalchemy.exc.OperationalError as e:
@@ -526,7 +523,8 @@ class Materiel:
             except sqlalchemy.exc.IntegrityError as e:
                 print(f"SQL IntegrityError: {e}")
                 return False
-            
+
+
         def ajout_materiel_in_commande(cnx, idmat, idut, quantite, boolajouterMat):
             try:
                 idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idut)
@@ -598,9 +596,11 @@ class MaterielUnique:
 
     class Delete:
 
-        def delete_all_materiel_unique_with_idMateriel(cnx, idMateriel):
+        def delete_all_materiel_unique_with_idMateriel(cnx, id_materiel):
             try:
-                cnx.execute(text("DELETE FROM MATERIELUNIQUE WHERE idMateriel = " + str(idMateriel) + ";"))
+                cnx.execute(text("DELETE FROM ALERTESENCOURS WHERE idMaterielUnique IN (SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMateriel = " + str(id_materiel) + ");"))
+                cnx.execute(text("DELETE FROM RESERVELABORATOIRE WHERE idMaterielUnique IN (SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMateriel = " + str(id_materiel) + ");"))
+                cnx.execute(text("DELETE FROM MATERIELUNIQUE WHERE idMateriel = " + str(id_materiel) + ";"))
                 cnx.commit()
             except:
                 print("Erreur lors de la suppression de tous les matériels uniques")
@@ -635,28 +635,24 @@ class MaterielUnique:
                     datePeremption = "NULL"
                 else :
                     datePeremption = f"'{str(datePeremption)}'"
-
-                cnx.execute(text("UPDATE MATERIELUNIQUE SET idRangement = " + str(idRangement) + ", dateReception = '" + str(dateReception) + "', datePeremption = " + datePeremption + ", commentaireMateriel = '" + commentaireMateriel + "', quantiteApproximative = " + str(quantiteApproximative) + " WHERE idMaterielUnique = " + str(idMaterielUnique) + ";"))
-                """
-                cnx.execute(
-                    text(
-                        "UPDATE MATERIELUNIQUE SET idRangement = :idRangement, "
-                        "dateReception = :dateReception, datePeremption = :datePeremption, "
-                        "commentaireMateriel = :commentaireMateriel, "
-                        "quantiteApproximative = :quantiteApproximative "
-                        "WHERE idMaterielUnique = :idMaterielUnique;"
-                    ),
-                    {
-                        "idRangement": idRangement,
-                        "dateReception": dateReception,
-                        "datePeremption": datePeremption,
-                        "commentaireMateriel": commentaireMateriel,
-                        "quantiteApproximative": quantiteApproximative,
-                        "idMaterielUnique": idMaterielUnique,
-                    },
+                
+                query = (
+                    "UPDATE MATERIELUNIQUE SET idRangement = {}, "
+                    "dateReception = '{}', datePeremption = {}, "
+                    "commentaireMateriel = '{}', "
+                    "quantiteApproximative = {} "
+                    "WHERE idMaterielUnique = {};".format(
+                        idRangement,
+                        dateReception,
+                        datePeremption,
+                        commentaireMateriel.replace("'", "''"),  # Properly escape single quotes
+                        quantiteApproximative,
+                        idMaterielUnique,
+                    )
                 )
-                """
+                cnx.execute(text(query))
                 cnx.commit()
+
             except:
                 print("Erreur lors de la modification du matériel unique")
                 raise
@@ -665,14 +661,28 @@ class MaterielUnique:
             
     class Insert:
                 
-        def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative):
+        def insere_materiel_unique(
+            cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative
+        ):
             try:
-                if date_peremption is None or date_peremption == 'None' or date_peremption == "" :
+                if date_peremption is None or date_peremption == 'None' or date_peremption == "":
                     date_peremption = "NULL"
-                else :
+                else:
                     date_peremption = f"'{str(date_peremption)}'"
 
-                cnx.execute(text("insert into MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) values ('" + str(id_materiel) + "', '" + position + "', '" + str(date_reception) + "', " + date_peremption + ", '" + commentaire + "',  "+ str(quantite_approximative) + ");"))
+                query = (
+                    "INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, "
+                    "commentaireMateriel, quantiteApproximative) VALUES ('{}', '{}', '{}', {}, '{}', {});".format(
+                        id_materiel,
+                        position,
+                        str(date_reception),
+                        date_peremption,
+                        commentaire.replace("'", "''"),  # Properly escape single quotes
+                        quantite_approximative
+                    )
+                )
+
+                cnx.execute(text(query))
                 cnx.commit()
                 return True
             except sqlalchemy.exc.OperationalError as e:
