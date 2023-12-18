@@ -1102,13 +1102,12 @@ class STOCKLABORATOIRE:
     class Get:
         def get_quantite_with_idMateriel(cnx, idMateriel):
             try:
-                result = cnx.execute(text("SELECT quantiteLaboratoire FROM STOCKLABORATOIRE WHERE idMateriel = " + str(idMateriel) + ";"))
+                result = cnx.execute(text("SELECT quantiteLaboratoire FROM STOCKLABORATOIRE natural join MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
                 for row in result:
                     return row[0]
             except:
                 print("Erreur lors de la récupération de la quantité")
                 raise
-            return result
 
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
