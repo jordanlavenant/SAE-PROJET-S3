@@ -6,7 +6,7 @@
 {% block content %}
 <div class="utilisateur-container-overall">
     <div class="header-container">
-        <a href="{{ url_for('utilisateurs') }}"><button id="btn-retour">retour</button></a>
+        <a href="{{ url_for('base') }}"><button id="btn-retour">retour</button></a>
             <form method="POST" action="{{ url_for('recherche_utilisateur') }}" role="search">
                 <div class="search-content">
                     {{ RechercherFrom.value(size=50, class_="form-control element", placeholder="Chercher un utilisateur") }}
@@ -28,7 +28,10 @@
         {% for utilisateur in utilisateurs %}
             <section id="{{ utilisateur[0] }}" class="sous-container-info-utilisateur">
                 <p>{{ utilisateur[2] }} {{ utilisateur[3] }}</p>
-                <a href="{{ url_for('modifier_utilisateur', id=utilisateur[1]) }}"><button>modifier</button></a>
+                <div class="container-modification">
+                    <a href="{{ url_for('modifier_utilisateur', id=utilisateur[1]) }}"><button>modifier</button></a>
+                    <a href="{{ url_for('supprimer_utilisateur', id=utilisateur[1]) }}"><button>supprimer</button></a>
+                </div>
             </section>
         {% endfor %}
     </div>

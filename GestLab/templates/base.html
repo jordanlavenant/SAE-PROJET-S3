@@ -26,7 +26,7 @@
 
                 <!-- admin -->
                 {% if session['utilisateur'][1] == 1 %} 
-                <li><a href="{{ url_for('utilisateurs') }}">utilisateurs</a></li>
+                <li><a href="{{ url_for('consulter_utilisateur') }}">consulter utilisateurs</a></li>
                 <li><a href="{{ url_for('ajouter_utilisateur') }}">ajouter utilisateur</a></li>
                 {% endif %}
 
@@ -88,7 +88,7 @@
                 <!-- Admin -->
                 {% if session['utilisateur'][1] == 1 %}
                 <ul>
-                    <li><a href="{{ url_for('utilisateurs') }}">Utilisateurs</a></li>
+                    <li><a href="{{ url_for('consulter_utilisateur') }}">Consulter utilisateur</a></li>
                 </ul>
                 {% endif %}
                 

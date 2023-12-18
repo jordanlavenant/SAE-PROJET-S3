@@ -5,6 +5,7 @@
 {% endblock %}
 {% block content %}
 <a id="btn-back" href="{{ url_for('base') }}">Retour</a>
+{% if info_demande != [] %}
 <section>
         <div id="info">
             <img id="attention-orange" src="../static/images/attention-orange.png" alt="attention-orange">
@@ -21,4 +22,12 @@
         </div>
         {%endfor%}
 </section>
+{% else %}
+<section>
+    <div id="info">
+        <img id="attention-orange" src="../static/images/attention-orange.png" alt="attention-orange">
+        <p class="texte_orange">Aucune demande</p>
+    </div>
+</section>
+{% endif %}
 {% endblock %}
