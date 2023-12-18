@@ -891,8 +891,10 @@ class Demande :
                 result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL where idDemande =" + str(idDemande) + ";"))
                 info_demande = []
                 for row in result:
-                    print(row)
-                    info_demande.append(row)
+                    idMat = row[4]
+                    result1 = STOCKLABORATOIRE.Get.get_quantite_stock_labo_with_idMateriel(cnx, idMat)
+                    for row1 in result1:
+                        info_demande.append(row + row1)
                 return info_demande
             except Exception as e:
                 print("Erreur lors de la récupération des informations sur les commandes :", str(e))
@@ -1096,11 +1098,22 @@ class Commande :
             except:
                 print("Erreur lors de la récupération du statut de la commande")
                 raise
+class STOCKLABORATOIRE:
+    class Get:
+        def get_quantite_with_idMateriel(cnx, idMateriel):
+            try:
+                result = cnx.execute(text("SELECT quantiteLaboratoire FROM STOCKLABORATOIRE WHERE idMateriel = " + str(idMateriel) + ";"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de la quantité")
+                raise
 
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
 #     if nomcat is None:
-#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join MATERIELUNIQUE natural left join STOCKLABORATOIRE  natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
+#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join MATERIELUNIQUE natural left join 
+# natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
 #         for row in result:
 #             print(row[1],row[2],row[6])
 #             my_list.append((row[1],row[2],row[6]))
