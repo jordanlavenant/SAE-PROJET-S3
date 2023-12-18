@@ -892,7 +892,7 @@ class Demande :
                 info_demande = []
                 for row in result:
                     idMat = row[4]
-                    result1 = STOCKLABORATOIRE.Get.get_quantite_stock_labo_with_idMateriel(cnx, idMat)
+                    result1 = STOCKLABORATOIRE.Get.get_quantite_with_idMateriel(cnx, idMat)
                     for row1 in result1:
                         info_demande.append(row + row1)
                 return info_demande
