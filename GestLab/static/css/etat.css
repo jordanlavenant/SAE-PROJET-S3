@@ -176,7 +176,6 @@ a {
 .item-card {
     /* flex-basis: 40%; */
     background-color: #384274;
-    padding: 0;
     border-left: 15px solid #2EDD94;
     min-width: 450px; 
 }
@@ -184,6 +183,8 @@ a {
 .toggle-button-container {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    padding: 0 10px 0 0;
     color: white;
 }
 
