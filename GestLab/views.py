@@ -1,4 +1,4 @@
-from .app import app #, db
+from .app import app, csrf #, db
 from flask import render_template, url_for, redirect, request, session, jsonify, send_file
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
@@ -510,6 +510,7 @@ def ajouter_utilisateur():
     )
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
+@csrf.exempt
 def consulter_utilisateur():
     f = RechercherFrom()
     if 'cat' in request.form:
@@ -567,6 +568,7 @@ def consulter_utilisateur():
     )
 
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
+@csrf.exempt
 def recherche_utilisateur():
     f = RechercherFrom()    
     value = f.get_value()
@@ -594,6 +596,7 @@ def recherche_utilisateur():
 
 @app.route("/supprimer-utilisateur/<int:id>", methods=("GET","POST",))
 def supprimer_utilisateur(id):
+    Utilisateur.Delete.delete_utilisateur(cnx, id)
     print("supprimer utilisateur : "+str(id))
     return redirect(url_for('consulter_utilisateur'))
 
@@ -607,24 +610,24 @@ def modifier_utilisateur(id):
             if statut == "professeur":
                 res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
             elif statut == "gestionnaire":
                 res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 4, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
             elif statut == "laborantin":
                 res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 3, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
     prenom, nom, email, statut = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), id)
     return render_template(
     "modifierUtilisateur.html",
@@ -868,24 +871,24 @@ def ajouterUtilisateur():
             if statut == "professeur":
                 res = Utilisateur.Insert.ajout_professeur(cnx, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur d'insertion d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
             elif statut == "gestionnaire":
                 res = Utilisateur.Insert.ajout_gestionnaire(cnx, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur d'insertion d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
             elif statut == "laborantin":
                 res = Utilisateur.Insert.ajout_laborantin(cnx, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur d'insertion d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)

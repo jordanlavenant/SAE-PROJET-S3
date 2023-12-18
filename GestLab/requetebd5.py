@@ -291,6 +291,11 @@ class Utilisateur:
             
             def delete_utilisateur(cnx, idut):
                 try:
+                    bonCommande = cnx.execute(text("select idBonCommande from BONCOMMANDE where idUtilisateur = '" + str(idut) + "';"))
+                    for row in bonCommande:
+                        cnx.execute(text("delete from COMMANDE where idBonCommande = '" + str(row[0]) + "';"))
+                    cnx.execute(text("delete from BONCOMMANDE where idUtilisateur = '" + str(idut) + "';"))
+                    cnx.execute(text("delete from 2FA where idUtilisateur = '" + str(idut) + "';"))
                     cnx.execute(text("delete from UTILISATEUR where idUtilisateur = '" + str(idut) + "';"))
                     cnx.commit()
                     print("utilisateur supprimé")
