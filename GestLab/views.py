@@ -459,10 +459,22 @@ def bon_commande_unique():
 
 @app.route("/historique-bon-commande")
 def historique_bon_commande():
+    info_bon_commande = Bon_commande.Get.consulter_bon_commande_without_table(cnx)
+    liste_info_user = []
+    liste_etat_bon_commande = []
+    for info in info_bon_commande:
+        liste_etat_bon_commande.append(Commande.Get.get_statut_from_commande_with_id_etat(cnx, info[1]))
+        info_user = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), info[2])
+        liste_info_user.append(info_user)
     return render_template(
         "historiqueBonCommande.html",
         title="Historique des Bon de Commande",
-        chemin = [("base", "Accueil"), ("consulter_bon_commande, Consulter bon commande"), ("historique_bon_commande", "Historique des bon de commande")]
+        len = len(info_bon_commande),
+        bonCommande = info_bon_commande,
+        infoUser = liste_info_user,
+        listeEtat = liste_etat_bon_commande,
+        statutsCommande = Commande.Get.get_statut_from_commande(cnx),
+        # chemin = [("base", "Accueil"), ("consulter_bon_commande, Consulter bon commande"), ("historique_bon_commande", "Historique des bon de commande")]
     )
 
 
