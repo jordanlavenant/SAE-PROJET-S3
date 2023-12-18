@@ -89,10 +89,10 @@
                         </div>
                         <div class="date-peremption">
                             <p class="date-peremption-label">Date de péremption : </p>
-                            {% if item[0] == 3 %}
+                            {% if item[1] == 3 %}
                                 <p class="date-peremption-content">{{ item[8] }}</p>
                             {% endif %}
-                            {% if item[0] == 5 %}
+                            {% if item[1] == 5 %}
                                 <p class="date-peremption-content">{{ item[8] }}</p>
                             {% else %}
                                 <p class="date-peremption-content">-</p>
@@ -100,7 +100,7 @@
                         </div>
                         <div class="quantite-container">
                             <p class="quantite-label">Quantité approx.: </p>
-                            {% if item[0] == 5%}
+                            {% if item[1] == 5 %}
                                 <p class="quantite-content">{{ item[7] }} L</p>
                             {% else %}
                                 <p class="quantite-content">-</p>
