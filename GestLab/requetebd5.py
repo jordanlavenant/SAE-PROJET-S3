@@ -1108,6 +1108,7 @@ class STOCKLABORATOIRE:
             except:
                 print("Erreur lors de la récupération de la quantité")
                 raise
+            return result
 
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
