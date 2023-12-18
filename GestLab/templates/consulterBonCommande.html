@@ -15,7 +15,7 @@
     {% for i in range(0, len) %}
     <div class="info-bon">
         <p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p>
-        <a id="suppr-bon" href="#">Supprimer</a>
+        <a id="suppr-bon" href="{{ url_for('delete_bon_commande', id=bonCommande[i][0]) }}">Supprimer</a>
         <select name="" id="statut">
             {% for statut in statutsCommande %}
                 {% if listeEtat[i][0] == statut[0] %}

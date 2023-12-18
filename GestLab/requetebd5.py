@@ -1013,6 +1013,18 @@ class Bon_commande:
             except:
                 print("Erreur lors de la récupération des commandes")
                 raise
+
+        def get_bon_commande_with_statut(cnx, idetat):
+            try:
+                list = []
+                result = cnx.execute(text("SELECT * FROM BONCOMMANDE WHERE idEtat = " + str(idetat) + ";"))
+                for row in result:
+                    list.append(row)
+                return list
+            except:
+                print("Erreur lors de la récupération des commandes")
+                raise
+            
             
     class Update:
         
@@ -1025,6 +1037,17 @@ class Bon_commande:
                 Utilisateur.Insert.ajout_gest_into_boncommande(cnx,idut)
             except:
                 print("Erreur lors du changement d'état du bon de commande")
+                raise
+
+    class Delete:
+        
+        def delete_bonCommande_with_id(cnx, idbc):
+            try:
+                cnx.execute(text("DELETE FROM COMMANDE WHERE idBonCommande = " + str(idbc) + ";"))
+                cnx.execute(text("DELETE FROM BONCOMMANDE WHERE idBonCommande = " + str(idbc) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du bon de commande")
                 raise
 
 class Suggestion_materiel:

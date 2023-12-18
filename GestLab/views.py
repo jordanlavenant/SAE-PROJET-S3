@@ -459,7 +459,7 @@ def bon_commande_unique():
 
 @app.route("/historique-bon-commande")
 def historique_bon_commande():
-    info_bon_commande = Bon_commande.Get.consulter_bon_commande_without_table(cnx)
+    info_bon_commande = Bon_commande.Get.get_bon_commande_with_statut(cnx, 4)
     liste_info_user = []
     liste_etat_bon_commande = []
     for info in info_bon_commande:
@@ -477,6 +477,10 @@ def historique_bon_commande():
         # chemin = [("base", "Accueil"), ("consulter_bon_commande, Consulter bon commande"), ("historique_bon_commande", "Historique des bon de commande")]
     )
 
+@app.route("/delete-bon-commande/<int:id>", methods=("GET","POST",))
+def delete_bon_commande(id):
+    Bon_commande.Delete.delete_bonCommande_with_id(cnx, id)
+    return redirect(url_for('consulter_bon_commande'))
 
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
