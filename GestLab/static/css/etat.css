@@ -30,6 +30,12 @@ a {
     border-radius: 20px;
     border: #384274 1px solid;
 }
+
+.container-middle {
+    display: flex;
+    align-items: center;
+}
+
 .btns-header {
     display: flex;
     flex-direction: column;

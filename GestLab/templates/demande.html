@@ -13,8 +13,13 @@
     </div>
     <div class="btns-objet">
         <a id="btn-voir" href="/commander-demande-materiel-unique/{{ idUser }}?idMat={{ infoCommande[i][4] }}&qte={{ infoCommande[i][2] }}&idDemande={{ idDemande }}">commander</a>
-        {% if infoCommande[i][4] %}
-        <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}" cursor="none" >voir le stock</a>
+        {% if infoCommande[i][-1] == 0 %}
+            <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}"
+                style="cursor: not-allowed;pointer-events: none;opacity: 0.5;"
+            >voir le stock</a>
+        {% else %}
+            <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}">voir le stock</a>
+        {% endif %}
         <a id="btn-voir" href="#">supprimer</a>
     </div>
 </div>
