@@ -1104,6 +1104,12 @@ class STOCKLABORATOIRE:
             try:
                 result = cnx.execute(text("SELECT quantiteLaboratoire FROM STOCKLABORATOIRE natural join MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
                 for row in result:
+                    print(row[0])
+                    print(row[0])
+                    print(row[0])
+                    print(row[0])
+                    print(row[0])
+                    print(row[0])
                     return row[0]
             except:
                 print("Erreur lors de la récupération de la quantité")
