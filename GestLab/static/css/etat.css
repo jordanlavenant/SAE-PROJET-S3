@@ -30,18 +30,14 @@ a {
     border-radius: 20px;
     border: #384274 1px solid;
 }
+.btns-header {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 
-.container-middle {
-   
-    & .btns-header {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-        
-        & a {
-            text-align: center;
-        }
-    }
+}
+.btns-header > a {
+    text-align: center;
 }
 
 .container-right {
@@ -174,26 +170,26 @@ a {
     padding: 0 0 0 10px;
     color: white;
     height: 50px;
+}
 
-    & button {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        font-variant: small-caps;
-        background-color: #384274;
-        color: white;
-        border: none;
+.toggle-button-container > button {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-variant: small-caps;
+    background-color: #384274;
+    color: white;
+    border: none;
+}
 
-        & img {
-            transform: rotate(0deg);
-            transition: .5s;
-        }
+.toggle-button-container > button > img {
+    transform: rotate(0deg);
+    transition: .5s;
+}
 
-        & img.rotate {
-            transform: rotate(180deg);
-            transition: .5s;
-        }
-    }
+.toggle-button-container > button > img.rotate {
+    transform: rotate(180deg);
+    transition: .5s;
 }
 
 .item-card-toggle {
@@ -201,10 +197,10 @@ a {
     flex-direction: row;
     justify-content: space-between;
     padding: 0 2px;
+}
 
-    & .date-reception-content {
-        color: white;
-    }
+.item-card-toggle > .date-reception-content {
+    color: white;
 }
 
 .item-properties {
