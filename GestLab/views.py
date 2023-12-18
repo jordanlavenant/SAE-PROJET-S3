@@ -57,7 +57,7 @@ class ChangerMailForm(FlaskForm):
         mdp = self.mdp.data
         return (ancienMail, nouveauMail, confirmerMail, mdp)
       
-class RechercherFrom(FlaskForm):
+class RechercherForm(FlaskForm):
     value = StringField('value')
     submit = SubmitField('Rechercher')
 
@@ -511,7 +511,7 @@ def ajouter_utilisateur():
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
 def consulter_utilisateur():
-    f = RechercherFrom()
+    f = RechercherForm()
     if 'cat' in request.form:
         selected_value = request.form['cat']
         print("Option sélectionnée : "+selected_value)
@@ -522,7 +522,7 @@ def consulter_utilisateur():
                 nbUser = Utilisateur.Get.get_all_user(get_cnx())[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
-                RechercherFrom=f,
+                RechercherForm=f,
                 chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
         elif selected_value == "Professeur":
@@ -532,7 +532,7 @@ def consulter_utilisateur():
                 nbUser = Utilisateur.Get.get_all_user(get_cnx(), 2)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
-                RechercherFrom=f,
+                RechercherForm=f,
                 chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
         elif selected_value == "Gestionnaire":
@@ -542,7 +542,7 @@ def consulter_utilisateur():
                 nbUser = Utilisateur.Get.get_all_user(get_cnx(), 4)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
-                RechercherFrom=f,
+                RechercherForm=f,
                 chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
         elif selected_value == "Laborantin":
@@ -552,7 +552,7 @@ def consulter_utilisateur():
                 nbUser = Utilisateur.Get.get_all_user(get_cnx(), 3)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="Consulter les Utilisateurs",
-                RechercherFrom=f,
+                RechercherForm=f,
                 chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
 
@@ -562,13 +562,13 @@ def consulter_utilisateur():
         nbUser = Utilisateur.Get.get_all_user(get_cnx())[1],
         categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
         title="Consulter les Utilisateurs",
-        RechercherFrom=f,
+        RechercherForm=f,
         chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
     )
 
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
 def recherche_utilisateur():
-    f = RechercherFrom()    
+    f = RechercherForm()    
     value = f.get_value()
     print("value : "+value)
     if value != None:
@@ -578,7 +578,7 @@ def recherche_utilisateur():
             nbUser = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[1],
             categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
             title="Consulter les Utilisateurs",
-            RechercherFrom=f,
+            RechercherForm=f,
             chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
         )
 
@@ -588,7 +588,7 @@ def recherche_utilisateur():
     nbUser = Utilisateur.Get.get_all_user(get_cnx())[1],
     categories = ["Tous", "Professeur", "Gestionnaire"],
     title="Consulter les Utilisateurs",
-    RechercherFrom=f,
+    RechercherForm=f,
     chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
     )
 
