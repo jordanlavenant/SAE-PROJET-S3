@@ -63,12 +63,12 @@
 }
 
 .info {
-    margin-left: 26vw;
-    margin-right: 30vw;
+    margin-left: 20vw;
+    margin-right: 20vw;
     margin-bottom: 3%;
     margin-top: 3%;
     border-radius: 1em;
-    width: 50%;
+    /* width: 50%; */
     border: solid #384274 2px;
     padding:  1%;
 }
@@ -116,3 +116,20 @@
 
 }
 
+#suppr-bon {
+    color: white;
+    background-color: #384274;
+    border-radius: 10px;
+    border: none;
+    padding: 1% 3%;
+    transition: .2s;
+    font-size: 24px;
+}
+
+#suppr-bon:hover {
+    color: white;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: .2s;
+    cursor: pointer;
+}

@@ -426,7 +426,7 @@ def consulter_bon_commande():
     liste_info_user = []
     liste_etat_bon_commande = []
     for info in info_bon_commande:
-        liste_etat_bon_commande.append(Commande.Get.get_statut_from_commande_with_id(cnx, info[1]))
+        liste_etat_bon_commande.append(Commande.Get.get_statut_from_commande_with_id_etat(cnx, info[1]))
         info_user = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), info[2])
         liste_info_user.append(info_user)
     return render_template(
@@ -445,17 +445,26 @@ def delete_materiel(idbc, idMat):
     Materiel.Delete.delete_materiel_in_BonCommande_whith_id(cnx, idMat, idbc)
     return redirect(url_for('bon_commande', id=idbc))
 
-@app.route("/historique-bon-commande", methods=("GET","POST",))
-def historique_bon_commande():
+@app.route("/bon-commande-unique", methods=("GET","POST",))
+def bon_commande_unique():
     idbc = request.args.get('idbc')
     liste_materiel = Bon_commande.Get.get_bon_commande_with_id(cnx, idbc)
     return render_template(
-        "historiqueBonCommande.html",
+        "bonCommandeUnique.html",
         liste_materiel = liste_materiel,
         title="Bon de Commande N°"+str(idbc),
         idbc = idbc,
-        chemin = [("base", "Accueil"), ("consulter_bon_commande", "Consulter bon de commande"), ("historique_bon_commande", "Historique des Bon de Commande")]
+        chemin = [("base", "Accueil"), ("consulter_bon_commande", "Consulter bon de commande"), ("bon_commande_unique", "Bon de commande")]
     )
+
+@app.route("/historique-bon-commande")
+def historique_bon_commande():
+    return render_template(
+        "historiqueBonCommande.html",
+        title="Historique des Bon de Commande",
+        chemin = [("base", "Accueil"), ("consulter_bon_commande, Consulter bon commande"), ("historique_bon_commande", "Historique des bon de commande")]
+    )
+
 
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):

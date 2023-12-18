@@ -15,7 +15,7 @@
     {% for i in range(0, len) %}
     <div class="info-bon">
         <p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p>
-        <p class="para">Date</p>
+        <a id="suppr-bon" href="#">Supprimer</a>
         <select name="" id="statut">
             {% for statut in statutsCommande %}
                 {% if listeEtat[i][0] == statut[0] %}
@@ -25,7 +25,7 @@
                 {% endif %}
             {% endfor %}
         </select>
-        <a class="btn-consulter" href="/historique-bon-commande?idbc={{ bonCommande[i][0] }}">Consulter le bon ></a>
+        <a class="btn-consulter" href="/bon-commande-unique?idbc={{ bonCommande[i][0] }}">Consulter le bon ></a>
     </div>
     {% endfor %}
 </section>
