@@ -895,13 +895,15 @@ class Demande :
                     result1 = STOCKLABORATOIRE.Get.get_quantite_with_idMateriel(cnx, idMat)
                     if result1 == None:
                         result1 = 0
-                        rowRes = row
+                        rowRes = []
+                        rowRes.append(row)
                         rowRes.append(result1)
                         info_demande.append(rowRes)
                     else:
                         for row1 in result1:
-                            rowRes = row
-                            rowRes.append(row1)
+                            rowRes = []
+                            rowRes.append(row)
+                            rowRes.append(row1[0])
                             info_demande.append(rowRes)
                 return info_demande
             except Exception as e:
