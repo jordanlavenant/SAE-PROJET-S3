@@ -888,24 +888,13 @@ class Demande :
             
         def get_info_demande_with_id(cnx, idDemande):
             try:
+                rowRes = []
                 result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL where idDemande =" + str(idDemande) + ";"))
-                info_demande = []
                 for row in result:
-                    idMat = row[4]
-                    result1 = STOCKLABORATOIRE.Get.get_quantite_with_idMateriel(cnx, idMat)
-                    if result1 == None:
-                        result1 = 0
-                        rowRes = []
-                        rowRes.append(row)
-                        rowRes.append(result1)
-                        info_demande.append(rowRes)
-                    else:
-                        for row1 in result1:
-                            rowRes = []
-                            rowRes.append(row)
-                            rowRes.append(row1[0])
-                            info_demande.append(rowRes)
-                return info_demande
+                    cpt = MaterielUnique.Get.get_nb_materiel_to_MaterielUnique_with_id(cnx, row[4])
+                    print(cpt)
+                    rowRes.append((row[0], row[1], row[2], row[3], row[4], row[5], cpt))
+                return rowRes
             except Exception as e:
                 print("Erreur lors de la récupération des informations sur les commandes :", str(e))
                 raise
