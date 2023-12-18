@@ -54,7 +54,8 @@
                     <script>
                         function toggleContent(button,id) {
                             var element = document.getElementById("item_properties_" + id);
-                            var chevron = button.nextElementSibling;
+                            var chevron = button.children[0];
+                            console.log(chevron);
                             element.classList.toggle("collapsed");
                             chevron.classList.toggle("rotate");
                         }

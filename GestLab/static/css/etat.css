@@ -198,12 +198,12 @@ a {
         color: white;
         border: none;
 
-        & #down-chevron {
+        & img {
             transform: rotate(0deg);
             transition: .5s;
         }
 
-        & #down-chevron.rotate {
+        & img.rotate {
             transform: rotate(180deg);
             transition: .5s;
         }
