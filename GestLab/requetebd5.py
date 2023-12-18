@@ -894,10 +894,10 @@ class Demande :
                     result1 = STOCKLABORATOIRE.Get.get_quantite_with_idMateriel(cnx, row[4])
                     if result1 == None:
                         result1 = 0
-                        info_demande.append(row + result1)
+                        info_demande.append(row + str(result1))
                     else:
                         for row1 in result1:
-                            info_demande.append(row + row1)
+                            info_demande.append(row + str(row1))
                 return info_demande
             except Exception as e:
                 print("Erreur lors de la récupération des informations sur les commandes :", str(e))
