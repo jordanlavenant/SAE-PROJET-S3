@@ -181,6 +181,12 @@ a {
     min-width: 450px; 
 }
 
+.toggle-button-container {
+    display: flex;
+    flex-direction: row;
+    color: white;
+}
+
 .item-card-toggle {
     display: flex;
     flex-direction: row;

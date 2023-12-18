@@ -52,14 +52,10 @@
                 <div class="item-card" id="{{ item[3] }}">
                     {% if items_unique[1] > 1 %}
                     <script>
-                        function toggleContent(button) {
-                            var itemProperties = button.nextElementSibling; // Sélectionnez l'élément suivant, ici, la div avec la classe "item-properties"
-                    
-                            // Ajoute ou supprime la classe "collapsed" pour définir l'état déplié ou replié
-                            itemProperties.classList.toggle("collapsed");
-                    
-                            // Mettez à jour le texte du bouton en conséquence
-                            button.textContent = itemProperties.classList.contains("collapsed") ? "Replier" : "Déplier";
+                        function toggleContent(button,id) {
+                            var element = document.getElementById("item_properties_" + id);
+                            element.classList.toggle("collapsed");
+                            button.textContent = element.classList.contains("collapsed") ? "Déplier" : "Replier";
                         }
                     </script>
 
@@ -78,9 +74,12 @@
                             max-height: none; /* Permet à la transition de calculer la hauteur du contenu */
                         }
                     </style>
-                    <button class="toggle-button" onclick="toggleContent(this)">Déplier</button>
+                    <div class="toggle-button-container">
+                        <button class="toggle-button" onclick="toggleContent(this,'{{ item[3] }}')">Déplier</button>
+                        <p class="date-reception-toggle">{{ item[5] }}</p>
+                    </div>
                     {% endif %}
-                    <div class="item-properties">
+                    <div class="item-properties" id="item_properties_{{ item[3] }}">
                         <div class="header-container">
                             <a href="/commentaire?materiel={{ item_properties[1] }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
                         </div>
