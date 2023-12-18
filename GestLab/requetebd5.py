@@ -635,10 +635,31 @@ class MaterielUnique:
                     datePeremption = "NULL"
                 else :
                     datePeremption = f"'{str(datePeremption)}'"
+                
+                query = (
+                    "UPDATE MATERIELUNIQUE SET idRangement = {}, "
+                    "dateReception = '{}', datePeremption = {}, "
+                    "commentaireMateriel = '{}', "
+                    "quantiteApproximative = {} "
+                    "WHERE idMaterielUnique = {};".format(
+                        idRangement,
+                        dateReception,
+                        datePeremption,
+                        commentaireMateriel.replace("'", "''"),  # Properly escape single quotes
+                        quantiteApproximative,
+                        idMaterielUnique,
+                    )
+                )
+                cnx.execute(text(query))
+                cnx.commit()
 
-                cnx.execute(text("UPDATE MATERIELUNIQUE SET idRangement = " + str(idRangement) + ", dateReception = '" + str(dateReception) + "', datePeremption = " + datePeremption + ", commentaireMateriel = '" + commentaireMateriel + "', quantiteApproximative = " + str(quantiteApproximative) + " WHERE idMaterielUnique = " + str(idMaterielUnique) + ";"))
-                """
-                cnx.execute(
+
+
+
+
+                #cnx.execute(text("UPDATE MATERIELUNIQUE SET idRangement = " + str(idRangement) + ", dateReception = '" + str(dateReception) + "', datePeremption = " + datePeremption + ", commentaireMateriel = '" + commentaireMateriel + "', quantiteApproximative = " + str(quantiteApproximative) + " WHERE idMaterielUnique = " + str(idMaterielUnique) + ";"))
+                
+                """cnx.execute(
                     text(
                         "UPDATE MATERIELUNIQUE SET idRangement = :idRangement, "
                         "dateReception = :dateReception, datePeremption = :datePeremption, "
@@ -655,8 +676,8 @@ class MaterielUnique:
                         "idMaterielUnique": idMaterielUnique,
                     },
                 )
-                """
-                cnx.commit()
+                
+                cnx.commit()"""
             except:
                 print("Erreur lors de la modification du matériel unique")
                 raise
