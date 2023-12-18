@@ -13,7 +13,7 @@ a {
 .container-all {
     display: flex;
     flex-wrap: nowrap;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-bottom: 2em;
     margin-left: 20px;
     margin-right: 20px;
@@ -47,7 +47,6 @@ a {
 .container-right {
     overflow: auto;
     flex-grow: 1;
-    /* overflow: hidden; */
     border-radius: 20px;
     border: #384274 1px solid;
     max-height: 75vh;
