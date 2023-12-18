@@ -596,9 +596,11 @@ class MaterielUnique:
 
     class Delete:
 
-        def delete_all_materiel_unique_with_idMateriel(cnx, idMateriel):
+        def delete_all_materiel_unique_with_idMateriel(cnx, id_materiel):
             try:
-                cnx.execute(text("DELETE FROM MATERIELUNIQUE WHERE idMateriel = " + str(idMateriel) + ";"))
+                cnx.execute(text("DELETE FROM ALERTESENCOURS WHERE idMaterielUnique IN (SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMateriel = " + str(id_materiel) + ");"))
+                cnx.execute(text("DELETE FROM RESERVELABORATOIRE WHERE idMaterielUnique IN (SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMateriel = " + str(id_materiel) + ");"))
+                cnx.execute(text("DELETE FROM MATERIELUNIQUE WHERE idMateriel = " + str(id_materiel) + ";"))
                 cnx.commit()
             except:
                 print("Erreur lors de la suppression de tous les matériels uniques")
