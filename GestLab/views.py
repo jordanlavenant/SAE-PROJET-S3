@@ -830,30 +830,48 @@ def demande(idDemande):
     )
 
 @app.route("/inventaire/")
+@csrf.exempt
 def inventaire():
+    rechercher = RechercherForm()
+    items = Materiel.Get.get_all_information_to_Materiel(get_cnx())
+    # print("-------------------")
+    print(items)
+    #for item in items[0]:
+    #     print(item[0][4])
+    # print("-------------------")
+    # Longueur de l'inventaire : items[1]
     return render_template(
         "inventaire.html",
-        categories = Categories.get_categories(get_cnx()),
-        items = Materiel.Get.get_all_information_to_Materiel(get_cnx()),
+        RechercherForm=rechercher,
+        categories = Domaine.get_domaine(get_cnx()),
+        items = items,
+        nbMateriel = items[1],
         alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
         title="inventaire",
         chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
     )
 
-@app.route("/rechercher-inventaire/", methods=("GET","POST",))
-def rechercher_inventaire():
-    f = RechercherForm()
-    value = f.get_value()
+@app.route("/rechercher-inventaire", methods=("GET","POST",))
+@csrf.exempt
+def recherche_inventaire():
+    rechercher = RechercherForm()
+    value = rechercher.get_value()
+    items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(), value)
     print("value : "+value)
-    return render_template(
-        "inventaire.html",
-        categories = Categories.get_categories(get_cnx()),
-        items = Materiel.Get.get_all_information_to_Materiel(get_cnx()),
-        alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
-        title="inventaire",
-        RechercherForm = f,
-        chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
-    )
+    print(items)
+    if value != None:
+        return render_template(
+            "inventaire.html",
+            categories = Domaine.get_domaine(get_cnx()),
+            items = items,
+            title="inventaire",
+            alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
+            nbMateriel = items[1],
+            RechercherForm=rechercher,
+            chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
+        )
+    return redirect(url_for('inventaire'))
+
 
 @app.route("/demander/")
 def demander():
