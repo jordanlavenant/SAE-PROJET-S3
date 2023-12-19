@@ -219,11 +219,36 @@ def ajouter_materiel():
         print("Erreur lors de la validation du formulaire")
         print(f.errors)
     return render_template(
-    "ajouterMateriel.html",
-    title="Ajouter un matériel",
-    AjouterMaterielForm=f,
-    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+        "ajouterMateriel.html",
+        title="Ajouter un matériel",
+        AjouterMaterielForm=f,
+        chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
     )
+
+@app.route("/recherche-materiel", methods=("GET","POST",))
+@csrf.exempt
+def recherche_materiel():
+    rechercher = RechercherForm()
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
+    value = rechercher.get_value()
+    print("value : "+value)
+    if value != None:
+        liste_materiel = Recherche.recherche_all_in_materiel_with_search(get_cnx(), idbc, value)
+        return render_template(
+            "ajouterMateriel.html",
+            title="commander",
+            idUser = idUser,
+            idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
+            categories = Domaine.get_domaine(get_cnx()),
+            RechercherForm=rechercher,
+            liste_materiel = liste_materiel,
+            nbMateriel = len(liste_materiel),
+            alertes = Alert.get_nb_alert(cnx),
+            demandes = Demande.Get.get_nb_demande(cnx),
+            chemin = [("base", "accueil"), ("commander", "commander")]
+        )
+    return redirect(url_for('ajouter_materiel'))
 
 def get_endroit_choices():
     query = text("SELECT endroit, idEndroit FROM ENDROIT;")
@@ -630,8 +655,6 @@ def consulter_utilisateur():
         RechercherForm=f,
         chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
     )
-
-
 
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
 @csrf.exempt

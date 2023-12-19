@@ -5,6 +5,14 @@
 {% endblock %}
 {% block content %}
 <a id="btn-back" href="{{ url_for('consulter_utilisateur') }}">retour</a>
+
+<form method="POST" action="{{ url_for('recherche_materiel') }}" role="search">
+    <div class="search-content">
+        {{ RechercherForm.value(size=50, class_="form-control element", placeholder="chercher un matériel", id="search-bar") }}
+        <button id="btn-search" type="submit">Rechercher</button>
+    </div>
+</form>
+
 <div class="ajouterMateriel-container">
     <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('ajouter_materiel') }}">
         {{ AjouterMaterielForm.hidden_tag() }}
