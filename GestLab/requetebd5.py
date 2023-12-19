@@ -11,6 +11,7 @@ import json
 import smtplib
 from email.message import EmailMessage
 import qrcode
+from datetime import datetime
 
 cnx = ouvrir_connexion()
 
@@ -211,7 +212,8 @@ class Utilisateur:
         def ajout_gest_into_boncommande(cnx,id):
             try:
                 etat = 1
-                cnx.execute(text("insert into BONCOMMANDE (idEtat,idUtilisateur ) values (" + str(etat) + ", " + str(id) + ");"))
+                format_date = "%Y-%m-%d"
+                cnx.execute(text("insert into BONCOMMANDE (idEtat,idUtilisateur, dateBonCommande) values (" + str(etat) + ", " + str(id) + ", " + str(datetime.now().strftime(format_date)) + ");"))
                 cnx.commit()
                 print("bon de commande ajouté")
             except:
@@ -1033,7 +1035,7 @@ class Bon_commande:
         def consulter_bon_commande_without_table(cnx):
             try:
                 list = []
-                result = cnx.execute(text("SELECT * FROM BONCOMMANDE WHERE idEtat != 1 and idEtat != 4;"))
+                result = cnx.execute(text(" SELECT * FROM BONCOMMANDE WHERE idEtat != 1 and idEtat != 4;"))
                 for row in result:
                     list.append(row)
                 return list
