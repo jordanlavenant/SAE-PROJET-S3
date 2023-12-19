@@ -4,20 +4,22 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/inventaire.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('base') }}">Retour</a>
+<a id="btn-back" href="{{ url_for('base') }}">retour</a>
 <div class="inventaire-container-overall">
     <div class="header-container">
-        <div class="search-content">
-            <input type="text" id="search-bar" placeholder="matériel, produits, ustensibles">
-            <button id="btn-search">Rechercher</button>
-        </div>
+        <form method="POST" action="{{ url_for('recherche_inventaire') }}" role="search">
+            <div class="search-content">
+                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar") }}
+                <button id="btn-search" type="submit">Rechercher</button>
+            </div>
+        </form>
         <div class="filter-container">
             <p>trier par : </p>
-            <form action="/traiter" method="post">
-                <select name="cat" id="categorie-select">
-                    <option value="">(aucun)</option>
-                    {% for categorie in categories %}
-                        <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
+            <form action="/traiter" method="post" id="formulaire-trie-domaine" class="{{ nbMateriel }}">
+                <select name="cat" id="domaine-select">
+                    <option value="">aucun tri</option>
+                    {% for domaine in categories %}
+                        <option value="{{ domaine[1] }}" name="{{ domaine[1] }}">{{ domaine[1] }}</option>
                     {% endfor %}
                 </select>
             </form>
@@ -26,37 +28,40 @@
     <div class="item-container">
         <p id="lenItem" class="{{ items[1] }}" style="display: none;"></p>
         {% for (item,count) in items[0] %}
-            <div class="item" id="{{ item[0] }}">
-                <div class="item-properties">
-                    <h2>{{ item[1] }}</h2>
-                    <div class="quantity-container">
-                        <p class="quantity-label">Quantité : </p>
-                        <p class="quantity">{{ count }} unités</p>
-                    </div>
-                    <div class="footer-properties">
-                        {% if item[0] in alertes.keys() %}
-                            <div class="alerts-state">
-                                <img id="attention-rouge" src="{{ url_for('static',filename='./images/attention-rouge.png') }}" alt="attention-rouge">
-                                <div class="alerts-statement">
-                                    <p class="{{ alertes[item[0]] }} alerts_count" id="alerts_count_{{ item[0] }}">{{ alertes[item[0]] }}</p>
-                                    {% if alertes[item[0]] > 1%}
-                                        <p class="texte_rouge">Alertes</p>
-                                    {% else %}
-                                        <p class="texte_rouge">Alerte</p>
-                                    {% endif %}
+            <section class="section-contenu" id="{{ item[4] }}">
+                <div class="item" id="{{ item[0] }}">
+                    <div class="item-properties">
+                        <h2>{{ item[1] }}</h2>
+                        <div class="quantity-container">
+                            <p class="quantity-label">quantité : </p>
+                            <p class="quantity">{{ count }} unités</p>
+                        </div>
+                        <div class="footer-properties">
+                            {% if item[0] in alertes.keys() %}
+                                <div class="alerts-state">
+                                    <img id="attention-rouge" src="{{ url_for('static',filename='./images/attention-rouge.png') }}" alt="attention-rouge">
+                                    <div class="alerts-statement">
+                                        <p class="{{ alertes[item[0]] }} alerts_count" id="alerts_count_{{ item[0] }}">{{ alertes[item[0]] }}</p>
+                                        {% if alertes[item[0]] > 1%}
+                                            <p class="texte_rouge">alertes</p>
+                                        {% else %}
+                                            <p class="texte_rouge">alerte</p>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
-                        {% else %}
-                            <div></div>
-                        {% endif %}
-                        <a id="btn-redirect-item" href="{{ url_for('etat',id=item[0]) }}">Détails</a>
+                            {% else %}
+                                <div></div>
+                            {% endif %}
+                            <a id="btn-redirect-item" href="{{ url_for('etat',id=item[0]) }}">détails</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
         {% endfor %}
     </div>
 </div>
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='./js/inventaire.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/trieDomaine.js') }}"></script>
 {% endblock %}

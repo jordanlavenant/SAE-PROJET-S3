@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/etat.css') }}">
 {% endblock %}
 {% block content %}
+<a id="btn-back" href="{{ url_for('inventaire') }}">retour</a>
 <div class="container-all">
     <div class="container-left">
         <div class="recap-item">
@@ -39,10 +40,9 @@
 
     <div class="container-middle">
         <div class="btns-header">
-            <a id="btn-back" href="{{ url_for('inventaire') }}">Retour</a>
-            <a id="btn-edit-materiel" href="{{ url_for('modifier_materiel', id=item_properties[0]) }}">Modifier</a>
-            <a id="btn-edit-materiel" href="{{ url_for('ajouter_materiel_unique', id=item_properties[0]) }}">Ajouter</a>
-            <a id="btn-edit-materiel" href="#">Supprimer</a>
+            <a id="btn-edit-materiel" href="{{ url_for('modifier_materiel', id=item_properties[0]) }}">modifier</a>
+            <a id="btn-edit-materiel" href="{{ url_for('ajouter_materiel_unique', id=item_properties[0]) }}">ajouter</a>
+            <a id="btn-edit-materiel" href="{{ url_for('supprimer_materiels_uniques', id=item_properties[0]) }}">supprimer tous les éléments relatifs à cet objet du stock</a>
         </div>
     </div>
 
@@ -52,14 +52,14 @@
                 <div class="item-card" id="{{ item[3] }}">
                     {% if items_unique[1] > 1 %}
                     <script>
-                        function toggleContent(button) {
-                            var itemProperties = button.nextElementSibling; // Sélectionnez l'élément suivant, ici, la div avec la classe "item-properties"
-                    
-                            // Ajoute ou supprime la classe "collapsed" pour définir l'état déplié ou replié
-                            itemProperties.classList.toggle("collapsed");
-                    
-                            // Mettez à jour le texte du bouton en conséquence
-                            button.textContent = itemProperties.classList.contains("collapsed") ? "Replier" : "Déplier";
+                        function toggleContent(container,id) {
+                            var element = document.getElementById("item_properties_" + id);
+                            var chevron = container.children[0].children[0];
+                            var header_text = container.children[1];
+                            element.classList.toggle("collapsed");
+                            chevron.classList.toggle("rotate");
+                            header_text.classList.toggle("hidden");
+
                         }
                     </script>
 
@@ -78,29 +78,55 @@
                             max-height: none; /* Permet à la transition de calculer la hauteur du contenu */
                         }
                     </style>
-                    <button class="toggle-button" onclick="toggleContent(this)">Déplier</button>
+                    <div class="toggle-button-container" onclick="toggleContent(this,'{{ item[3] }}')">
+                        <button class="toggle-button">
+                            <img 
+                                src="{{ url_for('static',filename='./images/down-chevron.png') }}"
+                                alt="down-chevron"
+                                id="down-chevron"
+                                width="30"
+                                height="30"
+                            />
+                        </button>
+                        <p class="date-reception-toggle">{{ item[5] }}</p>
+                    </div>
+                    {% else %}
+                    <script>
+                        document.querySelector(".container-right").style.overflow = "hidden";
+                    </script>
                     {% endif %}
-                    <div class="item-properties">
+                    <div class="item-properties" id="item_properties_{{ item[3] }}">
                         <div class="header-container">
                             <a href="/commentaire?materiel={{ item_properties[1] }}"><img src="{{ url_for('static',filename='./images/flag.png') }}" alt="report-redirect" id="report-redirect-img"></a>
                         </div>
                         <div class="date-reception">
-                            <p class="date-reception-label">Date de réception : </p>
+                            <p class="date-reception-label">date de réception : </p>
                             <p class="date-reception-content">{{ item[5] }}</p>
                         </div>
+
+                        {% if item[1] == 1 %}
                         <div class="date-peremption">
-                            <p class="date-peremption-label">Date de péremption : </p>
-                            {% if item[1] == 3 %}
-                                <p class="date-peremption-content">{{ item[8] }}</p>
-                            {% endif %}
-                            {% if item[1] == 5 %}
-                                <p class="date-peremption-content">{{ item[8] }}</p>
-                            {% else %}
-                                <p class="date-peremption-content">-</p>
-                            {% endif %}
+                            <p class="date-peremption-label">date de péremption : </p>
+                            <p class="date-peremption-content">{{ item[8] }}</p>
                         </div>
+                        {% endif %}
+
+                        {% if item[1] == 3 %}
+                        <div class="date-peremption">
+                            <p class="date-peremption-label">date de péremption : </p>
+                            <p class="date-peremption-content">{{ item[8] }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if item[1] == 5 %}
+                        <div class="date-peremption">
+                            <p class="date-peremption-label">date de péremption : </p>
+                            <p class="date-peremption-content">{{ item[8] }}</p>
+                        </div>
+                        {% endif %}
+
                         <div class="quantite-container">
-                            <p class="quantite-label">Quantité approx.: </p>
+                            <p class="quantite-label">quantité approx.: </p>
                             {% if item[1] == 5 %}
                                 <p class="quantite-content">{{ item[7] }} L</p>
                             {% else %}
@@ -108,7 +134,7 @@
                             {% endif %}
                         </div>
                         <div class="comment-container">
-                            <p class="comment-label">Commentaire : </p>
+                            <p class="comment-label">commentaire : </p>
                             {% if item[6] != None %}
                                 <p class="comment-content">{{ item[6] }}</p>
                             {% else %}
@@ -122,9 +148,9 @@
                                     <div class="alerts-statement">
                                         <p class="{{ alertes[item[0]] }} alerts_count" id="alerts_count_{{ item[3] }}">{{ alertes[item[3]] }}</p>
                                         {% if alertes[item[3]] > 1 %}
-                                            <p class="texte_rouge">Alertes</p>
+                                            <p class="texte_rouge">alertes</p>
                                         {% else %}
-                                            <p class="texte_rouge">Alerte</p>
+                                            <p class="texte_rouge">alerte</p>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -134,13 +160,13 @@
                         </div>
                         <div class="btns">
                             {% if session['utilisateur'][1] == 4 %}
-                                <a id="btn-redirect-order" href="#">Commander</a>
-                                <a id="btn-redirect-order" href="{{ url_for('modifier_materiel_unique', id=item[3]) }}">Modifier</a>
-                                <a id="btn-redirect-order" href="{{ url_for('supprimer_materiel_unique', id=item[3]) }}">Supprimer</a>
+                                <a id="btn-redirect-order" href="#">commander</a>
+                                <a id="btn-redirect-order" href="{{ url_for('modifier_materiel_unique', id=item[3]) }}">modifier</a>
+                                <a id="btn-redirect-order" href="{{ url_for('supprimer_materiel_unique', id=item[3]) }}">supprimer</a>
                             {% endif %}
                             {% if session['utilisateur'][1] == 3 %}
-                                <a id="btn-redirect-order" href="{{ url_for('modifier_materiel_unique', id=item[3]) }}">Modifier</a>
-                                <a id="btn-redirect-order" href="{{ url_for('supprimer_materiel_unique', id=item[3]) }}">Supprimer</a>
+                                <a id="btn-redirect-order" href="{{ url_for('modifier_materiel_unique', id=item[3]) }}">modifier</a>
+                                <a id="btn-redirect-order" href="{{ url_for('supprimer_materiel_unique', id=item[3]) }}">supprimer</a>
                             {% endif %}
                         </div>
                     </div>

@@ -4,51 +4,49 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/modifierMateriel.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('inventaire') }}">retour</a>
+<a id="btn-back" href="{{ url_for('etat',id=id) }}">retour</a>
 <div class="modifierMateriel-container">
-    <div id="modifierMateriel-box">
-        <form class="form-modifMateriel" role="form" method="POST" action="{{ url_for('modifier_materiel', id=id) }}">
-            {{ AjouterMaterielForm.hidden_tag() }}
+    <form class="form-modifMateriel" role="form" method="POST" action="{{ url_for('modifier_materiel', id=id) }}">
+        {{ AjouterMaterielForm.hidden_tag() }}
 
-            <div class="left-side-info">
-                <div class="user-box">
-                    <label for="domaine">Domaine :</label>
-                    <div>{{ AjouterMaterielForm.domaine(size=0, class_="comboBox element") }}</div>
-                </div>
-                <div class="user-box">
-                    <label for="categorie">Catégorie :</label>
-                    <div>{{ AjouterMaterielForm.categorie(size=0, class_="comboBox element") }}</div>
-                </div>
-                <div class="user-box">
-                    <label for="nom">Nom :</label>
-                    <div>{{ AjouterMaterielForm.nom(size=50, class_="form-control element") }}</div>
-                </div>
-                <div class="user-box">
-                    <label for="reference">Référence :</label>
-                    <div>{{ AjouterMaterielForm.reference(size=50, class_="form-control element") }}</div>
-                </div>
-                <div class="user-box">
-                    <label for="seuilalerte">Seuil d'alerte quantité :</label>
-                    <div>{{ AjouterMaterielForm.seuilalerte(size=50, class_="form-control element") }}</div>
-                </div>
+        <div class="left-side-info">
+            <div class="user-box">
+                <label for="domaine">domaine :</label>
+                <div>{{ AjouterMaterielForm.domaine(size=0, class_="comboBox element") }}</div>
             </div>
+            <div class="user-box">
+                <label for="categorie">catégorie :</label>
+                <div>{{ AjouterMaterielForm.categorie(size=0, class_="comboBox element") }}</div>
+            </div>
+            <div class="user-box">
+                <label for="nom">nom :</label>
+                <div>{{ AjouterMaterielForm.nom(size=50, class_="form-control element") }}</div>
+            </div>
+            <div class="user-box">
+                <label for="reference">référence :</label>
+                <div>{{ AjouterMaterielForm.reference(size=50, class_="form-control element") }}</div>
+            </div>
+            <div class="user-box">
+                <label for="seuilalerte">seuil d'alerte quantité :</label>
+                <div>{{ AjouterMaterielForm.seuilalerte(size=50, class_="form-control element") }}</div>
+            </div>
+        </div>
 
-            <div class="right-side-info">
-                <div class="user-box">
-                    <label for="caracteristiques">Caractéristiques :</label>
-                    <div>{{ AjouterMaterielForm.caracteristiques(size=50, class_="form-control text-area") }}</div>
-                </div>
-                <div class="user-box">
-                    <label for="infossup">Informations complémentaires :</label>
-                    <div>{{ AjouterMaterielForm.infossup(size=50, class_="form-control text-area") }}</div>
-                </div>
-                <!--modifier une façon d'uploader une fds ???-->
-                <div class="valid-container">
-                    <input type="submit" value="Modifier matériel" class="element submit">
-                </div>
+        <div class="right-side-info">
+            <div class="user-box">
+                <label for="caracteristiques">caractéristiques :</label>
+                <div>{{ AjouterMaterielForm.caracteristiques(size=50, class_="form-control text-area") }}</div>
             </div>
-        </form>
-    </div>
+            <div class="user-box">
+                <label for="infossup">informations complémentaires :</label>
+                <div>{{ AjouterMaterielForm.infossup(size=50, class_="form-control text-area") }}</div>
+            </div>
+            <!--modifier une façon d'uploader une fds ???-->
+            <div class="valid-container">
+                <input type="submit" value="MODIFIER MATERIEL" class="element submit">
+            </div>
+        </div>
+    </form>
 </div>
 
 <script>

@@ -452,35 +452,35 @@ class Materiel:
 
     class Update:
 
-        def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte) :
+        def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte):
             try:
-                if seuilalerte is None or seuilalerte == "None" :
+                if seuilalerte is None or seuilalerte == "None":
                     seuilalerte = "NULL"
-                cnx.execute(text("UPDATE MATERIEL SET idCategorie = " + str(categorie) + ", nomMateriel = '" + nom + "', referenceMateriel = '" + reference + "', caracteristiquesComplementaires = '" + caracteristiques + "', informationsComplementairesEtSecurite = '" + infossup + "', seuilAlerte = " + str(seuilalerte) + " WHERE idMateriel = " + str(idMateriel) + ";"))     
-                """cnx.execute(
-                    text(
-                        "UPDATE MATERIEL SET idCategorie = :categorie, "
-                        "nomMateriel = :nom, referenceMateriel = :reference, "
-                        "caracteristiquesComplementaires = :caracteristiques, "
-                        "informationsComplementairesEtSecurite = :infossup, "
-                        "seuilAlerte = :seuilalerte WHERE idMateriel = :idMateriel;"
-                    ),
-                    {
-                        "categorie": categorie,
-                        "nom": nom,
-                        "reference": reference,
-                        "caracteristiques": caracteristiques,
-                        "infossup": infossup,
-                        "seuilalerte": seuilalerte,
-                        "idMateriel": idMateriel,
-                    },
-                )"""
+
+                query = (
+                    "UPDATE MATERIEL SET idCategorie = {}, "
+                    "nomMateriel = '{}', referenceMateriel = '{}', "
+                    "caracteristiquesComplementaires = '{}', "
+                    "informationsComplementairesEtSecurite = '{}', "
+                    "seuilAlerte = {} WHERE idMateriel = {};".format(
+                        categorie,
+                        nom.replace("'", "''"),  # Properly escape single quotes
+                        reference.replace("'", "''"),
+                        caracteristiques.replace("'", "''"),
+                        infossup.replace("'", "''"),
+                        seuilalerte,
+                        idMateriel,
+                    )
+                )
+
+                cnx.execute(text(query))
                 cnx.commit()
                 return True
-            except:
-                print("Erreur lors de la modification du matériel")
+            except Exception as e:
+                print("Erreur lors de la modification du matériel:", str(e))
                 raise
-            
+
+
         def set_all_quantite_from_ajouterMat_to_boncommande(cnx, idDemande,idut, boolajouterMat=False):
             try:
                 result = cnx.execute(text("SELECT idMateriel,quantite from AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + ";"))
@@ -497,31 +497,28 @@ class Materiel:
 
     class Insert: 
 
-        def insere_materiel(cnx, idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte):
+        def insere_materiel(
+            cnx, idCategorie, nomMateriel, referenceMateriel,
+            caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte
+        ):
             try:
-                if seuilAlerte == '' :
-                    seuilAlerte = "NULL"
-                cnx.execute(text("insert into MATERIEL (idCategorie, nomMateriel, referenceMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) values (" + idCategorie + ", '" + nomMateriel + "', '" + referenceMateriel + "', '" + caracteristiquesComplementaires + "', '" + informationsComplementairesEtSecurite + "',  "+ str(seuilAlerte) + ");"))
-                """
                 if seuilAlerte == '':
-                    seuilAlerte = None
+                    seuilAlerte = "NULL"
 
-                cnx.execute(
-                    text(
-                        "INSERT INTO MATERIEL (idCategorie, nomMateriel, referenceMateriel, "
-                        "caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) "
-                        "VALUES (:idCategorie, :nomMateriel, :referenceMateriel, "
-                        ":caracteristiquesComplementaires, :informationsComplementairesEtSecurite, :seuilAlerte);"
-                    ),
-                    {
-                        "idCategorie": idCategorie,
-                        "nomMateriel": nomMateriel,
-                        "referenceMateriel": referenceMateriel,
-                        "caracteristiquesComplementaires": caracteristiquesComplementaires,
-                        "informationsComplementairesEtSecurite": informationsComplementairesEtSecurite,
-                        "seuilAlerte": seuilAlerte,
-                    },
-                )"""
+                query = (
+                    "INSERT INTO MATERIEL (idCategorie, nomMateriel, referenceMateriel, "
+                    "caracteristiquesComplementaires, informationsComplementairesEtSecurite, seuilAlerte) "
+                    "VALUES ({}, '{}', '{}', '{}', '{}', {});".format(
+                        idCategorie,
+                        nomMateriel.replace("'", "''"),  # Properly escape single quotes
+                        referenceMateriel.replace("'", "''"),
+                        caracteristiquesComplementaires.replace("'", "''"),
+                        informationsComplementairesEtSecurite.replace("'", "''"),
+                        seuilAlerte
+                    )
+                )
+
+                cnx.execute(text(query))
                 cnx.commit()
                 return True
             except sqlalchemy.exc.OperationalError as e:
@@ -530,7 +527,8 @@ class Materiel:
             except sqlalchemy.exc.IntegrityError as e:
                 print(f"SQL IntegrityError: {e}")
                 return False
-            
+
+
         def ajout_materiel_in_commande(cnx, idmat, idut, quantite, boolajouterMat):
             try:
                 idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idut)
@@ -602,9 +600,11 @@ class MaterielUnique:
 
     class Delete:
 
-        def delete_all_materiel_unique_with_idMateriel(cnx, idMateriel):
+        def delete_all_materiel_unique_with_idMateriel(cnx, id_materiel):
             try:
-                cnx.execute(text("DELETE FROM MATERIELUNIQUE WHERE idMateriel = " + str(idMateriel) + ";"))
+                cnx.execute(text("DELETE FROM ALERTESENCOURS WHERE idMaterielUnique IN (SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMateriel = " + str(id_materiel) + ");"))
+                cnx.execute(text("DELETE FROM RESERVELABORATOIRE WHERE idMaterielUnique IN (SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMateriel = " + str(id_materiel) + ");"))
+                cnx.execute(text("DELETE FROM MATERIELUNIQUE WHERE idMateriel = " + str(id_materiel) + ";"))
                 cnx.commit()
             except:
                 print("Erreur lors de la suppression de tous les matériels uniques")
@@ -639,28 +639,24 @@ class MaterielUnique:
                     datePeremption = "NULL"
                 else :
                     datePeremption = f"'{str(datePeremption)}'"
-
-                cnx.execute(text("UPDATE MATERIELUNIQUE SET idRangement = " + str(idRangement) + ", dateReception = '" + str(dateReception) + "', datePeremption = " + datePeremption + ", commentaireMateriel = '" + commentaireMateriel + "', quantiteApproximative = " + str(quantiteApproximative) + " WHERE idMaterielUnique = " + str(idMaterielUnique) + ";"))
-                """
-                cnx.execute(
-                    text(
-                        "UPDATE MATERIELUNIQUE SET idRangement = :idRangement, "
-                        "dateReception = :dateReception, datePeremption = :datePeremption, "
-                        "commentaireMateriel = :commentaireMateriel, "
-                        "quantiteApproximative = :quantiteApproximative "
-                        "WHERE idMaterielUnique = :idMaterielUnique;"
-                    ),
-                    {
-                        "idRangement": idRangement,
-                        "dateReception": dateReception,
-                        "datePeremption": datePeremption,
-                        "commentaireMateriel": commentaireMateriel,
-                        "quantiteApproximative": quantiteApproximative,
-                        "idMaterielUnique": idMaterielUnique,
-                    },
+                
+                query = (
+                    "UPDATE MATERIELUNIQUE SET idRangement = {}, "
+                    "dateReception = '{}', datePeremption = {}, "
+                    "commentaireMateriel = '{}', "
+                    "quantiteApproximative = {} "
+                    "WHERE idMaterielUnique = {};".format(
+                        idRangement,
+                        dateReception,
+                        datePeremption,
+                        commentaireMateriel.replace("'", "''"),  # Properly escape single quotes
+                        quantiteApproximative,
+                        idMaterielUnique,
+                    )
                 )
-                """
+                cnx.execute(text(query))
                 cnx.commit()
+
             except:
                 print("Erreur lors de la modification du matériel unique")
                 raise
@@ -669,14 +665,28 @@ class MaterielUnique:
             
     class Insert:
                 
-        def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative):
+        def insere_materiel_unique(
+            cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative
+        ):
             try:
-                if date_peremption is None or date_peremption == 'None' or date_peremption == "" :
+                if date_peremption is None or date_peremption == 'None' or date_peremption == "":
                     date_peremption = "NULL"
-                else :
+                else:
                     date_peremption = f"'{str(date_peremption)}'"
 
-                cnx.execute(text("insert into MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, commentaireMateriel, quantiteApproximative) values ('" + str(id_materiel) + "', '" + position + "', '" + str(date_reception) + "', " + date_peremption + ", '" + commentaire + "',  "+ str(quantite_approximative) + ");"))
+                query = (
+                    "INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, "
+                    "commentaireMateriel, quantiteApproximative) VALUES ('{}', '{}', '{}', {}, '{}', {});".format(
+                        id_materiel,
+                        position,
+                        str(date_reception),
+                        date_peremption,
+                        commentaire.replace("'", "''"),  # Properly escape single quotes
+                        quantite_approximative
+                    )
+                )
+
+                cnx.execute(text(query))
                 cnx.commit()
                 return True
             except sqlalchemy.exc.OperationalError as e:
@@ -720,17 +730,36 @@ class Recherche:
             raise
 
     
-    def recherche_all_in_materiel_with_search(cnx, search):
+    def recherche_all_in_materiel_with_search(cnx, idbc, search):
         try:
-            list = []
-            result = cnx.execute(text("select idMateriel,nomMateriel,referenceMateriel,idFDS,idFDS,seuilAlerte,caracteristiquesComplementaires,caracteristiquesComplementaires from MATERIEL where nomMateriel like '%" + search + "%' ;"))
+            liste = []
+            result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite, idCategorie FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + " and nomMateriel like '%" + search + "%';"))
+            result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite, idCategorie FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ") and nomMateriel like '%" + search + "%';"))
             for row in result:
-                print(row)
-                list.append(row)
-            return list
+                    idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
+            for row in result2:
+                idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
+            return liste
         except:
             print("erreur de recherche")
             raise
+
+    def recherche_all_in_inventaire_with_search(cnx, search):
+            try:
+                list = []
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE where nomMateriel like '%" + search + "%' ;"))
+                for row in result:
+                    id = row[0]
+                    result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+                    for row_count in result_count:
+                        print((row_count[1]))
+                        list.append((row,row_count[1]))
+                return list, len(list)
+            except:
+                print("erreur de l'id")
+                raise
 
 
 class Mots_de_passe:
@@ -892,12 +921,13 @@ class Demande :
             
         def get_info_demande_with_id(cnx, idDemande):
             try:
+                rowRes = []
                 result = cnx.execute(text("SELECT nom, prenom, quantite, nomMateriel, idMateriel, referenceMateriel from UTILISATEUR natural join DEMANDE natural join AJOUTERMATERIEL natural join MATERIEL where idDemande =" + str(idDemande) + ";"))
-                info_demande = []
                 for row in result:
-                    print(row)
-                    info_demande.append(row)
-                return info_demande
+                    cpt = MaterielUnique.Get.get_nb_materiel_to_MaterielUnique_with_id(cnx, row[4])
+                    print(cpt)
+                    rowRes.append((row[0], row[1], row[2], row[3], row[4], row[5], cpt))
+                return rowRes
             except Exception as e:
                 print("Erreur lors de la récupération des informations sur les commandes :", str(e))
                 raise
@@ -966,13 +996,15 @@ class Bon_commande:
         def afficher_bon_commande(cnx, idut): #get
             try:
                 idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idut)
-                result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
-                result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ");"))
+                result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite, idCategorie FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+                result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite, idCategorie FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ");"))
                 liste = []
                 for row in result:
-                    liste.append(row)
+                    idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
                 for row in result2:
-                    liste.append(row)
+                    idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
                 return liste
             except:
                 print("Erreur lors de l'affichage de la table")
@@ -1095,19 +1127,19 @@ class Bon_commande:
 class Suggestion_materiel:
     
     def get_all_information_to_Materiel_suggestions(cnx):
-        try:
-            list = []
-            result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie, nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock, 0  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE ;"))
-            for row in result:
-                id = row[0]
-                result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
-                for row_count in result_count:
-                    print((row_count[1]))
-                    list.append((row,row_count[1]))
-            return list, len(list)
-        except:
-            print("erreur de l'id")
-            raise
+            try:
+                list = []
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE ;"))
+                for row in result:
+                    id = row[0]
+                    result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+                    for row_count in result_count:
+                        print((row_count[1]))
+                        list.append((row,row_count[1]))
+                return list, len(list)
+            except:
+                print("erreur de l'id")
+                raise
 
 class Recherche_materiel:
     
@@ -1177,11 +1209,22 @@ class Commande :
             except:
                 print("Erreur lors de la récupération du statut de la commande")
                 raise
+class STOCKLABORATOIRE:
+    class Get:
+        def get_quantite_with_idMateriel(cnx, idMateriel):
+            try:
+                result = cnx.execute(text("SELECT quantiteLaboratoire FROM STOCKLABORATOIRE natural join MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de la quantité")
+                raise
 
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
 #     if nomcat is None:
-#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join MATERIELUNIQUE natural left join STOCKLABORATOIRE  natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
+#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join MATERIELUNIQUE natural left join 
+# natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
 #         for row in result:
 #             print(row[1],row[2],row[6])
 #             my_list.append((row[1],row[2],row[6]))

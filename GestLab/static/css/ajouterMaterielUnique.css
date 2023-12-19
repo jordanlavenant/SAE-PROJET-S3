@@ -27,16 +27,18 @@ p {
 .ajouterMateriel-container {
     display: flex;
     justify-content: center;
-    margin: 5%;
+    align-items: center;
+    margin: 2% 0;
 }
 
 .form-ajoutMateriel {
     background-color: #384274;
-    min-width: 60vw;
+    min-width: 80%;
     padding: 3%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 10px;
 }
 
 .left-side-info {
@@ -109,10 +111,10 @@ p {
     background-color: white;
     padding: 14px 20px;
     border-radius: 20px;
-    font-size: 30px;
+    font-size: 25px;
     border: none;
-    margin-top: 30px;
     transition: 0.2s;
+    text-align: center;
 }
 
 .submit:hover {

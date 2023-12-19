@@ -104,7 +104,7 @@ a {
     align-items: center;
 }
 
-#categorie-select {
+#domaine-select {
     color: #fff;
     background-color: #384274;
     border-radius: 20px;
@@ -113,7 +113,7 @@ a {
     border: none;
 }
 
-#categorie-select {
+#domaine-select {
     cursor: pointer;
     padding: 10px 60px;
 }
