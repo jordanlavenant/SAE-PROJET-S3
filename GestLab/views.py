@@ -874,12 +874,13 @@ def recherche_inventaire():
   
 @app.route("/demander/")
 def demander():
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     return render_template(
         "demander.html",
         title="demander",
-        liste_materiel = Suggestion_materiel.get_all_information_to_Materiel_suggestions(get_cnx()),
+        liste_materiel = Bon_commande.Get.afficher_bon_commande(cnx, idUser),
         categories = Domaine.get_domaine(get_cnx()),
-        idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2]),
+        idUser = idUser,
         chemin = [("base", "accueil"), ("demander", "demander")]
     )
 
@@ -930,15 +931,19 @@ def login():
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
-        nom, idStatut, mail, prenom = f.get_authenticated_user()
-        user = nom, idStatut, mail, prenom
-        if user != None:
-            #login_user(user)
-            idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-            session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
-            print("login : "+str(session['utilisateur']))
-            next = f.next.data or url_for("base")
-            return redirect(next)
+        try:
+            nom, idStatut, mail, prenom = f.get_authenticated_user()
+            user = nom, idStatut, mail, prenom
+            if user != None:
+                #login_user(user)
+                idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+                session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+                print("login : "+str(session['utilisateur']))
+                next = f.next.data or url_for("base")
+                return redirect(next)
+        except:
+            print("erreur de connexion")
+            return redirect(url_for('login'))
     return render_template(
         "login.html",
         title="profil",

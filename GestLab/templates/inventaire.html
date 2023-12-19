@@ -29,7 +29,7 @@
         <p id="lenItem" class="{{ items[1] }}" style="display: none;"></p>
         {% for (item,count) in items[0] %}
             <section class="section-contenu" id="{{ item[4] }}">
-                <div class="item" id="{{ item[0] }}">
+                <div class="item" id="item_{{ item[0] }}">
                     <div class="item-properties">
                         <h2>{{ item[1] }}</h2>
                         <div class="quantity-container">
