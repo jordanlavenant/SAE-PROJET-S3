@@ -11,14 +11,15 @@ a {
 }
 
 .header-container {
-    margin: 5vh 10vw;
+    margin: 5vh 10vw 0 10vw;
 }
 
 .container-top {
+    margin: 0 10vw;
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .search-content {
@@ -58,7 +59,6 @@ a {
 }
 
 #btn-back {
-    margin-left: 10vw;
     color: white;
     background-color: #384274;
     padding: 14px 40px;
@@ -153,6 +153,12 @@ a {
 }
 
 
+.ajouter-materiel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3% 0;
+}
 
 /* partie item */
 
@@ -175,14 +181,21 @@ a {
 
 .section-contenu h3 {
     color: #fff;
+    font-size: 35px;
+    font-weight: 500;
+    flex-basis: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.section-contenu h4 {
+    color: #fff;
     font-size: 30px;
     font-weight: 500;
     flex-basis: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-}
-
-.section-contenu h3 {
     font-weight: bold;
 }
 
