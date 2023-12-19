@@ -208,7 +208,7 @@ def ajouter_materiel():
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
         res = Materiel.Insert.insere_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
         if res:
-            return redirect(url_for('inventaire'))
+            return redirect(url_for('demander'))
         else:
             print("Erreur lors de l'insertion du matériel")
             return redirect(url_for('ajouter_materiel'))
