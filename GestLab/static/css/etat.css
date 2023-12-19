@@ -13,11 +13,8 @@ a {
 .container-all {
     display: flex;
     flex-wrap: nowrap;
-    justify-content: space-between;
-    margin-bottom: 2em;
-    margin-left: 20px;
-    margin-right: 20px;
-    gap: 5%;
+    padding: 2em;
+    gap: 2em;
 }
 
 .container-left {
@@ -25,8 +22,9 @@ a {
     flex-wrap: nowrap;
     justify-content: space-around;
     align-items: center;
-    flex-basis: 40%;
-    max-height: 75vh;
+    flex-basis: 42.5%;
+    /* min-height: 75VH; */
+    max-height: 60vh;
     border-radius: 20px;
     border: #384274 1px solid;
 }
@@ -34,6 +32,7 @@ a {
 .container-middle {
     display: flex;
     align-items: center;
+    flex-basis: 15%;
 }
 
 .btns-header {
@@ -51,11 +50,13 @@ a {
     flex-grow: 1;
     border-radius: 20px;
     border: #384274 1px solid;
-    max-height: 75vh;
-    flex-basis: 40%;
+    /* min-height: 50vh; */
+    max-height: 60vh;
+    flex-basis: 42.5%;
 }
 
 #btn-back {
+    margin-left: 10vw;
     color: white;
     background-color: #384274;
     padding: 14px 40px;
@@ -82,23 +83,18 @@ a {
 
 .recap-item {
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 10px;
-    min-height: 50vh;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10%;
 }
 
 .text {
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     flex-wrap: wrap;
-    flex-basis: 100%;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
     color: #384274;
     font-size: 35px;
-    margin: 0;
-    padding: 0;
 }
 
 .recap-item > .text:nth-of-type(1) {
@@ -178,6 +174,10 @@ a {
     height: 50px;
 }
 
+.toggle-button-container:hover {
+    cursor: pointer;
+}
+
 .toggle-button-container > button {
     display: flex;
     align-items: center;
@@ -196,6 +196,14 @@ a {
 .toggle-button-container > button > img.rotate {
     transform: rotate(180deg);
     transition: .5s;
+}
+
+.date-reception-toggle {
+    display: block;
+}
+
+.date-reception-toggle.hidden {
+    display: none;
 }
 
 .item-card-toggle {

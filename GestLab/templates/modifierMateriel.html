@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/modifierMateriel.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('inventaire') }}">retour</a>
+<a id="btn-back" href="{{ url_for('etat',id=id) }}">retour</a>
 <div class="modifierMateriel-container">
     <form class="form-modifMateriel" role="form" method="POST" action="{{ url_for('modifier_materiel', id=id) }}">
         {{ AjouterMaterielForm.hidden_tag() }}
@@ -43,7 +43,7 @@
             </div>
             <!--modifier une façon d'uploader une fds ???-->
             <div class="valid-container">
-                <input type="submit" value="Modifier matériel" class="element submit">
+                <input type="submit" value="MODIFIER MATERIEL" class="element submit">
             </div>
         </div>
     </form>

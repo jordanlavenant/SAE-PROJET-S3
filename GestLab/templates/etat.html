@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/etat.css') }}">
 {% endblock %}
 {% block content %}
+<a id="btn-back" href="{{ url_for('inventaire') }}">retour</a>
 <div class="container-all">
     <div class="container-left">
         <div class="recap-item">
@@ -39,7 +40,6 @@
 
     <div class="container-middle">
         <div class="btns-header">
-            <a id="btn-back" href="{{ url_for('inventaire') }}">Retour</a>
             <a id="btn-edit-materiel" href="{{ url_for('modifier_materiel', id=item_properties[0]) }}">Modifier</a>
             <a id="btn-edit-materiel" href="{{ url_for('ajouter_materiel_unique', id=item_properties[0]) }}">Ajouter</a>
             <a id="btn-edit-materiel" href="{{ url_for('supprimer_materiels_uniques', id=item_properties[0]) }}">Supprimer tous les éléments relatifs à cet objet du stock</a>
@@ -52,12 +52,14 @@
                 <div class="item-card" id="{{ item[3] }}">
                     {% if items_unique[1] > 1 %}
                     <script>
-                        function toggleContent(button,id) {
+                        function toggleContent(container,id) {
                             var element = document.getElementById("item_properties_" + id);
-                            var chevron = button.children[0];
-                            console.log(chevron);
+                            var chevron = container.children[0].children[0];
+                            var header_text = container.children[1];
                             element.classList.toggle("collapsed");
                             chevron.classList.toggle("rotate");
+                            header_text.classList.toggle("hidden");
+
                         }
                     </script>
 
@@ -76,8 +78,8 @@
                             max-height: none; /* Permet à la transition de calculer la hauteur du contenu */
                         }
                     </style>
-                    <div class="toggle-button-container">
-                        <button class="toggle-button" onclick="toggleContent(this,'{{ item[3] }}')">
+                    <div class="toggle-button-container" onclick="toggleContent(this,'{{ item[3] }}')">
+                        <button class="toggle-button">
                             <img 
                                 src="{{ url_for('static',filename='./images/down-chevron.png') }}"
                                 alt="down-chevron"
