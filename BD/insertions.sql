@@ -105,7 +105,6 @@ INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, commentaireM
 (3, 3, '2023-10-26 12:00:00', null, 1, NULL),
 (2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 10, '2023-10-30') ;
 
---éviter les insertions manuelles sur stocklaboratoire, exceptionnel ici pour les tests sur les alertes
 INSERT INTO STOCKLABORATOIRE(idMateriel, quantiteLaboratoire) VALUES
 (3, 1),
 (1, 0) ;
@@ -121,8 +120,6 @@ INSERT INTO DEMANDE (idUtilisateur, descriptionDemande) VALUES
 INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES
 (2, 2, 2);
 
---(1, 1, 2),
---(1, 2, 5),
 
 INSERT INTO ETATCOMMANDE (nomEtat) VALUES
 ('En attente de la validation du Gestionnaire'),
@@ -130,13 +127,15 @@ INSERT INTO ETATCOMMANDE (nomEtat) VALUES
 ('Expédiée'),
 ('Livrée');
 
+
+
 INSERT INTO BONCOMMANDE (idEtat, idUtilisateur, dateBonCommande) VALUES
 (1, 1, NULL),
 (2, 1, NULL);
 
-INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES
-(1, 1, 2),
-(1, 2, 5);
+-- INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES
+-- (1, 1, 2),
+-- (1, 2, 5);
 
 INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
 (1, 'Entrepôt 1', 12345),

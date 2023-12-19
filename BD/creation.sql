@@ -167,10 +167,17 @@ create table BONCOMMANDE(
     primary key(idBonCommande)
 );
 
+create table ETATDEMANDE(
+    idEtatD int not null auto_increment,
+    nomEtatD varchar(50) not null,
+    primary key(idEtat)
+);
+
 create table COMMANDE(
     idBonCommande int not null references BONCOMMANDE,
     idMateriel int not null references MATERIEL,
     quantite int not null,
+    idEtatD int not null references ETATDEMANDE,
     primary key(idBonCommande,idMateriel)
 );
 
