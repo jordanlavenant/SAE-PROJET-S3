@@ -104,7 +104,7 @@ a {
     align-items: center;
 }
 
-#categorie-select {
+#domaine-select {
     color: #fff;
     background-color: #384274;
     border-radius: 20px;
@@ -113,7 +113,7 @@ a {
     border: none;
 }
 
-#categorie-select {
+#domaine-select {
     cursor: pointer;
     padding: 10px 60px;
 }
@@ -218,14 +218,21 @@ a {
 
 .section-contenu h3 {
     color: #fff;
+    font-size: 35px;
+    font-weight: 500;
+    flex-basis: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.section-contenu h4 {
+    color: #fff;
     font-size: 30px;
     font-weight: 500;
     flex-basis: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-}
-
-.section-contenu h3 {
     font-weight: bold;
 }
 
@@ -241,6 +248,13 @@ a {
     background-color: transparent;
     color: #fff;
     cursor: pointer;
+}
+
+.section-contenu .bottom-side {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
 }
 
 #ajouter-commande {

@@ -9,7 +9,7 @@
     <div class="container-main">
         
         <!-- sous titre -->
-        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} {{ session['utilisateur'][3] }} !</h2>
+        <h2 class="sous-title">bienvenue  {{ session['utilisateur'][0] }} {{ session['utilisateur'][3] }} !</h2>
 
         <!-- admin -->
         {% if session['utilisateur'][1] == 1 %}
@@ -43,7 +43,6 @@
             <section class="carte-lien">
                 <h2>ENVOYER UN COMMENTAIRE</h2>
                 <p>aux gestionnaires</p>
-                <p>à l'administration</p>
             </section>
         </a>
         {% endif %}
@@ -54,23 +53,13 @@
         <a href="{{ url_for('demander') }}">
             <section class="carte-lien">
                 <h2>DEMANDER</h2>
-                <p>produits</p>
-                <p>accessoires</p>
-                <p>verrerie</p>
-                <p>Matériel</p>
-                <p>médias</p>
-                <p>...</p>
+                <p>matériel</p>
             </section>
         </a>
-        <a href="{{ url_for('ajouter_materiel') }}">
+        <a href="#">
             <section class="carte-lien">
                 <h2>AJOUTER</h2>
-                <p>produits</p>
-                <p>accessoires</p>
-                <p>verrerie</p>
-                <p>Matériel</p>
-                <p>médias</p>
-                <p>...</p>
+                <p>matériel</p>
             </section>
         </a>
         <a href="{{ url_for('inventaire') }}">
@@ -109,40 +98,31 @@
         <a href="{{ url_for('commander') }}">
             <section class="carte-lien">
                 <h2>COMMANDER</h2>
-                <p>produits</p>
-                <p>accessoires</p>
-                <p>verrerie</p>
-                <p>Matériel</p>
-                <p>médias</p>
-                <p>...</p>
+                <p>matériel</p>
             </section>
         </a>
         <a href="{{ url_for('alertes') }}">
             <section class="carte-lien">
                 <h2>ALERTES</h2>
-                <p>quantité</p>
-                <p>étalonnages</p>
-                <p>péremptions</p>
+                <p>consulter les alertes</p>
             </section>
         </a>
         <a href="{{ url_for('inventaire') }}">
             <section class="carte-lien">
                 <h2>INVENTAIRE</h2>
-                <p>consulter</p>
+                <p>consulter l'inventaire</p>
             </section>
         </a>
         <a href="{{ url_for('demandes') }}">
             <section class="carte-lien">
                 <h2>DEMANDES</h2>
-                <p>commandes</p>
-                <p>commentaires</p>
+                <p>consulter les demandes</p>
             </section>
         </a>
         <a href="{{ url_for('consulter_bon_commande') }}">
             <section class="carte-lien">
-                <h2>CONSULTER BON COMMANDE</h2>
-                <p>bon de commande</p>
-                <p>...</p>
+                <h2>BON DE COMMANDE</h2>
+                <p>consulter bon commande</p>
             </section>
         {% endif %}
     </div>
@@ -150,6 +130,6 @@
     <!-- si l'utilisateur n'est pas connecter -->
     {% else %}
     <h2 class="sous-title">Bienvenue !</h2>
-    <a id="container-bouton-connexion" href="{{ url_for('login') }}"><button id="btn-connexion">Se Connecter</button></a>
+    <a id="container-bouton-connexion" href="{{ url_for('login') }}"><button id="btn-connexion">se connecter</button></a>
     {% endif %}
 {% endblock %}

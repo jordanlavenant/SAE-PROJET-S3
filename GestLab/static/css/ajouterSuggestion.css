@@ -56,14 +56,14 @@ label {
     cursor: pointer;
 }
 
-.ajouterMateriel-container {
+.ajouterSuggestion-container {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 2% 0 10%;
 }
 
-.form-ajoutMateriel {
+.form-ajoutSuggestion {
     background-color: #384274;
     width: 80%;
     padding: 3%;
@@ -160,6 +160,37 @@ label {
     cursor: pointer;
 }
 
+.fds {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+    padding: 0 0 2%;
+}
+
+.fds-text {
+    color: white;
+    font-size: 25px;
+    margin: 2vh 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkmark label {
+    margin: 0;
+    padding: 0;
+}
+
+.checkmark input {
+    height: 30px;
+    width: 30px;
+}
+
 @media screen and (max-width: 1200px) {
     .pair-info {
         flex-direction: column;
@@ -170,7 +201,7 @@ label {
 }
 
 @media screen and (max-width: 1050px) {
-    .form-ajoutMateriel {
+    .form-ajoutSuggestion {
         flex-direction: column;
         align-items: center;
         gap: 30px;
@@ -192,4 +223,9 @@ label {
     .pair-info > div > p {
         text-align: center;
     }
+}
+
+.fds {
+    display: flex;
+    flex-wrap: nowrap;
 }
