@@ -387,12 +387,15 @@ def commander_demande_materiel_unique(id):
 #     return redirect(url_for('commander'))
 
 @app.route("/commander/")
+@csrf.exempt
 def commander():
+    rechercher = RechercherForm()
     nb_alertes = Alert.get_nb_alert(cnx)
     nb_demandes = Demande.Get.get_nb_demande(cnx)
     idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
     liste_materiel = Bon_commande.Get.afficher_bon_commande(cnx, idUser)
+    nbMateriel = len(liste_materiel)
     print(liste_materiel)
     return render_template(
         "commander.html",
@@ -403,8 +406,35 @@ def commander():
         idUser = idUser,
         idbc = idbc,
         liste_materiel = liste_materiel,
+        nbMateriel = nbMateriel,
+        RechercherForm=rechercher,
         chemin = [("base", "Accueil"), ("commander", "Commander")]
     )
+
+@app.route("/recherche-materiel", methods=("GET","POST",))
+@csrf.exempt
+def recherche_materiel():
+    rechercher = RechercherForm()
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
+    value = rechercher.get_value()
+    print("value : "+value)
+    if value != None:
+        liste_materiel = Recherche.recherche_all_in_materiel_with_search(get_cnx(), idbc, value)
+        return render_template(
+            "commander.html",
+            title="Commander",
+            idUser = idUser,
+            idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
+            categories = Domaine.get_domaine(get_cnx()),
+            RechercherForm=rechercher,
+            liste_materiel = liste_materiel,
+            nbMateriel = len(liste_materiel),
+            alertes = Alert.get_nb_alert(cnx),
+            demandes = Demande.Get.get_nb_demande(cnx),
+            chemin = [("base", "Accueil"), ("commander", "Commander")]
+        )
+    return redirect(url_for('commander'))
 
 @app.route("/bon-commande/<int:id>")
 def bon_commande(id):
@@ -413,11 +443,11 @@ def bon_commande(id):
     return render_template(
         "bonDeCommande.html",
         id = id,
-        categories = Domaine.get_domaine(get_cnx()),
         idUser = idUser,
+        categories = Domaine.get_domaine(get_cnx()),
+        title = "bon de commande",
         liste_materiel = liste_materiel,
         longueur = len(liste_materiel),
-        title = "bon de commande",
         chemin = [("base", "Accueil"), ("commander", "Commander"), ('demandes', 'Bon de commande')]
     )
 @app.route("/consulterBonCommande/")

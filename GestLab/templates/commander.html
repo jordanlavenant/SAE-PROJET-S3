@@ -34,18 +34,20 @@
             </div>
             <a class="lien-item" href="{{ url_for('bon_commande', id=idbc) }}"><button id="btn-retour">Voir le bon de commande</button></a>
         </div>
-        <div class="search-content">
-            <input type="text" id="search-bar" placeholder="Chercher un matériel">
-            <button id="btn-search">Rechercher</button>
-        </div>
+        <form method="POST" action="{{ url_for('recherche_materiel') }}" role="search">
+            <div class="search-content">
+                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar") }}
+                <button id="btn-search" type="submit">Rechercher</button>
+            </div>
+        </form>
         <div class="filter-container">
             <div class="filter-sous-container">
                 <p>trier par : </p>
-                <form action="/traiter" method="post">
-                    <select name="cat" id="categorie-select">
+                <form class="{{ nbMateriel }}" id="formulaire-trie-domaine" action="/traiter" method="post">
+                    <select name="cat" id="domaine-select">
                         <option value="aucun-tri">aucun tri</option>
-                        {% for categorie in categories %}
-                            <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
+                        {% for domaine in categories %}
+                            <option value="{{ domaine[1] }}" name="{{ domaine[1] }}">{{ domaine[1] }}</option>
                         {% endfor %}
                     </select>
                 </form>
@@ -55,7 +57,7 @@
     </div>
     <div class="container-contenu">
         {% for item in liste_materiel %}
-            <section class="section-contenu">
+            <section class="section-contenu" id="{{ item[6] }}">
                 <h3>{{ item[1] }} - {{ item[3] }}</h3>
                 <h3>{{ item[5] }}</h3>
                 <div class="choisir-item">
@@ -75,4 +77,5 @@
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='./js/ajusterValCommander.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/trieDomaine.js') }}"></script>
 {% endblock %}

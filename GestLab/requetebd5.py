@@ -730,14 +730,19 @@ class Recherche:
             raise
 
     
-    def recherche_all_in_materiel_with_search(cnx, search):
+    def recherche_all_in_materiel_with_search(cnx, idbc, search):
         try:
-            list = []
-            result = cnx.execute(text("select idMateriel,nomMateriel,referenceMateriel,idFDS,idFDS,seuilAlerte,caracteristiquesComplementaires,caracteristiquesComplementaires from MATERIEL where nomMateriel like '%" + search + "%' ;"))
+            liste = []
+            result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite, idCategorie FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + " and nomMateriel like '%" + search + "%';"))
+            result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite, idCategorie FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ") and nomMateriel like '%" + search + "%';"))
+            # result = cnx.execute(text("select idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite, idCategorie from MATERIEL where nomMateriel like '%" + search + "%' ;"))
             for row in result:
-                print(row)
-                list.append(row)
-            return list
+                    idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
+            for row in result2:
+                idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
+            return liste
         except:
             print("erreur de recherche")
             raise
@@ -977,13 +982,15 @@ class Bon_commande:
         def afficher_bon_commande(cnx, idut): #get
             try:
                 idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idut)
-                result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
-                result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ");"))
+                result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite, idCategorie FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+                result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite, idCategorie FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ");"))
                 liste = []
                 for row in result:
-                    liste.append(row)
+                    idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
                 for row in result2:
-                    liste.append(row)
+                    idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
                 return liste
             except:
                 print("Erreur lors de l'affichage de la table")
