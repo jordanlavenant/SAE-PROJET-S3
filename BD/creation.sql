@@ -139,10 +139,18 @@ create table FOURNISSEUR(
     primary key(idFournisseur)
 );
 
+create table ETATCOMMANDE(
+    idEtat int not null auto_increment,
+    nomEtat varchar(50) not null,
+    primary key(idEtat)
+);
+
+
 create table DEMANDE(
     idDemande int not null auto_increment,
     idUtilisateur int not null references UTILISATEUR,
     descriptionDemande varchar(2000),
+    idEtatD int not null references ETATDEMANDE,
     primary key(idDemande)
 );
 
@@ -153,11 +161,6 @@ create table AJOUTERMATERIEL(
     primary key(idDemande, idMateriel)
 );
 
-create table ETATCOMMANDE(
-    idEtat int not null auto_increment,
-    nomEtat varchar(50) not null,
-    primary key(idEtat)
-);
 
 create table BONCOMMANDE(
     idBonCommande int not null auto_increment,
@@ -177,7 +180,6 @@ create table COMMANDE(
     idBonCommande int not null references BONCOMMANDE,
     idMateriel int not null references MATERIEL,
     quantite int not null,
-    idEtatD int not null references ETATDEMANDE,
     primary key(idBonCommande,idMateriel)
 );
 
