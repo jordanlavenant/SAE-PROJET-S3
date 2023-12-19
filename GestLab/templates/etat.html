@@ -103,17 +103,28 @@
                             <p class="date-reception-label">date de réception : </p>
                             <p class="date-reception-content">{{ item[5] }}</p>
                         </div>
+
+                        {% if item[1] == 1 %}
                         <div class="date-peremption">
                             <p class="date-peremption-label">date de péremption : </p>
-                            {% if item[1] == 3 %}
-                                <p class="date-peremption-content">{{ item[8] }}</p>
-                            {% endif %}
-                            {% if item[1] == 5 %}
-                                <p class="date-peremption-content">{{ item[8] }}</p>
-                            {% else %}
-                                <p class="date-peremption-content">-</p>
-                            {% endif %}
+                            <p class="date-peremption-content">{{ item[8] }}</p>
                         </div>
+                        {% endif %}
+
+                        {% if item[1] == 3 %}
+                        <div class="date-peremption">
+                            <p class="date-peremption-label">date de péremption : </p>
+                            <p class="date-peremption-content">{{ item[8] }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if item[1] == 5 %}
+                        <div class="date-peremption">
+                            <p class="date-peremption-label">date de péremption : </p>
+                            <p class="date-peremption-content">{{ item[8] }}</p>
+                        </div>
+                        {% endif %}
+
                         <div class="quantite-container">
                             <p class="quantite-label">quantité approx.: </p>
                             {% if item[1] == 5 %}
