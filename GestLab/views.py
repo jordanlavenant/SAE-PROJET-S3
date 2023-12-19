@@ -59,7 +59,7 @@ class ChangerMailForm(FlaskForm):
       
 class RechercherForm(FlaskForm):
     value = StringField('value')
-    submit = SubmitField('Rechercher')
+    submit = SubmitField('rechercher')
 
     def get_value(self):
         value = self.value.data
@@ -120,7 +120,7 @@ class CommentaireForm(FlaskForm):
     
 class MdpOublierForm(FlaskForm):
     email = StringField('email', validators=[DataRequired()])
-    submit = SubmitField('Recevoir un nouveau mot de passe')
+    submit = SubmitField('recevoir un nouveau mot de passe')
 
     def get_email(self):
         email = self.email.data
@@ -217,7 +217,7 @@ def ajouter_materiel():
         print(f.errors)
     return render_template(
     "ajouterMateriel.html",
-    title="Ajouter un matériel",
+    title="ajouter un matériel",
     AjouterMaterielForm=f,
     chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
     )
@@ -265,7 +265,7 @@ def ajouter_materiel_unique(id):
         print(f.errors)
     return render_template(
     "ajouterMaterielUnique.html",
-    title="Ajouter un matériel au stock",
+    title="ajouter un matériel au stock",
     AjouterMaterielUniqueForm=f,
     id = id,
     chemin = [("base", "Accueil")]
@@ -396,7 +396,7 @@ def commander():
     print(liste_materiel)
     return render_template(
         "commander.html",
-        title="Commander du Matériel",
+        title="commander du matériel",
         categories = Domaine.get_domaine(get_cnx()),
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
@@ -431,7 +431,7 @@ def consulter_bon_commande():
         liste_info_user.append(info_user)
     return render_template(
         "consulterBonCommande.html",
-        title="Consultation des Bon de Commande",
+        title="consultation des bon de commande",
         len = len(info_bon_commande),
         bonCommande = info_bon_commande,
         infoUser = liste_info_user,
@@ -452,7 +452,7 @@ def historique_bon_commande():
     return render_template(
         "historiqueBonCommande.html",
         liste_materiel = liste_materiel,
-        title="Bon de Commande N°"+str(idbc),
+        title="bon de commande n°"+str(idbc),
         idbc = idbc,
         chemin = [("base", "Accueil"), ("consulter_bon_commande", "Consulter bon de commande"), ("historique_bon_commande", "Historique des Bon de Commande")]
     )
@@ -483,7 +483,7 @@ def alertes():
         alertes = str(nb_alertes),
         nb_alerte = nb_alertes,
         info_materiels = info_materiel,
-        title="Alertes",
+        title="alertes",
         chemin = [("base", "Accueil"), ("alertes", "Alertes")]
     )
 
@@ -492,7 +492,7 @@ def etat(id):
     return render_template(
         "etat.html",
         id=id,
-        title="Etat",
+        title="etat",
         item_properties = Materiel.Get.get_all_information_to_Materiel_with_id(cnx, id),
         items_unique = MaterielUnique.Get.get_all_information_to_MaterielUnique_with_id(cnx, id),
         alertes = Alert.nb_alert_par_materielUnique_dict(cnx),
@@ -504,7 +504,7 @@ def ajouter_utilisateur():
     f = AjouterUtilisateurForm()
     return render_template(
         "ajouterUtilisateur.html",
-        title="Ajouter un Utilisateur",
+        title="ajouter un utilisateur",
         AjouterUtilisateurForm=f,
         chemin = [("base", "Accueil"), ("ajouter_utilisateur", "Ajouter un Utilisateur")]
     )
@@ -521,7 +521,7 @@ def consulter_utilisateur():
                 utilisateurs = Utilisateur.Get.get_all_user(get_cnx())[0],
                 nbUser = Utilisateur.Get.get_all_user(get_cnx())[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
-                title="Consulter les Utilisateurs",
+                title="consulter les utilisateurs",
                 RechercherForm=f,
                 chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
@@ -531,7 +531,7 @@ def consulter_utilisateur():
                 utilisateurs = Utilisateur.Get.get_all_user(get_cnx(), 2)[0],
                 nbUser = Utilisateur.Get.get_all_user(get_cnx(), 2)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
-                title="Consulter les Utilisateurs",
+                title="consulter les utilisateurs",
                 RechercherForm=f,
                 chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
@@ -541,7 +541,7 @@ def consulter_utilisateur():
                 utilisateurs = Utilisateur.Get.get_all_user(get_cnx(), 4)[0],
                 nbUser = Utilisateur.Get.get_all_user(get_cnx(), 4)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
-                title="Consulter les Utilisateurs",
+                title="consulter les utilisateurs",
                 RechercherForm=f,
                 chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
@@ -551,7 +551,7 @@ def consulter_utilisateur():
                 utilisateurs = Utilisateur.Get.get_all_user(get_cnx(), 3)[0],
                 nbUser = Utilisateur.Get.get_all_user(get_cnx(), 3)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
-                title="Consulter les Utilisateurs",
+                title="consulter les utilisateurs",
                 RechercherForm=f,
                 chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
             )
@@ -561,7 +561,7 @@ def consulter_utilisateur():
         utilisateurs = Utilisateur.Get.get_all_user(get_cnx())[0],
         nbUser = Utilisateur.Get.get_all_user(get_cnx())[1],
         categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
-        title="Consulter les Utilisateurs",
+        title="consulter les utilisateurs",
         RechercherForm=f,
         chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
     )
@@ -579,7 +579,7 @@ def recherche_utilisateur():
             utilisateurs = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[0],
             nbUser = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[1],
             categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
-            title="Consulter les Utilisateurs",
+            title="consulter les utilisateurs",
             RechercherForm=f,
             chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
         )
@@ -589,7 +589,7 @@ def recherche_utilisateur():
         utilisateurs = Utilisateur.Get.get_all_user(get_cnx())[0],
         nbUser = Utilisateur.Get.get_all_user(get_cnx())[1],
         categories = ["Tous", "Professeur", "Gestionnaire"],
-        title="Consulter les Utilisateurs",
+        title="consulter les utilisateurs",
         RechercherForm=f,
         chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
     )
@@ -630,7 +630,7 @@ def modifier_utilisateur(id):
     prenom, nom, email, statut = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), id)
     return render_template(
         "modifierUtilisateur.html",
-        title="Modifier un Utilisateur",
+        title="modifier un utilisateur",
         AjouterUtilisateurForm=f,
         nom=nom,
         prenom=prenom,
@@ -671,7 +671,7 @@ def modifier_materiel(id):
         print(f.errors)
     return render_template(
         "modifierMateriel.html",
-        title="Modifier un matériel",
+        title="modifier un matériel",
         AjouterMaterielForm=f,
         id = idMateriel,
         chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
@@ -706,7 +706,7 @@ def modifier_materiel_unique(id):
         print(f.errors)
     return render_template(
         "modifierMaterielUnique.html",
-        title="Modifier les informations d'un matériel en stock",
+        title="modifier les informations d'un matériel en stock",
         AjouterMaterielUniqueForm=f,
         id=id,
         chemin=[("base", "Accueil")]
@@ -731,7 +731,7 @@ def demandes():
 
     return render_template(
         "demandes.html",
-        title="Demandes",
+        title="demandes",
         nb_demande = int(Demande.Get.get_nb_demande(cnx)),
         info_demande = Demande.Get.get_info_demande(cnx),
         chemin = [("base", "Accueil"), ("demandes", "Demandes")]
@@ -748,7 +748,7 @@ def demande(idDemande):
         infoCommande = info_commande,
         longeur = len(info_commande),
         idUser = id_user,
-        title = "Demande de "+ info_commande[0][0] + " " + info_commande[0][1],
+        title = "demande de "+ info_commande[0][0] + " " + info_commande[0][1],
         chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Demande')]
     )
 
@@ -759,7 +759,7 @@ def inventaire():
         categories = Categories.get_categories(get_cnx()),
         items = Materiel.Get.get_all_information_to_Materiel(get_cnx()),
         alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
-        title="Inventaire",
+        title="inventaire",
         chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
     )
 
@@ -773,7 +773,7 @@ def rechercher_inventaire():
         categories = Categories.get_categories(get_cnx()),
         items = Materiel.Get.get_all_information_to_Materiel(get_cnx()),
         alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
-        title="Inventaire",
+        title="inventaire",
         RechercherForm = f,
         chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
     )
@@ -782,7 +782,7 @@ def rechercher_inventaire():
 def demander():
     return render_template(
         "demander.html",
-        title="Demander",
+        title="demander",
         liste_materiel = Suggestion_materiel.get_all_information_to_Materiel_suggestions(get_cnx()),
         categories = Domaine.get_domaine(get_cnx()),
         idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2]),
@@ -845,7 +845,7 @@ def login():
             return redirect(next)
     return render_template(
         "login.html",
-        title="Profil",
+        title="profil",
         form=f,
         fromChangerMDP=changerMDP,
         fromChangerMail=changerMail,
