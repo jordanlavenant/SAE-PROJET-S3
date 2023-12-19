@@ -219,7 +219,7 @@ def ajouter_suggestion():
     "ajouterSuggestion.html",
     title="ajouter une suggestion",
     AjouterSuggestionForm=f,
-    chemin = [("base", "accueil"), ("ajouter_suggestion", "Ajouter une Suggestion")]
+    chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
     )
 
 def get_endroit_choices():
