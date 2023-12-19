@@ -126,14 +126,21 @@ class MdpOublierForm(FlaskForm):
         email = self.email.data
         return email
 
-class AjouterMaterielForm(FlaskForm):
+class AjouterStockForm(FlaskForm):
+    materiel = SelectField('ComboBox', choices=[], id="materiel", name="materiel", validators=[DataRequired()])
+    endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
+    position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
     domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
     categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
+    date_reception = DateField('date_reception', validators=[DataRequired()], default =  datetime.datetime.now().date())
+    date_peremption = DateField('date_peremption', validators=[Optional()])
     nom = StringField('nom', validators=[DataRequired()])
     reference = StringField('reference', validators=[DataRequired()])
     caracteristiques = TextAreaField('caracteristiques')
     infossup = TextAreaField('infossup')
     seuilalerte  = StringField('seuilalerte')
+    quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
+    commentaire = TextAreaField('commentaire')
     next = HiddenField()
 
     def get_full_materiel(self):
@@ -225,30 +232,29 @@ def ajouter_suggestion():
     chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
     )
 
-@app.route("/recherche-materiel", methods=("GET","POST",))
-@csrf.exempt
-def recherche_materiel():
-    rechercher = RechercherForm()
-    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
-    idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
-    value = rechercher.get_value()
-    print("value : "+value)
-    if value != None:
-        liste_materiel = Recherche.recherche_all_in_materiel_with_search(get_cnx(), idbc, value)
-        return render_template(
-            "ajouterMateriel.html",
-            title="commander",
-            idUser = idUser,
-            idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
-            categories = Domaine.get_domaine(get_cnx()),
-            RechercherForm=rechercher,
-            liste_materiel = liste_materiel,
-            nbMateriel = len(liste_materiel),
-            alertes = Alert.get_nb_alert(cnx),
-            demandes = Demande.Get.get_nb_demande(cnx),
-            chemin = [("base", "accueil"), ("commander", "commander")]
-        )
-    return redirect(url_for('ajouter_materiel'))
+@app.route("/ajouter-stock/", methods=("GET","POST",))
+def ajouter_stock():
+    rechercherForm = RechercherForm()
+    ajouterForm = AjouterStockForm()
+    ajouterForm.domaine.choices = get_domaine_choices() 
+    if ajouterForm.validate_on_submit() :
+        categorie, nom, reference, caracteristiques, infossup, seuilalerte = ajouterForm.get_full_materiel()
+        res = Materiel.Insert.insere_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        if res:
+            return redirect(url_for('demander'))
+        else:
+            print("Erreur lors de l'insertion du matériel")
+            return redirect(url_for('ajouter_stock'))
+    else :
+        print("Erreur lors de la validation du formulaire")
+        print(ajouterForm.errors)
+    return render_template(
+        "ajouterStock.html",
+        title="ajouter au stock",
+        AjouterStockForm=ajouterForm,
+        RechercherForm=rechercherForm,
+        chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
+    )
 
 def get_endroit_choices():
     query = text("SELECT endroit, idEndroit FROM ENDROIT;")
