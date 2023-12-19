@@ -1114,10 +1114,10 @@ class Bon_commande:
                 cnx.commit()
                 # partie commande
                 for commande in liste_bon_commande:
-                    if cnx.execute(text("SELECT * FROM COMMANDE WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[3])+";")).first() is None:
-                        cnx.execute(text("INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES ("+str(id_bon)+", "+str(commande[3])+", "+str(commande[4])+");"))
+                    if cnx.execute(text("SELECT * FROM COMMANDE WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[4])+";")).first() is None:
+                        cnx.execute(text("INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES ("+str(id_bon)+", "+str(commande[4])+", "+str(commande[5])+");"))
                     else:
-                        cnx.execute(text("UPDATE COMMANDE SET quantite = quantite + "+str(commande[4])+" WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[3])+";"))
+                        cnx.execute(text("UPDATE COMMANDE SET quantite = quantite + "+str(commande[5])+" WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[4])+";"))
                     Bon_commande.Delete.delete_bonCommande_with_id(cnx, commande[0])
                     cnx.commit()   
             except:
