@@ -42,7 +42,7 @@
             <a id="btn-back" href="{{ url_for('inventaire') }}">Retour</a>
             <a id="btn-edit-materiel" href="{{ url_for('modifier_materiel', id=item_properties[0]) }}">Modifier</a>
             <a id="btn-edit-materiel" href="{{ url_for('ajouter_materiel_unique', id=item_properties[0]) }}">Ajouter</a>
-            <a id="btn-edit-materiel" href="#">Supprimer</a>
+            <a id="btn-edit-materiel" href="{{ url_for('supprimer_materiels_uniques', id=item_properties[0]) }}">Supprimer tous les éléments relatifs à cet objet du stock</a>
         </div>
     </div>
 

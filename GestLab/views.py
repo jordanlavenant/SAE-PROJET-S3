@@ -721,6 +721,11 @@ def supprimer_materiel_unique(id):
     print(3)
     return redirect(url_for('etat', id=id_materiel))
 
+@app.route("/supprimer-materiels-uniques/<int:id>", methods=("GET","POST",))
+def supprimer_materiels_uniques(id):
+    MaterielUnique.Delete.delete_all_materiel_unique_with_idMateriel(cnx, id)
+    return redirect(url_for('inventaire'))
+
 @app.route("/demandes/")
 def demandes():
 
