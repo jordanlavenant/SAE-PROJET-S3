@@ -4,17 +4,15 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/demander.css') }}">
 {% endblock %}
 {% block content %}
-
-<a class="lien-item" href="{{ url_for('base') }}"><button id="btn-back">retour</button></a>
+<div class="container-top">
+    <a class="lien-item" href="{{ url_for('base') }}"><button id="btn-back">RETOUR</button></a>
+    <a href="#"><button id="btns">VALIDER LA COMMANDE</button></a>
+</div>
 <div class="demander-container-overall">
     <div class="header-container">
-        <div class="container-top">
-            <a href="#"><button id="btns">valider la demande</button></a>
-            <a href="#"><button id="btns">réinitialiser la demande</button></a>
-        </div>
         <div class="search-content">
             <input type="text" id="search-bar" placeholder="Chercher un matériel">
-            <button id="btn-search">rechercher</button>
+            <button id="btn-search">RECHERCHER</button>
         </div>
         <div class="filter-container">
             <div class="filter-sous-container">
@@ -28,15 +26,18 @@
                     </select>
                 </form>
             </div>
-            <a href="#"><button id="btn-reset">Réinitialiser la demande</button></a>
-            <a href="{{ url_for('ajouter_materiel') }}">ajouter materiel</a>
+            <a href="#"><button id="btns">RÉNITIALISER LA DEMANDE</button></a>
         </div>
+    </div>
+    <div class="ajouter-materiel-container">
+        <a href="{{ url_for('ajouter_materiel') }}"><button id="btns">AJOUTER SUGGESTION</button></a>
     </div>
     <div class="container-contenu">
         {% for item,count in liste_materiel[0] %}
             <section class="section-contenu">
                 <h3>{{ item[1] }} - {{ item[11] }}</h3>
-                <h3>{{ item[14] }}</h3> 
+                <h4>{{ item[13] }}</h4> 
+                <h4>{{ item[14] }}</h4>
                 <div class="bottom-side">
                     <div class="choisir-item">
                         <button class="bouton-moins">-</button>
