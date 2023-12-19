@@ -1,4 +1,4 @@
-from .app import app #, db
+from .app import app, csrf #, db
 from flask import render_template, url_for, redirect, request, session, jsonify, send_file
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
@@ -423,16 +423,21 @@ def bon_commande(id):
 @app.route("/consulterBonCommande/")
 def consulter_bon_commande():
     info_bon_commande = Bon_commande.Get.consulter_bon_commande_without_table(cnx)
+    print(info_bon_commande)
     liste_info_user = []
     liste_etat_bon_commande = []
+    nb_bon_commande_attente = 0
     for info in info_bon_commande:
-        liste_etat_bon_commande.append(Commande.Get.get_statut_from_commande_with_id(cnx, info[1]))
+        if info[1] == 2:
+            nb_bon_commande_attente += 1
+        liste_etat_bon_commande.append(Commande.Get.get_statut_from_commande_with_id_etat(cnx, info[1]))
         info_user = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), info[2])
         liste_info_user.append(info_user)
     return render_template(
         "consulterBonCommande.html",
         title="Consultation des Bon de Commande",
         len = len(info_bon_commande),
+        nb_bon_commande_attente = nb_bon_commande_attente,
         bonCommande = info_bon_commande,
         infoUser = liste_info_user,
         listeEtat = liste_etat_bon_commande,
@@ -440,22 +445,54 @@ def consulter_bon_commande():
         chemin = [("base", "Accueil"), ('consulter_bon_commande', 'Consulter bon de commande')]
     )
 
+@app.route("/changer-statut-bon-commande", methods=("GET","POST",))
+def changer_statut_bon_commande():
+    idbc = request.args.get('idbc')
+    idStatut = request.args.get('statut')
+    Bon_commande.Update.changer_etat_bonCommande_with_id(cnx, idbc, idStatut)
+    return redirect(url_for('consulter_bon_commande'))
+
 @app.route("/delete-materiel/<int:idbc>/<int:idMat>", methods=("GET","POST",))
 def delete_materiel(idbc, idMat):
     Materiel.Delete.delete_materiel_in_BonCommande_whith_id(cnx, idMat, idbc)
     return redirect(url_for('bon_commande', id=idbc))
 
-@app.route("/historique-bon-commande", methods=("GET","POST",))
-def historique_bon_commande():
+@app.route("/bon-commande-unique", methods=("GET","POST",))
+def bon_commande_unique():
     idbc = request.args.get('idbc')
     liste_materiel = Bon_commande.Get.get_bon_commande_with_id(cnx, idbc)
     return render_template(
-        "historiqueBonCommande.html",
+        "bonCommandeUnique.html",
         liste_materiel = liste_materiel,
         title="Bon de Commande N°"+str(idbc),
         idbc = idbc,
-        chemin = [("base", "Accueil"), ("consulter_bon_commande", "Consulter bon de commande"), ("historique_bon_commande", "Historique des Bon de Commande")]
+        chemin = [("base", "Accueil"), ("consulter_bon_commande", "Consulter bon de commande"), ("bon_commande_unique", "Bon de commande")]
     )
+
+@app.route("/historique-bon-commande")
+def historique_bon_commande():
+    info_bon_commande = Bon_commande.Get.get_bon_commande_with_statut(cnx, 4)
+    liste_info_user = []
+    liste_etat_bon_commande = []
+    for info in info_bon_commande:
+        liste_etat_bon_commande.append(Commande.Get.get_statut_from_commande_with_id_etat(cnx, info[1]))
+        info_user = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), info[2])
+        liste_info_user.append(info_user)
+    return render_template(
+        "historiqueBonCommande.html",
+        title="Historique des Bon de Commande",
+        len = len(info_bon_commande),
+        bonCommande = info_bon_commande,
+        infoUser = liste_info_user,
+        listeEtat = liste_etat_bon_commande,
+        statutsCommande = Commande.Get.get_statut_from_commande(cnx),
+        # chemin = [("base", "Accueil"), ("consulter_bon_commande, Consulter bon commande"), ("historique_bon_commande", "Historique des bon de commande")]
+    )
+
+@app.route("/delete-bon-commande/<int:id>", methods=("GET","POST",))
+def delete_bon_commande(id):
+    Bon_commande.Delete.delete_bonCommande_with_id(cnx, id)
+    return redirect(url_for('consulter_bon_commande'))
 
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
@@ -473,6 +510,13 @@ def valider_bon_commande_pdf(id):
     liste_materiel = Materiel.Get.get_all_materiel_for_pdf_in_bon_commande_after(cnx, id)
     PDF_BonCommande.genererpdfBonCommande(session['utilisateur'][0], session['utilisateur'][3], liste_materiel, str(id))
     return send_file("static/data/bonCommande.pdf", as_attachment=True)
+
+@app.route("/fusion-bon-commande")
+def fusion_bon_commande():
+    liste_bon_commande = Bon_commande.Get.get_bon_commande_with_statut_fusion(cnx, 2)
+    print(liste_bon_commande)
+    Bon_commande.Insert.fusion_bon_commande(cnx, liste_bon_commande, session['utilisateur'][4])
+    return redirect(url_for('consulter_bon_commande'))
 
 @app.route("/alertes/")
 def alertes():
@@ -510,6 +554,7 @@ def ajouter_utilisateur():
     )
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
+@csrf.exempt
 def consulter_utilisateur():
     f = RechercherForm()
     if 'cat' in request.form:
@@ -569,6 +614,7 @@ def consulter_utilisateur():
 
 
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
+@csrf.exempt
 def recherche_utilisateur():
     f = RechercherForm()    
     value = f.get_value()
@@ -596,6 +642,7 @@ def recherche_utilisateur():
 
 @app.route("/supprimer-utilisateur/<int:id>", methods=("GET","POST",))
 def supprimer_utilisateur(id):
+    Utilisateur.Delete.delete_utilisateur(cnx, id)
     print("supprimer utilisateur : "+str(id))
     return redirect(url_for('consulter_utilisateur'))
 
@@ -609,24 +656,24 @@ def modifier_utilisateur(id):
             if statut == "professeur":
                 res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
             elif statut == "gestionnaire":
                 res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 4, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
             elif statut == "laborantin":
                 res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 3, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
     prenom, nom, email, statut = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), id)
     return render_template(
         "modifierUtilisateur.html",
@@ -836,10 +883,12 @@ def login():
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
-        user = f.get_authenticated_user()
+        nom, idStatut, mail, prenom = f.get_authenticated_user()
+        user = nom, idStatut, mail, prenom
         if user != None:
             #login_user(user)
-            session['utilisateur'] = user
+            idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+            session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
             print("login : "+str(session['utilisateur']))
             next = f.next.data or url_for("base")
             return redirect(next)
@@ -890,24 +939,24 @@ def ajouterUtilisateur():
             if statut == "professeur":
                 res = Utilisateur.Insert.ajout_professeur(cnx, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur d'insertion d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
             elif statut == "gestionnaire":
                 res = Utilisateur.Insert.ajout_gestionnaire(cnx, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur d'insertion d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
             elif statut == "laborantin":
                 res = Utilisateur.Insert.ajout_laborantin(cnx, nom, prenom, email)
                 if res:
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur d'insertion d'utilisateur")
-                    return redirect(url_for('utilisateurs'))
+                    return redirect(url_for('consulter_utilisateur'))
     return render_template(
         "ajouterUtilisateur.html",
         fromAjouterUtilisateur=f)

@@ -97,7 +97,6 @@ class Utilisateur:
             try:
                 result = cnx.execute(text("select nom,prenom,email,nomStatut from UTILISATEUR natural join STATUT where idUtilisateur = " + str(id) + ";"))
                 for row in result:
-                    print(row)
                     return row
             except:
                 print("erreur de l'id")
@@ -291,6 +290,11 @@ class Utilisateur:
             
             def delete_utilisateur(cnx, idut):
                 try:
+                    bonCommande = cnx.execute(text("select idBonCommande from BONCOMMANDE where idUtilisateur = '" + str(idut) + "';"))
+                    for row in bonCommande:
+                        cnx.execute(text("delete from COMMANDE where idBonCommande = '" + str(row[0]) + "';"))
+                    cnx.execute(text("delete from BONCOMMANDE where idUtilisateur = '" + str(idut) + "';"))
+                    cnx.execute(text("delete from 2FA where idUtilisateur = '" + str(idut) + "';"))
                     cnx.execute(text("delete from UTILISATEUR where idUtilisateur = '" + str(idut) + "';"))
                     cnx.commit()
                     print("utilisateur supprimé")
@@ -977,10 +981,8 @@ class Bon_commande:
                 result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ");"))
                 liste = []
                 for row in result:
-                    print(row)
                     liste.append(row)
                 for row in result2:
-                    print(row)
                     liste.append(row)
                 return liste
             except:
@@ -1001,7 +1003,6 @@ class Bon_commande:
                 result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires,referenceMateriel, quantite, informationsComplementairesEtSecurite, idFDS, idBonCommande FROM COMMANDE NATURAL JOIN MATERIEL natural join BONCOMMANDE WHERE idBonCommande = " + str(idbc) + " and idEtat != 1;"))
                 liste = []
                 for row in result:
-                    print(row)
                     liste.append(row)
                 return liste
             except:
@@ -1010,14 +1011,44 @@ class Bon_commande:
             
         def consulter_bon_commande_without_table(cnx):
             try:
-                idetat = 1
                 list = []
-                result = cnx.execute(text(" SELECT * FROM BONCOMMANDE WHERE idEtat != " + str(idetat) + ";"))
+                result = cnx.execute(text(" SELECT * FROM BONCOMMANDE WHERE idEtat != 1 and idEtat != 4;"))
                 for row in result:
                     list.append(row)
                 return list
             except:
                 print("Erreur lors de la récupération des commandes")
+                raise
+
+        def get_bon_commande_with_statut(cnx, idetat):
+            try:
+                list = []
+                result = cnx.execute(text("SELECT * FROM BONCOMMANDE WHERE idEtat = " + str(idetat) + ";"))
+                for row in result:
+                    list.append(row)
+                return list
+            except:
+                print("Erreur lors de la récupération des commandes")
+                raise
+
+        def get_bon_commande_with_statut_fusion(cnx, idetat):
+            try:
+                list = []
+                result = cnx.execute(text("SELECT * FROM BONCOMMANDE natural join COMMANDE WHERE idEtat = " + str(idetat) + ";"))
+                for row in result:
+                    list.append(row)
+                return list
+            except:
+                print("Erreur lors de la récupération des commandes")
+                raise
+            
+        def get_max_id_bon_commande(cnx):
+            try:
+                result = cnx.execute(text("SELECT MAX(idBonCommande) FROM BONCOMMANDE;"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de l'id du bon de commande")
                 raise
             
     class Update:
@@ -1031,6 +1062,45 @@ class Bon_commande:
                 Utilisateur.Insert.ajout_gest_into_boncommande(cnx,idut)
             except:
                 print("Erreur lors du changement d'état du bon de commande")
+                raise
+
+        def changer_etat_bonCommande_with_id(cnx, idbc, idetat):
+            try:
+                cnx.execute(text("UPDATE BONCOMMANDE SET idEtat = " + str(idetat) + " WHERE idBonCommande = " + str(idbc) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors du changement d'état du bon de commande")
+                raise
+
+    class Delete:
+        
+        def delete_bonCommande_with_id(cnx, idbc):
+            try:
+                cnx.execute(text("DELETE FROM COMMANDE WHERE idBonCommande = " + str(idbc) + ";"))
+                cnx.execute(text("DELETE FROM BONCOMMANDE WHERE idBonCommande = " + str(idbc) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du bon de commande")
+                raise
+
+    class Insert:
+
+        def fusion_bon_commande(cnx, liste_bon_commande, idUt):
+            try:
+                # partie bon commande
+                id_bon = Bon_commande.Get.get_max_id_bon_commande(cnx) + 1
+                cnx.execute(text("INSERT INTO BONCOMMANDE (idBonCommande, idEtat, idUtilisateur) VALUES ("+str(id_bon)+", 2, "+str(idUt)+");"))
+                cnx.commit()
+                # partie commande
+                for commande in liste_bon_commande:
+                    if cnx.execute(text("SELECT * FROM COMMANDE WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[3])+";")).first() is None:
+                        cnx.execute(text("INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES ("+str(id_bon)+", "+str(commande[3])+", "+str(commande[4])+");"))
+                    else:
+                        cnx.execute(text("UPDATE COMMANDE SET quantite = quantite + "+str(commande[4])+" WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[3])+";"))
+                    Bon_commande.Delete.delete_bonCommande_with_id(cnx, commande[0])
+                    cnx.commit()   
+            except:
+                print("Erreur lors de l'ajout du bon de commande")
                 raise
 
 class Suggestion_materiel:
@@ -1086,7 +1156,18 @@ class Commande :
 
     class Get:
         
-        def get_statut_from_commande_with_id(cnx, id_etat):
+        def get_statut_from_commande_with_id_boncommande(cnx, id_boncommande):
+            try:
+                result = cnx.execute(text("SELECT idEtat, nomEtat FROM ETATCOMMANDE NATURAL JOIN BONCOMMANDE WHERE idBonCommande = " + str(id_boncommande) + ";"))
+                liste = []
+                for row in result:
+                    liste.append(row[0])
+                return liste
+            except:
+                print("Erreur lors de la récupération du statut de la commande")
+                raise
+
+        def get_statut_from_commande_with_id_etat(cnx, id_etat):
             try:
                 result = cnx.execute(text("SELECT idEtat, nomEtat FROM ETATCOMMANDE WHERE idEtat = " + str(id_etat) + ";"))
                 liste = []
