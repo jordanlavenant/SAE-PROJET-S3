@@ -7,11 +7,18 @@ a {
 }
 
 .demander-container-overall {
-    margin: 10vh 5vw;
+    margin: 2% 5vw;
 }
 
 .header-container {
     margin: 5vh 10vw;
+}
+
+.container-top {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
 }
 
 .search-content {
@@ -50,17 +57,19 @@ a {
     cursor: pointer;
 }
 
-#btn-retour {
-    color: #fff;
+#btn-back {
+    margin-left: 10vw;
+    color: white;
     background-color: #384274;
-    padding: 10px 20px;
-    margin: 10px 0px;
-    border-radius: 20px;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 25px;
     border: none;
     transition: 0.2s;
 }
 
-#btn-retour:hover {
+#btn-back:hover {
+    color: white;
     background-color: #009af0;
     box-shadow: 0 0 15px #009af0;
     transition: 0.2s;
@@ -68,16 +77,18 @@ a {
     cursor: pointer;
 }
 
-#btn-reset {
-    color: #fff;
+#btns {
+    color: white;
     background-color: #384274;
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 25px;
     border: none;
     transition: 0.2s;
 }
 
-#btn-reset:hover {
+#btns:hover {
+    color: white;
     background-color: #009af0;
     box-shadow: 0 0 15px #009af0;
     transition: 0.2s;
@@ -186,6 +197,13 @@ a {
     background-color: transparent;
     color: #fff;
     cursor: pointer;
+}
+
+.section-contenu .bottom-side {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
 }
 
 #ajouter-demande {

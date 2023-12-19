@@ -29,7 +29,8 @@ label {
 .ajouterMateriel-container {
     display: flex;
     justify-content: center;
-    margin: 5%;
+    align-items: center;
+    margin: 2% 0 10%;
 }
 
 .form-ajoutMateriel {
@@ -38,10 +39,16 @@ label {
     padding: 3%;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between; 
+    gap: 10px;
+}
+
+.left-side-info {
+    width: 50%;
 }
 
 .right-side-info {
+    width: 50%;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -109,8 +116,9 @@ label {
     border-radius: 20px;
     font-size: 25px;
     border: none;
-    margin-top: 30px;
     transition: 0.2s;
+    text-align: center;
+    font-family: 'Alumni Sans', sans-serif;
 }
 
 .submit:hover {
