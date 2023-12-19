@@ -172,23 +172,22 @@ end |
 delimiter ;
 
 delimiter |
-CREATE OR REPLACE TRIGGER archivageCommandes AFTER UPDATE ON BONCOMMANDE FOR EACH ROW
-BEGIN 
+CREATE OR REPLACE TRIGGER archivageCommandes AFTER INSERT ON ARCHIVEBONCOMMANDE FOR EACH ROW
+BEGIN
     declare idA int ;
-    declare idBC int;
     declare idM int ;
     declare qte int ;
     declare fini BOOLEAN default false;
 
     declare infosCommandes cursor for
-        SELECT idArchiveBonCommande, idBonCommande, idMateriel, quantite FROM COMMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ARCHIVEBONCOMMANDE WHERE idBonCommande = new.idBonCommande and idEtat = 4 ;
+        SELECT A.idArchiveBonCommande, C.idMateriel, C.quantite FROM COMMANDE C INNER JOIN ARCHIVEBONCOMMANDE A ON C.idBonCommande = A.idBonCommande WHERE A.idArchiveBonCommande =  new.idArchiveBonCommande ;
     
     declare continue handler for not found set fini = true ;
     open infosCommandes ;
     while not fini do
-        fetch infosCommandes into idA, idBC, idM, qte ;
+        fetch infosCommandes into idA, idM, qte ;
         if not fini then
-            INSERT INTO ARCHIVECOMMANDE (idArchiveBonCommande, idBonCommande, idMateriel, quantite) VALUES (idA, idBC, idM, qte) ;
+            INSERT INTO ARCHIVECOMMANDE(idArchiveBonCommande, idMateriel, quantite) VALUES (idA, idM, qte) ;
         end if ;
     end while ;
     close infosCommandes ;
