@@ -5,15 +5,16 @@
 {% endblock %}
 {% block content %}
 
+<a class="lien-item" href="{{ url_for('base') }}"><button id="btn-back">retour</button></a>
 <div class="demander-container-overall">
     <div class="header-container">
         <div class="container-top">
-            <a class="lien-item" href="{{ url_for('base') }}"><button id="btn-retour">retour</button></a>
-            <a class="lien-item" href="#"><button id="btn-retour">Valider la demande</button></a>
+            <a href="#"><button id="btns">valider la demande</button></a>
+            <a href="#"><button id="btns">réinitialiser la demande</button></a>
         </div>
         <div class="search-content">
             <input type="text" id="search-bar" placeholder="Chercher un matériel">
-            <button id="btn-search">Rechercher</button>
+            <button id="btn-search">rechercher</button>
         </div>
         <div class="filter-container">
             <div class="filter-sous-container">
@@ -36,12 +37,14 @@
             <section class="section-contenu">
                 <h3>{{ item[1] }} - {{ item[11] }}</h3>
                 <h3>{{ item[14] }}</h3> 
-                <div class="choisir-item">
-                    <button class="bouton-moins">-</button>
-                    <p class="nb-choisit">{{ item[-1] }}</p>
-                    <button class="bouton-plus">+</button>
+                <div class="bottom-side">
+                    <div class="choisir-item">
+                        <button class="bouton-moins">-</button>
+                        <p class="nb-choisit">{{ item[-1] }}</p>
+                        <button class="bouton-plus">+</button>
+                    </div>
+                    <a class="{{ item[0] }} {{ item[-1] }}" href="#"><button class="ajouter-demande" id="ajouter-demande">ajouter à la demande</button></a>
                 </div>
-                <a class="{{ item[0] }} {{ item[-1] }}" href="#"><button class="ajouter-demande" id="ajouter-demande">Ajouter à la demande</button></a>
                 <script>
                     var maVariableJavaScript = "{{ item[4] }}"; 
                     var idUser = "{{ idUser }}"; 
