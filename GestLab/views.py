@@ -3,7 +3,7 @@ from flask import render_template, url_for, redirect, request, session, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField
+from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField
 from wtforms.validators import DataRequired, Optional
 from wtforms import PasswordField
 from hashlib import sha256
@@ -80,14 +80,14 @@ class AjouterUtilisateurForm(FlaskForm):
         statut = self.statut.data
         return (nom, prenom, email, statut)
 
-class AjouterMaterielForm(FlaskForm):
+class AjouterSuggestionForm(FlaskForm):
     domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
     categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
     nom = StringField('nom', validators=[DataRequired()])
     reference = StringField('reference', validators=[DataRequired()])
     caracteristiques = StringField('caracteristiques')
     infossup = StringField('infossup')
-    seuilalerte  = StringField('seuilalerte')
+    seuilalerte  = IntegerField('seuilalerte')
     next = HiddenField()
 
     def get_full_materiel(self):
@@ -200,9 +200,9 @@ def get_categorie_choices_modifier_materiel(idDomaine):
     categories = [(str(id_), name) for name, id_ in result]
     return categories
 
-@app.route("/ajouter-materiel/", methods=("GET","POST",))
-def ajouter_materiel():
-    f = AjouterMaterielForm()
+@app.route("/ajouter-suggestion/", methods=("GET","POST",))
+def ajouter_suggestion():
+    f = AjouterSuggestionForm()
     f.domaine.choices = get_domaine_choices() 
     if f.validate_on_submit() :
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
@@ -211,15 +211,15 @@ def ajouter_materiel():
             return redirect(url_for('demander'))
         else:
             print("Erreur lors de l'insertion du matériel")
-            return redirect(url_for('ajouter_materiel'))
+            return redirect(url_for('ajouter_suggestion'))
     else :
         print("Erreur lors de la validation du formulaire")
         print(f.errors)
     return render_template(
-    "ajouterMateriel.html",
-    title="ajouter un matériel",
-    AjouterMaterielForm=f,
-    chemin = [("base", "accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    "ajouterSuggestion.html",
+    title="ajouter une suggestion",
+    AjouterSuggestionForm=f,
+    chemin = [("base", "accueil"), ("ajouter_suggestion", "Ajouter une Suggestion")]
     )
 
 def get_endroit_choices():
