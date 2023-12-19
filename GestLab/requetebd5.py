@@ -1033,7 +1033,7 @@ class Bon_commande:
         def consulter_bon_commande_without_table(cnx):
             try:
                 list = []
-                result = cnx.execute(text(" SELECT * FROM BONCOMMANDE WHERE idEtat != 1 and idEtat != 4;"))
+                result = cnx.execute(text("SELECT * FROM BONCOMMANDE WHERE idEtat != 1 and idEtat != 4;"))
                 for row in result:
                     list.append(row)
                 return list
