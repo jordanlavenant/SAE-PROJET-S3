@@ -5,6 +5,27 @@
 {% endblock %}
 {% block content %}
 <a id="btn-back" href="{{ url_for('base') }}">retour</a>
+
+<div class="header-container">
+    <form method="POST" action="{{ url_for('recherche_inventaire') }}" role="search">
+        <div class="search-content">
+            {{ RechercherForm.value(size=50, class_="form-control element", placeholder="chercher un matériel", id="search-bar") }}
+            <button id="btn-search" type="submit">rechercher</button>
+        </div>
+    </form>
+    <div class="filter-container">
+        <p>trier par : </p>
+        <form action="/traiter" method="post" id="formulaire-trie-domaine" class="{{ nbMateriel }}">
+            <select name="cat" id="domaine-select">
+                <option value="">aucun tri</option>
+                {% for domaine in categories %}
+                    <option value="{{ domaine[1] }}" name="{{ domaine[1] }}">{{ domaine[1] }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+</div>
+
 <div class="ajouterMateriel-container">
     <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('ajouter_stock', id=id) }}">
         {{ AjouterStockForm.hidden_tag() }}

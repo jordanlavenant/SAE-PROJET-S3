@@ -126,21 +126,49 @@ class MdpOublierForm(FlaskForm):
         email = self.email.data
         return email
 
-class AjouterStockForm(FlaskForm):
-    materiel = SelectField('ComboBox', choices=[], id="materiel", name="materiel", validators=[DataRequired()])
-    endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
-    position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
+class AjouterMaterielForm(FlaskForm):
     domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
     categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
-    date_reception = DateField('date_reception', validators=[DataRequired()], default =  datetime.datetime.now().date())
-    date_peremption = DateField('date_peremption', validators=[Optional()])
     nom = StringField('nom', validators=[DataRequired()])
     reference = StringField('reference', validators=[DataRequired()])
     caracteristiques = TextAreaField('caracteristiques')
     infossup = TextAreaField('infossup')
     seuilalerte  = StringField('seuilalerte')
-    quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
+    next = HiddenField()
+
+    def get_full_materiel(self):
+        categorie = self.categorie.data
+        nom = self.nom.data
+        reference = self.reference.data
+        caracteristiques = self.caracteristiques.data
+        infossup = self.infossup.data
+        seuilalerte = self.seuilalerte.data
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+    
+    def get_full_materiel_requestform(self):
+        categorie = request.form['categorie']
+        nom = request.form['nom']
+        reference = request.form['reference']
+        caracteristiques = request.form['caracteristiques']
+        infossup = request.form['infossup']
+        seuilalerte = request.form['seuilalerte']
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+    
+class AjouterStockForm(FlaskForm):
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
+    nom = StringField('nom', validators=[DataRequired()])
+    reference = StringField('reference', validators=[DataRequired()])
+    caracteristiques = TextAreaField('caracteristiques')
+    infossup = TextAreaField('infossup')
+    seuilalerte  = StringField('seuilalerte')
+    materiel = SelectField('ComboBox', choices=[], id="materiel", name="materiel", validators=[DataRequired()])
+    endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
+    position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
+    date_reception = DateField('date_reception', validators=[DataRequired()], default =  datetime.datetime.now().date())
+    date_peremption = DateField('date_peremption', validators=[Optional()])
     commentaire = TextAreaField('commentaire')
+    quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
     next = HiddenField()
 
     def get_full_materiel(self):
