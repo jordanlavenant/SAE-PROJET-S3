@@ -92,6 +92,7 @@
     margin-left: 10vw;
     margin-right: 10vw;
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
 }
@@ -104,7 +105,7 @@
     gap: 50px;
     align-items: center;
     justify-content: space-between;
-    border: 4px solid #384274;
+    border: 1px solid #384274;
     padding: 10px;
     border-radius: 20px;
 }
@@ -132,4 +133,15 @@
     box-shadow: 0 0 15px #009af0;
     transition: 0.2s;
     cursor: pointer;
+}
+
+@media screen and (max-width: 1800px) {
+    .container-info-utilisateur {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sous-container-info-utilisateur {
+        width: 100%;
+    }
 }

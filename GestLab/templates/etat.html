@@ -88,6 +88,10 @@
                         </button>
                         <p class="date-reception-toggle">{{ item[5] }}</p>
                     </div>
+                    {% else %}
+                    <script>
+                        document.querySelector(".container-right").style.overflow = "hidden";
+                    </script>
                     {% endif %}
                     <div class="item-properties" id="item_properties_{{ item[3] }}">
                         <div class="header-container">

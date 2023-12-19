@@ -13,7 +13,7 @@ a {
 .container-all {
     display: flex;
     flex-wrap: nowrap;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-bottom: 2em;
     margin-left: 20px;
     margin-right: 20px;
@@ -25,8 +25,8 @@ a {
     flex-wrap: nowrap;
     justify-content: space-around;
     align-items: center;
-    max-height: 50vh;
-    max-width: 900px;
+    flex-basis: 40%;
+    max-height: 75vh;
     border-radius: 20px;
     border: #384274 1px solid;
 }
@@ -34,15 +34,16 @@ a {
 .container-middle {
     display: flex;
     align-items: center;
-    
-    & .btns-header {
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        gap: 50px;
-    }
+}
+
+.btns-header {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+}
+.btns-header > a {
+    text-align: center;
 }
 
 .container-right {
@@ -50,21 +51,8 @@ a {
     flex-grow: 1;
     border-radius: 20px;
     border: #384274 1px solid;
-    max-height: 50vh;
-    max-width: 900px;
-}
-
-.btns-header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
-}
-
-.btns-header > a {
-    min-width: 70px;
-    text-align: center;
+    max-height: 75vh;
+    flex-basis: 40%;
 }
 
 #btn-back {
@@ -188,26 +176,26 @@ a {
     padding: 0 0 0 10px;
     color: white;
     height: 50px;
+}
 
-    & button {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        font-variant: small-caps;
-        background-color: #384274;
-        color: white;
-        border: none;
+.toggle-button-container > button {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-variant: small-caps;
+    background-color: #384274;
+    color: white;
+    border: none;
+}
 
-        & img {
-            transform: rotate(0deg);
-            transition: .5s;
-        }
+.toggle-button-container > button > img {
+    transform: rotate(0deg);
+    transition: .5s;
+}
 
-        & img.rotate {
-            transform: rotate(180deg);
-            transition: .5s;
-        }
-    }
+.toggle-button-container > button > img.rotate {
+    transform: rotate(180deg);
+    transition: .5s;
 }
 
 .item-card-toggle {
@@ -215,10 +203,10 @@ a {
     flex-direction: row;
     justify-content: space-between;
     padding: 0 2px;
+}
 
-    & .date-reception-content {
-        color: white;
-    }
+.item-card-toggle > .date-reception-content {
+    color: white;
 }
 
 .item-properties {
@@ -325,6 +313,5 @@ a {
     .hard-recap-item > .text {
         flex-direction: column;
     }
-    
 }
 
