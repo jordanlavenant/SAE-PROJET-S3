@@ -50,9 +50,15 @@ INSERT INTO UTILISATEUR (idStatut, nom, prenom, email, motDePasse) VALUES
 (2, 'Utilisateur', 'Standard', 'user@example.com', 'motdepasseuser');
 
 INSERT INTO RISQUE (nomRisque) VALUES
-('Toxicité'),
-('Feu'),
-('Radiation');
+('Comburant'),
+('Danger incendie'),
+('Explosif'),
+('Effets graves sur la santé'),
+('Altération de la santé humaine'),
+('Gaz sous pression'),
+('Corrosion'),
+('Toxicité aquatique'),
+('Toxicité aiguë');
 
 INSERT INTO FDS (nomFDS) VALUES
 ('FDS 1'),
@@ -124,9 +130,9 @@ INSERT INTO ETATCOMMANDE (nomEtat) VALUES
 ('Expédiée'),
 ('Livrée');
 
-INSERT INTO BONCOMMANDE (idEtat, idUtilisateur) VALUES
-(1, 1),
-(2, 1);
+INSERT INTO BONCOMMANDE (idEtat, idUtilisateur, dateBonCommande) VALUES
+(1, 1, NULL),
+(2, 1, NULL);
 
 INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES
 (1, 1, 2),
@@ -140,9 +146,6 @@ INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
 (1, 1, 'Facture 1'),
 (2, 2, 'Facture 2');
 
-INSERT INTO RESERVELABORATOIRE (idReserve, idMaterielUnique) VALUES
-(1, 2),
-(2, 3);
 
 INSERT INTO TYPESALERTES (idAlerte, descriptionAlerte) VALUES 
 (1, "Date de péremption dépassée"),

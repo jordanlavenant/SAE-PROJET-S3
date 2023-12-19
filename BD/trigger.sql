@@ -154,6 +154,7 @@ BEGIN
     declare idBC int;
     declare idE int ;
     declare idU int ;
+    declare d date ;
     declare fini BOOLEAN default false;
 
     declare infosBonCommande cursor for
@@ -162,9 +163,9 @@ BEGIN
     declare continue handler for not found set fini = true ;
     open infosBonCommande ;
     while not fini do
-        fetch infosBonCommande into idBC, idE, idU ;
+        fetch infosBonCommande into idBC, idE, idU, d ;
         if not fini then
-            INSERT INTO ARCHIVEBONCOMMANDE (idBonCommande, idEtat, idUtilisateur) VALUES (idBC, idE, idU) ;
+            INSERT INTO ARCHIVEBONCOMMANDE (idBonCommande, idEtat, idUtilisateur, dateArchiveBonCommande) VALUES (idBC, idE, idU, d) ;
         end if ;
     end while ;
     close infosBonCommande ;

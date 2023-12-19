@@ -155,6 +155,7 @@ class AjouterMaterielForm(FlaskForm):
         return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
 
 class AjouterMaterielUniqueForm(FlaskForm):
+    materiel = SelectField('ComboBox', choices=[], id="materiel", name="materiel", validators=[DataRequired()])
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
     position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
     date_reception = DateField('date_reception', validators=[DataRequired()], default =  datetime.datetime.now().date())
@@ -164,20 +165,22 @@ class AjouterMaterielUniqueForm(FlaskForm):
     next = HiddenField()
 
     def get_full_materiel_unique(self):
+        materiel = self.materiel.data
         position = self.position.data
         date_reception = self.date_reception.data
         date_peremption = self.date_peremption.data
         commentaire = self.commentaire.data
         quantite_approximative = self.quantite_approximative.data
-        return (position, date_reception, date_peremption, commentaire, quantite_approximative)
+        return (materiel, position, date_reception, date_peremption, commentaire, quantite_approximative)
     
     def get_full_materiel_unique_requestform(self):
+        materiel = request.form['materiel']
         position = request.form['position']     
         date_reception = request.form['date_reception'] 
         date_peremption = request.form['date_peremption']
         commentaire = request.form['commentaire']
         quantite_approximative = request.form['quantite_approximative']
-        return (position, date_reception, date_peremption, commentaire, quantite_approximative)
+        return (materiel, position, date_reception, date_peremption, commentaire, quantite_approximative)
 
 def get_domaine_choices():
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
@@ -242,25 +245,42 @@ def get_position_choices_modifier_materiel(idEndroit):
     positions = [(str(id_), name) for name, id_ in result]
     return positions
 
+def get_materiels_existants():
+    query = text("SELECT nomMateriel, idMateriel FROM MATERIEL;")
+    result = cnx.execute(query)
+    materiels = [(str(id_), name) for name, id_ in result]
+    return materiels
+
 @app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
 def ajouter_materiel_unique(id):
     f = AjouterMaterielUniqueForm()
+    f.materiel.choices = get_materiels_existants()
+    print(f.materiel.choices)
+    print(type(f.materiel.choices))
+    print(type(f.materiel.choices[0]))
+    print(f.materiel.choices[0])
     f.endroit.choices = get_endroit_choices() 
 
     if f.validate_on_submit() :
-        position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique()
-        print("datepppppppp")
-        print(date_peremption)
-        res = MaterielUnique.Insert.insere_materiel_unique(cnx, id, position, date_reception, date_peremption, commentaire, quantite_approximative)
+        infosmateriel, position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique()
+        identifiant = infosmateriel[0]
+        print(identifiant) 
+        
+        if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), identifiant) <= 0 :
+            STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant)
+        
+        res = MaterielUnique.Insert.insere_materiel_unique(cnx, identifiant, position, date_reception, date_peremption, commentaire, quantite_approximative)
+        
         if res:
-            return redirect(url_for('etat', id=id))
+            res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, id)
+        
+        if res:
+            return redirect(url_for('etat', id=identifiant))
+        
         else:
             print("Erreur lors de l'insertion du matériel")
             return redirect(url_for('ajouter_materiel'))
     else :
-        position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique()
-        print("datepppppppp")
-        print(date_peremption)
         print("Erreur lors de la validation du formulaire")
         print(f.errors)
     return render_template(

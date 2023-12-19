@@ -23,8 +23,8 @@ DROP TABLE IF EXISTS FDS;
 DROP TABLE IF EXISTS BONCOMMANDE;
 DROP TABLE IF EXISTS DEMANDE;
 DROP TABLE IF EXISTS ETATCOMMANDE;
-DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
+DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS TYPESALERTES;
 DROP TABLE IF EXISTS 2FA;
 
@@ -116,7 +116,7 @@ create table MATERIELUNIQUE(
 );
 
 create table RESERVELABORATOIRE(
-    idReserve int not null,
+    idReserve int not null auto_increment,
     idMaterielUnique int not null references MATERIELUNIQUE,
     primary key(idReserve, idMaterielUnique)
 );
@@ -179,6 +179,7 @@ create table ARCHIVEBONCOMMANDE(
     idBonCommande int  not null,
     idEtat int not null,
     idUtilisateur int not null,
+    dateArchiveBonCommande date,
     primary key(idArchiveBonCommande)
 );
 

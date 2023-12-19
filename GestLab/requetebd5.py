@@ -331,7 +331,7 @@ class Materiel:
 
         def get_all_information_to_Materiel_with_id(cnx, id):
             try:
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE WHERE idMateriel = " + str(id) + ";"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE WHERE idMateriel = " + str(id) + ";"))
                 for row in result:
                     return row
             except:
@@ -341,7 +341,7 @@ class Materiel:
         def get_all_information_to_Materiel(cnx):
             try:
                 list = []
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE ;"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE WHERE quantiteLaboratoire > 0 ;"))
                 for row in result:
                     id = row[0]
                     result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
@@ -351,6 +351,17 @@ class Materiel:
                 return list, len(list)
             except:
                 print("erreur de l'id")
+                raise
+
+        def get_materiels_existants(cnx):
+            try:
+                result = cnx.execute(text("SELECT idMateriel, nomMateriel FROM MATERIEL;"))
+                liste = []
+                for row in result:
+                    liste.append(row)
+                return liste
+            except:
+                print("Erreur lors de la récupération des matériels existants")
                 raise
 
 
@@ -1108,7 +1119,7 @@ class Suggestion_materiel:
     def get_all_information_to_Materiel_suggestions(cnx):
         try:
             list = []
-            result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie, nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock, 0  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE ;"))
+            result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie, nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock, 0  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE ;"))
             for row in result:
                 id = row[0]
                 result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
@@ -1198,6 +1209,38 @@ class STOCKLABORATOIRE:
             except:
                 print("Erreur lors de la récupération de la quantité")
                 raise
+
+        def materiel_dans_stock(cnx, idMateriel):
+            try:
+                result = cnx.execute(text("SELECT COUNT(*) FROM STOCKLABORATOIRE WHERE idMateriel = " + str(idMateriel) + ";"))
+                for row in result:
+                    return row[0]
+                cnx.commit()
+            except:
+                print("Erreur lors de l'insertion du matériel dans le stock")
+                raise
+        
+    class Insert:
+        def insere_materiel_stock(cnx, idMateriel):
+            try:
+                cnx.execute(text("INSERT INTO STOCKLABORATOIRE (idMateriel, quantiteLaboratoire) VALUES (" + str(idMateriel) + ", 0);"))
+                cnx.commit()
+            except:
+                print("Erreur lors de l'insertion du matériel dans le stock")
+                raise
+
+class ReserveLaboratoire :
+    class Insert:
+        def insere_materiel_unique_reserve(cnx, idMaterielUnique):
+            try:
+                cnx.execute(text("INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES (" + str(idMaterielUnique) + ");"))
+                cnx.commit()
+                return True
+            except:
+                print("INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES (" + str(idMaterielUnique) + ");")
+                print("Erreur lors de l'insertion du matériel dans la réserve")
+                return False
+
 
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
