@@ -61,7 +61,6 @@ create table CATEGORIE(
 create table RISQUE(
     idRisque int not null auto_increment,
     nomRisque varchar(50) not null,
-    pictogramme mediumblob,
     primary key(idRisque)
 );
 
@@ -164,6 +163,7 @@ create table BONCOMMANDE(
     idBonCommande int not null auto_increment,
     idEtat int not null references ETATCOMMANDE,
     idUtilisateur int not null references UTILISATEUR,
+    dateBonCommande date,
     primary key(idBonCommande)
 );
 
