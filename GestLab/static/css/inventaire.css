@@ -83,7 +83,7 @@ a {
     padding: 0;
 }
 
-#categorie-select {
+#domaine-select {
     color: #fff;
     background-color: #384274;
     font-family: 'Alumni Sans', sans-serif;
@@ -93,7 +93,7 @@ a {
     border: none;
 }
 
-#categorie-select {
+#domaine-select {
     cursor: pointer;
     padding: 10px 60px;
 }
