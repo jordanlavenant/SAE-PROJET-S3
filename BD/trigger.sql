@@ -4,7 +4,7 @@ begin
     declare presente int;
     declare mes varchar(255);
 
-    SELECT COUNT(ifnull(DEMANDE.idDemande, 0)) into presente FROM DEMANDE JOIN BONCOMMANDE ON DEMANDE.idDemande = BONCOMMANDE.idDemande WHERE DEMANDE.idDemande = new.idDemande ;
+    SELECT COUNT(ifnull(DEMANDE.idDemande, 0)) into presente FROM DEMANDE WHERE DEMANDE.idDemande = new.idDemande WHERE idEtatD = 2;
 
     if presente > 0 then
         set mes = concat("La modification ne peut être effectuée sur la demande (id demande : ", new.idDemande,") car celle-ci est associée à un bon de commande.");
@@ -79,7 +79,7 @@ begin
     declare fini boolean default false ;
 
     declare idDemandes cursor for 
-        SELECT DEMANDE.idDemande FROM DEMANDE ;
+        SELECT DEMANDE.idDemande FROM DEMANDE WHERE idEtatD = 2;
 
     declare continue handler for not found set fini = true ;
     open idDemandes ;
@@ -154,6 +154,7 @@ BEGIN
     declare idBC int;
     declare idE int ;
     declare idU int ;
+    declare d date ;
     declare fini BOOLEAN default false;
 
     declare infosBonCommande cursor for
@@ -162,9 +163,9 @@ BEGIN
     declare continue handler for not found set fini = true ;
     open infosBonCommande ;
     while not fini do
-        fetch infosBonCommande into idBC, idE, idU ;
+        fetch infosBonCommande into idBC, idE, idU, d ;
         if not fini then
-            INSERT INTO ARCHIVEBONCOMMANDE (idBonCommande, idEtat, idUtilisateur) VALUES (idBC, idE, idU) ;
+            INSERT INTO ARCHIVEBONCOMMANDE (idBonCommande, idEtat, idUtilisateur, dateArchiveBonCommande) VALUES (idBC, idE, idU, d) ;
         end if ;
     end while ;
     close infosBonCommande ;
@@ -172,23 +173,22 @@ end |
 delimiter ;
 
 delimiter |
-CREATE OR REPLACE TRIGGER archivageCommandes AFTER UPDATE ON BONCOMMANDE FOR EACH ROW
-BEGIN 
+CREATE OR REPLACE TRIGGER archivageCommandes AFTER INSERT ON ARCHIVEBONCOMMANDE FOR EACH ROW
+BEGIN
     declare idA int ;
-    declare idBC int;
     declare idM int ;
     declare qte int ;
     declare fini BOOLEAN default false;
 
     declare infosCommandes cursor for
-        SELECT idArchiveBonCommande, idBonCommande, idMateriel, quantite FROM COMMANDE NATURAL JOIN BONCOMMANDE NATURAL JOIN ARCHIVEBONCOMMANDE WHERE idBonCommande = new.idBonCommande and idEtat = 4 ;
+        SELECT A.idArchiveBonCommande, C.idMateriel, C.quantite FROM COMMANDE C INNER JOIN ARCHIVEBONCOMMANDE A ON C.idBonCommande = A.idBonCommande WHERE A.idArchiveBonCommande =  new.idArchiveBonCommande ;
     
     declare continue handler for not found set fini = true ;
     open infosCommandes ;
     while not fini do
-        fetch infosCommandes into idA, idBC, idM, qte ;
+        fetch infosCommandes into idA, idM, qte ;
         if not fini then
-            INSERT INTO ARCHIVECOMMANDE (idArchiveBonCommande, idBonCommande, idMateriel, quantite) VALUES (idA, idBC, idM, qte) ;
+            INSERT INTO ARCHIVECOMMANDE(idArchiveBonCommande, idMateriel, quantite) VALUES (idA, idM, qte) ;
         end if ;
     end while ;
     close infosCommandes ;

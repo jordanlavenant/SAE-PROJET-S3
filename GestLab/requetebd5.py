@@ -359,7 +359,7 @@ class Materiel:
         def get_all_information_to_Materiel(cnx):
             try:
                 list = []
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE ;"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE WHERE quantiteLaboratoire > 0 ;"))
                 for row in result:
                     id = row[0]
                     result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
@@ -369,6 +369,17 @@ class Materiel:
                 return list, len(list)
             except:
                 print("erreur de l'id")
+                raise
+
+        def get_materiels_existants(cnx):
+            try:
+                result = cnx.execute(text("SELECT idMateriel, nomMateriel FROM MATERIEL;"))
+                liste = []
+                for row in result:
+                    liste.append(row)
+                return liste
+            except:
+                print("Erreur lors de la récupération des matériels existants")
                 raise
 
 
@@ -679,6 +690,14 @@ class MaterielUnique:
                 print("erreur de l'id")
             raise
 
+        def get_last_id(cnx) :
+            try :
+                result = cnx.execute(text("SELECT idMaterielUnique FROM MATERIELUNIQUE ORDER BY idMaterielUnique DESC LIMIT 1 ;"))
+                for row in result:
+                    return row[0]
+            except :
+                print("Erreur lors de la récupération du dernier id")
+
     class Delete:
 
         def delete_all_materiel_unique_with_idMateriel(cnx, id_materiel):
@@ -746,18 +765,21 @@ class MaterielUnique:
             
     class Insert:
                 
-        def insere_materiel_unique(
-            cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative
-        ):
+        def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative):
             try:
                 if date_peremption is None or date_peremption == 'None' or date_peremption == "":
                     date_peremption = "NULL"
                 else:
                     date_peremption = f"'{str(date_peremption)}'"
 
+                dernier_id = MaterielUnique.Get.get_last_id(cnx) 
+                nouvel_id = dernier_id + 1
+                print("nouvel id" + str(nouvel_id))
+
                 query = (
-                    "INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, "
-                    "commentaireMateriel, quantiteApproximative) VALUES ('{}', '{}', '{}', {}, '{}', {});".format(
+                    "INSERT INTO MATERIELUNIQUE (idMaterielUnique, idMateriel, idRangement, dateReception, datePeremption, "
+                    "commentaireMateriel, quantiteApproximative) VALUES ('{}','{}', '{}', '{}', {}, '{}', {});".format(
+                        nouvel_id,
                         id_materiel,
                         position,
                         str(date_reception),
@@ -769,13 +791,13 @@ class MaterielUnique:
 
                 cnx.execute(text(query))
                 cnx.commit()
-                return True
+                return nouvel_id
             except sqlalchemy.exc.OperationalError as e:
                 print(f"SQL OperationalError: {e}")
-                return False
+                return -1
             except sqlalchemy.exc.IntegrityError as e:
                 print(f"SQL IntegrityError: {e}")
-                return False
+                return -1
 
 
 
@@ -857,7 +879,6 @@ class Recherche:
             except:
                 print("erreur de l'id")
                 raise
-
 
 class Mots_de_passe:
     
@@ -1402,6 +1423,46 @@ class DATE:
             # Extraire la date du résultat
             date_res = date_result[0] if date_result else datetime.now().date()
 
+        def materiel_dans_stock(cnx, idMateriel):
+            try:
+                result = cnx.execute(text("SELECT COUNT(*) FROM STOCKLABORATOIRE WHERE idMateriel = " + str(idMateriel) + ";"))
+                for row in result:
+                    return row[0]
+                cnx.commit()
+            except:
+                print("Erreur lors de l'insertion du matériel dans le stock")
+                raise
+        
+    class Insert:
+        def insere_materiel_stock(cnx, idMateriel):
+            try:
+                cnx.execute(text("INSERT INTO STOCKLABORATOIRE (idMateriel, quantiteLaboratoire) VALUES (" + str(idMateriel) + ", 0);"))
+                cnx.commit()
+            except:
+                print("Erreur lors de l'insertion du matériel dans le stock")
+                raise
+
+class ReserveLaboratoire :
+    class Get:
+        def get_last_id_reserve(cnx) :
+            try :
+                result = cnx.execute(text("SELECT idReserve FROM RESERVELABORATOIRE ORDER BY idReserve DESC LIMIT 1 ;"))
+                for row in result:
+                    return row[0]
+            except :
+                print("Erreur lors de la récupération du dernier id")
+                raise
+        
+    class Insert:
+        def insere_materiel_unique_reserve(cnx, idMaterielUnique):
+            last_id_reserve = ReserveLaboratoire.Get.get_last_id_reserve(cnx)+1
+            cnx.execute(text("INSERT INTO RESERVELABORATOIRE (idReserve,idMaterielUnique) VALUES (" + str(last_id_reserve) + "," + str(idMaterielUnique) + ");"))
+            cnx.commit()
+            return True
+                
+            # print("INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES (" + str(idMaterielUnique) + ");")
+            # print("Erreur lors de l'insertion du matériel dans la réserve")
+            # return False
             #recuperer que la date 
             date_res = date_res.strftime("%Y-%m-%d")
 
@@ -1416,7 +1477,7 @@ class RELOAD:
         except:
             print("Erreur lors du reload des alertes")
             raise
-        
+            
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
 #     if nomcat is None:

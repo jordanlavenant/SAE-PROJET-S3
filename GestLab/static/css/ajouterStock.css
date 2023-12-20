@@ -1,4 +1,5 @@
-p {
+p,
+label {
     color: white;
     font-size: 35px;
     margin: 15px 0;
@@ -24,6 +25,58 @@ p {
     cursor: pointer;
 }
 
+.header-container {
+    margin: 5vh 10vw;
+}
+
+.search-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.filters-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+#search-bar {
+    flex-basis: 80%;
+    width: calc(100% - 60px);
+    height: 50px;
+    border-radius: 20px;
+    border: none;
+    padding: 10px 30px;
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+#btn-search {
+    flex-basis: 20%;
+    max-height: 50px;
+    color: #384274;
+    background-color: white;
+    padding: 10px 0px;
+    border-radius: 20px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-search:hover {
+    background-color: #009af0;
+    color: white;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.main-container {
+    padding: 5% 0 0;
+}
+
 .ajouterMateriel-container {
     display: flex;
     justify-content: center;
@@ -31,10 +84,17 @@ p {
     margin: 2% 0;
 }
 
-.form-ajoutMateriel {
+.ajouterMateriel-content {
     background-color: #384274;
     min-width: 80%;
     padding: 3%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    flex-grow: 0;
+}
+
+.main-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -115,6 +175,7 @@ p {
     border: none;
     transition: 0.2s;
     text-align: center;
+    margin-top: 30px;
 }
 
 .submit:hover {
