@@ -1356,6 +1356,27 @@ class Commande :
             except:
                 print("Erreur lors de la récupération du statut de la commande")
                 raise
+
+
+    class Update:
+        def tout_commander_with_idDemmande_and_idUt (cnx, idDemande, idUt):
+            try:
+                idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUt)
+                resultDemande = cnx.execute(text("SELECT idMateriel, quantite FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + ";"))
+                for row in resultDemande:
+                    resultVerif = cnx.execute(text("SELECT idMateriel, quantite FROM MATERIEL NATURAL JOIN COMMANDE WHERE idBonCommande = " + str(idbc) + ";"))
+                    for rowVerif in resultVerif:
+                        if row[0] == rowVerif[0]:
+                            cnx.execute(text("UPDATE BONCOMMANDE SET quantite = quantite + " + str(row[1]) + " WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(row[0]) + ";"))
+                            cnx.commit()
+                        else:
+                            cnx.execute(text("INSERT INTO BONCOMMANDE (idBonCommande, idMateriel, quantite) VALUES (" + str(idbc) + ", " + str(row[0]) + ", " + str(row[1]) + ");"))
+                            cnx.commit()
+                cnx.commit()
+            except:
+                print("Erreur lors de la modification de l'état de la commande")
+                raise
+
 class STOCKLABORATOIRE:
     class Get:
         def get_quantite_with_idMateriel(cnx, idMateriel):
