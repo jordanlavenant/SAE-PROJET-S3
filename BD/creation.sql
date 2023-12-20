@@ -24,9 +24,10 @@ DROP TABLE IF EXISTS RISQUE;
 DROP TABLE IF EXISTS FDS;
 DROP TABLE IF EXISTS BONCOMMANDE;
 DROP TABLE IF EXISTS DEMANDE;
+DROP TABLE IF EXISTS ETATDEMANDE;
 DROP TABLE IF EXISTS ETATCOMMANDE;
-DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS STATUT;
+DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS TYPESALERTES;
 DROP TABLE IF EXISTS 2FA;
 
@@ -63,7 +64,6 @@ create table CATEGORIE(
 create table RISQUE(
     idRisque int not null auto_increment,
     nomRisque varchar(50) not null,
-    pictogramme mediumblob,
     primary key(idRisque)
 );
 
@@ -119,7 +119,7 @@ create table MATERIELUNIQUE(
 );
 
 create table RESERVELABORATOIRE(
-    idReserve int not null,
+    idReserve int not null auto_increment,
     idMaterielUnique int not null references MATERIELUNIQUE,
     primary key(idReserve, idMaterielUnique)
 );
@@ -142,10 +142,23 @@ create table FOURNISSEUR(
     primary key(idFournisseur)
 );
 
+create table ETATCOMMANDE(
+    idEtat int not null auto_increment,
+    nomEtat varchar(50) not null,
+    primary key(idEtat)
+);
+
+create table ETATDEMANDE(
+    idEtatD int not null auto_increment,
+    nomEtatD varchar(50) not null,
+    primary key(idEtatD)
+);
+
 create table DEMANDE(
     idDemande int not null auto_increment,
     idUtilisateur int not null references UTILISATEUR,
     descriptionDemande varchar(2000),
+    idEtatD int not null references ETATDEMANDE,
     primary key(idDemande)
 );
 
@@ -156,18 +169,15 @@ create table AJOUTERMATERIEL(
     primary key(idDemande, idMateriel)
 );
 
-create table ETATCOMMANDE(
-    idEtat int not null auto_increment,
-    nomEtat varchar(50) not null,
-    primary key(idEtat)
-);
 
 create table BONCOMMANDE(
     idBonCommande int not null auto_increment,
     idEtat int not null references ETATCOMMANDE,
     idUtilisateur int not null references UTILISATEUR,
+    dateBonCommande date,
     primary key(idBonCommande)
 );
+
 
 create table COMMANDE(
     idBonCommande int not null references BONCOMMANDE,
@@ -181,6 +191,7 @@ create table ARCHIVEBONCOMMANDE(
     idBonCommande int  not null,
     idEtat int not null,
     idUtilisateur int not null,
+    dateArchiveBonCommande date,
     primary key(idArchiveBonCommande)
 );
 

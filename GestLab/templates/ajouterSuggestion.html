@@ -43,40 +43,49 @@
                 <div class="left-side">
                     <div class="checkmark">
                         <input type="checkbox" id="comburant" name="comburant" value="1"/>
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/comburant.png') }}" alt="pictogramme">
                         <label for="comburant">comburant</label>
                     </div>
                     <div class="checkmark">
                         <input type="checkbox" id="inflammable" name="inflammable" value="2"/>
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/inflammable.png') }}" alt="pictogramme">
                         <label for="inflammable">danger incendie</label>
                     </div>
                     <div class="checkmark">
                         <input type="checkbox" id="explosif" name="explosif" value="3"/>
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/explosion.png') }}" alt="pictogramme">
                         <label for="explosif">explosif</label>
                     </div>
                     <div class="checkmark">
                         <input type="checkbox" id="CMR" name="CMR" value="4"/>
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/CMR.png') }}" alt="pictogramme">
                         <label for="CMR">effets graves sur la santé</label>
                     </div>
                     <div class="checkmark">
                         <input type="checkbox" id="santé" name="santé" value="5"/>
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/chimique.png') }}" alt="pictogramme">
                         <label for="santé">altération de la santé humaine</label>
                     </div>
                </div>
                <div class="right-side">
                     <div class="checkmark">
                         <input type="checkbox" id="gaz" name="gaz" value="6"/>
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/gaz.png') }}" alt="pictogramme">
                         <label for="gaz">gaz sous pression</label><br/>
                     </div>
                     <div class="checkmark">
                         <input type="checkbox" id="corrosif" name="corrosif" value="7"/>
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/corrosif.png') }}" alt="pictogramme">
                         <label for="corrosif">corrosion</label><br/>
                     </div>
                     <div class="checkmark">
                         <input type="checkbox" id="environnement" name="environnement" value="8"/>
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/environnement.png') }}" alt="pictogramme">
                         <label for="environnement">toxicité aquatique</label><br/>
                     </div>
                     <div class="checkmark">
                         <input type="checkbox" id="toxique" name="toxique" value="9"/>
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/toxique.png') }}" alt="pictogramme">
                         <label for="toxique">toxicité aiguë</label><br/>
                     </div>
                </div>

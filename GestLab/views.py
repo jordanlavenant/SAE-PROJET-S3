@@ -64,6 +64,24 @@ class RechercherForm(FlaskForm):
     def get_value(self):
         value = self.value.data
         return value
+    
+class RechercherFormWithAssets(FlaskForm):
+    value = StringField('value')
+    domaine = SelectField('domaine', choices=[], id="domaine", name="domaine", validators=[])
+    categorie = SelectField('categorie', choices=[], id="categorie", name="categorie", validators=[])
+    submit = SubmitField('rechercher')
+
+    def get_value(self):
+        value = self.value.data
+        return value
+
+    def get_domaine(self):
+        domaine = self.domaine.data
+        return domaine
+    
+    def get_categorie(self):
+        categorie = self.categorie.data
+        return categorie
 
 class AjouterUtilisateurForm(FlaskForm):
     nom = StringField('nom', validators=[DataRequired()])
@@ -85,8 +103,8 @@ class AjouterSuggestionForm(FlaskForm):
     categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
     nom = StringField('nom', validators=[DataRequired()])
     reference = StringField('reference', validators=[DataRequired()])
-    caracteristiques = StringField('caracteristiques')
-    infossup = StringField('infossup')
+    caracteristiques = TextAreaField('caracteristiques')
+    infossup = TextAreaField('infossup')
     seuilalerte  = IntegerField('seuilalerte')
     next = HiddenField()
 
@@ -153,8 +171,68 @@ class AjouterMaterielForm(FlaskForm):
         infossup = request.form['infossup']
         seuilalerte = request.form['seuilalerte']
         return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+    
+class AjouterStockForm(FlaskForm):
+    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
+    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
+    nom = StringField('nom', validators=[DataRequired()])
+    reference = StringField('reference', validators=[DataRequired()])
+    caracteristiques = TextAreaField('caracteristiques')
+    infossup = TextAreaField('infossup')
+    seuilalerte  = StringField('seuilalerte')
+    materiel = SelectField('ComboBox', choices=[], id="materiel", name="materiel", validators=[DataRequired()])
+    endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
+    position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
+    date_reception = DateField('date_reception', validators=[DataRequired()], default =  datetime.datetime.now().date())
+    date_peremption = DateField('date_peremption', validators=[Optional()])
+    commentaire = TextAreaField('commentaire')
+    quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
+    next = HiddenField()
+
+    def get_full_materiel(self):
+        categorie = self.categorie.data
+        domaine = self.domaine.data
+        return (domaine,categorie)
+    
+    def get_full_materiel_requestform(self):
+        categorie = request.form['categorie']
+        nom = request.form['nom']
+        reference = request.form['reference']
+        caracteristiques = request.form['caracteristiques']
+        infossup = request.form['infossup']
+        seuilalerte = request.form['seuilalerte']
+        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
 
 class AjouterMaterielUniqueForm(FlaskForm):
+    endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
+    position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
+    date_reception = DateField('date_reception', validators=[DataRequired()], default =  datetime.datetime.now().date())
+    date_peremption = DateField('date_peremption', validators=[Optional()])
+    commentaire = TextAreaField('commentaire')
+    quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
+    quantite_recue = StringField('quantite_recue', validators=[DataRequired()])
+    submit = SubmitField("AJOUTER MATERIEL")
+    next = HiddenField()
+
+    def get_full_materiel_unique(self):
+        position = self.position.data
+        date_reception = self.date_reception.data
+        date_peremption = self.date_peremption.data
+        commentaire = self.commentaire.data
+        quantite_approximative = self.quantite_approximative.data
+        quantite_recue = self.quantite_recue.data
+        return (position, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue)
+    
+    def get_full_materiel_unique_requestform(self):
+        position = request.form['position']     
+        date_reception = request.form['date_reception'] 
+        date_peremption = request.form['date_peremption']
+        commentaire = request.form['commentaire']
+        quantite_approximative = request.form['quantite_approximative']
+        quantite_recue = request.form['quantite_recue']
+        return (position, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue)
+
+class ModifierMaterielUniqueForm(FlaskForm):
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
     position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
     date_reception = DateField('date_reception', validators=[DataRequired()], default =  datetime.datetime.now().date())
@@ -222,6 +300,82 @@ def ajouter_suggestion():
     chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
     )
 
+@app.route("/ajouter-stock/", methods=("GET","POST",))
+@csrf.exempt
+def ajouter_stock():
+    rechercherForm = RechercherFormWithAssets()
+    rechercherForm.domaine.choices = get_domaine_choices() 
+
+    ajouterForm = AjouterStockForm()
+    ajouterForm.endroit.choices = get_endroit_choices()
+
+    print(rechercherForm.domaine.data)
+    print(rechercherForm.categorie.data)
+
+    items = get_materiels_existants()
+
+    return render_template(
+        "ajouterStock.html",
+        title="ajouter au stock",
+        AjouterStockForm=ajouterForm,
+        RechercherFormWithAssets=rechercherForm,
+        items = items,
+        chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
+    )
+
+def intersection(lst1, lst2): 
+    return [item for item in lst1 if item not in lst2]
+
+@app.route("/recherche-materiel-existant/", methods=("GET","POST",))
+@csrf.exempt
+def recherche_materiel_existant():
+    rechercherForm = RechercherFormWithAssets()
+    rechercherForm.domaine.choices = get_domaine_choices() 
+
+    ajouterForm = AjouterStockForm()
+    ajouterForm.endroit.choices = get_endroit_choices()
+
+    search = rechercherForm.get_value()
+    domaine = rechercherForm.get_domaine()
+    categorie = rechercherForm.get_categorie()
+
+    print("catégorie : ",categorie)
+
+    items = get_materiels_existants() # Valeur par-défaut
+    # filtre à la valeur de la recherche    
+    if search != None:
+        items = get_materiels_existants_with_search(search)
+
+    # Filtre du domaine
+    if domaine != "":
+        domaines_list = []
+        for (idM,name) in items:
+            domaine_id = str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[4])
+            if domaine_id != domaine:
+                domaines_list.append((idM,name))
+    
+    # Filtre de la catégorie
+    if categorie != None:
+        categories_list = []
+        for (idM,name) in items:
+            categorie_id = str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[2])
+            if categorie_id != categorie:
+                categories_list.append((idM,name))
+
+    if domaine != "":
+        items = intersection(items, domaines_list)
+
+    if categorie != None:
+        items = intersection(items, categories_list)
+
+    return render_template(
+
+        "ajouterStock.html",
+        items = items,
+        RechercherFormWithAssets = rechercherForm,
+        AjouterStockForm = ajouterForm,
+    )
+
 def get_endroit_choices():
     query = text("SELECT endroit, idEndroit FROM ENDROIT;")
     result = cnx.execute(query)
@@ -242,33 +396,57 @@ def get_position_choices_modifier_materiel(idEndroit):
     positions = [(str(id_), name) for name, id_ in result]
     return positions
 
+def get_materiels_existants():
+    query = text("SELECT nomMateriel, idMateriel FROM MATERIEL;")
+    result = cnx.execute(query)
+    materiels = [(str(id_), name) for name, id_ in result]
+    return materiels
+
+def get_materiels_existants_with_search(search):
+    query = text("SELECT nomMateriel, idMateriel FROM MATERIEL where nomMateriel like'%" + search + "%';")
+    result = cnx.execute(query)
+    materiels = [(str(id_), name) for name, id_ in result]
+    return materiels
+
 @app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
 def ajouter_materiel_unique(id):
     f = AjouterMaterielUniqueForm()
     f.endroit.choices = get_endroit_choices() 
 
-    if f.validate_on_submit() :
-        position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique()
-        print("datepppppppp")
-        print(date_peremption)
-        res = MaterielUnique.Insert.insere_materiel_unique(cnx, id, position, date_reception, date_peremption, commentaire, quantite_approximative)
-        if res:
-            return redirect(url_for('etat', id=id))
-        else:
-            print("Erreur lors de l'insertion du matériel")
-            return redirect(url_for('ajouter_materiel'))
+    if f.validate_on_submit():
+        position, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue = f.get_full_materiel_unique_requestform()
+        identifiant = Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(), id)[0]
+        print("id : ",identifiant)
+
+        if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), identifiant) <= 0:
+            STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant)
+
+        liste_res = []
+
+        print("qt recu : ",quantite_recue)
+
+        for _ in range(int(quantite_recue)): # On insère autant de fois que la quantité est exigée
+            print("----------------------------------------")
+            new_id = MaterielUnique.Insert.insere_materiel_unique(cnx, identifiant, position, date_reception, date_peremption, commentaire, quantite_approximative)
+            print("new_id : ",new_id)
+            if new_id > 0 :
+                res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, new_id) # Erreur ici
+                if res == False or res == None:
+                    print("Erreur lors de l'insertion du matériel unique d'id " + str(new_id))
+                    return redirect(url_for('etat', id=id))
+        
+        return redirect(url_for('etat', id=id))
+        
     else :
-        position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique()
-        print("datepppppppp")
-        print(date_peremption)
         print("Erreur lors de la validation du formulaire")
         print(f.errors)
     return render_template(
-    "ajouterMaterielUnique.html",
-    title="ajouter un matériel au stock",
-    AjouterMaterielUniqueForm=f,
-    id = id,
-    chemin = [("base", "accueil")]
+        "ajouterMaterielUnique.html",
+        title="ajouter un matériel au stock",
+        AjouterMaterielUniqueForm=f,
+        id = id,
+        materiel = Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(), id)[1],
+        chemin = [("base", "accueil"),("inventaire", "inventaire")]
     )
 
 class A2FForm(FlaskForm):
@@ -719,8 +897,6 @@ def consulter_utilisateur():
         chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
     )
 
-
-
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
 @csrf.exempt
 def recherche_utilisateur():
@@ -837,7 +1013,7 @@ def modifier_materiel_unique(id):
     materiel = MaterielUnique.Get.get_materiel_unique(cnx, id)
     idMaterielUnique, idMateriel, idRangement, dateReception, commentaireMateriel, quantiteApproximative, datePeremption = materiel[0]
     idEndroit = Rangement.Get.get_id_endroit_from_id_rangement(cnx, idRangement)
-    f = AjouterMaterielUniqueForm()
+    f = ModifierMaterielUniqueForm()
     f.date_reception.default = dateReception
     f.date_peremption.default = datePeremption
     f.commentaire.default = commentaireMateriel
@@ -861,8 +1037,8 @@ def modifier_materiel_unique(id):
         print(f.errors)
     return render_template(
         "modifierMaterielUnique.html",
-        title="modifier les informations d'un matériel en stock",
-        AjouterMaterielUniqueForm=f,
+        title="Modifier les informations d'un matériel en stock",
+        ModifierMaterielUniqueForm=f,
         id=id,
         chemin=[("base", "accueil")]
     )
@@ -1009,6 +1185,36 @@ def commentaire():
         CommentaireForm=f
     )
 
+
+@app.route("/login/", methods=("GET","POST",))
+def login():
+    f = LoginForm ()
+    changerMDP = ChangerMDPForm()
+    changerMail = ChangerMailForm()
+    mdpOublier = MdpOublierForm()
+    if not f.is_submitted():
+        f.next.data = request.args.get("next")
+    elif f.validate_on_submit():
+        nom, idStatut, mail, prenom = f.get_authenticated_user()
+        user = nom, idStatut, mail, prenom
+        if user != None:
+            #login_user(user)
+            idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+            #session['utilisateur'] = ('Lallier', 3, 'mail@', 'Anna', 3)
+            session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+            print("login : "+str(session['utilisateur']))
+            next = f.next.data or url_for("base")
+            return redirect(next)
+    return render_template(
+        "login.html",
+        title="profil",
+        form=f,
+        fromChangerMDP=changerMDP,
+        fromChangerMail=changerMail,
+        MdpOublierForm=mdpOublier
+    )
+
+"""
 @app.route("/login/", methods=("GET","POST",))
 def login():
     f = LoginForm ()
@@ -1036,6 +1242,7 @@ def login():
         fromChangerMail=changerMail,
         MdpOublierForm=mdpOublier
     )
+"""
 
 @app.route("/logout/")
 def logout():

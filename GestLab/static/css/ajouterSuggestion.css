@@ -2,7 +2,37 @@ p,
 label {
     color: white;
     font-size: 25px;
-    margin: 2vh 0;
+    margin: 15px 0;
+    cursor: pointer;
+}
+
+#search-bar {
+    flex-basis: 80%;
+    width: calc(100% - 60px);
+    height: 50px;
+    border-radius: 20px;
+    border: none;
+    padding: 0 30px;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+#btn-search {
+    flex-basis: 20%;
+    max-height: 50px;
+    color: #fff;
+    background-color: #384274;
+    padding: 0px 0px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.2s;
+}
+
+#btn-search:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
     cursor: pointer;
 }
 
@@ -159,6 +189,23 @@ label {
 .checkmark input {
     height: 30px;
     width: 30px;
+    accent-color: #d35252;
+}
+
+.checkmark div {
+    display: flex;
+    align-items: center;
+}
+
+.pictogramme {
+    width: 30px;
+    height: 30px;
+    align-items: center;
+}
+
+.pictogramme {
+    width: 30px;
+    height: 30px;
 }
 
 @media screen and (max-width: 1200px) {
