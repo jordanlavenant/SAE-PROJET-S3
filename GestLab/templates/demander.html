@@ -6,19 +6,21 @@
 {% block content %}
 <div class="container-top">
     <a class="lien-item" href="{{ url_for('base') }}"><button id="btn-back">RETOUR</button></a>
-    <a href="#"><button id="btns">VALIDER LA COMMANDE</button></a>
+    <a href="{{ url_for('bon_demande', id=idDemande) }}"><button id="btns">VALIDER LA DEMANDE</button></a>
 </div>
 <div class="demander-container-overall">
     <div class="header-container">
-        <div class="search-content">
-            <input type="text" id="search-bar" placeholder="Chercher un matériel">
-            <button id="btn-search">RECHERCHER</button>
-        </div>
+        <form method="POST" action="{{ url_for('recherche_materiel_demander') }}" role="search">
+            <div class="search-content">
+                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar") }}
+                <button id="btn-search" type="submit">Rechercher</button>
+            </div>
+        </form>
         <div class="filter-container">
             <div class="filter-sous-container">
                 <p>trier par : </p>
-                <form action="/traiter" method="post">
-                    <select name="cat" id="categorie-select">
+                <form action="/traiter" method="post" class="{{ nbMateriel }}" id="formulaire-trie-domaine">
+                    <select name="cat" id="domaine-select">
                         <option value="aucun-tri">aucun tri</option>
                         {% for categorie in categories %}
                             <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
@@ -26,25 +28,25 @@
                     </select>
                 </form>
             </div>
-            <a href="#"><button id="btns">RÉNITIALISER LA DEMANDE</button></a>
+            <a href="{{ url_for('reinitialiser_demande', id=idUser) }}"><button id="btns">RÉNITIALISER LA DEMANDE</button></a>
         </div>
     </div>
     <div class="ajouter-materiel-container">
         <a href="{{ url_for('ajouter_suggestion') }}"><button id="btns">AJOUTER SUGGESTION</button></a>
     </div>
     <div class="container-contenu">
-        {% for item,count in liste_materiel[0] %}
-            <section class="section-contenu">
-                <h3>{{ item[1] }} - {{ item[11] }}</h3>
-                <h4>{{ item[13] }}</h4> 
-                <h4>{{ item[14] }}</h4>
+        {% for item in liste_materiel %}
+            <section class="section-contenu" id="{{ item[6] }}">
+                <h3>{{ item[1] }} - {{ item[3] }}</h3>
+                <h4>{{ item[2] }}</h4>
+                <h4>{{ item[5] }}</h4>
                 <div class="bottom-side">
                     <div class="choisir-item">
                         <button class="bouton-moins">-</button>
-                        <p class="nb-choisit">{{ item[-1] }}</p>
+                        <p class="nb-choisit">{{ item[4] }}</p>
                         <button class="bouton-plus">+</button>
                     </div>
-                    <a class="{{ item[0] }} {{ item[-1] }}" href="#"><button class="ajouter-demande" id="ajouter-demande">ajouter à la demande</button></a>
+                    <a class="{{ item[0] }} {{ item[4] }}" href="#"><button class="ajouter-demande" id="ajouter-demande">ajouter à la demande</button></a>
                 </div>
                 <script>
                     var maVariableJavaScript = "{{ item[4] }}"; 
@@ -57,4 +59,5 @@
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='./js/ajusterValDemander.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/trieDomaine.js') }}"></script>
 {% endblock %}
