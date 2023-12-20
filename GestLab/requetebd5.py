@@ -1415,6 +1415,26 @@ class STOCKLABORATOIRE:
             except:
                 print("Erreur lors de la récupération de la quantité")
                 raise
+
+        def materiel_dans_stock(cnx, idMateriel):
+                try:
+                    result = cnx.execute(text("SELECT COUNT(*) FROM STOCKLABORATOIRE WHERE idMateriel = " + str(idMateriel) + ";"))
+                    for row in result:
+                        return row[0]
+                    cnx.commit()
+                except:
+                    print("Erreur lors de l'insertion du matériel dans le stock")
+                    raise
+        
+    class Insert:
+        def insere_materiel_stock(cnx, idMateriel):
+            try:
+                cnx.execute(text("INSERT INTO STOCKLABORATOIRE (idMateriel, quantiteLaboratoire) VALUES (" + str(idMateriel) + ", 0);"))
+                cnx.commit()
+            except:
+                print("Erreur lors de l'insertion du matériel dans le stock")
+                raise
+
 class DATE:
     class Get:
         def get_date(cnx):
