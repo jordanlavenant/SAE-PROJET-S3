@@ -85,8 +85,8 @@ class AjouterSuggestionForm(FlaskForm):
     categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
     nom = StringField('nom', validators=[DataRequired()])
     reference = StringField('reference', validators=[DataRequired()])
-    caracteristiques = StringField('caracteristiques')
-    infossup = StringField('infossup')
+    caracteristiques = TextAreaField('caracteristiques')
+    infossup = TextAreaField('infossup')
     seuilalerte  = IntegerField('seuilalerte')
     next = HiddenField()
 
@@ -264,9 +264,16 @@ def ajouter_suggestion():
 def ajouter_stock():
     rechercherForm = RechercherForm()
     ajouterForm = AjouterStockForm()
+
+    if rechercherForm.validate_on_submit():
+        print("rechercher")
+
     ajouterForm.materiel.choices = get_materiels_existants()
     ajouterForm.endroit.choices = get_endroit_choices()
+    # if ajouterForm.endroit.data = get_position_choices_modifier_materiel(ajouterForm.endroit.data)
     ajouterForm.domaine.choices = get_domaine_choices() 
+    # ajouterForm.categorie.choices = get_categorie_choices_modifier_materiel(ajouterForm.domaine.data)
+
     if ajouterForm.validate_on_submit() :
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = ajouterForm.get_full_materiel()
         res = Materiel.Insert.insere_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
@@ -284,6 +291,13 @@ def ajouter_stock():
         AjouterStockForm=ajouterForm,
         RechercherForm=rechercherForm,
         chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
+    )
+
+@app.route("/recherche-materiel-existant/", methods=("GET","POST",))
+def recherche_materiel_existant():
+
+    return render_template(
+        "ajouterStock.html",
     )
 
 def get_endroit_choices():
