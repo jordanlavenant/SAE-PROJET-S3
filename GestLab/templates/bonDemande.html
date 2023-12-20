@@ -26,7 +26,7 @@
     </div>
 </div>
 <div class="container-valider">
-    <a id="btn-valider" href="#">valider la demande</a>
+    <a id="btn-valider" href="/valider-bon-demande/{{ idUser }}?idDemande={{ id }}">valider la demande</a>
 </div>
 {% for item in liste_materiel %}
 <section class="section-contenu">
@@ -39,7 +39,7 @@
             <!-- <button class="bouton-plus">+</button> -->
         </div>
     </div>
-    <a id="btn-voir" href="#">supprimer</a>
+    <a id="btn-voir" href="{{ url_for('delete_materiel_demande', idMat=item[0], idDemande=item[6]) }}">supprimer</a>
 </section>
 {%endfor%}
 <div class="popup" id="myPopup">

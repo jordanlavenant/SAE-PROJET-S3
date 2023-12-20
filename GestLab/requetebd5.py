@@ -1067,7 +1067,8 @@ class Demande :
 
         def changer_etat_demande(cnx, idut):
             try:
-                cnx.execute(text("UPDATE DEMANDE SET idEtatD = 2 WHERE idUtilisateur = " + str(idut) + ";"))
+                idDemande = Demande.Get.get_id_demande_actuel(cnx, idut)
+                cnx.execute(text("UPDATE DEMANDE SET idEtatD = 2 WHERE idDemande = " + str(idDemande) + ";"))
                 cnx.commit()
                 Utilisateur.Insert.ajout_laborantin_into_demande(cnx, idut)
             except:

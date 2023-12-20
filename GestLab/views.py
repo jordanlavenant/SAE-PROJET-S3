@@ -515,7 +515,7 @@ def delete_materiel(idbc, idMat):
 
 @app.route("/delete-materiel-demande/<int:idDemande>/<int:idMat>", methods=("GET","POST",))
 def delete_materiel_demande(idDemande, idMat):
-    Materiel.Delete.delete_materiel_in_Demande_whith_id(cnx, idMat, idDemande)
+    Materiel.Delete.delete_materiel_in_AouterMateriel_whith_id(cnx, idMat, idDemande)
     return redirect(url_for('bon_demande', id=idDemande))
 
 @app.route("/bon-commande-unique", methods=("GET","POST",))
@@ -554,6 +554,14 @@ def historique_bon_commande():
 def delete_bon_commande(id):
     Bon_commande.Delete.delete_bonCommande_with_id(cnx, id)
     return redirect(url_for('consulter_bon_commande'))
+
+@app.route("/valider-bon-demande/<int:id>", methods=("GET","POST",))
+def valider_bon_demande(id):
+    idDemande = request.args.get('idDemande')
+    Demande.Insert.changer_etat_demande(cnx, id)
+    while True:
+        pass
+    return redirect(url_for('base'))
 
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
