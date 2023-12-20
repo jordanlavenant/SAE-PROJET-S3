@@ -356,6 +356,10 @@ def reinitialiser_bon_commande(id):
     Materiel.Delete.delete_all_materiel_in_commande(cnx, id)
     return redirect(url_for('commander'))
 
+@app.route("/reinitialiser-demande/<int:id>", methods=("GET","POST",))
+def reinitialiser_demande(id):
+    Materiel.Delete.delete_all_materiel_in_AjouterMateriel(cnx, id)
+    return redirect(url_for('demander'))
 
 @app.route("/commander-materiel-unique/<int:id>", methods=("GET","POST",))
 def commander_materiel_unique(id):
@@ -363,8 +367,6 @@ def commander_materiel_unique(id):
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
     Materiel.Insert.ajout_materiel_in_commande(cnx, idMat, id, qte, False)
-    # delete_materiel_unique_in_demande(cnx, idDemande, idMat)
-    set
     return redirect(url_for('commander'))
 
 @app.route("/commander-demande-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -375,6 +377,14 @@ def commander_demande_materiel_unique(id):
     Materiel.Insert.ajout_materiel_in_commande(cnx, idMat, id, qte, True)
     MaterielUnique.Delete.delete_materiel_unique_in_demande(cnx, idDemande, idMat)
     return redirect(url_for('commander'))
+
+@app.route("/demander-materiel-unique/<int:id>", methods=("GET","POST",))
+def demander_materiel_unique(id):
+    idDemande = request.args.get('idDemande')
+    idMat = request.args.get('idMat')
+    qte = request.args.get('qte')
+    Materiel.Insert.ajout_materiel_in_AjouterMateriel(cnx, idMat, id, qte, False)
+    return redirect(url_for('demander'))
 
 #Pour le bouton commander tout les materiels 
 
