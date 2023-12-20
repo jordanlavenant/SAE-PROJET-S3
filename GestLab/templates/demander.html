@@ -33,18 +33,18 @@
         <a href="{{ url_for('ajouter_suggestion') }}"><button id="btns">AJOUTER SUGGESTION</button></a>
     </div>
     <div class="container-contenu">
-        {% for item,count in liste_materiel[0] %}
-            <section class="section-contenu">
-                <h3>{{ item[1] }} - {{ item[11] }}</h3>
-                <h4>{{ item[13] }}</h4> 
-                <h4>{{ item[14] }}</h4>
+        {% for item in liste_materiel %}
+            <section class="section-contenu" id="{{ item[6] }}">
+                <h3>{{ item[1] }} - {{ item[3] }}</h3>
+                <h4>{{ item[2] }}</h4>
+                <h4>{{ item[5] }}</h4>
                 <div class="bottom-side">
                     <div class="choisir-item">
                         <button class="bouton-moins">-</button>
-                        <p class="nb-choisit">{{ item[-1] }}</p>
+                        <p class="nb-choisit">{{ item[4] }}</p>
                         <button class="bouton-plus">+</button>
                     </div>
-                    <a class="{{ item[0] }} {{ item[-1] }}" href="#"><button class="ajouter-demande" id="ajouter-demande">ajouter à la demande</button></a>
+                    <a class="{{ item[0] }} {{ item[4] }}" href="#"><button class="ajouter-demande" id="ajouter-demande">ajouter à la demande</button></a>
                 </div>
                 <script>
                     var maVariableJavaScript = "{{ item[4] }}"; 

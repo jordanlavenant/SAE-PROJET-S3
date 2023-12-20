@@ -304,6 +304,7 @@ class Utilisateur:
             except:
                 print("erreur d'ajout de l'utilisateur")
                 return False
+                
     class Delete:
             
             def delete_utilisateur(cnx, idut):
