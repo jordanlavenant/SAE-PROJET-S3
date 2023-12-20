@@ -264,6 +264,8 @@ def ajouter_suggestion():
 def ajouter_stock():
     rechercherForm = RechercherForm()
     ajouterForm = AjouterStockForm()
+    ajouterForm.materiel.choices = get_materiels_existants()
+    ajouterForm.endroit.choices = get_endroit_choices()
     ajouterForm.domaine.choices = get_domaine_choices() 
     if ajouterForm.validate_on_submit() :
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = ajouterForm.get_full_materiel()
@@ -314,10 +316,6 @@ def get_materiels_existants():
 def ajouter_materiel_unique(id):
     f = AjouterMaterielUniqueForm()
     f.materiel.choices = get_materiels_existants()
-    print(f.materiel.choices)
-    print(type(f.materiel.choices))
-    print(type(f.materiel.choices[0]))
-    print(f.materiel.choices[0])
     f.endroit.choices = get_endroit_choices() 
 
     if f.validate_on_submit() :
