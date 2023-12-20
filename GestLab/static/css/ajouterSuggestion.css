@@ -189,6 +189,23 @@ label {
 .checkmark input {
     height: 30px;
     width: 30px;
+    accent-color: #d35252;
+}
+
+.checkmark div {
+    display: flex;
+    align-items: center;
+}
+
+.pictogramme {
+    width: 30px;
+    height: 30px;
+    align-items: center;
+}
+
+.pictogramme {
+    width: 30px;
+    height: 30px;
 }
 
 @media screen and (max-width: 1200px) {
