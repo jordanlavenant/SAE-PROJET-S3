@@ -428,6 +428,31 @@ def commander():
         chemin = [("base", "accueil"), ("commander", "commander")]
     )
 
+@app.route("/recherche-materiel-demander", methods=("GET","POST",))
+@csrf.exempt
+def recherche_materiel_demander():
+    rechercher = RechercherForm()
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
+    value = rechercher.get_value()
+    print("value : "+value)
+    if value != None:
+        liste_materiel = Recherche.recherche_all_in_materiel_demande_with_search(get_cnx(), idDemande, value)
+        return render_template(
+            "demander.html",
+            title="demander",
+            idUser = idUser,
+            idDemande = Demande.Get.get_id_demande_actuel(cnx, Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
+            categories = Domaine.get_domaine(get_cnx()),
+            RechercherForm=rechercher,
+            liste_materiel = liste_materiel,
+            nbMateriel = len(liste_materiel),
+            alertes = Alert.get_nb_alert(cnx),
+            demandes = Demande.Get.get_nb_demande(cnx),
+            chemin = [("base", "accueil"), ("demander", "demander")]
+        )
+    return redirect(url_for('demander'))
+
 @app.route("/recherche-materiel", methods=("GET","POST",))
 @csrf.exempt
 def recherche_materiel():
@@ -926,16 +951,21 @@ def recherche_inventaire():
     return redirect(url_for('inventaire'))
   
 @app.route("/demander/")
+@csrf.exempt
 def demander():
+    recherche = RechercherForm()
     idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     liste_materiel = Demande.Get.afficher_demande(cnx, idUser)
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
     print(liste_materiel)
+    print(len(liste_materiel))
     return render_template(
         "demander.html",
         title="demander",
         idDemande = idDemande,
         liste_materiel = liste_materiel,
+        nbMateriel = len(liste_materiel),
+        RechercherForm=recherche,
         categories = Domaine.get_domaine(get_cnx()),
         idUser = idUser,
         chemin = [("base", "accueil"), ("demander", "demander")]

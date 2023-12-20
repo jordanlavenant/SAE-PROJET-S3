@@ -827,6 +827,22 @@ class Recherche:
             print("erreur de recherche")
             raise
 
+    def recherche_all_in_materiel_demande_with_search(cnx, idDemande, search):
+        try:
+            liste = []
+            result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite, idCategorie FROM AJOUTERMATERIEL NATURAL JOIN MATERIEL WHERE idDemande = " + str(idDemande) + " and nomMateriel like '%" + search + "%';"))
+            result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite, idCategorie FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM AJOUTERMATERIEL NATURAL JOIN MATERIEL WHERE idDemande = " + str(idDemande) + ") and nomMateriel like '%" + search + "%';"))
+            for row in result:
+                    idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
+            for row in result2:
+                idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
+            return liste
+        except:
+            print("erreur de recherche")
+            raise
+
     def recherche_all_in_inventaire_with_search(cnx, search):
             try:
                 list = []

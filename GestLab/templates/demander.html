@@ -10,15 +10,17 @@
 </div>
 <div class="demander-container-overall">
     <div class="header-container">
-        <div class="search-content">
-            <input type="text" id="search-bar" placeholder="Chercher un matériel">
-            <button id="btn-search">RECHERCHER</button>
-        </div>
+        <form method="POST" action="{{ url_for('recherche_materiel_demander') }}" role="search">
+            <div class="search-content">
+                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar") }}
+                <button id="btn-search" type="submit">Rechercher</button>
+            </div>
+        </form>
         <div class="filter-container">
             <div class="filter-sous-container">
                 <p>trier par : </p>
-                <form action="/traiter" method="post">
-                    <select name="cat" id="categorie-select">
+                <form action="/traiter" method="post" class="{{ nbMateriel }}" id="formulaire-trie-domaine">
+                    <select name="cat" id="domaine-select">
                         <option value="aucun-tri">aucun tri</option>
                         {% for categorie in categories %}
                             <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
@@ -57,4 +59,5 @@
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='./js/ajusterValDemander.js') }}"></script>
+<script src="{{ url_for('static', filename='./js/trieDomaine.js') }}"></script>
 {% endblock %}
