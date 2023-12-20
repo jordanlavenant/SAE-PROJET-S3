@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container-top">
     <a class="lien-item" href="{{ url_for('base') }}"><button id="btn-back">RETOUR</button></a>
-    <a href="#"><button id="btns">VALIDER LA COMMANDE</button></a>
+    <a href="{{ url_for('bon_demande', id=idDemande) }}"><button id="btns">VALIDER LA DEMANDE</button></a>
 </div>
 <div class="demander-container-overall">
     <div class="header-container">

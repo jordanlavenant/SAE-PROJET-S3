@@ -385,6 +385,18 @@ class Materiel:
                 print("Erreur lors de la récupération du matériel dans la commande")
                 raise
 
+        def get_materiel_demande(cnx,idDemande):
+            try:
+                result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, informationsComplementairesEtSecurite,referenceMateriel, idFDS, idDemande,quantite FROM AJOUTERMATERIEL NATURAL JOIN MATERIEL WHERE idDemande = " + str(idDemande) + ";"))
+                liste = []
+                for row in result:
+                    print(row)
+                    liste.append(row)
+                return liste
+            except:
+                print("Erreur lors de la récupération du matériel dans la demande")
+                raise
+
         def get_id_materiel_from_id_materiel_unique(cnx, id_materiel_unique) :
             try:
                 result = cnx.execute(text("SELECT idMateriel FROM MATERIELUNIQUE NATURAL JOIN MATERIEL WHERE idMaterielUnique = " + str(id_materiel_unique) + ";"))
