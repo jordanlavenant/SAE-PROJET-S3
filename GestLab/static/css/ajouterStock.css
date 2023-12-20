@@ -67,36 +67,16 @@ label {
     cursor: pointer;
 }
 
-.filter-container {
+.do-cat-container {
     display: flex;
     flex-direction: row;
-    gap: 25px;
-    margin-bottom: 25px;
-    align-items: center;
+    justify-content: flex-start;
+    gap: 50px;
 }
 
-.filter-container > p {
-    color: white;
-    font-size: 40px;
-    margin: 0;
-    padding: 0;
+.main-container {
+    padding: 5% 0 0;
 }
-
-#domaine-select {
-    color: #384274;
-    background-color: white;
-    font-family: 'Alumni Sans', sans-serif;
-    border-radius: 20px;
-    font-size: 25px;
-    padding: 10px 60px;
-    border: none;
-}
-
-#domaine-select {
-    cursor: pointer;
-    padding: 10px 60px;
-}
-
 
 .ajouterMateriel-container {
     display: flex;
@@ -131,14 +111,6 @@ label {
     flex-direction: column;
     justify-content: space-between;
     width: 50%;
-}
-
-
-.do-cat-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 50px;
 }
 
 .domaine-container,

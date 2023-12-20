@@ -64,6 +64,24 @@ class RechercherForm(FlaskForm):
     def get_value(self):
         value = self.value.data
         return value
+    
+class RechercherFormWithAssets(FlaskForm):
+    value = StringField('value')
+    domaine = SelectField('domaine', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
+    categorie = SelectField('categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
+    submit = SubmitField('rechercher')
+
+    def get_value(self):
+        value = self.value.data
+        return value
+
+    def get_domaine(self):
+        domaine = self.domaine.data
+        return domaine
+    
+    def get_categorie(self):
+        categorie = self.categorie.data
+        return categorie
 
 class AjouterUtilisateurForm(FlaskForm):
     nom = StringField('nom', validators=[DataRequired()])
@@ -173,12 +191,8 @@ class AjouterStockForm(FlaskForm):
 
     def get_full_materiel(self):
         categorie = self.categorie.data
-        nom = self.nom.data
-        reference = self.reference.data
-        caracteristiques = self.caracteristiques.data
-        infossup = self.infossup.data
-        seuilalerte = self.seuilalerte.data
-        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        domaine = self.domaine.data
+        return (domaine,categorie)
     
     def get_full_materiel_requestform(self):
         categorie = request.form['categorie']
@@ -263,29 +277,22 @@ def ajouter_suggestion():
 @app.route("/ajouter-stock/", methods=("GET","POST",))
 @csrf.exempt
 def ajouter_stock():
-    rechercherForm = RechercherForm()
+    rechercherForm = RechercherFormWithAssets()
+    rechercherForm.domaine.choices = get_domaine_choices() 
+
     ajouterForm = AjouterStockForm()
     ajouterForm.endroit.choices = get_endroit_choices()
-    ajouterForm.domaine.choices = get_domaine_choices() 
+
+    print(rechercherForm.domaine.data)
+    print(rechercherForm.categorie.data)
 
     items = get_materiels_existants()
 
-    if ajouterForm.validate_on_submit() :
-        categorie, nom, reference, caracteristiques, infossup, seuilalerte = ajouterForm.get_full_materiel()
-        res = Materiel.Insert.insere_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
-        if res:
-            return redirect(url_for('demander'))
-        else:
-            print("Erreur lors de l'insertion du matériel")
-            return redirect(url_for('ajouter_stock'))
-    else :
-        print("Erreur lors de la validation du formulaire")
-        print(ajouterForm.errors)
     return render_template(
         "ajouterStock.html",
         title="ajouter au stock",
         AjouterStockForm=ajouterForm,
-        RechercherForm=rechercherForm,
+        RechercherFormWithAssets=rechercherForm,
         items = items,
         chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
     )
@@ -293,19 +300,24 @@ def ajouter_stock():
 @app.route("/recherche-materiel-existant/", methods=("GET","POST",))
 @csrf.exempt
 def recherche_materiel_existant():
-    rechercherForm = RechercherForm()
+    rechercherForm = RechercherFormWithAssets()
+    rechercherForm.domaine.choices = get_domaine_choices() 
+
     ajouterForm = AjouterStockForm()
+    ajouterForm.endroit.choices = get_endroit_choices()
 
     items = get_materiels_existants()
-    value = rechercherForm.get_value()
-    if value != None:
-        print("value : ",value)
-        items = get_materiels_existants_with_search(value)
-    print("items : ",items)
+    search = rechercherForm.get_value()
+
+    print(rechercherForm.domaine.data)
+    print(rechercherForm.categorie.data)
+
+    if search != None:
+        items = get_materiels_existants_with_search(search)
     return render_template(
         "ajouterStock.html",
         items = items,
-        RechercherForm = rechercherForm,
+        RechercherFormWithAssets = rechercherForm,
         AjouterStockForm = ajouterForm,
     )
 
