@@ -7,30 +7,27 @@
 <a id="btn-back" href="{{ url_for('base') }}">retour</a>
 
 <div class="ajouterMateriel-container">
-
     <div class="ajouterMateriel-content">
-
         <form method="POST" action="{{ url_for('recherche_materiel_existant') }}" role="search">
             <div class="search-content">
                 {{ RechercherFormWithAssets.value(size=50, class_="form-control element", placeholder="chercher un matériel", id="search-bar") }}
-                <button id="btn-search" type="submit">rechercher</button>
+                <div class="filters-container">
+                    <div class="user-box domaine-container">
+                        <label for="search_domaine">domaine : </label>
+                        <div>{{ RechercherFormWithAssets.domaine(size=auto, id="search_domaine", class_="comboBox dom-select") }}</div>
+                    </div>
+                    <div class="user-box categorie-container">
+                        <label for="search_categorie">catégorie : </label>
+                        <div>{{ RechercherFormWithAssets.categorie(size=auto, id="search_categorie", class_="comboBox cat-select") }}</div>
+                    </div>
+                    {{ RechercherFormWithAssets.submit(value="Rechercher", class_="element submit", id="btn-search") }}
+                </div>
             </div>
         </form>
-        <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('ajouter_stock') }}">
-            {{ AjouterStockForm.hidden_tag() }}     
 
-            <div class="do-cat-container">
-                <div class="user-box domaine-container">
-                    <label for="domaine">domaine : </label>
-                    <div>{{ RechercherFormWithAssets.domaine(size=auto, id="domaine", class_="comboBox dom-select") }}</div>
-                </div>
-    
-                <div class="user-box categorie-container">
-                    <label for="categorie">catégorie : </label>
-                    <div>{{ RechercherFormWithAssets.categorie(size=auto, id="categorie", class_="comboBox cat-select") }}</div>
-                </div>
-            </div>
-                    
+
+        <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('ajouter_stock') }}">
+            {{ AjouterStockForm.hidden_tag() }}                        
             <div class="main-container">
 
                 <div class="left-side-info">
@@ -113,8 +110,8 @@
     });
 
     document.addEventListener("DOMContentLoaded", function() {
-        const domaineSelect = document.getElementById("domaine");
-        const categorieSelect = document.getElementById("categorie");
+        const categorieSelect = document.getElementById("search_categorie");
+        const domaineSelect = document.getElementById("search_domaine");
 
         domaineSelect.addEventListener("change", function() {
             const selectedDomaine = domaineSelect.value;
@@ -130,10 +127,6 @@
                     }
                 })
                 .catch(error => console.error(error));
-        });
-
-        categorieSelect.addEventListener("change", function() {
-            console.log(categorieSelect.value);
         });
     });
 </script>

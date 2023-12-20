@@ -67,8 +67,8 @@ class RechercherForm(FlaskForm):
     
 class RechercherFormWithAssets(FlaskForm):
     value = StringField('value')
-    domaine = SelectField('domaine', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
-    categorie = SelectField('categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
+    domaine = SelectField('domaine', choices=[], id="domaine", name="domaine", validators=[])
+    categorie = SelectField('categorie', choices=[], id="categorie", name="categorie", validators=[])
     submit = SubmitField('rechercher')
 
     def get_value(self):
@@ -306,15 +306,26 @@ def recherche_materiel_existant():
     ajouterForm = AjouterStockForm()
     ajouterForm.endroit.choices = get_endroit_choices()
 
-    items = get_materiels_existants()
+    items = get_materiels_existants() # Valeur par-défaut
+    
     search = rechercherForm.get_value()
+    domaine = rechercherForm.get_domaine()
+    categorie = rechercherForm.get_categorie()
 
-    print(rechercherForm.domaine.data)
-    print(rechercherForm.categorie.data)
-
+    print('dcs')
+    print(domaine,categorie,search)
+    
     if search != None:
         items = get_materiels_existants_with_search(search)
+    
+    if domaine != None:
+        for (idM,name) in items:
+            if str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[4]) != domaine:
+                items.remove((idM,name))
+
+    print(items)
     return render_template(
+
         "ajouterStock.html",
         items = items,
         RechercherFormWithAssets = rechercherForm,
