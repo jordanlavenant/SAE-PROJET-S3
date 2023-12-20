@@ -396,10 +396,10 @@ def ajouter_materiel_unique(id):
         if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), identifiant) <= 0 :
             STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant)
         
-        res = MaterielUnique.Insert.insere_materiel_unique(cnx, identifiant, position, date_reception, date_peremption, commentaire, quantite_approximative)
+        nouvel_id = MaterielUnique.Insert.insere_materiel_unique(cnx, identifiant, position, date_reception, date_peremption, commentaire, quantite_approximative)
         
-        if res:
-            res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, id)
+        if nouvel_id > 0 :
+            res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, nouvel_id)
         
         if res:
             return redirect(url_for('etat', id=identifiant))
@@ -1065,6 +1065,36 @@ def commentaire():
         chemin = [("base", "accueil"), ("commentaire", "envoyer un commentaire")],
         CommentaireForm=f
     )
+
+"""
+@app.route("/login/", methods=("GET","POST",))
+def login():
+    f = LoginForm ()
+    changerMDP = ChangerMDPForm()
+    changerMail = ChangerMailForm()
+    mdpOublier = MdpOublierForm()
+    if not f.is_submitted():
+        f.next.data = request.args.get("next")
+    elif f.validate_on_submit():
+        #nom, idStatut, mail, prenom = f.get_authenticated_user()
+        #user = nom, idStatut, mail, prenom
+        #if user != None:
+        #login_user(user)
+        #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+        session['utilisateur'] = ('Lallier', 3, 'mail@', 'Anna', 3)
+        #session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+        print("login : "+str(session['utilisateur']))
+        next = f.next.data or url_for("base")
+        return redirect(next)
+    return render_template(
+        "login.html",
+        title="profil",
+        form=f,
+        fromChangerMDP=changerMDP,
+        fromChangerMail=changerMail,
+        MdpOublierForm=mdpOublier
+    )
+"""
 
 @app.route("/login/", methods=("GET","POST",))
 def login():
