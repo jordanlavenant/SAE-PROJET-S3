@@ -36,7 +36,13 @@
 
                     <div class="user-box materiel-container">
                         <label for="materiel">Materiel : </label>
-                        <div>{{ AjouterStockForm.materiel(size=auto, class_="comboBox dom-select", id="materiel") }}</div>
+                        <div>
+                            <select name="" id="" class="comboBox dom-select">
+                                {% for item in items %}
+                                    <option value="{{ item[0] }}" name="{{ item[0] }}">{{ item[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
 
                     <div class="user-box domaine-container">

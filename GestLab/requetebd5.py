@@ -772,7 +772,6 @@ class Recherche:
                 print("erreur de l'id")
                 raise
 
-
 class Mots_de_passe:
     
     def generer_mot_de_passe():

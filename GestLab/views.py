@@ -261,18 +261,14 @@ def ajouter_suggestion():
     )
 
 @app.route("/ajouter-stock/", methods=("GET","POST",))
+@csrf.exempt
 def ajouter_stock():
     rechercherForm = RechercherForm()
     ajouterForm = AjouterStockForm()
-
-    if rechercherForm.validate_on_submit():
-        print("rechercher")
-
-    ajouterForm.materiel.choices = get_materiels_existants()
     ajouterForm.endroit.choices = get_endroit_choices()
-    # if ajouterForm.endroit.data = get_position_choices_modifier_materiel(ajouterForm.endroit.data)
     ajouterForm.domaine.choices = get_domaine_choices() 
-    # ajouterForm.categorie.choices = get_categorie_choices_modifier_materiel(ajouterForm.domaine.data)
+
+    items = get_materiels_existants()
 
     if ajouterForm.validate_on_submit() :
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = ajouterForm.get_full_materiel()
@@ -290,14 +286,27 @@ def ajouter_stock():
         title="ajouter au stock",
         AjouterStockForm=ajouterForm,
         RechercherForm=rechercherForm,
+        items = items,
         chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
     )
 
 @app.route("/recherche-materiel-existant/", methods=("GET","POST",))
+@csrf.exempt
 def recherche_materiel_existant():
+    rechercherForm = RechercherForm()
+    ajouterForm = AjouterStockForm()
 
+    items = get_materiels_existants()
+    value = rechercherForm.get_value()
+    if value != None:
+        print("value : ",value)
+        items = get_materiels_existants_with_search(value)
+    print("items : ",items)
     return render_template(
         "ajouterStock.html",
+        items = items,
+        RechercherForm = rechercherForm,
+        AjouterStockForm = ajouterForm,
     )
 
 def get_endroit_choices():
@@ -326,10 +335,16 @@ def get_materiels_existants():
     materiels = [(str(id_), name) for name, id_ in result]
     return materiels
 
+def get_materiels_existants_with_search(search):
+    query = text("SELECT nomMateriel, idMateriel FROM MATERIEL where nomMateriel like'%" + search + "%';")
+    result = cnx.execute(query)
+    materiels = [(str(id_), name) for name, id_ in result]
+    return materiels
+
 @app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
 def ajouter_materiel_unique(id):
     f = AjouterMaterielUniqueForm()
-    f.materiel.choices = get_materiels_existants()
+    f.materiel.choices = get_materiels_existants()   
     f.endroit.choices = get_endroit_choices() 
 
     if f.validate_on_submit() :
@@ -359,7 +374,7 @@ def ajouter_materiel_unique(id):
     title="ajouter un matériel au stock",
     AjouterMaterielUniqueForm=f,
     id = id,
-    chemin = [("base", "accueil")]
+    chemin = [("base", "accueil"),("inventaire", "inventaire")]
     )
 
 class A2FForm(FlaskForm):
