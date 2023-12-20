@@ -7,7 +7,10 @@ class PDF_BonCommande:
     class PDF(FPDF):
         def header(self):
             #logo
-            self.image('./GestLab/static/images/logo-GestLab.png', 10, 8, 33)
+            try:
+                self.image('./GestLab/static/images/logo-GestLab.png', 10, 8, 33)
+            except:
+                self.image('./static/images/logo-GestLab.png', 10, 8, 33)
             #font
             self.set_font('Arial', 'B', 30)
             #padding
@@ -64,17 +67,30 @@ class PDF_BonCommande:
         
         def affiche_FDS(self,referenceMateriel, nomMateriel, estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif ):
             #image
-            lien = "./GestLab/static/images/FDS/"
-            lienImageLogo = "./GestLab/static/images/logo-Gestlab.png"
-            lienImageToxique = lien + "Pictogramme-chimique-toxique-removebg-preview.png"
-            lienImageInflamable = lien + "Pictogramme-chimique-inflammable-removebg-preview.png"
-            lienImageCorrosif = lien + "Pictogramme-chimique-corrosif-removebg-preview.png"
-            lienImageExplosif = lien + "Pictogramme-chimique-explosion-removebg-preview.png"
-            lienImageGazSousPression = lien + "Pictogramme-chimique-gaz-sous-pression-removebg-preview.png"
-            lienImageCMR = lien + "Pictogramme-chimique-CMR-removebg-preview.png"
-            lienImageChimiqueEnvironement = lien + "Pictogramme-chimique-environnement-removebg-preview.png"
-            lienImageDangereux = lien + "Pictogramme-chimique-point-dexclamation-removebg-preview.png"
-            lienImageComburant = lien + "Pictogramme-chimique-comburant-removebg-preview.png"
+            try:
+                lien = "./GestLab/static/images/"
+                lienImageLogo = "./GestLab/static/images/logo-Gestlab.png"
+                lienImageToxique = lien + "Pictogramme-chimique-toxique-removebg-preview.png"
+                lienImageInflamable = lien + "Pictogramme-chimique-inflammable-removebg-preview.png"
+                lienImageCorrosif = lien + "Pictogramme-chimique-corrosif-removebg-preview.png"
+                lienImageExplosif = lien + "Pictogramme-chimique-explosion-removebg-preview.png"
+                lienImageGazSousPression = lien + "Pictogramme-chimique-gaz-sous-pression-removebg-preview.png"
+                lienImageCMR = lien + "Pictogramme-chimique-CMR-removebg-preview.png"
+                lienImageChimiqueEnvironement = lien + "Pictogramme-chimique-environnement-removebg-preview.png"
+                lienImageDangereux = lien + "Pictogramme-chimique-point-dexclamation-removebg-preview.png"
+                lienImageComburant = lien + "Pictogramme-chimique-comburant-removebg-preview.png"
+            except:
+                lien = "./static/images/FDS/"
+                lienImageLogo = "./static/images/logo-Gestlab.png"
+                lienImageToxique = lien + "Pictogramme-chimique-toxique-removebg-preview.png"
+                lienImageInflamable = lien + "Pictogramme-chimique-inflammable-removebg-preview.png"
+                lienImageCorrosif = lien + "Pictogramme-chimique-corrosif-removebg-preview.png"
+                lienImageExplosif = lien + "Pictogramme-chimique-explosion-removebg-preview.png"
+                lienImageGazSousPression = lien + "Pictogramme-chimique-gaz-sous-pression-removebg-preview.png"
+                lienImageCMR = lien + "Pictogramme-chimique-CMR-removebg-preview.png"
+                lienImageChimiqueEnvironement = lien + "Pictogramme-chimique-environnement-removebg-preview.png"
+                lienImageDangereux = lien + "Pictogramme-chimique-point-dexclamation-removebg-preview.png"
+                lienImageComburant = lien + "Pictogramme-chimique-comburant-removebg-preview.png"
 
 
             explication_explosif = "Ce pictogramme chimique identifie des produits explosifs instables et très réactifs. Ces derniers peuvent exploser au contact d'une flamme, d'une étincelle, sous l'effet de la chaleur, en cas de frottement ou en cas de choc."
@@ -259,7 +275,10 @@ class PDF_BonCommande:
         my_pdf.afficher_numero_commande(numero_commande, datetime.datetime.now().strftime("%d/%m/%Y"))
         my_pdf.cree_par(nom, prenom)
         my_pdf.affiche_materiel(liste_materiel)
-        my_pdf.output("./GestLab/static/data/bonCommande.pdf")
+        try:
+            my_pdf.output("./GestLab/static/data/bonCommande.pdf")
+        except:
+            my_pdf.output("./static/data/bonCommande.pdf")
 
 
     def genererpdfFDS(nom, prenom,referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif):
@@ -277,5 +296,5 @@ class PDF_BonCommande:
         my_pdf.output("./GestLab/static/data/FDS_pictogramme.pdf")
 
 
-PDF_BonCommande.genererpdfFDS("testNom", "testPrenom", "reftest", "testNomMateriel", True, True, False, False, False, False, True, False, False)
-PDF_BonCommande.genererpdfFDSPicatogramme() # PATCH AUJOUDHUI
+# PDF_BonCommande.genererpdfFDS("testNom", "testPrenom", "reftest", "testNomMateriel", True, True, False, False, False, False, True, False, False)
+# PDF_BonCommande.genererpdfFDSPicatogramme() # PATCH AUJOUDHUI

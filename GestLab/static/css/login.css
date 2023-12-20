@@ -7,69 +7,68 @@
 }
 
 #login-box {
-    margin-top: 5em;
-    margin-bottom: 5em;
+    margin: 2em 0 5em 0;
     width: 400px;
     padding: 40px;
     background: #009af0;
     box-shadow: 0 15px 25px #384274;
-    border-radius: 10px;
+    /* border-radius: 10px; */
     }
 
-    #login-box h2 {
-        margin: 0 0 30px;
-        padding: 0;
-        color: #fff;
-        text-align: center;
-    }
-    
-    .user-box {
-      position: relative;
-    }
-    
-    .user-box input {
-      width: 100%;
-      padding: 10px 0;
-      font-size: 30px;
-      color: #fff;
-      margin-bottom: 30px;
-      border: none;
-      border-bottom: 1px solid #fff;
-      outline: none;
-      background: transparent;
-    }
-   
-    .valid-container {
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      margin-top: 30px;
-    }
-  
-    .valid-container input {
-      padding: 10px 20px;  
-      color: #fff;
-      font-size: 30px;
-      text-decoration: none;
-      transition: .5s;
-      background-color: #384274;
-      border-radius: 5px;
-      border: 0;
-    }
-    
-    .valid-container input:hover {
-      box-shadow: 0 0 15px #384274;
-    }
-  
-    .valid-container a {
-      text-decoration: none;
-      color: #fff;
-    }
-  
-    .valid-container a:hover {
-      color: #384274;
-      transition: 0.2s;
-    }
+#login-box h2 {
+    margin: 0 0 30px;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+}
+
+.user-box {
+  position: relative;
+}
+
+.user-box input {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 30px;
+  color: #fff;
+  margin-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+}
+
+.valid-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.valid-container input {
+  padding: 10px 20px;  
+  color: #fff;
+  font-size: 30px;
+  text-decoration: none;
+  transition: .5s;
+  background-color: #384274;
+  border-radius: 5px;
+  border: 0;
+}
+
+.valid-container input:hover {
+  box-shadow: 0 0 15px #384274;
+}
+
+.valid-container a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.valid-container a:hover {
+  color: #384274;
+  transition: 0.2s;
+}
   
 /* changer le mdp */
 
@@ -138,7 +137,7 @@
   justify-content: space-evenly;
   align-items: center;
   margin-top: 30px;
-  margin-bottom: 2em;
+  margin-bottom: 40vh;
 }
 
 .a-lien {

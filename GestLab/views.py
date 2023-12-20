@@ -3,7 +3,7 @@ from flask import render_template, url_for, redirect, request, session, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField
+from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField
 from wtforms.validators import DataRequired, Optional
 from wtforms import PasswordField
 from hashlib import sha256
@@ -80,14 +80,14 @@ class AjouterUtilisateurForm(FlaskForm):
         statut = self.statut.data
         return (nom, prenom, email, statut)
 
-class AjouterMaterielForm(FlaskForm):
+class AjouterSuggestionForm(FlaskForm):
     domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
     categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
     nom = StringField('nom', validators=[DataRequired()])
     reference = StringField('reference', validators=[DataRequired()])
     caracteristiques = StringField('caracteristiques')
     infossup = StringField('infossup')
-    seuilalerte  = StringField('seuilalerte')
+    seuilalerte  = IntegerField('seuilalerte')
     next = HiddenField()
 
     def get_full_materiel(self):
@@ -200,9 +200,9 @@ def get_categorie_choices_modifier_materiel(idDomaine):
     categories = [(str(id_), name) for name, id_ in result]
     return categories
 
-@app.route("/ajouter-materiel/", methods=("GET","POST",))
-def ajouter_materiel():
-    f = AjouterMaterielForm()
+@app.route("/ajouter-suggestion/", methods=("GET","POST",))
+def ajouter_suggestion():
+    f = AjouterSuggestionForm()
     f.domaine.choices = get_domaine_choices() 
     if f.validate_on_submit() :
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
@@ -211,15 +211,15 @@ def ajouter_materiel():
             return redirect(url_for('demander'))
         else:
             print("Erreur lors de l'insertion du matériel")
-            return redirect(url_for('ajouter_materiel'))
+            return redirect(url_for('ajouter_suggestion'))
     else :
         print("Erreur lors de la validation du formulaire")
         print(f.errors)
     return render_template(
-    "ajouterMateriel.html",
-    title="ajouter un matériel",
-    AjouterMaterielForm=f,
-    chemin = [("base", "Accueil"), ("ajouter_materiel", "Ajouter un Matériel")]
+    "ajouterSuggestion.html",
+    title="ajouter une suggestion",
+    AjouterSuggestionForm=f,
+    chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
     )
 
 def get_endroit_choices():
@@ -268,7 +268,7 @@ def ajouter_materiel_unique(id):
     title="ajouter un matériel au stock",
     AjouterMaterielUniqueForm=f,
     id = id,
-    chemin = [("base", "Accueil")]
+    chemin = [("base", "accueil")]
     )
 
 class A2FForm(FlaskForm):
@@ -408,7 +408,7 @@ def commander():
         liste_materiel = liste_materiel,
         nbMateriel = nbMateriel,
         RechercherForm=rechercher,
-        chemin = [("base", "Accueil"), ("commander", "Commander")]
+        chemin = [("base", "accueil"), ("commander", "commander")]
     )
 
 @app.route("/recherche-materiel", methods=("GET","POST",))
@@ -423,7 +423,7 @@ def recherche_materiel():
         liste_materiel = Recherche.recherche_all_in_materiel_with_search(get_cnx(), idbc, value)
         return render_template(
             "commander.html",
-            title="Commander",
+            title="commander",
             idUser = idUser,
             idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
             categories = Domaine.get_domaine(get_cnx()),
@@ -432,7 +432,7 @@ def recherche_materiel():
             nbMateriel = len(liste_materiel),
             alertes = Alert.get_nb_alert(cnx),
             demandes = Demande.Get.get_nb_demande(cnx),
-            chemin = [("base", "Accueil"), ("commander", "Commander")]
+            chemin = [("base", "accueil"), ("commander", "commander")]
         )
     return redirect(url_for('commander'))
 
@@ -448,7 +448,7 @@ def bon_commande(id):
         title = "bon de commande",
         liste_materiel = liste_materiel,
         longueur = len(liste_materiel),
-        chemin = [("base", "Accueil"), ("commander", "Commander"), ('demandes', 'Bon de commande')]
+        chemin = [("base", "accueil"), ("commander", "commander"), ('demandes', 'bon de commande')]
     )
 @app.route("/consulterBonCommande/")
 def consulter_bon_commande():
@@ -472,7 +472,7 @@ def consulter_bon_commande():
         infoUser = liste_info_user,
         listeEtat = liste_etat_bon_commande,
         statutsCommande = Commande.Get.get_statut_from_commande(cnx),
-        chemin = [("base", "Accueil"), ('consulter_bon_commande', 'Consulter bon de commande')]
+        chemin = [("base", "accueil"), ('consulter_bon_commande', 'consulter bon de commande')]
     )
 
 @app.route("/changer-statut-bon-commande", methods=("GET","POST",))
@@ -496,7 +496,7 @@ def bon_commande_unique():
         liste_materiel = liste_materiel,
         title="bon de commande n°"+str(idbc),
         idbc = idbc,
-        chemin = [("base", "Accueil"), ("consulter_bon_commande", "Consulter bon de commande"), ("bon_commande_unique", "Bon de commande")]
+        chemin = [("base", "accueil"), ("consulter_bon_commande", "consulter bon de commande"), ("bon_commande_unique", "bon de commande")]
     )
 
 @app.route("/historique-bon-commande")
@@ -514,9 +514,9 @@ def historique_bon_commande():
         len = len(info_bon_commande),
         bonCommande = info_bon_commande,
         infoUser = liste_info_user,
-        listeEtat = liste_etat_bon_commande,
+        listeetat = liste_etat_bon_commande,
         statutsCommande = Commande.Get.get_statut_from_commande(cnx),
-        # chemin = [("base", "Accueil"), ("consulter_bon_commande, Consulter bon commande"), ("historique_bon_commande", "Historique des bon de commande")]
+        # chemin = [("base", "accueil"), ("consulter_bon_commande, Consulter bon commande"), ("historique_bon_commande", "Historique des bon de commande")]
     )
 
 @app.route("/delete-bon-commande/<int:id>", methods=("GET","POST",))
@@ -558,7 +558,7 @@ def alertes():
         nb_alerte = nb_alertes,
         info_materiels = info_materiel,
         title="alertes",
-        chemin = [("base", "Accueil"), ("alertes", "Alertes")]
+        chemin = [("base", "accueil"), ("alertes", "Alertes")]
     )
 
 @app.route("/etat/<int:id>")
@@ -570,7 +570,7 @@ def etat(id):
         item_properties = Materiel.Get.get_all_information_to_Materiel_with_id(cnx, id),
         items_unique = MaterielUnique.Get.get_all_information_to_MaterielUnique_with_id(cnx, id),
         alertes = Alert.nb_alert_par_materielUnique_dict(cnx),
-        chemin = [("base", "Accueil"), ("inventaire", "Inventaire"), ("inventaire", "Etat")]
+        chemin = [("base", "accueil"), ("inventaire", "inventaire"), ("inventaire", "etat")]
     )
 
 @app.route("/ajouter-utilisateur/")
@@ -580,7 +580,7 @@ def ajouter_utilisateur():
         "ajouterUtilisateur.html",
         title="ajouter un utilisateur",
         AjouterUtilisateurForm=f,
-        chemin = [("base", "Accueil"), ("ajouter_utilisateur", "Ajouter un Utilisateur")]
+        chemin = [("base", "accueil"), ("ajouter_utilisateur", "Ajouter un Utilisateur")]
     )
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
@@ -598,7 +598,7 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
             )
         elif selected_value == "Professeur":
             return render_template(
@@ -608,7 +608,7 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
             )
         elif selected_value == "Gestionnaire":
             return render_template(
@@ -618,7 +618,7 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
             )
         elif selected_value == "Laborantin":
             return render_template(
@@ -628,7 +628,7 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
             )
 
     return render_template(
@@ -638,7 +638,7 @@ def consulter_utilisateur():
         categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
         title="consulter les utilisateurs",
         RechercherForm=f,
-        chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+        chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
     )
 
 
@@ -657,7 +657,7 @@ def recherche_utilisateur():
             categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
             title="consulter les utilisateurs",
             RechercherForm=f,
-            chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+            chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
         )
 
     return render_template(
@@ -667,7 +667,7 @@ def recherche_utilisateur():
         categories = ["Tous", "Professeur", "Gestionnaire"],
         title="consulter les utilisateurs",
         RechercherForm=f,
-        chemin = [("base", "Accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "Consulter les Utilisateurs")]
+        chemin = [("base", "accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "consulter les utilisateurs")]
     )
 
 @app.route("/supprimer-utilisateur/<int:id>", methods=("GET","POST",))
@@ -714,7 +714,7 @@ def modifier_utilisateur(id):
         email=email,
         statut=statut,
         id=id,
-        chemin = [("base", "Accueil"), ("consulter_utilisateur", "Consulter les Utilisateurs"), ("consulter_utilisateur", "Modifier un Utilisateur")] 
+        chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs"), ("consulter_utilisateur", "modifier un utilisateur")] 
     )
 
 @app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
@@ -751,7 +751,7 @@ def modifier_materiel(id):
         title="modifier un matériel",
         AjouterMaterielForm=f,
         id = idMateriel,
-        chemin = [("base", "Accueil"),("inventaire", "Modifier un Matériel")]
+        chemin = [("base", "accueil"),("inventaire", "Modifier un Matériel")]
     )
 
 @app.route("/modifier-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -786,7 +786,7 @@ def modifier_materiel_unique(id):
         title="modifier les informations d'un matériel en stock",
         AjouterMaterielUniqueForm=f,
         id=id,
-        chemin=[("base", "Accueil")]
+        chemin=[("base", "accueil")]
     )
 
 @app.route("/supprimer-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -811,7 +811,7 @@ def demandes():
         title="demandes",
         nb_demande = int(Demande.Get.get_nb_demande(cnx)),
         info_demande = Demande.Get.get_info_demande(cnx),
-        chemin = [("base", "Accueil"), ("demandes", "Demandes")]
+        chemin = [("base", "accueil"), ("demandes", "demandes")]
     )
 
 @app.route("/demande/<int:idDemande>")
@@ -826,7 +826,7 @@ def demande(idDemande):
         longeur = len(info_commande),
         idUser = id_user,
         title = "demande de "+ info_commande[0][0] + " " + info_commande[0][1],
-        chemin = [("base", "Accueil"), ("demandes", "Demandes"), ('demandes', 'Demande')]
+        chemin = [("base", "accueil"), ("demandes", "demandes"), ('demandes', 'demandes')]
     )
 
 @app.route("/inventaire/")
@@ -848,7 +848,7 @@ def inventaire():
         nbMateriel = items[1],
         alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
         title="inventaire",
-        chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
+        chemin = [("base", "accueil"), ("inventaire", "inventaire")]
     )
 
 @app.route("/rechercher-inventaire", methods=("GET","POST",))
@@ -871,8 +871,7 @@ def recherche_inventaire():
             chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
         )
     return redirect(url_for('inventaire'))
-
-
+  
 @app.route("/demander/")
 def demander():
     return render_template(
@@ -881,7 +880,7 @@ def demander():
         liste_materiel = Suggestion_materiel.get_all_information_to_Materiel_suggestions(get_cnx()),
         categories = Domaine.get_domaine(get_cnx()),
         idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2]),
-        chemin = [("base", "Accueil"), ("demander", "Demander")]
+        chemin = [("base", "accueil"), ("demander", "demander")]
     )
 
 @app.route("/ajouter-demande/<int:id>", methods=("GET","POST",))
@@ -918,7 +917,7 @@ def commentaire():
         users = users,
         title ="envoyer un commentaire",
         materiel = materiel,
-        chemin = [("base", "Accueil"), ("commentaire", "envoyer un commentaire")],
+        chemin = [("base", "accueil"), ("commentaire", "envoyer un commentaire")],
         CommentaireForm=f
     )
 

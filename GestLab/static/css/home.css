@@ -1,5 +1,9 @@
 /*  sous titre si l'utilisateur est connecter */
 
+main {
+    margin: 7vh 0;
+}
+
 .sous-title {
     text-align: center;
     font-size: 50px;
