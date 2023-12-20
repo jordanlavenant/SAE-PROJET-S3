@@ -4,7 +4,10 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/demande.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('demandes') }}">retour</a>
+<div class="container-bouton-top">
+    <a id="btn-back" href="{{ url_for('demandes') }}">retour</a>
+    <a id="btn-tout-commander" href="#">tout commander</a>
+</div>
 {% for i in range(0, longeur) %}
 <div class="container-objet">
     <div class="info">
