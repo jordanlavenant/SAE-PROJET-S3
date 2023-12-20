@@ -18,7 +18,6 @@ cnx = ouvrir_connexion()
 def get_cnx():
     return cnx
 
-
 class Table:
     
     class Get:
@@ -982,7 +981,7 @@ class Demande :
         
         def get_nb_demande(cnx):
             try:
-                result = cnx.execute(text("select nombreDemandesEnAttente();"))
+                result = cnx.execute(text("SELECT COUNT(DEMANDE.idDemande) FROM DEMANDE WHERE DEMANDE.idEtatD = 2;"))
                 for row in result:
                     return row[0]
             except Exception as e:
@@ -1369,7 +1368,15 @@ class DATE:
 
             return date_res
                 
-
+class RELOAD:
+    def reload_alert(cnx):
+        try:
+            cnx.execute(text("call gestionAlertes();"))
+            cnx.commit()
+        except:
+            print("Erreur lors du reload des alertes")
+            raise
+        
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
 #     if nomcat is None:
