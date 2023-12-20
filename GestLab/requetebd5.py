@@ -11,6 +11,7 @@ import json
 import smtplib
 from email.message import EmailMessage
 import qrcode
+from datetime import datetime
 
 cnx = ouvrir_connexion()
 
@@ -211,7 +212,11 @@ class Utilisateur:
         def ajout_gest_into_boncommande(cnx,id):
             try:
                 etat = 1
-                cnx.execute(text("insert into BONCOMMANDE (idEtat,idUtilisateur ) values (" + str(etat) + ", " + str(id) + ");"))
+                date = cnx.execute(text("SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d');"))
+                for row in date:
+                    date = row[0]
+                print(date)
+                cnx.execute(text("insert into BONCOMMANDE (idEtat,idUtilisateur, dateBonCommande) values (" + str(etat) + ", " + str(id) + ", " + str(date) + ");"))
                 cnx.commit()
                 print("bon de commande ajouté")
             except:
@@ -331,7 +336,7 @@ class Materiel:
 
         def get_all_information_to_Materiel_with_id(cnx, id):
             try:
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE WHERE idMateriel = " + str(id) + ";"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL LEFT JOIN CATEGORIE NATURAL LEFT JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL LEFT JOIN RISQUES NATURAL LEFT JOIN RISQUE WHERE idMateriel = " + str(id) + ";"))
                 for row in result:
                     return row
             except:
@@ -341,7 +346,7 @@ class Materiel:
         def get_all_information_to_Materiel(cnx):
             try:
                 list = []
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE ;"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE ;"))
                 for row in result:
                     id = row[0]
                     result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
@@ -749,7 +754,7 @@ class Recherche:
     def recherche_all_in_inventaire_with_search(cnx, search):
             try:
                 list = []
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE where nomMateriel like '%" + search + "%' ;"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE where nomMateriel like '%" + search + "%' ;"))
                 for row in result:
                     id = row[0]
                     result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
@@ -1110,14 +1115,17 @@ class Bon_commande:
             try:
                 # partie bon commande
                 id_bon = Bon_commande.Get.get_max_id_bon_commande(cnx) + 1
-                cnx.execute(text("INSERT INTO BONCOMMANDE (idBonCommande, idEtat, idUtilisateur) VALUES ("+str(id_bon)+", 2, "+str(idUt)+");"))
+                date = cnx.execute(text("SELECT CURDATE();"))
+                for elem in date:
+                    date = elem[0]
+                cnx.execute(text("INSERT INTO BONCOMMANDE (idBonCommande, idEtat, idUtilisateur, dateBonCommande) VALUES ("+str(id_bon)+", 2, "+str(idUt)+ ", " + str(date) +");"))
                 cnx.commit()
                 # partie commande
                 for commande in liste_bon_commande:
-                    if cnx.execute(text("SELECT * FROM COMMANDE WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[3])+";")).first() is None:
-                        cnx.execute(text("INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES ("+str(id_bon)+", "+str(commande[3])+", "+str(commande[4])+");"))
+                    if cnx.execute(text("SELECT * FROM COMMANDE WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[4])+";")).first() is None:
+                        cnx.execute(text("INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES ("+str(id_bon)+", "+str(commande[4])+", "+str(commande[5])+");"))
                     else:
-                        cnx.execute(text("UPDATE COMMANDE SET quantite = quantite + "+str(commande[4])+" WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[3])+";"))
+                        cnx.execute(text("UPDATE COMMANDE SET quantite = quantite + "+str(commande[5])+" WHERE idBonCommande = "+str(id_bon)+" AND idMateriel = "+str(commande[4])+";"))
                     Bon_commande.Delete.delete_bonCommande_with_id(cnx, commande[0])
                     cnx.commit()   
             except:
@@ -1129,7 +1137,7 @@ class Suggestion_materiel:
     def get_all_information_to_Materiel_suggestions(cnx):
             try:
                 list = []
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,pictogramme,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE ;"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE ;"))
                 for row in result:
                     id = row[0]
                     result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
