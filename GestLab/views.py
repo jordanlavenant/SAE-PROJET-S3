@@ -375,7 +375,7 @@ def commander_demande_materiel_unique(id):
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
     Materiel.Insert.ajout_materiel_in_commande(cnx, idMat, id, qte, True)
-    Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idDemande, idMat)
+    MaterielUnique.Delete.delete_materiel_unique_in_demande(cnx, idDemande, idMat)
     return redirect(url_for('commander'))
 
 @app.route("/demander-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -520,7 +520,9 @@ def delete_materiel_demande(idDemande, idMat):
 
 @app.route("/delete-materiel-demandes/<int:idDemande>/<int:idMat>", methods=("GET","POST",))
 def delete_materiel_demandes(idDemande, idMat):
-    Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande)
+    res = Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande)
+    if res:
+        return redirect(url_for('base'))
     return redirect(url_for('demande', idDemande=idDemande))
 
 @app.route("/bon-commande-unique", methods=("GET","POST",))
