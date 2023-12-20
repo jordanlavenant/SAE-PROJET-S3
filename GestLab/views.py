@@ -874,12 +874,15 @@ def recherche_inventaire():
   
 @app.route("/demander/")
 def demander():
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    liste_materiel = Demande.Get.afficher_demande(cnx, idUser)
+    print(liste_materiel)
     return render_template(
         "demander.html",
         title="demander",
-        liste_materiel = Suggestion_materiel.get_all_information_to_Materiel_suggestions(get_cnx()),
+        liste_materiel = liste_materiel,
         categories = Domaine.get_domaine(get_cnx()),
-        idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2]),
+        idUser = idUser,
         chemin = [("base", "accueil"), ("demander", "demander")]
     )
 
