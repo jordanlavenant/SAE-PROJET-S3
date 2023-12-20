@@ -375,7 +375,7 @@ def commander_demande_materiel_unique(id):
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
     Materiel.Insert.ajout_materiel_in_commande(cnx, idMat, id, qte, True)
-    MaterielUnique.Delete.delete_materiel_unique_in_demande(cnx, idDemande, idMat)
+    Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idDemande, idMat)
     return redirect(url_for('commander'))
 
 @app.route("/demander-materiel-unique/<int:id>", methods=("GET","POST",))

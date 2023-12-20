@@ -474,7 +474,17 @@ class Materiel:
         def delete_materiel_in_AjouterMateriel_whith_id(cnx, idMateriel, idDemande):
             try:
                 cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idMateriel = " + str(idMateriel) + " AND idDemande = " + str(idDemande) + ";"))
+                result = cnx.execute(text("SELECT COUNT(*) FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) +  ";"))
+                for row in result:
+                    nbmat_in_demande = row[0]
+                if nbmat_in_demande == 0:
+                    Demande.Delete.delete_demande(cnx,idDemande)
+                    print("Materiel & Demande supprimée")
+                    cnx.commit()
+                    return True
+                print("Matériel supprimé")
                 cnx.commit()
+                return False
             except:
                 print("Erreur lors de la suppression du matériel dans la commande")
                 raise
@@ -681,16 +691,16 @@ class MaterielUnique:
                 print("Erreur lors de la suppression de tous les matériels uniques")
                 raise
 
-        def delete_materiel_unique_in_demande(cnx, idDemande, idMateriel):
-            try:
-                cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idMateriel) + ";"))
-                cnx.commit()
-                nbmat_in_demande = MaterielUnique.Get.get_nb_materiel_unique_in_demande(cnx, idDemande)
-                if nbmat_in_demande == 0:
-                    Demande.Delete.delete_demande(cnx,idDemande)
-            except:
-                print("Erreur lors de la suppression du matériel unique dans la demande")
-                raise
+        # def delete_materiel_unique_in_demande(cnx, idDemande, idMateriel):
+        #     try:
+        #         cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idMateriel) + ";"))
+        #         cnx.commit()
+        #         nbmat_in_demande = MaterielUnique.Get.get_nb_materiel_unique_in_demande(cnx, idDemande)
+        #         if nbmat_in_demande == 0:
+        #             Demande.Delete.delete_demande(cnx,idDemande)
+        #     except:
+        #         print("Erreur lors de la suppression du matériel unique dans la demande")
+        #         raise
             
         def supprimer_materiel_unique_bdd(cnx, id_materiel_unique) :
             try :
@@ -1056,10 +1066,11 @@ class Demande :
         def delete_materiel_demande(cnx, idut, idMateriel):
             try:
                 idDemande = Demande.Get.get_id_demande_actuel(cnx, idut)
-                cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idMateriel) + ";"))
+                cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idMateriel) + ";"))        
                 cnx.commit()
             except:
                 print("Erreur lors de la suppression du matériel dans la demande")
+
                 raise
 
     class Insert:
