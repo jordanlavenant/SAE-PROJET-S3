@@ -5,26 +5,6 @@
 {% endblock %}
 {% block content %}
 {% if longueur > 0 %}
-<div class="header-container">
-    <div class="container-top">
-        <a class="lien-item" href="{{ url_for('commander') }}"><button id="btn-retour">retour</button></a>
-    </div>
-    <div class="search-content">
-        <input type="text" id="search-bar" placeholder="Chercher un matériel">
-        <button id="btn-search">Rechercher</button>
-    </div>
-    <div class="filter-container">
-        <p>trier par : </p>
-        <form action="/traiter" method="post">
-            <select name="cat" id="categorie-select">
-                <option value="aucun-tri">aucun tri</option>
-                {% for categorie in categories %}
-                    <option value="{{ categorie[1] }}" name="{{ categorie[1] }}">{{ categorie[1] }}</option>
-                {% endfor %}
-            </select>
-        </form>
-    </div>
-</div>
 <div class="container-valider">
     <a id="btn-valider" href="/valider-bon-commande/{{ idUser }}?idCommande={{ id }}">Valider la commande</a>
 </div>
