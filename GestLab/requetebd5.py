@@ -958,7 +958,37 @@ class Demande :
             except Exception as e:
                 print("Erreur lors de la récupération des informations sur les commandes :", str(e))
                 raise
+
+        def get_demande_with_statut(cnx, idetat):
+            try:
+                list = []
+                result = cnx.execute(text("SELECT * FROM DEMANDE WHERE idEtatD = " + str(idetat) + ";"))
+                for row in result:
+                    list.append(row)
+                return list
+            except:
+                print("Erreur lors de la récupération des commandes")
+                raise
+
+        def afficher_demande(cnx, idut): #get
+            try:
+                idD = Demande.Get.get_id_demande_actuel(cnx, idut)
+                result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite, idCategorie FROM AJOUTERMATERIEL NATURAL JOIN MATERIEL WHERE idDemande = " + str(idD) + ";"))
+                result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite, idCategorie FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM AJOUTERMATERIEL NATURAL JOIN MATERIEL WHERE idDemande = " + str(idD) + ");"))
+                liste = []
+                for row in result:
+                    idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
+                for row in result2:
+                    idDomaine = Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
+                return liste
+            except:
+                print("Erreur lors de l'affichage de la table")
+                raise
             
+        
+
     class Delete:
         
         def delete_demande(cnx,idDemande):
@@ -1148,6 +1178,8 @@ class Bon_commande:
             except:
                 print("Erreur lors du changement d'état du bon de commande")
                 raise
+
+            
 
     class Delete:
         
