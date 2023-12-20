@@ -27,8 +27,15 @@ a {
     gap: 20px;
 }
 
-#btn-back {
+.container-bouton-top {
     margin-left: 10vw;
+    margin-right: 10vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#btn-back {
     color: white;
     background-color: #384274;
     padding: 14px 40px;
@@ -40,6 +47,24 @@ a {
 
 #btn-back:hover {
     color: white;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#btn-tout-commander {
+    color: #fff;
+    background-color: #384274;
+    border-radius: 25px;
+    padding: 14px 40px;
+    transition: 0.2s;
+    font-size: 25px;
+    text-align: center;
+}
+
+#btn-tout-commander:hover {
     background-color: #009af0;
     box-shadow: 0 0 15px #009af0;
     transition: 0.2s;
