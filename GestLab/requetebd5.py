@@ -471,7 +471,7 @@ class Materiel:
                 print("Erreur lors de la suppression du matériel dans la commande")
                 raise
 
-        def delete_materiel_in_AouterMateriel_whith_id(cnx, idMateriel, idDemande):
+        def delete_materiel_in_AjouterMateriel_whith_id(cnx, idMateriel, idDemande):
             try:
                 cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idMateriel = " + str(idMateriel) + " AND idDemande = " + str(idDemande) + ";"))
                 cnx.commit()
@@ -1369,6 +1369,7 @@ class DATE:
             return date_res
                 
 class RELOAD:
+    
     def reload_alert(cnx):
         try:
             cnx.execute(text("call gestionAlertes();"))

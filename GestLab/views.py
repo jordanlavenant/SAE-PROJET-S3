@@ -515,8 +515,13 @@ def delete_materiel(idbc, idMat):
 
 @app.route("/delete-materiel-demande/<int:idDemande>/<int:idMat>", methods=("GET","POST",))
 def delete_materiel_demande(idDemande, idMat):
-    Materiel.Delete.delete_materiel_in_AouterMateriel_whith_id(cnx, idMat, idDemande)
+    Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande)
     return redirect(url_for('bon_demande', id=idDemande))
+
+@app.route("/delete-materiel-demandes/<int:idDemande>/<int:idMat>", methods=("GET","POST",))
+def delete_materiel_demandes(idDemande, idMat):
+    Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande)
+    return redirect(url_for('demande', idDemande=idDemande))
 
 @app.route("/bon-commande-unique", methods=("GET","POST",))
 def bon_commande_unique():
@@ -981,6 +986,7 @@ def login():
             idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
             session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
             print("login : "+str(session['utilisateur']))
+            RELOAD.reload_alert(cnx)
             next = f.next.data or url_for("base")
             return redirect(next)
     return render_template(
