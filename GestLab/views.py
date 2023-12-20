@@ -297,6 +297,9 @@ def ajouter_stock():
         chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
     )
 
+def intersection(lst1, lst2): 
+    return [item for item in lst1 if item not in lst2]
+
 @app.route("/recherche-materiel-existant/", methods=("GET","POST",))
 @csrf.exempt
 def recherche_materiel_existant():
@@ -306,24 +309,39 @@ def recherche_materiel_existant():
     ajouterForm = AjouterStockForm()
     ajouterForm.endroit.choices = get_endroit_choices()
 
-    items = get_materiels_existants() # Valeur par-défaut
-    
     search = rechercherForm.get_value()
     domaine = rechercherForm.get_domaine()
     categorie = rechercherForm.get_categorie()
 
-    print('dcs')
-    print(domaine,categorie,search)
-    
+    print("catégorie : ",categorie)
+
+    items = get_materiels_existants() # Valeur par-défaut
+    # filtre à la valeur de la recherche    
     if search != None:
         items = get_materiels_existants_with_search(search)
-    
-    if domaine != None:
-        for (idM,name) in items:
-            if str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[4]) != domaine:
-                items.remove((idM,name))
 
-    print(items)
+    # Filtre du domaine
+    if domaine != "":
+        domaines_list = []
+        for (idM,name) in items:
+            domaine_id = str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[4])
+            if domaine_id != domaine:
+                domaines_list.append((idM,name))
+    
+    # Filtre de la catégorie
+    if categorie != None:
+        categories_list = []
+        for (idM,name) in items:
+            categorie_id = str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[2])
+            if categorie_id != categorie:
+                categories_list.append((idM,name))
+
+    if domaine != "":
+        items = intersection(items, domaines_list)
+
+    if categorie != None:
+        items = intersection(items, categories_list)
+
     return render_template(
 
         "ajouterStock.html",
