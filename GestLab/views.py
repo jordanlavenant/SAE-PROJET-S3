@@ -446,7 +446,7 @@ def ajouter_materiel_unique(id):
                 res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, nouvel_id)
                 if res == False :
                     print("Erreur lors de l'insertion du matériel unique d'id " + str(nouvel_id))
-                    return redirect(url_for('ajouter_materiel'))
+                    return redirect(url_for('etat', id=identifiant))
         
         return redirect(url_for('etat', id=identifiant))
         
