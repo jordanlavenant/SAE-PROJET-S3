@@ -143,6 +143,11 @@ a {
     cursor: pointer;
 }
 
+#btn-edit-materiel:hover:nth-child(4) {
+    background-color: #d35252;
+    box-shadow: 0 0 15px #d35252;
+}
+
 #report-redirect-img {
     width: 20px;    
     align-items: center;
