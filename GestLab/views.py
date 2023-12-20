@@ -422,13 +422,14 @@ def ajouter_materiel_unique(id):
         print("id : ",identifiant)
 
         if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), identifiant) <= 0 :
-            STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant) # Erreur ici
-        
+            STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant)
+
         liste_res = []
-        for i in range(int(quantite_recue)) :
+        for _ in range(int(quantite_recue)): # On insère autant de fois que la quantité est exigée
             nouvel_id = MaterielUnique.Insert.insere_materiel_unique(cnx, identifiant, position, date_reception, date_peremption, commentaire, quantite_approximative)
+            print("nouvel_id : ",nouvel_id)
             if nouvel_id > 0 :
-                res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, nouvel_id)
+                res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, nouvel_id) # Erreur ici
                 if res == False :
                     print("Erreur lors de l'insertion du matériel unique d'id " + str(nouvel_id))
                     return redirect(url_for('etat', id=id))

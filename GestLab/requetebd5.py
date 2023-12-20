@@ -609,6 +609,14 @@ class MaterielUnique:
                 print("erreur de l'id")
             raise
 
+        def get_last_id(cnx) :
+            try :
+                result = cnx.execute(text("SELECT idMaterielUnique FROM MATERIELUNIQUE ORDER BY idMaterielUnique DESC LIMIT 1 ;"))
+                for row in result:
+                    return row[0]
+            except :
+                print("Erreur lors de la récupération du dernier id")
+
     class Delete:
 
         def delete_all_materiel_unique_with_idMateriel(cnx, id_materiel):
@@ -685,6 +693,10 @@ class MaterielUnique:
                 else:
                     date_peremption = f"'{str(date_peremption)}'"
 
+                dernier_id = MaterielUnique.Get.get_last_id(cnx) 
+                nouvel_id = dernier_id + 1
+                print("novuelid" + str(nouvel_id))
+
                 query = (
                     "INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, "
                     "commentaireMateriel, quantiteApproximative) VALUES ('{}', '{}', '{}', {}, '{}', {});".format(
@@ -699,13 +711,13 @@ class MaterielUnique:
 
                 cnx.execute(text(query))
                 cnx.commit()
-                return True
+                return nouvel_id
             except sqlalchemy.exc.OperationalError as e:
                 print(f"SQL OperationalError: {e}")
-                return False
+                return -1
             except sqlalchemy.exc.IntegrityError as e:
                 print(f"SQL IntegrityError: {e}")
-                return False
+                return -1
 
 
 
