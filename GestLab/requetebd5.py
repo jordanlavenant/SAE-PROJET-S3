@@ -224,10 +224,10 @@ class Utilisateur:
                 print("Erreur d'ajout du bon de commande :", str(e))
                 raise
 
-        def ajout_laborantin_into_demande(cnx, id, description = 'Null'):
+        def ajout_laborantin_into_demande(cnx, idut):
             try:
                 etat = 1
-                cnx.execute(text("INSERT INTO DEMANDE (idUtilisateur, descriptionDemande, idEtatD) VALUES (" + str(id) + ", '" + description + "', " + str(etat) + ");")) 
+                cnx.execute(text("INSERT INTO DEMANDE (idUtilisateur, idEtatD) VALUES (" + str(idut) + ", " + str(etat) + ");")) 
                 cnx.commit()
                 print("Demande ajoutée")
             except:
@@ -980,20 +980,12 @@ class Demande :
                 raise
 
     class Insert:
-        
-        def ajout_demande(cnx, idut):
-            try:
-                cnx.execute(text("INSERT INTO DEMANDE (idEtatD, idUtilisateur) VALUES (1, " + str(idut) + ");"))
-                cnx.commit()
-            except:
-                print("Erreur lors de l'ajout de la demande")
-                raise
 
         def changer_etat_demande(cnx, idut):
             try:
                 cnx.execute(text("UPDATE DEMANDE SET idEtatD = 2 WHERE idUtilisateur = " + str(idut) + ";"))
                 cnx.commit()
-                Demande.Insert.ajout_demande(cnx, idut)
+                Utilisateur.Insert.ajout_laborantin_into_demande(cnx, idut)
             except:
                 print("Erreur lors de la modification de l'état de la demande")
                 raise
