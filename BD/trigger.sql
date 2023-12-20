@@ -346,7 +346,7 @@ BEGIN
     declare fini BOOLEAN default false;
 
     declare curseur cursor for
-        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMaterielUnique = new.idMaterielUnique;
+        SELECT idMateriel FROM MATERIELUNIQUE WHERE idMaterielUnique = new.idMaterielUnique;
 
     declare continue handler for not found set fini = true ;
 
@@ -378,7 +378,7 @@ BEGIN
     declare fini BOOLEAN default false;
 
     declare curseur cursor for
-        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMaterielUnique = new.idMaterielUnique;
+        SELECT idMateriel FROM MATERIELUNIQUE WHERE idMaterielUnique = new.idMaterielUnique;
 
     declare continue handler for not found set fini = true ;
 
@@ -410,7 +410,7 @@ BEGIN
     declare fini BOOLEAN default false;
 
     declare curseur cursor for
-        SELECT idMaterielUnique FROM MATERIELUNIQUE WHERE idMaterielUnique = old.idMaterielUnique;
+        SELECT idMateriel FROM MATERIELUNIQUE WHERE idMaterielUnique = old.idMaterielUnique;
 
     declare continue handler for not found set fini = true ;
 

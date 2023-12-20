@@ -341,10 +341,10 @@ class Materiel:
         def get_all_information_to_Materiel(cnx):
             try:
                 list = []
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE WHERE quantiteLaboratoire > 0 ;"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,0,0,0,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE WHERE quantiteLaboratoire > 0 ;"))
                 for row in result:
                     id = row[0]
-                    result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+                    result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE NATURAL JOIN RESERVELABORATOIRE where idMateriel =" + str(id) + ";"))
                     for row_count in result_count:
                         print((row_count[1]))
                         list.append((row,row_count[1]))
@@ -591,7 +591,7 @@ class MaterielUnique:
         def get_all_information_to_MaterielUnique_with_id(cnx, id):
             try:
                 list = []
-                result = cnx.execute(text("select * from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+                result = cnx.execute(text("select * from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE NATURAL JOIN RESERVELABORATOIRE where idMateriel =" + str(id) + ";"))
                 for row in result:
                     print(row)
                     list.append(row)
@@ -602,12 +602,20 @@ class MaterielUnique:
 
         def get_nb_materiel_to_MaterielUnique_with_id(cnx, id):
             try:
-                result = cnx.execute(text("select count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+                result = cnx.execute(text("select count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE NATURAL JOIN RESERVELABORATOIRE where idMateriel =" + str(id) + ";"))
                 for row in result:
                     return row[0]
             except:
                 print("erreur de l'id")
             raise
+
+        def get_last_id(cnx) :
+            try :
+                result = cnx.execute(text("SELECT idMaterielUnique FROM MATERIELUNIQUE ORDER BY idMaterielUnique DESC LIMIT 1 ;"))
+                for row in result:
+                    return row[0]
+            except :
+                print("Erreur lors de la récupération du dernier id")
 
     class Delete:
 
@@ -685,6 +693,10 @@ class MaterielUnique:
                 else:
                     date_peremption = f"'{str(date_peremption)}'"
 
+                dernier_id = MaterielUnique.Get.get_last_id(cnx) 
+                nouvel_id = dernier_id + 1
+                print("novuelid" + str(nouvel_id))
+
                 query = (
                     "INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, "
                     "commentaireMateriel, quantiteApproximative) VALUES ('{}', '{}', '{}', {}, '{}', {});".format(
@@ -699,13 +711,13 @@ class MaterielUnique:
 
                 cnx.execute(text(query))
                 cnx.commit()
-                return True
+                return nouvel_id
             except sqlalchemy.exc.OperationalError as e:
                 print(f"SQL OperationalError: {e}")
-                return False
+                return -1
             except sqlalchemy.exc.IntegrityError as e:
                 print(f"SQL IntegrityError: {e}")
-                return False
+                return -1
 
 
 
