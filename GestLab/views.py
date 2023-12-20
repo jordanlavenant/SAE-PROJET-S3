@@ -460,6 +460,22 @@ def bon_commande(id):
         longueur = len(liste_materiel),
         chemin = [("base", "accueil"), ("commander", "commander"), ('demandes', 'bon de commande')]
     )
+
+@app.route("/bon-demande/<int:id>")
+def bon_demande(id):
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    liste_materiel = Materiel.Get.get_materiel_demande(cnx, id)
+    return render_template(
+        "bonDemande.html",
+        id = id,
+        idUser = idUser,
+        categories = Domaine.get_domaine(get_cnx()),
+        title = "bon de demande",
+        liste_materiel = liste_materiel,
+        longueur = len(liste_materiel),
+        chemin = [("base", "accueil"), ("demander", "demander")]
+    )
+
 @app.route("/consulterBonCommande/")
 def consulter_bon_commande():
     info_bon_commande = Bon_commande.Get.consulter_bon_commande_without_table(cnx)
@@ -496,6 +512,11 @@ def changer_statut_bon_commande():
 def delete_materiel(idbc, idMat):
     Materiel.Delete.delete_materiel_in_BonCommande_whith_id(cnx, idMat, idbc)
     return redirect(url_for('bon_commande', id=idbc))
+
+@app.route("/delete-materiel-demande/<int:idDemande>/<int:idMat>", methods=("GET","POST",))
+def delete_materiel_demande(idDemande, idMat):
+    Materiel.Delete.delete_materiel_in_Demande_whith_id(cnx, idMat, idDemande)
+    return redirect(url_for('bon_demande', id=idDemande))
 
 @app.route("/bon-commande-unique", methods=("GET","POST",))
 def bon_commande_unique():
@@ -886,10 +907,12 @@ def recherche_inventaire():
 def demander():
     idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     liste_materiel = Demande.Get.afficher_demande(cnx, idUser)
+    idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
     print(liste_materiel)
     return render_template(
         "demander.html",
         title="demander",
+        idDemande = idDemande,
         liste_materiel = liste_materiel,
         categories = Domaine.get_domaine(get_cnx()),
         idUser = idUser,
