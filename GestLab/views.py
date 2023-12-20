@@ -413,9 +413,6 @@ def ajouter_materiel_unique(id):
     f = AjouterMaterielUniqueForm()
     f.endroit.choices = get_endroit_choices() 
 
-
-
-
     if f.validate_on_submit():
         position, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue = f.get_full_materiel_unique_requestform()
         identifiant = Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(), id)[0]
@@ -425,13 +422,17 @@ def ajouter_materiel_unique(id):
             STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant)
 
         liste_res = []
+
+        print("qt recu : ",quantite_recue)
+
         for _ in range(int(quantite_recue)): # On insère autant de fois que la quantité est exigée
-            nouvel_id = MaterielUnique.Insert.insere_materiel_unique(cnx, identifiant, position, date_reception, date_peremption, commentaire, quantite_approximative)
-            print("nouvel_id : ",nouvel_id)
-            if nouvel_id > 0 :
-                res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, nouvel_id) # Erreur ici
+            print("----------------------------------------")
+            new_id = MaterielUnique.Insert.insere_materiel_unique(cnx, identifiant, position, date_reception, date_peremption, commentaire, quantite_approximative)
+            print("new_id : ",new_id)
+            if new_id > 0 :
+                res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, new_id) # Erreur ici
                 if res == False :
-                    print("Erreur lors de l'insertion du matériel unique d'id " + str(nouvel_id))
+                    print("Erreur lors de l'insertion du matériel unique d'id " + str(new_id))
                     return redirect(url_for('etat', id=id))
         
         return redirect(url_for('etat', id=id))

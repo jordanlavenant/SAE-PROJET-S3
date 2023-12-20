@@ -1262,10 +1262,21 @@ class STOCKLABORATOIRE:
                 raise
 
 class ReserveLaboratoire :
+    class Get:
+        def get_last_id_reserve(cnx) :
+            try :
+                result = cnx.execute(text("SELECT idReserveLaboratoire FROM RESERVELABORATOIRE ORDER BY idReserveLaboratoire DESC LIMIT 1 ;"))
+                for row in result:
+                    return row[0]
+            except :
+                print("Erreur lors de la récupération du dernier id")
+                raise
+        
     class Insert:
         def insere_materiel_unique_reserve(cnx, idMaterielUnique):
             try:
-                cnx.execute(text("INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES (" + str(idMaterielUnique) + ");"))
+                last_id_reserve = ReserveLaboratoire.Get.get_last_id_reserve(cnx)+1
+                cnx.execute(text("INSERT INTO RESERVELABORATOIRE (idReserve,idMaterielUnique) VALUES (" + str(last_id_reserve) + "," + str(idMaterielUnique) + ");"))
                 cnx.commit()
                 return True
             except:
