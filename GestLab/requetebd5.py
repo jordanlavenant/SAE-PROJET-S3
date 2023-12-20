@@ -223,6 +223,16 @@ class Utilisateur:
             except Exception as e:
                 print("Erreur d'ajout du bon de commande :", str(e))
                 raise
+
+        def ajout_laborantin_into_demande(cnx, id, description = 'Null'):
+            try:
+                etat = 1
+                cnx.execute(text("INSERT INTO DEMANDE (idUtilisateur, descriptionDemande, idEtatD) VALUES (" + str(id) + ", '" + description + "', " + str(etat) + ");")) 
+                cnx.commit()
+                print("Demande ajoutée")
+            except:
+                print("erreur d'ajout de la demande")
+                raise
             
         def ajout_professeur(cnx, nom, prenom, email):
             try:
@@ -286,6 +296,8 @@ class Utilisateur:
                 mdphash = Mots_de_passe.hasher_mdp(mdpRandom)
                 cnx.execute(text("insert into UTILISATEUR (idStatut, nom, prenom, email, motDePasse) values ('" + str(idStatut) + "', '" + nom + "', '" + prenom + "', '" + email + "', '" + mdphash +  "');"))
                 cnx.commit()
+                id = Utilisateur.Get.get_id_with_email(cnx, email)
+                Utilisateur.Insert.ajout_laborantin_into_demande(cnx,id)
                 Authentification.create_qr_code_nouvel_utlisateur(email, mdpRandom)
                 print("utilisateur ajouté")
                 return True
