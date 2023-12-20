@@ -209,18 +209,19 @@ class Utilisateur:
                 print("erreur d'ajout du fournisseur")
                 raise
 
-        def ajout_gest_into_boncommande(cnx,id):
+        
+        def ajout_gest_into_boncommande(cnx, id):
             try:
                 etat = 1
-                date = cnx.execute(text("SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d');"))
-                for row in date:
-                    date = row[0]
-                print(date)
-                cnx.execute(text("insert into BONCOMMANDE (idEtat,idUtilisateur, dateBonCommande) values (" + str(etat) + ", " + str(id) + ", " + str(date) + ");"))
+                date = DATE.Get.get_date(cnx)
+                
+                # Insérer la date convertie en string dans le format SQL approprié (YYYY-MM-DD)
+                cnx.execute(text("INSERT INTO BONCOMMANDE (idEtat, idUtilisateur, dateBonCommande) VALUES (" + str(etat) + ", " + str(id) + ", '" + str(date) + "');"))
+                
                 cnx.commit()
-                print("bon de commande ajouté")
-            except:
-                print("erreur d'ajout du bon de commande")
+                print("Bon de commande ajouté")
+            except Exception as e:
+                print("Erreur d'ajout du bon de commande :", str(e))
                 raise
             
         def ajout_professeur(cnx, nom, prenom, email):
@@ -1115,9 +1116,9 @@ class Bon_commande:
             try:
                 # partie bon commande
                 id_bon = Bon_commande.Get.get_max_id_bon_commande(cnx) + 1
-                date = cnx.execute(text("SELECT CURDATE();"))
-                for elem in date:
-                    date = elem[0]
+                
+                date = DATE.Get.get_date(cnx)
+                
                 cnx.execute(text("INSERT INTO BONCOMMANDE (idBonCommande, idEtat, idUtilisateur, dateBonCommande) VALUES ("+str(id_bon)+", 2, "+str(idUt)+ ", " + str(date) +");"))
                 cnx.commit()
                 # partie commande
@@ -1227,6 +1228,19 @@ class STOCKLABORATOIRE:
             except:
                 print("Erreur lors de la récupération de la quantité")
                 raise
+class DATE:
+    class Get:
+        def get_date(cnx):
+            date_result = cnx.execute(text("SELECT CURDATE();")).fetchone()
+                
+            # Extraire la date du résultat
+            date_res = date_result[0] if date_result else datetime.now().date()
+
+            #recuperer que la date 
+            date_res = date_res.strftime("%Y-%m-%d")
+
+            return date_res
+                
 
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
