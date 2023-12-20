@@ -4,7 +4,7 @@ begin
     declare presente int;
     declare mes varchar(255);
 
-    SELECT COUNT(ifnull(DEMANDE.idDemande, 0)) into presente FROM DEMANDE JOIN BONCOMMANDE ON DEMANDE.idDemande = BONCOMMANDE.idDemande WHERE DEMANDE.idDemande = new.idDemande ;
+    SELECT COUNT(ifnull(DEMANDE.idDemande, 0)) into presente FROM DEMANDE WHERE DEMANDE.idDemande = new.idDemande WHERE idEtatD = 2;
 
     if presente > 0 then
         set mes = concat("La modification ne peut être effectuée sur la demande (id demande : ", new.idDemande,") car celle-ci est associée à un bon de commande.");
@@ -79,7 +79,7 @@ begin
     declare fini boolean default false ;
 
     declare idDemandes cursor for 
-        SELECT DEMANDE.idDemande FROM DEMANDE ;
+        SELECT DEMANDE.idDemande FROM DEMANDE WHERE idEtatD = 2;
 
     declare continue handler for not found set fini = true ;
     open idDemandes ;
