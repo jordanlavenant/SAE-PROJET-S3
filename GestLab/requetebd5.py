@@ -1054,15 +1054,6 @@ class Demande :
                 print("Erreur lors de la modification de l'état de la demande")
                 raise
 
-        def ajout_materiel_in_demande(cnx, idut, idMateriel, quantite):
-            try:
-                idDemande = Demande.Get.get_id_demande_actuel(cnx, idut)
-                cnx.execute(text("INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES (" + str(idDemande) + ", " + str(idMateriel) + ", " + str(quantite) + ");"))
-                cnx.commit()
-            except:
-                print("Erreur lors de l'ajout du matériel dans la demande")
-                raise
-
         
 class Categories:
     
