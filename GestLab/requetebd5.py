@@ -903,6 +903,15 @@ class Alert:
 class Demande : 
     
     class Get:
+
+        def get_id_demande_actuel(cnx, idut):
+            try:
+                result = cnx.execute(text("SELECT idDemande FROM DEMANDE WHERE idUtilisateur = " + str(idut) + " AND idEtatD = 1;"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de l'id de la demande")
+                raise
         
         def get_nb_demande(cnx):
             try:
@@ -946,6 +955,43 @@ class Demande :
                 cnx.commit()
             except:
                 print("Erreur lors de la suppression de la demande")
+                raise
+
+        def delete_materiel_demande(cnx, idut, idMateriel):
+            try:
+                idDemande = Demande.Get.get_id_demande_actuel(cnx, idut)
+                cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idMateriel) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel dans la demande")
+                raise
+
+    class Insert:
+        
+        def ajout_demande(cnx, idut):
+            try:
+                cnx.execute(text("INSERT INTO DEMANDE (idEtatD, idUtilisateur) VALUES (1, " + str(idut) + ");"))
+                cnx.commit()
+            except:
+                print("Erreur lors de l'ajout de la demande")
+                raise
+
+        def changer_etat_demande(cnx, idut):
+            try:
+                cnx.execute(text("UPDATE DEMANDE SET idEtatD = 2 WHERE idUtilisateur = " + str(idut) + ";"))
+                cnx.commit()
+                Demande.Insert.ajout_demande(cnx, idut)
+            except:
+                print("Erreur lors de la modification de l'état de la demande")
+                raise
+
+        def ajout_materiel_in_demande(cnx, idut, idMateriel, quantite):
+            try:
+                idDemande = Demande.Get.get_id_demande_actuel(cnx, idut)
+                cnx.execute(text("INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES (" + str(idDemande) + ", " + str(idMateriel) + ", " + str(quantite) + ");"))
+                cnx.commit()
+            except:
+                print("Erreur lors de l'ajout du matériel dans la demande")
                 raise
 
         
