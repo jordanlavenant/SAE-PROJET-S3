@@ -1072,7 +1072,7 @@ class Demande :
                 result = cnx.execute(text("SELECT idMateriel, quantite FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + ";"))
                 for row in result:
                     Materiel.Insert.ajout_materiel_in_commande(cnx, row[0], idUt, row[1], True)
-                    Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idDemande, row[0])
+                    Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, row[0], idDemande)
                 cnx.commit()  
             except:
                 print("Erreur lors de la mise à jour de la quantité dans la demande")
