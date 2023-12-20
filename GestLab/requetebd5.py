@@ -212,8 +212,11 @@ class Utilisateur:
         def ajout_gest_into_boncommande(cnx,id):
             try:
                 etat = 1
-                format_date = "%Y-%m-%d"
-                cnx.execute(text("insert into BONCOMMANDE (idEtat,idUtilisateur, dateBonCommande) values (" + str(etat) + ", " + str(id) + ", " + str(datetime.now().strftime(format_date)) + ");"))
+                date = cnx.execute(text("SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d');"))
+                for row in date:
+                    date = row[0]
+                print(date)
+                cnx.execute(text("insert into BONCOMMANDE (idEtat,idUtilisateur, dateBonCommande) values (" + str(etat) + ", " + str(id) + ", " + str(date) + ");"))
                 cnx.commit()
                 print("bon de commande ajouté")
             except:
@@ -1112,7 +1115,10 @@ class Bon_commande:
             try:
                 # partie bon commande
                 id_bon = Bon_commande.Get.get_max_id_bon_commande(cnx) + 1
-                cnx.execute(text("INSERT INTO BONCOMMANDE (idBonCommande, idEtat, idUtilisateur) VALUES ("+str(id_bon)+", 2, "+str(idUt)+");"))
+                date = cnx.execute(text("SELECT CURDATE();"))
+                for elem in date:
+                    date = elem[0]
+                cnx.execute(text("INSERT INTO BONCOMMANDE (idBonCommande, idEtat, idUtilisateur, dateBonCommande) VALUES ("+str(id_bon)+", 2, "+str(idUt)+ ", " + str(date) +");"))
                 cnx.commit()
                 # partie commande
                 for commande in liste_bon_commande:
