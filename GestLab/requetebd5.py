@@ -469,6 +469,15 @@ class Materiel:
                 print("Erreur lors de la suppression du matériel dans la commande")
                 raise
 
+        def delete_all_materiel_in_AjouterMateriel(cnx, idut):
+            try:
+                idDemande = Demande.Get.get_id_demande_actuel(cnx, idut)
+                cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel dans la commande")
+                raise
+
     class Update:
 
         def modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte):
@@ -567,6 +576,30 @@ class Materiel:
                     cnx.commit()
                 else:
                     cnx.execute(text("DELETE FROM COMMANDE WHERE idBonCommande = " + str(idbc) + " AND idMateriel = " + str(idmat) + ";"))
+                    cnx.commit()
+            except:
+                print("Erreur lors de l'ajout du matériel dans la commande")
+                raise
+
+        def ajout_materiel_in_AjouterMateriel(cnx, idmat, idut, quantite, boolajouterMat):
+            try:
+                idDemande = Demande.Get.get_id_demande_actuel(cnx, idut)
+                result = cnx.execute(text("select idMateriel from AJOUTERMATERIEL where idDemande = " + str(idDemande)+ ";"))
+                if quantite != 0 :
+                    query = text("INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES (" + str(idDemande) + ", " + str(idmat) + ", " + str(quantite) + ");")
+                    for mat in result:
+                        if int(mat[0]) == int(idmat) :
+                            if int(quantite) == 0 :
+                                query = text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idmat) + ";")
+                            else :
+                                if boolajouterMat is False :
+                                    query = text("UPDATE AJOUTERMATERIEL SET quantite = " + str(quantite) + " WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idmat) + ";")
+                                else:
+                                    query = text("UPDATE AJOUTERMATERIEL SET quantite = quantite + " + str(quantite) + " WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idmat) + ";")
+                    cnx.execute(query)
+                    cnx.commit()
+                else:
+                    cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) + " AND idMateriel = " + str(idmat) + ";"))
                     cnx.commit()
             except:
                 print("Erreur lors de l'ajout du matériel dans la commande")
@@ -1019,15 +1052,6 @@ class Demande :
                 Utilisateur.Insert.ajout_laborantin_into_demande(cnx, idut)
             except:
                 print("Erreur lors de la modification de l'état de la demande")
-                raise
-
-        def ajout_materiel_in_demande(cnx, idut, idMateriel, quantite):
-            try:
-                idDemande = Demande.Get.get_id_demande_actuel(cnx, idut)
-                cnx.execute(text("INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES (" + str(idDemande) + ", " + str(idMateriel) + ", " + str(quantite) + ");"))
-                cnx.commit()
-            except:
-                print("Erreur lors de l'ajout du matériel dans la demande")
                 raise
 
         
