@@ -113,13 +113,13 @@ INSERT INTO FOURNISSEUR (nomFournisseur, adresseFournisseur, mailFournisseur, te
 ('Fournisseur 1', 'Adresse 1', 'fournisseur1@example.com', '1234567890'),
 ('Fournisseur 2', 'Adresse 2', 'fournisseur2@example.com', '9876543210');
 
-INSERT INTO DEMANDE (idUtilisateur, descriptionDemande) VALUES
-(2, 'Demande 1 de l''utilisateur standard'),
-(2, 'Demande 2 de l''utilisateur standard');
+INSERT INTO ETATDEMANDE(nomEtatD) 
+VALUES ('En attente de validation'),
+       ('Envoyée');
 
-INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES
-(2, 2, 2);
-
+INSERT INTO DEMANDE (idUtilisateur, descriptionDemande, idEtatD) VALUES
+(6, 'Demande 1 de l''utilisateur standard', 1),
+(6, 'Demande 2 de l''utilisateur standard', 2);
 
 INSERT INTO ETATCOMMANDE (nomEtat) VALUES
 ('En attente de la validation du Gestionnaire'),
@@ -140,10 +140,6 @@ INSERT INTO BONCOMMANDE (idEtat, idUtilisateur, dateBonCommande) VALUES
 INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
 (1, 'Entrepôt 1', 12345),
 (2, 'Entrepôt 2', 67890);
-
-INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
-(1, 1, 'Facture 1'),
-(2, 2, 'Facture 2');
 
 
 INSERT INTO TYPESALERTES (idAlerte, descriptionAlerte) VALUES 
@@ -218,3 +214,5 @@ VALUES  ('Microscope'),
         ('Tubes de centrifugation'),
         ('Boîtes cryogéniques'),
         ('Flacons de stockage');
+
+

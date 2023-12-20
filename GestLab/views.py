@@ -211,6 +211,7 @@ class AjouterMaterielUniqueForm(FlaskForm):
     date_peremption = DateField('date_peremption', validators=[Optional()])
     commentaire = TextAreaField('commentaire')
     quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
+    quantite_recue = StringField('quantite_recue', validators=[DataRequired()])
     next = HiddenField()
 
     def get_full_materiel_unique(self):
@@ -220,7 +221,8 @@ class AjouterMaterielUniqueForm(FlaskForm):
         date_peremption = self.date_peremption.data
         commentaire = self.commentaire.data
         quantite_approximative = self.quantite_approximative.data
-        return (materiel, position, date_reception, date_peremption, commentaire, quantite_approximative)
+        quantite_recue = self.quantite_recue.data
+        return (materiel, position, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue)
     
     def get_full_materiel_unique_requestform(self):
         materiel = request.form['materiel']
@@ -229,7 +231,33 @@ class AjouterMaterielUniqueForm(FlaskForm):
         date_peremption = request.form['date_peremption']
         commentaire = request.form['commentaire']
         quantite_approximative = request.form['quantite_approximative']
-        return (materiel, position, date_reception, date_peremption, commentaire, quantite_approximative)
+        quantite_recue = request.form['quantite_recue']
+        return (materiel, position, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue)
+
+class ModifierMaterielUniqueForm(FlaskForm):
+    endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
+    position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
+    date_reception = DateField('date_reception', validators=[DataRequired()], default =  datetime.datetime.now().date())
+    date_peremption = DateField('date_peremption', validators=[Optional()])
+    commentaire = TextAreaField('commentaire')
+    quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
+    next = HiddenField()
+
+    def get_full_materiel_unique(self):
+        position = self.position.data
+        date_reception = self.date_reception.data
+        date_peremption = self.date_peremption.data
+        commentaire = self.commentaire.data
+        quantite_approximative = self.quantite_approximative.data
+        return (position, date_reception, date_peremption, commentaire, quantite_approximative)
+    
+    def get_full_materiel_unique_requestform(self):
+        position = request.form['position']     
+        date_reception = request.form['date_reception'] 
+        date_peremption = request.form['date_peremption']
+        commentaire = request.form['commentaire']
+        quantite_approximative = request.form['quantite_approximative']
+        return (position, date_reception, date_peremption, commentaire, quantite_approximative)
 
 def get_domaine_choices():
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
@@ -385,28 +413,43 @@ def get_materiels_existants_with_search(search):
 @app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
 def ajouter_materiel_unique(id):
     f = AjouterMaterielUniqueForm()
-    f.materiel.choices = get_materiels_existants()   
+    f.materiel.choices = get_materiels_existants()
+    print(f.materiel.choices)
+    print(f.materiel.choices[0])
     f.endroit.choices = get_endroit_choices() 
+    if id > 0 :
+        default_materiel = Materiel.Get.get_id_materiel_from_id_materiel_unique(get_cnx(), id)
+        
+        # Trouvez l'index de la valeur par défaut dans les choix
+        default_index = next((i for i, choice in enumerate(f.materiel.choices) if choice[0] == default_materiel), None)
+        print(default_index)
+
+        # Définissez la valeur par défaut en utilisant la méthode populate_obj
+        if default_index is not None:
+            print("ehhoooooo")
+            f.materiel.process_data(f.materiel.choices[default_index][0])
+
+    print("snif + " + str(Materiel.Get.get_id_materiel_from_id_materiel_unique(get_cnx(), id)))
 
     if f.validate_on_submit() :
-        infosmateriel, position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique()
+        infosmateriel, position, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue = f.get_full_materiel_unique()
         identifiant = infosmateriel[0]
         print(identifiant) 
         
         if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), identifiant) <= 0 :
             STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant)
         
-        res = MaterielUnique.Insert.insere_materiel_unique(cnx, identifiant, position, date_reception, date_peremption, commentaire, quantite_approximative)
+        liste_res = []
+        for i in range(int(quantite_recue)) :
+            nouvel_id = MaterielUnique.Insert.insere_materiel_unique(cnx, identifiant, position, date_reception, date_peremption, commentaire, quantite_approximative)
+            if nouvel_id > 0 :
+                res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, nouvel_id)
+                if res == False :
+                    print("Erreur lors de l'insertion du matériel unique d'id " + str(nouvel_id))
+                    return redirect(url_for('ajouter_materiel'))
         
-        if res:
-            res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, id)
+        return redirect(url_for('etat', id=identifiant))
         
-        if res:
-            return redirect(url_for('etat', id=identifiant))
-        
-        else:
-            print("Erreur lors de l'insertion du matériel")
-            return redirect(url_for('ajouter_materiel'))
     else :
         print("Erreur lors de la validation du formulaire")
         print(f.errors)
@@ -904,7 +947,7 @@ def modifier_materiel_unique(id):
     materiel = MaterielUnique.Get.get_materiel_unique(cnx, id)
     idMaterielUnique, idMateriel, idRangement, dateReception, commentaireMateriel, quantiteApproximative, datePeremption = materiel[0]
     idEndroit = Rangement.Get.get_id_endroit_from_id_rangement(cnx, idRangement)
-    f = AjouterMaterielUniqueForm()
+    f = ModifierMaterielUniqueForm()
     f.date_reception.default = dateReception
     f.date_peremption.default = datePeremption
     f.commentaire.default = commentaireMateriel
@@ -928,8 +971,8 @@ def modifier_materiel_unique(id):
         print(f.errors)
     return render_template(
         "modifierMaterielUnique.html",
-        title="modifier les informations d'un matériel en stock",
-        AjouterMaterielUniqueForm=f,
+        title="Modifier les informations d'un matériel en stock",
+        ModifierMaterielUniqueForm=f,
         id=id,
         chemin=[("base", "accueil")]
     )
@@ -1066,6 +1109,36 @@ def commentaire():
         CommentaireForm=f
     )
 
+
+@app.route("/login/", methods=("GET","POST",))
+def login():
+    f = LoginForm ()
+    changerMDP = ChangerMDPForm()
+    changerMail = ChangerMailForm()
+    mdpOublier = MdpOublierForm()
+    if not f.is_submitted():
+        f.next.data = request.args.get("next")
+    elif f.validate_on_submit():
+        #nom, idStatut, mail, prenom = f.get_authenticated_user()
+        #user = nom, idStatut, mail, prenom
+        #if user != None:
+        #login_user(user)
+        #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+        session['utilisateur'] = ('Lallier', 3, 'mail@', 'Anna', 3)
+        #session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+        print("login : "+str(session['utilisateur']))
+        next = f.next.data or url_for("base")
+        return redirect(next)
+    return render_template(
+        "login.html",
+        title="profil",
+        form=f,
+        fromChangerMDP=changerMDP,
+        fromChangerMail=changerMail,
+        MdpOublierForm=mdpOublier
+    )
+
+"""
 @app.route("/login/", methods=("GET","POST",))
 def login():
     f = LoginForm ()
@@ -1092,6 +1165,7 @@ def login():
         fromChangerMail=changerMail,
         MdpOublierForm=mdpOublier
     )
+"""
 
 @app.route("/logout/")
 def logout():

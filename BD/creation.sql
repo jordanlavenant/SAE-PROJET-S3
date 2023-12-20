@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS RISQUE;
 DROP TABLE IF EXISTS FDS;
 DROP TABLE IF EXISTS BONCOMMANDE;
 DROP TABLE IF EXISTS DEMANDE;
+DROP TABLE IF EXISTS ETATDEMANDE;
 DROP TABLE IF EXISTS ETATCOMMANDE;
 DROP TABLE IF EXISTS STATUT;
 DROP TABLE IF EXISTS UTILISATEUR;
@@ -147,6 +148,11 @@ create table ETATCOMMANDE(
     primary key(idEtat)
 );
 
+create table ETATDEMANDE(
+    idEtatD int not null auto_increment,
+    nomEtatD varchar(50) not null,
+    primary key(idEtatD)
+);
 
 create table DEMANDE(
     idDemande int not null auto_increment,
@@ -172,11 +178,6 @@ create table BONCOMMANDE(
     primary key(idBonCommande)
 );
 
-create table ETATDEMANDE(
-    idEtatD int not null auto_increment,
-    nomEtatD varchar(50) not null,
-    primary key(idEtat)
-);
 
 create table COMMANDE(
     idBonCommande int not null references BONCOMMANDE,
