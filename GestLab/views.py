@@ -418,7 +418,7 @@ def ajouter_materiel_unique(id):
         identifiant = Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(), id)[0]
         print("id : ",identifiant)
 
-        if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), identifiant) <= 0 :
+        if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), identifiant) <= 0:
             STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant)
 
         liste_res = []
@@ -431,7 +431,7 @@ def ajouter_materiel_unique(id):
             print("new_id : ",new_id)
             if new_id > 0 :
                 res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, new_id) # Erreur ici
-                if res == False :
+                if res == False or res == None:
                     print("Erreur lors de l'insertion du matériel unique d'id " + str(new_id))
                     return redirect(url_for('etat', id=id))
         
@@ -1107,16 +1107,16 @@ def login():
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
-        #nom, idStatut, mail, prenom = f.get_authenticated_user()
-        #user = nom, idStatut, mail, prenom
-        #if user != None:
-        #login_user(user)
-        #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-        session['utilisateur'] = ('Lallier', 3, 'mail@', 'Anna', 3)
-        #session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
-        print("login : "+str(session['utilisateur']))
-        next = f.next.data or url_for("base")
-        return redirect(next)
+        nom, idStatut, mail, prenom = f.get_authenticated_user()
+        user = nom, idStatut, mail, prenom
+        if user != None:
+            #login_user(user)
+            idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+            #session['utilisateur'] = ('Lallier', 3, 'mail@', 'Anna', 3)
+            session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+            print("login : "+str(session['utilisateur']))
+            next = f.next.data or url_for("base")
+            return redirect(next)
     return render_template(
         "login.html",
         title="profil",

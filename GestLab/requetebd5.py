@@ -684,9 +684,7 @@ class MaterielUnique:
             
     class Insert:
                 
-        def insere_materiel_unique(
-            cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative
-        ):
+        def insere_materiel_unique(cnx, id_materiel, position, date_reception, date_peremption, commentaire, quantite_approximative):
             try:
                 if date_peremption is None or date_peremption == 'None' or date_peremption == "":
                     date_peremption = "NULL"
@@ -695,11 +693,12 @@ class MaterielUnique:
 
                 dernier_id = MaterielUnique.Get.get_last_id(cnx) 
                 nouvel_id = dernier_id + 1
-                print("novuelid" + str(nouvel_id))
+                print("nouvel id" + str(nouvel_id))
 
                 query = (
-                    "INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, datePeremption, "
-                    "commentaireMateriel, quantiteApproximative) VALUES ('{}', '{}', '{}', {}, '{}', {});".format(
+                    "INSERT INTO MATERIELUNIQUE (idMaterielUnique, idMateriel, idRangement, dateReception, datePeremption, "
+                    "commentaireMateriel, quantiteApproximative) VALUES ('{}','{}', '{}', '{}', {}, '{}', {});".format(
+                        nouvel_id,
                         id_materiel,
                         position,
                         str(date_reception),
@@ -1265,7 +1264,7 @@ class ReserveLaboratoire :
     class Get:
         def get_last_id_reserve(cnx) :
             try :
-                result = cnx.execute(text("SELECT idReserveLaboratoire FROM RESERVELABORATOIRE ORDER BY idReserveLaboratoire DESC LIMIT 1 ;"))
+                result = cnx.execute(text("SELECT idReserve FROM RESERVELABORATOIRE ORDER BY idReserve DESC LIMIT 1 ;"))
                 for row in result:
                     return row[0]
             except :
@@ -1274,15 +1273,14 @@ class ReserveLaboratoire :
         
     class Insert:
         def insere_materiel_unique_reserve(cnx, idMaterielUnique):
-            try:
-                last_id_reserve = ReserveLaboratoire.Get.get_last_id_reserve(cnx)+1
-                cnx.execute(text("INSERT INTO RESERVELABORATOIRE (idReserve,idMaterielUnique) VALUES (" + str(last_id_reserve) + "," + str(idMaterielUnique) + ");"))
-                cnx.commit()
-                return True
-            except:
-                print("INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES (" + str(idMaterielUnique) + ");")
-                print("Erreur lors de l'insertion du matériel dans la réserve")
-                return False
+            last_id_reserve = ReserveLaboratoire.Get.get_last_id_reserve(cnx)+1
+            cnx.execute(text("INSERT INTO RESERVELABORATOIRE (idReserve,idMaterielUnique) VALUES (" + str(last_id_reserve) + "," + str(idMaterielUnique) + ");"))
+            cnx.commit()
+            return True
+                
+            # print("INSERT INTO RESERVELABORATOIRE (idMaterielUnique) VALUES (" + str(idMaterielUnique) + ");")
+            # print("Erreur lors de l'insertion du matériel dans la réserve")
+            # return False
 
 
 # def get_all_information_to_Materiel(cnx, nomcat=None):
