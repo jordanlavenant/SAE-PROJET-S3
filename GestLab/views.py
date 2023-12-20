@@ -378,6 +378,13 @@ def commander_demande_materiel_unique(id):
     MaterielUnique.Delete.delete_materiel_unique_in_demande(cnx, idDemande, idMat)
     return redirect(url_for('commander'))
 
+@app.route("/tout-commander-materiel-unique/<int:idDemande>", methods=("GET","POST",))
+def tout_commander_materiel_unique(idDemande):
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    Demande.Update.tout_commander_with_idDemmande_and_idUt(cnx, idDemande, idUser)
+    return redirect(url_for('commander'))
+
+
 @app.route("/demander-materiel-unique/<int:id>", methods=("GET","POST",))
 def demander_materiel_unique(id):
     idDemande = request.args.get('idDemande')
