@@ -460,6 +460,14 @@ class Materiel:
                 print("Erreur lors de la suppression du matériel dans la commande")
                 raise
 
+        def delete_materiel_in_AouterMateriel_whith_id(cnx, idMateriel, idDemande):
+            try:
+                cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idMateriel = " + str(idMateriel) + " AND idDemande = " + str(idDemande) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel dans la commande")
+                raise
+
         def delete_all_materiel_in_commande(cnx, idut):
             try:
                 idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idut)
