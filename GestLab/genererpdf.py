@@ -7,7 +7,10 @@ class PDF_BonCommande:
     class PDF(FPDF):
         def header(self):
             #logo
-            self.image('./GestLab/static/images/logo-GestLab.png', 10, 8, 33)
+            try:
+                self.image('./GestLab/static/images/logo-GestLab.png', 10, 8, 33)
+            except:
+                self.image('./static/images/logo-GestLab.png', 10, 8, 33)
             #font
             self.set_font('Arial', 'B', 30)
             #padding
@@ -75,7 +78,6 @@ class PDF_BonCommande:
             lienImageChimiqueEnvironement = lien + "environnement.png"
             lienImageDangereux = lien + "chimique.png"
             lienImageComburant = lien + "comburant.png"
-
 
             explication_explosif = "Ce pictogramme chimique identifie des produits explosifs instables et très réactifs. Ces derniers peuvent exploser au contact d'une flamme, d'une étincelle, sous l'effet de la chaleur, en cas de frottement ou en cas de choc."
             explication_danger_incendie = "Le symbole de la flamme identifie des produits qui peuvent s'enflammer :\nau contact d'une flamme, d'une étincelle (ex. : benzène, acétone, éthanol, éther)\nau contact avec l'air\nau contact de l'eau en produisant des gaz inflammables qui s'enflamment spontanément ou en présence d'une source d'énergie\nLes produits identifiés par ce symbole sont variés. Ce sont :\nLes liquides inflammables, les matières solides inflammables, les gaz inflammables, les aérosols inflammables.\nLes liquides et solides pyrophoriques,\nCertains peroxydes organiques\nCertains produits autoréactifs\nLes hydroréactifs\nLes auto-échauffants"
@@ -259,7 +261,10 @@ class PDF_BonCommande:
         my_pdf.afficher_numero_commande(numero_commande, datetime.datetime.now().strftime("%d/%m/%Y"))
         my_pdf.cree_par(nom, prenom)
         my_pdf.affiche_materiel(liste_materiel)
-        my_pdf.output("./GestLab/static/data/bonCommande.pdf")
+        try:
+            my_pdf.output("./GestLab/static/data/bonCommande.pdf")
+        except:
+            my_pdf.output("./static/data/bonCommande.pdf")
 
 
     def genererpdfFDS(nom, prenom,referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif):
@@ -277,5 +282,5 @@ class PDF_BonCommande:
         my_pdf.output("./GestLab/static/data/FDS_pictogramme.pdf")
 
 
-PDF_BonCommande.genererpdfFDS("testNom", "testPrenom", "reftest", "testNomMateriel", True, True, False, False, False, False, True, False, False)
-PDF_BonCommande.genererpdfFDSPicatogramme() # PATCH AUJOUDHUI
+# PDF_BonCommande.genererpdfFDS("testNom", "testPrenom", "reftest", "testNomMateriel", True, True, False, False, False, False, True, False, False)
+# PDF_BonCommande.genererpdfFDSPicatogramme() # PATCH AUJOUDHUI

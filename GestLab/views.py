@@ -534,6 +534,10 @@ def reinitialiser_bon_commande(id):
     Materiel.Delete.delete_all_materiel_in_commande(cnx, id)
     return redirect(url_for('commander'))
 
+@app.route("/reinitialiser-demande/<int:id>", methods=("GET","POST",))
+def reinitialiser_demande(id):
+    Materiel.Delete.delete_all_materiel_in_AjouterMateriel(cnx, id)
+    return redirect(url_for('demander'))
 
 @app.route("/commander-materiel-unique/<int:id>", methods=("GET","POST",))
 def commander_materiel_unique(id):
@@ -541,8 +545,6 @@ def commander_materiel_unique(id):
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
     Materiel.Insert.ajout_materiel_in_commande(cnx, idMat, id, qte, False)
-    # delete_materiel_unique_in_demande(cnx, idDemande, idMat)
-    set
     return redirect(url_for('commander'))
 
 @app.route("/commander-demande-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -553,6 +555,21 @@ def commander_demande_materiel_unique(id):
     Materiel.Insert.ajout_materiel_in_commande(cnx, idMat, id, qte, True)
     MaterielUnique.Delete.delete_materiel_unique_in_demande(cnx, idDemande, idMat)
     return redirect(url_for('commander'))
+
+@app.route("/tout-commander-materiel-unique/<int:idDemande>", methods=("GET","POST",))
+def tout_commander_materiel_unique(idDemande):
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    Demande.Update.tout_commander_with_idDemmande_and_idUt(cnx, idDemande, idUser)
+    return redirect(url_for('commander'))
+
+
+@app.route("/demander-materiel-unique/<int:id>", methods=("GET","POST",))
+def demander_materiel_unique(id):
+    idDemande = request.args.get('idDemande')
+    idMat = request.args.get('idMat')
+    qte = request.args.get('qte')
+    Materiel.Insert.ajout_materiel_in_AjouterMateriel(cnx, idMat, id, qte, False)
+    return redirect(url_for('demander'))
 
 #Pour le bouton commander tout les materiels 
 
@@ -588,6 +605,31 @@ def commander():
         RechercherForm=rechercher,
         chemin = [("base", "accueil"), ("commander", "commander")]
     )
+
+@app.route("/recherche-materiel-demander", methods=("GET","POST",))
+@csrf.exempt
+def recherche_materiel_demander():
+    rechercher = RechercherForm()
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
+    value = rechercher.get_value()
+    print("value : "+value)
+    if value != None:
+        liste_materiel = Recherche.recherche_all_in_materiel_demande_with_search(get_cnx(), idDemande, value)
+        return render_template(
+            "demander.html",
+            title="demander",
+            idUser = idUser,
+            idDemande = Demande.Get.get_id_demande_actuel(cnx, Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
+            categories = Domaine.get_domaine(get_cnx()),
+            RechercherForm=rechercher,
+            liste_materiel = liste_materiel,
+            nbMateriel = len(liste_materiel),
+            alertes = Alert.get_nb_alert(cnx),
+            demandes = Demande.Get.get_nb_demande(cnx),
+            chemin = [("base", "accueil"), ("demander", "demander")]
+        )
+    return redirect(url_for('demander'))
 
 @app.route("/recherche-materiel", methods=("GET","POST",))
 @csrf.exempt
@@ -628,6 +670,22 @@ def bon_commande(id):
         longueur = len(liste_materiel),
         chemin = [("base", "accueil"), ("commander", "commander"), ('demandes', 'bon de commande')]
     )
+
+@app.route("/bon-demande/<int:id>")
+def bon_demande(id):
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    liste_materiel = Materiel.Get.get_materiel_demande(cnx, id)
+    return render_template(
+        "bonDemande.html",
+        id = id,
+        idUser = idUser,
+        categories = Domaine.get_domaine(get_cnx()),
+        title = "bon de demande",
+        liste_materiel = liste_materiel,
+        longueur = len(liste_materiel),
+        chemin = [("base", "accueil"), ("demander", "demander")]
+    )
+
 @app.route("/consulterBonCommande/")
 def consulter_bon_commande():
     info_bon_commande = Bon_commande.Get.consulter_bon_commande_without_table(cnx)
@@ -665,6 +723,18 @@ def delete_materiel(idbc, idMat):
     Materiel.Delete.delete_materiel_in_BonCommande_whith_id(cnx, idMat, idbc)
     return redirect(url_for('bon_commande', id=idbc))
 
+@app.route("/delete-materiel-demande/<int:idDemande>/<int:idMat>", methods=("GET","POST",))
+def delete_materiel_demande(idDemande, idMat):
+    Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande)
+    return redirect(url_for('bon_demande', id=idDemande))
+
+@app.route("/delete-materiel-demandes/<int:idDemande>/<int:idMat>", methods=("GET","POST",))
+def delete_materiel_demandes(idDemande, idMat):
+    res = Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande)
+    if res:
+        return redirect(url_for('base'))
+    return redirect(url_for('demande', idDemande=idDemande))
+
 @app.route("/bon-commande-unique", methods=("GET","POST",))
 def bon_commande_unique():
     idbc = request.args.get('idbc')
@@ -701,6 +771,14 @@ def historique_bon_commande():
 def delete_bon_commande(id):
     Bon_commande.Delete.delete_bonCommande_with_id(cnx, id)
     return redirect(url_for('consulter_bon_commande'))
+
+@app.route("/valider-bon-demande/<int:id>", methods=("GET","POST",))
+def valider_bon_demande(id):
+    idDemande = request.args.get('idDemande')
+    Demande.Insert.changer_etat_demande(cnx, id)
+    while True:
+        pass
+    return redirect(url_for('base'))
 
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
@@ -1049,13 +1127,23 @@ def recherche_inventaire():
     return redirect(url_for('inventaire'))
   
 @app.route("/demander/")
+@csrf.exempt
 def demander():
+    recherche = RechercherForm()
+    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    liste_materiel = Demande.Get.afficher_demande(cnx, idUser)
+    idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
+    print(liste_materiel)
+    print(len(liste_materiel))
     return render_template(
         "demander.html",
         title="demander",
-        liste_materiel = Suggestion_materiel.get_all_information_to_Materiel_suggestions(get_cnx()),
+        idDemande = idDemande,
+        liste_materiel = liste_materiel,
+        nbMateriel = len(liste_materiel),
+        RechercherForm=recherche,
         categories = Domaine.get_domaine(get_cnx()),
-        idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2]),
+        idUser = idUser,
         chemin = [("base", "accueil"), ("demander", "demander")]
     )
 
@@ -1143,6 +1231,7 @@ def login():
             idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
             session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
             print("login : "+str(session['utilisateur']))
+            RELOAD.reload_alert(cnx)
             next = f.next.data or url_for("base")
             return redirect(next)
     return render_template(
