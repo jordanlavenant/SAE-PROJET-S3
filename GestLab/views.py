@@ -336,22 +336,33 @@ def ajouter_suggestion():
     f = AjouterSuggestionForm()
     f.domaine.choices = get_domaine_choices() 
     if f.validate_on_submit() :
-        categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
-        res = Materiel.Insert.insere_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
-        print("FDS : " + str(FDSFormulaire.get_full_fds()))
-        toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif = FDSFormulaire.get_full_fds()
-        idMat = Materiel.Get.get_idMateriel_with_nomMateriel(cnx, nom)
-        
-        FDS.Insert.ajout_FDS(cnx, nom)
-        idFDS = FDS.Get.get_idFDS_with_nomFDS(cnx, nom)
-        FDS.Update.update_FDS(cnx, idFDS, idMat)
-        
-        Risques.Insert.ajout_risque_with_idMateriel(cnx, idMat, toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif)
-        if res:
-            return redirect(url_for('demander'))
-        else:
-            print("Erreur lors de l'insertion du matériel")
-            return redirect(url_for('ajouter_suggestion'))
+        try:
+            categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
+            res = Materiel.Insert.insere_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+            print("FDS : " + str(FDSFormulaire.get_full_fds()))
+            toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif = FDSFormulaire.get_full_fds()
+            idMat = Materiel.Get.get_idMateriel_with_nomMateriel(cnx, nom)
+            
+            FDS.Insert.ajout_FDS(cnx, nom)
+            idFDS = FDS.Get.get_idFDS_with_nomFDS(cnx, nom)
+            FDS.Update.update_FDS(cnx, idFDS, idMat)
+            
+            Risques.Insert.ajout_risque_with_idMateriel(cnx, idMat, toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif)
+            if res:
+                return redirect(url_for('demander'))
+            else:
+                print("Erreur lors de l'insertion du matériel")
+                return redirect(url_for('ajouter_suggestion'))
+        except Exception as e:
+            print(e)
+            return render_template(
+                "ajouterSuggestion.html",
+                title="ajouter une suggestion",
+                FDSForm=FDSFormulaire,
+                AjouterSuggestionForm=f,
+                erreur="Le nom du materiel ou la reference est deja existante",
+                chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
+            )
     else :
         print("Erreur lors de la validation du formulaire")
         print(f.errors)
@@ -1128,7 +1139,8 @@ def modifier_materiel(id):
         res = Materiel.Update.modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
         
         toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif = FDSFormulaire.get_full_fds()
-        Risques.Update.update_risque_with_idMateriel(cnx, id, toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif)
+        Risques.Update.update_risque_with_idMateriel(cnx, id, toxique, inflammable, explosif, gaz, CMR, chimique, environnement, comburant, corrosif)
+        RELOAD.reload_alert(cnx)
         if res:
             return redirect(url_for('etat', id=idMateriel))
         else:
@@ -1174,6 +1186,7 @@ def modifier_materiel_unique(id):
     if f.validate_on_submit() :
         position, date_reception, date_peremption, commentaire, quantite_approximative = f.get_full_materiel_unique_requestform()
         res = MaterielUnique.Update.modifie_materiel_unique(cnx, id, position, date_reception, date_peremption, commentaire, quantite_approximative)
+        RELOAD.reload_alert(cnx)
         if res:
             return redirect(url_for('etat', id=idMateriel))
         else:
