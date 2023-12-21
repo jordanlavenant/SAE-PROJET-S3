@@ -339,6 +339,13 @@ def ajouter_suggestion():
     chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
     )
 
+
+@app.route("/supprimer-suggestion/<int:id>", methods=("GET","POST",))
+def supprimer_suggestion(id):
+
+
+    return redirect(url_for('demander'))
+
 def intersection(lst1, lst2): 
     return [item for item in lst1 if item not in lst2]
 
