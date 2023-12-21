@@ -1105,7 +1105,11 @@ def modifier_materiel(id):
     FDSFormulaire = FDSForm()
     materiel = Materiel.Get.get_materiel(cnx, id)
     idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
-                         
+
+    referenceMateriel, nomMateriel, estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
+    print(estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif)
+
+
     idDomaine = Domaine.get_id_domaine_from_categorie(cnx, idCategorie)
     f = AjouterMaterielForm()
     f.nom.default = nomMateriel
@@ -1122,6 +1126,9 @@ def modifier_materiel(id):
     if f.validate_on_submit() :
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel_requestform()
         res = Materiel.Update.modifie_materiel(cnx, idMateriel, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        
+        toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif = FDSFormulaire.get_full_fds()
+        Risques.Update.update_risque_with_idMateriel(cnx, id, toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif)
         if res:
             return redirect(url_for('etat', id=idMateriel))
         else:
@@ -1136,6 +1143,15 @@ def modifier_materiel(id):
         AjouterMaterielForm=f,
         id = idMateriel,
         FDSForm=FDSFormulaire,
+        estToxique = estToxique,
+        estInflamable = estInflamable,
+        estExplosif = estExplosif,
+        est_gaz_sous_pression = est_gaz_sous_pression,
+        est_CMR = est_CMR,
+        est_chimique_environement = est_chimique_environement,
+        est_dangereux = est_dangereux,
+        est_comburant = est_comburant,
+        est_corrosif = est_corrosif,
         chemin = [("base", "accueil"),("inventaire", "Modifier un Matériel")]
     )
 
