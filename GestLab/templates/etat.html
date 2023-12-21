@@ -118,21 +118,33 @@
                         {% if item[1] == 1 %}
                         <div class="date-peremption">
                             <p class="date-peremption-label">date de péremption : </p>
-                            <p class="date-peremption-content">{{ item[8] }}</p>
+                            {% if item[8] == None %}
+                                <p class="date-peremption-content">-</p>
+                            {% else %}
+                                <p class="date-peremption-content">{{ item[8] }}</p>
+                            {% endif %}
                         </div>
                         {% endif %}
 
                         {% if item[1] == 3 %}
                         <div class="date-peremption">
                             <p class="date-peremption-label">date de péremption : </p>
-                            <p class="date-peremption-content">{{ item[8] }}</p>
+                            {% if item[8] == None %}
+                                <p class="date-peremption-content">-</p>
+                            {% else %}
+                                <p class="date-peremption-content">{{ item[8] }}</p>
+                            {% endif %}
                         </div>
                         {% endif %}
 
                         {% if item[1] == 5 %}
                         <div class="date-peremption">
                             <p class="date-peremption-label">date de péremption : </p>
-                            <p class="date-peremption-content">{{ item[8] }}</p>
+                            {% if item[8] == None %}
+                                <p class="date-peremption-content">-</p>
+                            {% else %}
+                                <p class="date-peremption-content">{{ item[8] }}</p>
+                            {% endif %}
                         </div>
                         {% endif %}
 
