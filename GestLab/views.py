@@ -173,10 +173,6 @@ class AjouterMaterielForm(FlaskForm):
         return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
     
 class AjouterStockForm(FlaskForm):
-    domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
-    categorie = SelectField('Categorie', choices=[], id="categorie", name="categorie", validate_choice=False, validators=[DataRequired()])
-    nom = StringField('nom', validators=[DataRequired()])
-    reference = StringField('reference', validators=[DataRequired()])
     caracteristiques = TextAreaField('caracteristiques')
     infossup = TextAreaField('infossup')
     seuilalerte  = StringField('seuilalerte')
@@ -185,8 +181,9 @@ class AjouterStockForm(FlaskForm):
     position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
     date_reception = DateField('date_reception', validators=[DataRequired()], default =  datetime.datetime.now().date())
     date_peremption = DateField('date_peremption', validators=[Optional()])
-    commentaire = TextAreaField('commentaire')
+    commentaire = TextAreaField('commentaire', validators=[Optional()])
     quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
+    submit = SubmitField("AJOUTER AU STOCK")
     next = HiddenField()
 
     def get_full_materiel(self):
@@ -195,14 +192,20 @@ class AjouterStockForm(FlaskForm):
         return (domaine,categorie)
     
     def get_full_materiel_requestform(self):
-        categorie = request.form['categorie']
-        nom = request.form['nom']
-        reference = request.form['reference']
-        caracteristiques = request.form['caracteristiques']
-        infossup = request.form['infossup']
-        seuilalerte = request.form['seuilalerte']
-        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
-
+        materiel = request.form['materiel']
+        idRangement = request.form['endroit']
+        date_reception = request.form['date_reception']
+        date_peremption = request.form['date_peremption']
+        commentaire = request.form['commentaire']
+        quantite_approximative = request.form['quantite_approximative']
+        return (materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative)
+    
+    def get_materiel(self):
+        return self.materiel.data
+    
+    def get_endroit(self):
+        return self.endroit.data
+    
 class AjouterMaterielUniqueForm(FlaskForm):
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
     position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
@@ -334,80 +337,70 @@ def ajouter_suggestion():
     chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
     )
 
+def intersection(lst1, lst2): 
+    return [item for item in lst1 if item not in lst2]
+
 @app.route("/ajouter-stock/", methods=("GET","POST",))
 @csrf.exempt
 def ajouter_stock():
     rechercherForm = RechercherFormWithAssets()
     rechercherForm.domaine.choices = get_domaine_choices() 
 
+    search = rechercherForm.get_value()
+    domaine = rechercherForm.get_domaine()
+    categorie = rechercherForm.get_categorie()
+
     ajouterForm = AjouterStockForm()
     ajouterForm.endroit.choices = get_endroit_choices()
 
-    print(rechercherForm.domaine.data)
-    print(rechercherForm.categorie.data)
+    items = get_materiels_existants() # Valeur par-défaut (tout tout tout les matériels)
 
-    items = get_materiels_existants()
+    # filtre à la valeur de la recherche    
+    if search != None: items = get_materiels_existants_with_search(search)
+
+    # Filtre du domaine
+    if domaine != "" and domaine != None:
+        domaines_list = list()
+        for (idM,name) in items:
+            domaine_id = str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[4])
+            if domaine_id != domaine: domaines_list.append((idM,name))
+
+    # Filtre de la catégorie
+    if categorie != None:
+        categories_list = list()
+        for (idM,name) in items:
+            categorie_id = str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[2])
+            if categorie_id != categorie: categories_list.append((idM,name))
+
+    # Intersection de tous les tris possibles
+    if domaine != "" and domaine != None:
+        items = intersection(items, domaines_list)
+    if categorie != None:
+        items = intersection(items, categories_list)
+
+    # Actualisation final des choix de matériels en fonction de tous les inputs
+    ajouterForm.materiel.choices = items
+
+    # /!\ L'ajout dans l'inventaire ne se fait pas correctement, code à reprendre en priorité V
+    if ajouterForm.validate_on_submit():
+        materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative = ajouterForm.get_full_materiel_requestform()
+        res = MaterielUnique.Insert.insere_materiel_unique(cnx, materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative)
+        # ^ Probablement incorrect, quand on ajoute, on est effectivement redirigier vers la vue Etat mais elle n'aparaît pas dans l'inventaire
+        if res:
+            return redirect(url_for('etat', id=materiel))
+        else:
+            print("Erreur lors de l'insertion du matériel")
+            return redirect(url_for('ajouter_stock'))
+    else:
+        print("Erreur lors de la validation du formulaire")
+        print(ajouterForm.errors)
 
     return render_template(
         "ajouterStock.html",
         title="ajouter au stock",
         AjouterStockForm=ajouterForm,
         RechercherFormWithAssets=rechercherForm,
-        items = items,
         chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
-    )
-
-def intersection(lst1, lst2): 
-    return [item for item in lst1 if item not in lst2]
-
-@app.route("/recherche-materiel-existant/", methods=("GET","POST",))
-@csrf.exempt
-def recherche_materiel_existant():
-    rechercherForm = RechercherFormWithAssets()
-    rechercherForm.domaine.choices = get_domaine_choices() 
-
-    ajouterForm = AjouterStockForm()
-    ajouterForm.endroit.choices = get_endroit_choices()
-
-    search = rechercherForm.get_value()
-    domaine = rechercherForm.get_domaine()
-    categorie = rechercherForm.get_categorie()
-
-    print("catégorie : ",categorie)
-
-    items = get_materiels_existants() # Valeur par-défaut
-    # filtre à la valeur de la recherche    
-    if search != None:
-        items = get_materiels_existants_with_search(search)
-
-    # Filtre du domaine
-    if domaine != "":
-        domaines_list = []
-        for (idM,name) in items:
-            domaine_id = str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[4])
-            if domaine_id != domaine:
-                domaines_list.append((idM,name))
-    
-    # Filtre de la catégorie
-    if categorie != None:
-        categories_list = []
-        for (idM,name) in items:
-            categorie_id = str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[2])
-            if categorie_id != categorie:
-                categories_list.append((idM,name))
-
-    if domaine != "":
-        items = intersection(items, domaines_list)
-
-    if categorie != None:
-        items = intersection(items, categories_list)
-
-    return render_template(
-
-        "ajouterStock.html",
-        items = items,
-        RechercherFormWithAssets = rechercherForm,
-        AjouterStockForm = ajouterForm,
     )
 
 def get_endroit_choices():
@@ -1130,12 +1123,18 @@ def demande(idDemande):
 def inventaire():
     rechercher = RechercherForm()
     items = Materiel.Get.get_all_information_to_Materiel(get_cnx())
+    
+    # N'affiche uniquement les matériels qui ont des unités supérieur à 0
+    # final_items = list()
+    # for (item,qt) in items[0]:
+    #     if qt > 0:
+    #         final_items.append((item,qt))
+
     # print("-------------------")
-    print(items)
-    #for item in items[0]:
-    #     print(item[0][4])
-    # print("-------------------")
-    # Longueur de l'inventaire : items[1]
+    # print(final_items)
+
+    print("items : ",items[0])
+
     return render_template(
         "inventaire.html",
         RechercherForm=rechercher,
