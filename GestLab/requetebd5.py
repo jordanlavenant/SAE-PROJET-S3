@@ -151,7 +151,7 @@ class Utilisateur:
                     bonCommande = cnx.execute(text("select idBonCommande from BONCOMMANDE where idUtilisateur = '" + str(idut) + "';"))
                     for row in bonCommande:
                         cnx.execute(text("delete from COMMANDE where idBonCommande = '" + str(row[0]) + "';"))
-                    Bon_commande.Delete.delete_bonCommande(cnx,idut)
+                    Bon_commande.Delete.delete_bonCommande_with_id(cnx,idut)
 
                 if nomStatut == "Laborantin" :
                     demande = cnx.execute(text("select idDemande from DEMANDE where idUtilisateur = '" + str(idut) + "';"))
@@ -209,10 +209,13 @@ class Utilisateur:
                 print("erreur de mise a jour du prenom")
                 raise
 
-        def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email):
+        def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email, adminbool = False):
             try:
-                cnx.execute(text("update UTILISATEUR set idStatut = '" + str(idStatut) + "', nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "' where idUtilisateur = '" + str(id) + "';"))
-                cnx.commit()
+                if adminbool is False:
+                    cnx.execute(text("update UTILISATEUR set idStatut = '" + str(idStatut) + "', nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "' where idUtilisateur = '" + str(id) + "';"))
+                    cnx.commit()
+                else:
+                    Utilisateur.Update.modification_droit_utilisateur(cnx, id, idStatut)
                 print("utilisateur mis a jour")
                 return True
             except:
