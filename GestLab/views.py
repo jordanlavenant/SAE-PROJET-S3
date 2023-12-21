@@ -997,21 +997,21 @@ def modifier_utilisateur(id):
         print(statut)
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
-                res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email, True)
+                res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
                 if res:
                     return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('consulter_utilisateur'))
             elif statut == "gestionnaire":
-                res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 4, nom, prenom, email, True)
+                res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 4, nom, prenom, email)
                 if res:
                     return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('consulter_utilisateur'))
             elif statut == "laborantin":
-                res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 3, nom, prenom, email , True)
+                res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 3, nom, prenom, email)
                 if res:
                     return redirect(url_for('consulter_utilisateur'))
                 else:

@@ -209,13 +209,11 @@ class Utilisateur:
                 print("erreur de mise a jour du prenom")
                 raise
 
-        def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email, adminbool = False):
+        def update_all_information_utillisateur_with_id(cnx,id,idStatut,nom,prenom,email):
             try:
-                if adminbool is False:
-                    cnx.execute(text("update UTILISATEUR set idStatut = '" + str(idStatut) + "', nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "' where idUtilisateur = '" + str(id) + "';"))
-                    cnx.commit()
-                else:
-                    Utilisateur.Update.modification_droit_utilisateur(cnx, id, idStatut)
+                cnx.execute(text("update UTILISATEUR set nom = '" + nom + "', prenom = '" + prenom + "', email = '" + email + "' where idUtilisateur = '" + str(id) + "';"))
+                cnx.commit()
+                Utilisateur.Update.modification_droit_utilisateur(cnx, id, idStatut)
                 print("utilisateur mis a jour")
                 return True
             except:
