@@ -319,56 +319,46 @@ def ajouter_stock():
     ajouterForm = AjouterStockForm()
     ajouterForm.endroit.choices = get_endroit_choices()
 
-    items = get_materiels_existants() # Valeur par-défaut
+    items = get_materiels_existants() # Valeur par-défaut (tout tout tout les matériels)
 
     # filtre à la valeur de la recherche    
-    if search != None:
-        items = get_materiels_existants_with_search(search)
-
-
+    if search != None: items = get_materiels_existants_with_search(search)
 
     # Filtre du domaine
     if domaine != "" and domaine != None:
-        print("do utils")
-        domaines_list = []
+        domaines_list = list()
         for (idM,name) in items:
             domaine_id = str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[4])
-            if domaine_id != domaine:
-                domaines_list.append((idM,name))
-    
+            if domaine_id != domaine: domaines_list.append((idM,name))
+
     # Filtre de la catégorie
     if categorie != None:
-        print("cat utils")
-        categories_list = []
+        categories_list = list()
         for (idM,name) in items:
             categorie_id = str(Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(),idM)[2])
-            if categorie_id != categorie:
-                categories_list.append((idM,name))
+            if categorie_id != categorie: categories_list.append((idM,name))
 
+    # Intersection de tous les tris possibles
     if domaine != "" and domaine != None:
         items = intersection(items, domaines_list)
-
     if categorie != None:
         items = intersection(items, categories_list)
 
-    print("items : ",len(items))
-
+    # Actualisation final des choix de matériels en fonction de tous les inputs
     ajouterForm.materiel.choices = items
 
-    # idMateriel, dateR, dateP, qtAppro, idRangement, commentaire 
+    # /!\ L'ajout dans l'inventaire ne se fait pas correctement, code à reprendre en priorité V
     if ajouterForm.validate_on_submit():
         materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative = ajouterForm.get_full_materiel_requestform()
         res = MaterielUnique.Insert.insere_materiel_unique(cnx, materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative)
+        # ^ Probablement incorrect, quand on ajoute, on est effectivement redirigier vers la vue Etat mais elle n'aparaît pas dans l'inventaire
         if res:
             return redirect(url_for('etat', id=materiel))
         else:
             print("Erreur lors de l'insertion du matériel")
             return redirect(url_for('ajouter_stock'))
-
     else:
         print("Erreur lors de la validation du formulaire")
-        print(ajouterForm.get_materiel())
-        print(ajouterForm.materiel.choices)
         print(ajouterForm.errors)
 
     return render_template(
@@ -376,7 +366,6 @@ def ajouter_stock():
         title="ajouter au stock",
         AjouterStockForm=ajouterForm,
         RechercherFormWithAssets=rechercherForm,
-        # items = items,
         chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
     )
 
@@ -1102,7 +1091,7 @@ def inventaire():
     # print("-------------------")
     # print(final_items)
 
-    print("items : ",items[1])
+    print("items : ",items[0])
 
     return render_template(
         "inventaire.html",
