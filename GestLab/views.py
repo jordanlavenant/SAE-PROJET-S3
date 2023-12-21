@@ -1269,7 +1269,6 @@ def login():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
         try:
-
             nom, idStatut, mail, prenom = f.get_authenticated_user()
             user = nom, idStatut, mail, prenom
             if user != None:
@@ -1281,7 +1280,16 @@ def login():
                 next = f.next.data or url_for("base")
                 return redirect(next)
         except:
-            return redirect(url_for('login'))
+            print("erreur de connexion")
+            return render_template(
+                "login.html",
+                title="profil",
+                form=f,
+                fromChangerMDP=changerMDP,
+                fromChangerMail=changerMail,
+                MdpOublierForm=mdpOublier,
+                erreur = "Le mail ou le mot de passe est incorrect"
+            )
         
 # ---------------------- léo rajoute 
         
