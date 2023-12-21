@@ -384,13 +384,21 @@ def ajouter_stock():
     # /!\ L'ajout dans l'inventaire ne se fait pas correctement, code à reprendre en priorité V
     if ajouterForm.validate_on_submit():
         materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative = ajouterForm.get_full_materiel_requestform()
-        res = MaterielUnique.Insert.insere_materiel_unique(cnx, materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative)
+        
+        if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), materiel) <= 0 :
+            print("pouac")
+            STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), materiel)
+        
+        
+        nouvel_id = MaterielUnique.Insert.insere_materiel_unique(cnx, materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative)
+        if nouvel_id > 0 :
+                res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, nouvel_id)
+                if res == False :
+                    print("Erreur lors de l'insertion du matériel unique d'id " + str(nouvel_id))
+                    return redirect(url_for('ajouter_materiel'))
         # ^ Probablement incorrect, quand on ajoute, on est effectivement redirigier vers la vue Etat mais elle n'aparaît pas dans l'inventaire
-        if res:
-            return redirect(url_for('etat', id=materiel))
-        else:
-            print("Erreur lors de l'insertion du matériel")
-            return redirect(url_for('ajouter_stock'))
+        
+        return redirect(url_for('etat', id=materiel))
     else:
         print("Erreur lors de la validation du formulaire")
         print(ajouterForm.errors)
@@ -900,17 +908,17 @@ def alertes():
 @app.route("/etat/<int:id>")
 def etat(id):
 
-    idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, id)
-    referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
-    risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
-    lenRisques = len(risques)
+    # idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, id)
+    # referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
+    # risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
+    # lenRisques = len(risques)
 
     return render_template(
         "etat.html",
         id=id,
         title="etat",
-        risques = risques,
-        lenRisques = lenRisques,
+        risques = [],
+        lenRisques = 0,
         path = ['../static/images/FDS/toxique.png', '../static/images/FDS/inflammable.png', '../static/images/FDS/explosion.png', '../static/images/FDS/gaz.png', '../static/images/FDS/CMR.png', '../static/images/FDS/environnement.png', '../static/images/FDS/chimique.png', '../static/images/FDS/comburant.png', '../static/images/FDS/corrosif.png'],
         item_properties = Materiel.Get.get_all_information_to_Materiel_with_id(cnx, id),
         items_unique = MaterielUnique.Get.get_all_information_to_MaterielUnique_with_id(cnx, id),
@@ -1186,6 +1194,7 @@ def inventaire():
     rechercher = RechercherForm()
     # items = Materiel.Get.get_all_information_to_Materiel(get_cnx())
     items = Recherche.recherche_all_in_inventaire(get_cnx())
+    print("clesitems" + str(items))
 
     # N'affiche uniquement les matériels qui ont des unités supérieur à 0
     final_items = list()

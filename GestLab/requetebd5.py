@@ -368,10 +368,10 @@ class Materiel:
         def get_all_information_to_Materiel(cnx):
             try:
                 list = []
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE WHERE quantiteLaboratoire > 0 ;"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,0,0,0,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE WHERE quantiteLaboratoire > 0 ;"))
                 for row in result:
                     id = row[0]
-                    result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
+                    result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE NATURAL JOIN RESERVELABORATOIRE where idMateriel =" + str(id) + ";"))
                     for row_count in result_count:
                         print((row_count[1]))
                         list.append((row,row_count[1]))
@@ -876,7 +876,7 @@ class Recherche:
     def recherche_all_in_inventaire(cnx):
             try:
                 list = []
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE;"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE;"))
                 for row in result:
                     id = row[0]
                     result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
@@ -1440,14 +1440,15 @@ class STOCKLABORATOIRE:
                 raise
 
         def materiel_dans_stock(cnx, idMateriel):
-                try:
-                    result = cnx.execute(text("SELECT COUNT(*) FROM STOCKLABORATOIRE WHERE idMateriel = " + str(idMateriel) + ";"))
-                    for row in result:
-                        return row[0]
-                    cnx.commit()
-                except:
-                    print("Erreur lors de l'insertion du matériel dans le stock")
-                    raise
+            try:
+                result = cnx.execute(text("SELECT COUNT(*) FROM STOCKLABORATOIRE WHERE idMateriel = " + str(idMateriel) + ";"))
+                print(text("SELECT COUNT(*) FROM STOCKLABORATOIRE WHERE idMateriel = " + str(idMateriel) + ";"))
+                for row in result:
+                    return row[0]
+                cnx.commit()
+            except:
+                print("Erreur lors de l'insertion du matériel dans le stock")
+                raise
         
     class Insert:
         def insere_materiel_stock(cnx, idMateriel):
@@ -1489,9 +1490,15 @@ class ReserveLaboratoire :
     class Get:
         def get_last_id_reserve(cnx) :
             try :
+                res = None
                 result = cnx.execute(text("SELECT idReserve FROM RESERVELABORATOIRE ORDER BY idReserve DESC LIMIT 1 ;"))
+
                 for row in result:
-                    return row[0]
+                    res = row[0]
+                if res == None :
+                    return 0
+                else :
+                    return res
             except :
                 print("Erreur lors de la récupération du dernier id")
                 raise
