@@ -1800,5 +1800,5 @@ class Risques:
                 print("Erreur lors de la suppression du risque")
                 raise
 
-Risques.Delete.delete_risque_with_idMateriel()
-Materiel.Delete.delete_materiel()         
+# Risques.Delete.delete_risque_with_idMateriel()
+# Materiel.Delete.delete_materiel()         

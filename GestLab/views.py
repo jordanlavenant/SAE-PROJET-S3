@@ -342,7 +342,9 @@ def ajouter_suggestion():
 
 @app.route("/supprimer-suggestion/<int:id>", methods=("GET","POST",))
 def supprimer_suggestion(id):
-
+    print("id supprimé : ",id)
+    Risques.Delete.delete_risque_with_idMateriel(get_cnx(),id)
+    Materiel.Delete.delete_materiel(get_cnx(),id)   
 
     return redirect(url_for('demander'))
 
