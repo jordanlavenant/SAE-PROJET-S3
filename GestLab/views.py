@@ -1156,11 +1156,10 @@ def inventaire():
             if (item,qt) not in final_items: # Eviter les doublons
                 final_items.append((item,qt))
 
-    print("-------------------")
     print(len(final_items))
 
-    # print("items : ",items[0])
-    print("idMateriel : ",final_items[0][0][0])
+
+    print("-------------------")
 
     return render_template(
         "inventaire.html",
@@ -1179,13 +1178,18 @@ def recherche_inventaire():
     rechercher = RechercherForm()
     value = rechercher.get_value()
     items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(), value)
-    print("value : "+value)
-    print(items)
+    
+    final_items = list()
+    for (item,qt) in items[0]:
+        if qt > 0:
+            if (item,qt) not in final_items: # Eviter les doublons
+                final_items.append((item,qt))
+
     if value != None:
         return render_template(
             "inventaire.html",
             categories = Domaine.get_domaine(get_cnx()),
-            items = items,
+            items = final_items,
             title="inventaire",
             alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
             nbMateriel = items[1],
