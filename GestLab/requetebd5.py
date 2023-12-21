@@ -538,6 +538,15 @@ class Materiel:
                 print("Erreur lors de la suppression du matériel dans la commande")
                 raise
 
+        def delete_materiel(cnx, idMateriel):
+            try:
+                MaterielUnique.Delete.delete_all_materiel_unique_with_idMateriel(cnx, idMateriel)
+                cnx.execute(text("DELETE FROM MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel")
+                raise
+
         def delete_all_materiel_in_commande(cnx, idut):
             try:
                 idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idut)
@@ -1712,33 +1721,17 @@ class Risques:
             except:
                 print("Erreur lors de l'ajout du risque")
                 raise
-            
-# def get_all_information_to_Materiel(cnx, nomcat=None):
-#     my_list = []
-#     if nomcat is None:
-#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join MATERIELUNIQUE natural left join 
-# natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
-#         for row in result:
-#             print(row[1],row[2],row[6])
-#             my_list.append((row[1],row[2],row[6]))
-#     else:
-#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE  natural left join DOMAINE natural left join CATEGORIE natural join FDS where nomCategorie = '" + nomcat + "';"))
-#         for row in result:
-#             my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
-#     return my_list
+    class Delete:
 
-# get_info_demande(cnx)
+        def delete_risque_with_idMateriel(cnx, idMat):
+            try:
+                idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, idMat)
+                cnx.execute(text("DELETE FROM RISQUES WHERE idFDS = " + str(idFDS) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du risque")
+                raise
 
-# def get_domaine(cnx):
-# def get_info_demande(cnx):
-#     try:
-#         result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
-#         info_commande = []
-#         for row in result:
-#             info_commande.append(row)
-#         return  info_commande
-#     except Exception as e:
-#         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
-#         raise
 
-#faire trigger before insert pour que si on ajoute un materiel deja dans la commande, on update la quantite
+# Risques.Delete.delete_risque_with_idMateriel()
+# Materiel.Delete.delete_materiel()         
