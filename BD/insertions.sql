@@ -67,6 +67,7 @@ INSERT INTO FDS (nomFDS) VALUES
 
 INSERT INTO RISQUES (idFDS, idRisque) VALUES
 (1, 1),
+(1, 2),
 (2, 2),
 (3, 3);
 

@@ -4,7 +4,7 @@ begin
     declare presente int;
     declare mes varchar(255);
 
-    SELECT COUNT(ifnull(DEMANDE.idDemande, 0)) into presente FROM DEMANDE WHERE DEMANDE.idDemande = new.idDemande WHERE idEtatD = 2;
+    SELECT COUNT(ifnull(DEMANDE.idDemande, 0)) into presente FROM DEMANDE WHERE DEMANDE.idDemande = new.idDemande AND idEtatD = 2;
 
     if presente > 0 then
         set mes = concat("La modification ne peut être effectuée sur la demande (id demande : ", new.idDemande,") car celle-ci est associée à un bon de commande.");

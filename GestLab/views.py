@@ -183,6 +183,7 @@ class AjouterStockForm(FlaskForm):
     date_peremption = DateField('date_peremption', validators=[Optional()])
     commentaire = TextAreaField('commentaire', validators=[Optional()])
     quantite_approximative = StringField('quantite_approximative', validators=[DataRequired()])
+    quantite_recue = StringField('quantite_recue', validators=[DataRequired()])
     submit = SubmitField("AJOUTER AU STOCK")
     next = HiddenField()
 
@@ -198,7 +199,8 @@ class AjouterStockForm(FlaskForm):
         date_peremption = request.form['date_peremption']
         commentaire = request.form['commentaire']
         quantite_approximative = request.form['quantite_approximative']
-        return (materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative)
+        quantite_recue = self.quantite_recue.data
+        return (materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue)
     
     def get_materiel(self):
         return self.materiel.data
@@ -383,14 +385,21 @@ def ajouter_stock():
 
     # /!\ L'ajout dans l'inventaire ne se fait pas correctement, code à reprendre en priorité V
     if ajouterForm.validate_on_submit():
-        materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative = ajouterForm.get_full_materiel_requestform()
-        res = MaterielUnique.Insert.insere_materiel_unique(cnx, materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative)
-        # ^ Probablement incorrect, quand on ajoute, on est effectivement redirigier vers la vue Etat mais elle n'aparaît pas dans l'inventaire
-        if res:
-            return redirect(url_for('etat', id=materiel))
-        else:
-            print("Erreur lors de l'insertion du matériel")
-            return redirect(url_for('ajouter_stock'))
+        materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue = ajouterForm.get_full_materiel_requestform()
+        
+        if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), materiel) <= 0 :
+            STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), materiel)
+        
+        for _ in range(int(quantite_recue)): # On insère autant de fois que la quantité est exigée
+            nouvel_id = MaterielUnique.Insert.insere_materiel_unique(cnx, materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative)
+            if nouvel_id > 0 :
+                    res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, nouvel_id)
+                    if res == False :
+                        print("Erreur lors de l'insertion du matériel unique d'id " + str(nouvel_id))
+                        return redirect(url_for('ajouter_materiel'))
+            # ^ Probablement incorrect, quand on ajoute, on est effectivement redirigier vers la vue Etat mais elle n'aparaît pas dans l'inventaire
+        RELOAD.reload_alert(cnx)
+        return redirect(url_for('etat', id=materiel))
     else:
         print("Erreur lors de la validation du formulaire")
         print(ajouterForm.errors)
@@ -402,6 +411,7 @@ def ajouter_stock():
         RechercherFormWithAssets=rechercherForm,
         chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
     )
+
 
 def get_endroit_choices():
     query = text("SELECT endroit, idEndroit FROM ENDROIT;")
@@ -443,14 +453,12 @@ def ajouter_materiel_unique(id):
     if f.validate_on_submit():
         position, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue = f.get_full_materiel_unique_requestform()
         identifiant = Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(), id)[0]
-        print("id : ",identifiant)
 
         if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), identifiant) <= 0:
             STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant)
 
         liste_res = []
 
-        print("qt recu : ",quantite_recue)
 
         for _ in range(int(quantite_recue)): # On insère autant de fois que la quantité est exigée
             print("----------------------------------------")
@@ -852,27 +860,27 @@ def etat(id):
     risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
     lenRisques = len(risques)
 
-    print("idFDS : ",idFDS)
-    print("risques : ",risques)
-    print("lenRisques : ",lenRisques)
-    print("referenceMateriel : ",referenceMateriel)
-    print("nomMateriel : ",nomMateriel)
-    print("estToxique : ",estToxique)
-    print("estInflamable : ",estInflamable)
-    print("estExplosif : ",estExplosif)
-    print("est_gaz_sous_pression : ",est_gaz_sous_pression)
-    print("est_CMR : ",est_CMR)
-    print("est_chimique_environement : ",est_chimique_environement)
-    print("est_dangereux : ",est_dangereux)
-    print("est_comburant : ",est_comburant)
-    print("est_corrosif : ",est_corrosif)
+    # print("idFDS : ",idFDS)
+    # print("risques : ",risques)
+    # print("lenRisques : ",lenRisques)
+    # print("referenceMateriel : ",referenceMateriel)
+    # print("nomMateriel : ",nomMateriel)
+    # print("estToxique : ",estToxique)
+    # print("estInflamable : ",estInflamable)
+    # print("estExplosif : ",estExplosif)
+    # print("est_gaz_sous_pression : ",est_gaz_sous_pression)
+    # print("est_CMR : ",est_CMR)
+    # print("est_chimique_environement : ",est_chimique_environement)
+    # print("est_dangereux : ",est_dangereux)
+    # print("est_comburant : ",est_comburant)
+    # print("est_corrosif : ",est_corrosif)
 
     return render_template(
         "etat.html",
         id=id,
         title="etat",
         risques = risques,
-        lenRisques = lenRisques,
+        lenRisques = len(risques),
         path = ['../static/images/FDS/toxique.png', '../static/images/FDS/inflammable.png', '../static/images/FDS/explosion.png', '../static/images/FDS/gaz.png', '../static/images/FDS/CMR.png', '../static/images/FDS/environnement.png', '../static/images/FDS/chimique.png', '../static/images/FDS/comburant.png', '../static/images/FDS/corrosif.png'],
         item_properties = Materiel.Get.get_all_information_to_Materiel_with_id(cnx, id),
         items_unique = MaterielUnique.Get.get_all_information_to_MaterielUnique_with_id(cnx, id),
@@ -1146,7 +1154,6 @@ def demande(idDemande):
 @csrf.exempt
 def inventaire():
     rechercher = RechercherForm()
-    # items = Materiel.Get.get_all_information_to_Materiel(get_cnx())
     items = Recherche.recherche_all_in_inventaire(get_cnx())
 
     # N'affiche uniquement les matériels qui ont des unités supérieur à 0
@@ -1155,11 +1162,6 @@ def inventaire():
         if qt > 0:
             if (item,qt) not in final_items: # Eviter les doublons
                 final_items.append((item,qt))
-
-    print(len(final_items))
-
-
-    print("-------------------")
 
     return render_template(
         "inventaire.html",
@@ -1177,7 +1179,7 @@ def inventaire():
 def recherche_inventaire():
     rechercher = RechercherForm()
     value = rechercher.get_value()
-    items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(), value)
+    items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(),value)
     
     final_items = list()
     for (item,qt) in items[0]:
@@ -1257,7 +1259,6 @@ def commentaire():
         CommentaireForm=f
     )
 
-
 @app.route("/login/", methods=("GET","POST",))
 def login():
     f = LoginForm ()
@@ -1285,8 +1286,8 @@ def login():
         fromChangerMail=changerMail,
         MdpOublierForm=mdpOublier
     )
-
 """
+
 @app.route("/login/", methods=("GET","POST",))
 def login():
     f = LoginForm ()
@@ -1296,12 +1297,12 @@ def login():
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
-        nom, idStatut, mail, prenom = f.get_authenticated_user()
-        user = nom, idStatut, mail, prenom
-        if user != None:
+        #nom, idStatut, mail, prenom = f.get_authenticated_user()
+        #user = nom, idStatut, mail, prenom
+        #if user != None:
             #login_user(user)
-            idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-            session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+            #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+            session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
             print("login : "+str(session['utilisateur']))
             RELOAD.reload_alert(cnx)
             next = f.next.data or url_for("base")
@@ -1314,6 +1315,7 @@ def login():
         fromChangerMail=changerMail,
         MdpOublierForm=mdpOublier
     )
+
 """
 
 @app.route("/logout/")
