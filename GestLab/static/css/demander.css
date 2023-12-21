@@ -179,6 +179,25 @@ a {
     padding: 1%;
 }
 
+.top-side {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#delete-suggestion-button {
+    transition: .2s;
+    scale: 1;
+}
+
+#delete-suggestion-button:hover {
+    transform: scale(1.1);
+    transition: .2s;
+    cursor: pointer;
+}
+
 .section-contenu h3 {
     color: #fff;
     font-size: 35px;
