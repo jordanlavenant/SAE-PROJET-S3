@@ -1040,6 +1040,7 @@ def modifier_utilisateur(id):
 
 @app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
 def modifier_materiel(id):
+    FDSFormulaire = FDSForm()
     materiel = Materiel.Get.get_materiel(cnx, id)
     idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
                          
@@ -1072,6 +1073,7 @@ def modifier_materiel(id):
         title="modifier un matériel",
         AjouterMaterielForm=f,
         id = idMateriel,
+        FDSForm=FDSFormulaire,
         chemin = [("base", "accueil"),("inventaire", "Modifier un Matériel")]
     )
 
