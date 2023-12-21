@@ -846,7 +846,9 @@ def alertes():
 
 @app.route("/etat/<int:id>")
 def etat(id):
-    referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, id)
+
+    idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, id)
+    referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
     
     print("--------------------")
     print(referenceMateriel)
