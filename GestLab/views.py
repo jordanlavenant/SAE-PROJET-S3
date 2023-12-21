@@ -1268,16 +1268,24 @@ def login():
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
-        nom, idStatut, mail, prenom = f.get_authenticated_user()
-        user = nom, idStatut, mail, prenom
-        if user != None:
-            #login_user(user)
-            idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-            session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
-            RELOAD.reload_alert(cnx)
-            print("login : "+str(session['utilisateur']))
-            next = f.next.data or url_for("base")
-            return redirect(next)
+        try:
+
+            nom, idStatut, mail, prenom = f.get_authenticated_user()
+            user = nom, idStatut, mail, prenom
+            if user != None:
+                #login_user(user)
+                idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+                session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+                RELOAD.reload_alert(cnx)
+                print("login : "+str(session['utilisateur']))
+                next = f.next.data or url_for("base")
+                return redirect(next)
+        except:
+            return redirect(url_for('login'))
+        
+# ---------------------- léo rajoute 
+        
+        
     return render_template(
         "login.html",
         title="profil",
@@ -1286,37 +1294,6 @@ def login():
         fromChangerMail=changerMail,
         MdpOublierForm=mdpOublier
     )
-"""
-
-@app.route("/login/", methods=("GET","POST",))
-def login():
-    f = LoginForm ()
-    changerMDP = ChangerMDPForm()
-    changerMail = ChangerMailForm()
-    mdpOublier = MdpOublierForm()
-    if not f.is_submitted():
-        f.next.data = request.args.get("next")
-    elif f.validate_on_submit():
-        #nom, idStatut, mail, prenom = f.get_authenticated_user()
-        #user = nom, idStatut, mail, prenom
-        #if user != None:
-            #login_user(user)
-            #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-            session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
-            print("login : "+str(session['utilisateur']))
-            RELOAD.reload_alert(cnx)
-            next = f.next.data or url_for("base")
-            return redirect(next)
-    return render_template(
-        "login.html",
-        title="profil",
-        form=f,
-        fromChangerMDP=changerMDP,
-        fromChangerMail=changerMail,
-        MdpOublierForm=mdpOublier
-    )
-
-"""
 
 @app.route("/logout/")
 def logout():
