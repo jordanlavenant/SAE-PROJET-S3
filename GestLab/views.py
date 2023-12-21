@@ -398,7 +398,7 @@ def ajouter_stock():
                         print("Erreur lors de l'insertion du matériel unique d'id " + str(nouvel_id))
                         return redirect(url_for('ajouter_materiel'))
             # ^ Probablement incorrect, quand on ajoute, on est effectivement redirigier vers la vue Etat mais elle n'aparaît pas dans l'inventaire
-        
+        RELOAD.reload_alert(cnx)
         return redirect(url_for('etat', id=materiel))
     else:
         print("Erreur lors de la validation du formulaire")
@@ -855,32 +855,32 @@ def alertes():
 @app.route("/etat/<int:id>")
 def etat(id):
 
-    # idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, id)
-    # referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
-    # risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
-    # lenRisques = len(risques)
+    idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, id)
+    referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
+    risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
+    lenRisques = len(risques)
 
-    print("idFDS : ",idFDS)
-    print("risques : ",risques)
-    print("lenRisques : ",lenRisques)
-    print("referenceMateriel : ",referenceMateriel)
-    print("nomMateriel : ",nomMateriel)
-    print("estToxique : ",estToxique)
-    print("estInflamable : ",estInflamable)
-    print("estExplosif : ",estExplosif)
-    print("est_gaz_sous_pression : ",est_gaz_sous_pression)
-    print("est_CMR : ",est_CMR)
-    print("est_chimique_environement : ",est_chimique_environement)
-    print("est_dangereux : ",est_dangereux)
-    print("est_comburant : ",est_comburant)
-    print("est_corrosif : ",est_corrosif)
+    # print("idFDS : ",idFDS)
+    # print("risques : ",risques)
+    # print("lenRisques : ",lenRisques)
+    # print("referenceMateriel : ",referenceMateriel)
+    # print("nomMateriel : ",nomMateriel)
+    # print("estToxique : ",estToxique)
+    # print("estInflamable : ",estInflamable)
+    # print("estExplosif : ",estExplosif)
+    # print("est_gaz_sous_pression : ",est_gaz_sous_pression)
+    # print("est_CMR : ",est_CMR)
+    # print("est_chimique_environement : ",est_chimique_environement)
+    # print("est_dangereux : ",est_dangereux)
+    # print("est_comburant : ",est_comburant)
+    # print("est_corrosif : ",est_corrosif)
 
     return render_template(
         "etat.html",
         id=id,
         title="etat",
-        risques = [],
-        lenRisques = 0,
+        risques = risques,
+        lenRisques = len(risques),
         path = ['../static/images/FDS/toxique.png', '../static/images/FDS/inflammable.png', '../static/images/FDS/explosion.png', '../static/images/FDS/gaz.png', '../static/images/FDS/CMR.png', '../static/images/FDS/environnement.png', '../static/images/FDS/chimique.png', '../static/images/FDS/comburant.png', '../static/images/FDS/corrosif.png'],
         item_properties = Materiel.Get.get_all_information_to_Materiel_with_id(cnx, id),
         items_unique = MaterielUnique.Get.get_all_information_to_MaterielUnique_with_id(cnx, id),
