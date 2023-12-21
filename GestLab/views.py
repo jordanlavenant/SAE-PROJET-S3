@@ -851,6 +851,7 @@ def etat(id):
     referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
     
     print("--------------------")
+    print(idFDS)
     print(referenceMateriel)
     print(nomMateriel)
     print(estToxique)
@@ -876,7 +877,8 @@ def etat(id):
 
 @app.route("/generer-fds/<int:idMat>")
 def generer_fds(idMat):
-    referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idMat)
+    idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, idMat)
+    referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
     PDF_BonCommande.genererpdfFDS(session['utilisateur'][0], session['utilisateur'][3], referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif)
     return send_file("static/data/FDS.pdf", as_attachment=True)
     # return redirect(url_for('inventaire'))

@@ -683,7 +683,6 @@ class MaterielUnique:
                 list = []
                 result = cnx.execute(text("select * from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
                 for row in result:
-                    print(row)
                     list.append(row)
                 return list, len(list)
             except:
