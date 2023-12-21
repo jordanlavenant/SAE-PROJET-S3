@@ -285,6 +285,15 @@ class FDSForm(FlaskForm):
         toxique = self.toxique.data
         return toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif
 
+class EndroitForm(FlaskForm):
+    endroit = StringField('endroit', validators=[DataRequired()])
+    submit = SubmitField('ajouter un endroit')
+    next = HiddenField()
+
+    def get_endroit(self):
+        endroit = self.endroit.data
+        return endroit
+
 def get_domaine_choices():
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
     result = cnx.execute(query)
@@ -337,6 +346,27 @@ def ajouter_suggestion():
     FDSForm=FDSFormulaire,
     AjouterSuggestionForm=f,
     chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
+    )
+
+@app.route("/ajouter-endroit", methods=("GET","POST",))
+def ajouter_endroit():
+    f = EndroitForm()
+    if f.validate_on_submit() :
+        endroit = f.get_endroit()
+        res = Endroit.Insert.insere_endroit(get_cnx(), endroit)
+        print(endroit)
+
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de l'insertion du matériel")
+            return redirect(url_for('ajouter_endroit'))
+    else :
+        return render_template(
+        "ajouterEndroit.html",
+        title="ajouter au stock",
+        AjouterEndroitForm=f,
+        chemin = [("base", "accueil")]
     )
 
 def intersection(lst1, lst2): 
@@ -860,6 +890,7 @@ def etat(id):
     # risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
     # lenRisques = len(risques)
 
+    """
     print("idFDS : ",idFDS)
     print("risques : ",risques)
     print("lenRisques : ",lenRisques)
@@ -874,6 +905,7 @@ def etat(id):
     print("est_dangereux : ",est_dangereux)
     print("est_comburant : ",est_comburant)
     print("est_corrosif : ",est_corrosif)
+    """
 
     return render_template(
         "etat.html",
@@ -1266,6 +1298,7 @@ def commentaire():
         CommentaireForm=f
     )
 
+
 @app.route("/login/", methods=("GET","POST",))
 def login():
     f = LoginForm ()
@@ -1323,7 +1356,7 @@ def login():
         MdpOublierForm=mdpOublier
     )
 
-"""
+    """
 
 @app.route("/logout/")
 def logout():

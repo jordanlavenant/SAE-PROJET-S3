@@ -1712,6 +1712,18 @@ class Risques:
                 print("Erreur lors de l'ajout du risque")
                 raise
             
+class Endroit :
+    class Insert :
+        def insere_endroit(cnx, endroit) :
+            try :
+                cnx.execute(text("INSERT INTO ENDROIT (endroit) VALUES ('" + endroit + "');"))
+                print(text("INSERT INTO ENDROIT (endroit) VALUES ('" + endroit + "');"))
+                cnx.commit()
+                return True
+            except :
+                print("Erreur lors de l'insertion de l'endroit")
+                return False
+            
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
 #     if nomcat is None:
