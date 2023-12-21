@@ -293,6 +293,21 @@ class EndroitForm(FlaskForm):
     def get_endroit(self):
         endroit = self.endroit.data
         return endroit
+    
+class RangementForm(FlaskForm):
+    endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
+    rangement = StringField('rangement', validators=[DataRequired()])
+    submit = SubmitField('ajouter un rangement')
+    next = HiddenField()
+
+    def get_rangement(self):
+        rangement = self.rangement.data
+        return rangement
+    
+    def get_full_rangement(self):
+        endroit = request.form['endroit']
+        rangement = request.form['rangement']
+        return (endroit, rangement)
 
 def get_domaine_choices():
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
@@ -359,13 +374,36 @@ def ajouter_endroit():
         if res:
             return redirect(url_for('inventaire'))
         else:
-            print("Erreur lors de l'insertion du matériel")
+            print("Erreur lors de l'insertion de l'endroit")
             return redirect(url_for('ajouter_endroit'))
     else :
         return render_template(
         "ajouterEndroit.html",
         title="ajouter au stock",
         AjouterEndroitForm=f,
+        chemin = [("base", "accueil")]
+    )
+
+@app.route("/ajouter-rangement", methods=("GET","POST",))
+def ajouter_rangement():
+    f = RangementForm()
+    f.endroit.choices = get_endroit_choices() 
+
+    if f.validate_on_submit():
+        endroit, rangement = f.get_full_rangement()
+        
+        res = Rangement.Insert.insere_rangement(get_cnx(), endroit, rangement)
+        
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de l'insertion du rangement")
+            return redirect(url_for('ajouter_rangement'))
+    else :
+        return render_template(
+        "ajouterRangement.html",
+        title="ajouter au stock",
+        AjouterRangementForm=f,
         chemin = [("base", "accueil")]
     )
 
