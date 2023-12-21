@@ -1122,24 +1122,26 @@ def demande(idDemande):
 @csrf.exempt
 def inventaire():
     rechercher = RechercherForm()
-    items = Materiel.Get.get_all_information_to_Materiel(get_cnx())
-    
+    # items = Materiel.Get.get_all_information_to_Materiel(get_cnx())
+    items = Recherche.recherche_all_in_inventaire(get_cnx())
+
     # N'affiche uniquement les matériels qui ont des unités supérieur à 0
-    # final_items = list()
-    # for (item,qt) in items[0]:
-    #     if qt > 0:
-    #         final_items.append((item,qt))
+    final_items = list()
+    for (item,qt) in items[0]:
+        if qt > 0:
+            final_items.append((item,qt))
 
-    # print("-------------------")
-    # print(final_items)
+    print("-------------------")
+    print(len(final_items))
 
-    print("items : ",items[0])
+    # print("items : ",items[0])
+    print(final_items[-1][0][0])
 
     return render_template(
         "inventaire.html",
         RechercherForm=rechercher,
         categories = Domaine.get_domaine(get_cnx()),
-        items = items,
+        items = final_items,
         nbMateriel = items[1],
         alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
         title="inventaire",
