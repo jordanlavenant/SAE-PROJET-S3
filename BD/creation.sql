@@ -70,6 +70,7 @@ create table RISQUE(
 create table FDS(
     idFDS int not null auto_increment,
     nomFDS varchar(50) not null,
+    unique(nomFDS),
     primary key(idFDS)
 );
 
