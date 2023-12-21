@@ -3,7 +3,7 @@ from flask import render_template, url_for, redirect, request, session, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField
+from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField, BooleanField
 from wtforms.validators import DataRequired, Optional
 from wtforms import PasswordField
 from hashlib import sha256
@@ -257,6 +257,29 @@ class ModifierMaterielUniqueForm(FlaskForm):
         quantite_approximative = request.form['quantite_approximative']
         return (position, date_reception, date_peremption, commentaire, quantite_approximative)
 
+class FDSForm(FlaskForm):
+    comburant = BooleanField('comburant')
+    inflammable = BooleanField('inflammable')
+    explosif = BooleanField('explosif')
+    CMR = BooleanField('CMR')
+    chimique = BooleanField('chimique')
+    gaz = BooleanField('gaz')
+    corrosif = BooleanField('corrosif',)
+    environnement = BooleanField('environnement')
+    toxique = BooleanField('toxique')
+   
+    def get_full_fds(self):
+        comburant = self.comburant.data
+        inflammable = self.inflammable.data
+        explosif = self.explosif.data
+        CMR = self.CMR.data
+        chimique = self.chimique.data
+        gaz = self.gaz.data
+        corrosif = self.corrosif.data
+        environnement = self.environnement.data
+        toxique = self.toxique.data
+        return toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif
+
 def get_domaine_choices():
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
     result = cnx.execute(query)
@@ -280,11 +303,21 @@ def get_categorie_choices_modifier_materiel(idDomaine):
 
 @app.route("/ajouter-suggestion/", methods=("GET","POST",))
 def ajouter_suggestion():
+    FDSFormulaire = FDSForm()
     f = AjouterSuggestionForm()
     f.domaine.choices = get_domaine_choices() 
     if f.validate_on_submit() :
         categorie, nom, reference, caracteristiques, infossup, seuilalerte = f.get_full_materiel()
         res = Materiel.Insert.insere_materiel(cnx, categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+        print("FDS : " + str(FDSFormulaire.get_full_fds()))
+        toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif = FDSFormulaire.get_full_fds()
+        idMat = Materiel.Get.get_idMateriel_with_nomMateriel(cnx, nom)
+        
+        FDS.Insert.ajout_FDS(cnx, nom)
+        idFDS = FDS.Get.get_idFDS_with_nomFDS(cnx, nom)
+        FDS.Update.update_FDS(cnx, idFDS, idMat)
+        
+        Risques.Insert.ajout_risque_with_idMateriel(cnx, idMat, toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif)
         if res:
             return redirect(url_for('demander'))
         else:
@@ -296,6 +329,7 @@ def ajouter_suggestion():
     return render_template(
     "ajouterSuggestion.html",
     title="ajouter une suggestion",
+    FDSForm=FDSFormulaire,
     AjouterSuggestionForm=f,
     chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
     )

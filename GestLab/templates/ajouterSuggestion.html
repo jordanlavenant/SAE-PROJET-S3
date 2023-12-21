@@ -38,57 +38,71 @@
                     <div>{{ AjouterSuggestionForm.seuilalerte(size=15 , class_="form-control element", placeholder="Quantité minimale", value=seuilalerte) }}</div>
                 </div>
             </div>
+            
             <p class="fds-text">fiche de sécurité :</h3>
             <div class="fds">
-                <div class="left-side">
-                    <div class="checkmark">
-                        <input type="checkbox" id="comburant" name="comburant" value="1"/>
-                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/comburant.png') }}" alt="pictogramme">
-                        <label for="comburant">comburant</label>
-                    </div>
-                    <div class="checkmark">
-                        <input type="checkbox" id="inflammable" name="inflammable" value="2"/>
-                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/inflammable.png') }}" alt="pictogramme">
-                        <label for="inflammable">danger incendie</label>
-                    </div>
-                    <div class="checkmark">
-                        <input type="checkbox" id="explosif" name="explosif" value="3"/>
-                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/explosion.png') }}" alt="pictogramme">
-                        <label for="explosif">explosif</label>
-                    </div>
-                    <div class="checkmark">
-                        <input type="checkbox" id="CMR" name="CMR" value="4"/>
-                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/CMR.png') }}" alt="pictogramme">
-                        <label for="CMR">effets graves sur la santé</label>
-                    </div>
-                    <div class="checkmark">
-                        <input type="checkbox" id="santé" name="santé" value="5"/>
-                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/chimique.png') }}" alt="pictogramme">
-                        <label for="santé">altération de la santé humaine</label>
-                    </div>
-               </div>
-               <div class="right-side">
-                    <div class="checkmark">
-                        <input type="checkbox" id="gaz" name="gaz" value="6"/>
-                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/gaz.png') }}" alt="pictogramme">
-                        <label for="gaz">gaz sous pression</label><br/>
-                    </div>
-                    <div class="checkmark">
-                        <input type="checkbox" id="corrosif" name="corrosif" value="7"/>
-                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/corrosif.png') }}" alt="pictogramme">
-                        <label for="corrosif">corrosion</label><br/>
-                    </div>
-                    <div class="checkmark">
-                        <input type="checkbox" id="environnement" name="environnement" value="8"/>
-                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/environnement.png') }}" alt="pictogramme">
-                        <label for="environnement">toxicité aquatique</label><br/>
-                    </div>
-                    <div class="checkmark">
-                        <input type="checkbox" id="toxique" name="toxique" value="9"/>
-                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/toxique.png') }}" alt="pictogramme">
-                        <label for="toxique">toxicité aiguë</label><br/>
-                    </div>
-               </div>
+                    <form method="POST" action="#">
+                        {{ FDSForm.hidden_tag() }}
+                        <div class="left-side">
+                            <div class="checkmark">
+                                {{ FDSForm.comburant(size=auto, id="comburant", value="1") }}
+                                <!-- <input type="checkbox" id="comburant" name="comburant" value="1"/> -->
+                                <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/comburant.png') }}" alt="pictogramme">
+                                <label for="comburant">comburant</label>
+                            </div>
+                            <div class="checkmark">
+                                {{ FDSForm.inflammable(size=auto, id="inflammable", value="2") }}
+                                <!-- <input type="checkbox" id="inflammable" name="inflammable" value="2"/> -->
+                                <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/inflammable.png') }}" alt="pictogramme">
+                                <label for="inflammable">danger incendie</label>
+                            </div>
+                            <div class="checkmark">
+                                {{ FDSForm.explosif(size=auto, id="explosif", value="3") }}
+                                <!-- <input type="checkbox" id="explosif" name="explosif" value="3"/> -->
+                                <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/explosion.png') }}" alt="pictogramme">
+                                <label for="explosif">explosif</label>
+                            </div>
+                            <div class="checkmark">
+                                {{ FDSForm.CMR(size=auto, id="CMR", value="4") }}
+                                <!-- <input type="checkbox" id="CMR" name="CMR" value="4"/> -->
+                                <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/CMR.png') }}" alt="pictogramme">
+                                <label for="CMR">effets graves sur la santé</label>
+                            </div>
+                            <div class="checkmark">
+                                {{ FDSForm.chimique(size=auto, id="chimique", value="5") }}
+                                <!-- <input type="checkbox" id="santé" name="santé" value="5"/> -->
+                                <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/chimique.png') }}" alt="pictogramme">
+                                <label for="chimique">altération de la santé humaine</label>
+                            </div>
+
+                        </div>
+                        <div class="right-side">
+                            <div class="checkmark">
+                                {{ FDSForm.gaz(size=auto, id="gaz", value="6") }}
+                                <!-- <input type="checkbox" id="gaz" name="gaz" value="6"/> -->
+                                <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/gaz.png') }}" alt="pictogramme">
+                                <label for="gaz">gaz sous pression</label><br/>
+                            </div>
+                            <div class="checkmark">
+                                {{ FDSForm.corrosif(size=auto, id="corrosif", value="7") }}
+                                <!-- <input type="checkbox" id="corrosif" name="corrosif" value="7"/> -->
+                                <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/corrosif.png') }}" alt="pictogramme">
+                                <label for="corrosif">corrosion</label><br/>
+                            </div>
+                            <div class="checkmark">
+                                {{ FDSForm.environnement(size=auto, id="environnement", value="8") }}
+                                <!-- <input type="checkbox" id="environnement" name="environnement" value="8"/> -->
+                                <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/environnement.png') }}" alt="pictogramme">
+                                <label for="environnement">toxicité aquatique</label><br/>
+                            </div>
+                            <div class="checkmark">
+                                {{ FDSForm.toxique(size=auto, id="toxique", value="9") }}
+                                <!-- <input type="checkbox" id="toxique" name="toxique" value="9"/> -->
+                                <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/toxique.png') }}" alt="pictogramme">
+                                <label for="toxique">toxicité aiguë</label><br/>
+                        </div>
+                    
+                </div>
             </div>
         </div>
 

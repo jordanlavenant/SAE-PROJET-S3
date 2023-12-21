@@ -335,6 +335,15 @@ class Materiel:
     
     class Get :
 
+        def get_idMateriel_with_nomMateriel(cnx, nomMateriel):
+            try:
+                result = cnx.execute(text("SELECT idMateriel FROM MATERIEL WHERE nomMateriel = '" + nomMateriel + "';"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de l'id du matériel")
+                raise
+
         def get_all_information_to_Materiel_cat_com(cnx):
             try:
                 list = []
@@ -1497,6 +1506,99 @@ class RELOAD:
         except:
             print("Erreur lors du reload des alertes")
             raise
+
+
+class FDS:
+    class Get:
+        def get_FDS_with_idMateriel(cnx, idMat):
+            try:
+                result = cnx.execute(text("SELECT idFDS FROM MATERIEL natural join FDS WHERE idMateriel = " + str(idMat) + ";"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de l'id de la FDS")
+                raise
+
+        def get_idFDS_with_nomFDS(cnx, nomFDS):
+            try:
+                result = cnx.execute(text("SELECT idFDS FROM FDS WHERE nomFDS = '" + nomFDS + "';"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de l'id de la FDS")
+                raise
+    
+    class Insert:
+        def ajout_FDS(cnx, nomFDS):
+            cnx.execute(text("INSERT INTO FDS (nomFDS) VALUES ('" + nomFDS + "');"))
+            cnx.commit()
+        
+    class Update:
+        def update_FDS(cnx, idFDS, idMateriel):
+            cnx.execute(text("UPDATE MATERIEL SET idFDS = '" + str(idFDS) + "' WHERE idMateriel = " + str(idMateriel) + ";"))
+            cnx.commit()
+        
+        
+            
+
+class Risques:
+    
+    class Get:
+        def get_risque_with_idMateriel(cnx, idMat):
+            try:
+                result = cnx.execute(text("SELECT * FROM MATERIEL natural join FDS natural join RISQUES Natural join RISQUE WHERE idFDS = " + str(idMat) + ";"))
+                for row in result:
+                    return row[0]
+            except:
+                print("Erreur lors de la récupération de l'id du risque")
+                raise
+            
+    class Insert:
+        def ajout_risques_with_idFDS_and_idrisque(cnx, idRisque, idFDS):
+            try:
+                cnx.execute(text("INSERT INTO RISQUES (idFDS, idRisque) VALUES (" + str(idFDS) + ", " + str(idRisque) + ");"))
+                cnx.commit()
+            except:
+                print("Erreur lors de l'ajout du risque")
+                raise               
+            
+        
+        def ajout_risque_with_idMateriel(cnx, idMat, estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif):
+            try:
+                idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, idMat)
+                listidRisque = []
+                listRisqueAMateriel = []
+                
+                if estToxique:
+                    listRisqueAMateriel.append("Toxicité aiguë")
+                if estInflamable:
+                    listRisqueAMateriel.append("Danger incendie")
+                if estExplosif:
+                    listRisqueAMateriel.append("Explosif")
+                if est_gaz_sous_pression:
+                    listRisqueAMateriel.append("Gaz sous pression")
+                if est_CMR:
+                    listRisqueAMateriel.append("Toxicité aquatique")
+                if est_chimique_environement:
+                    listRisqueAMateriel.append("Effets graves sur l'environement")           
+                if est_dangereux:
+                    listRisqueAMateriel.append("Altération de la santé humaine")          
+                if est_comburant:
+                    listRisqueAMateriel.append("Comburant")
+                if est_corrosif:
+                    listRisqueAMateriel.append("Corrosion")
+                    
+                resultRisque = cnx.execute(text("SELECT idRisque, nomRisque FROM RISQUE;"))
+                
+                for row in resultRisque:
+                    if row[1] in listRisqueAMateriel:
+                        listidRisque.append(row[0])
+                
+                for idRisque in listidRisque:
+                    Risques.Insert.ajout_risques_with_idFDS_and_idrisque(cnx, idRisque, idFDS)
+            except:
+                print("Erreur lors de l'ajout du risque")
+                raise
             
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
