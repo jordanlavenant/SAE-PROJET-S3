@@ -846,6 +846,22 @@ def alertes():
 
 @app.route("/etat/<int:id>")
 def etat(id):
+    referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, id)
+    
+    print("--------------------")
+    print(referenceMateriel)
+    print(nomMateriel)
+    print(estToxique)
+    print(estInflamable)
+    print(estExplosif)
+    print(est_gaz_sous_pression)
+    print(est_CMR)
+    print(est_chimique_environement)
+    print(est_dangereux)
+    print(est_comburant)
+    print(est_corrosif)
+    print("--------------------")
+
     return render_template(
         "etat.html",
         id=id,
@@ -862,7 +878,6 @@ def generer_fds(idMat):
     PDF_BonCommande.genererpdfFDS(session['utilisateur'][0], session['utilisateur'][3], referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif)
     return send_file("static/data/FDS.pdf", as_attachment=True)
     # return redirect(url_for('inventaire'))
-
 
 @app.route("/ajouter-utilisateur/")
 def ajouter_utilisateur():
@@ -1129,13 +1144,14 @@ def inventaire():
     final_items = list()
     for (item,qt) in items[0]:
         if qt > 0:
-            final_items.append((item,qt))
+            if (item,qt) not in final_items: # Eviter les doublons
+                final_items.append((item,qt))
 
     print("-------------------")
     print(len(final_items))
 
     # print("items : ",items[0])
-    print(final_items[-1][0][0])
+    print("idMateriel : ",final_items[0][0][0])
 
     return render_template(
         "inventaire.html",

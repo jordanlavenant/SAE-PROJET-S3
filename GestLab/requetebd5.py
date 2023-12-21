@@ -877,7 +877,7 @@ class Recherche:
     def recherche_all_in_inventaire(cnx):
             try:
                 list = []
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idRisque,nomRisque,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE;"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE;"))
                 for row in result:
                     id = row[0]
                     result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
@@ -1559,14 +1559,14 @@ class FDS:
 class Risques:
     
     class Get:
-        def get_risque_with_idMateriel(cnx, idMat):
-            try:
-                result = cnx.execute(text("SELECT * FROM MATERIEL natural join FDS natural join RISQUES Natural join RISQUE WHERE idFDS = " + str(idMat) + ";"))
-                for row in result:
-                    return row[0]
-            except:
-                print("Erreur lors de la récupération de l'id du risque")
-                raise
+        # def get_risque_with_idMateriel(cnx, idMat):
+        #     try:
+        #         result = cnx.execute(text("SELECT * FROM MATERIEL natural join FDS natural join RISQUES Natural join RISQUE WHERE idFDS = " + str(idMat) + ";"))
+        #         for row in result:
+        #             return row[0]
+        #     except:
+        #         print("Erreur lors de la récupération de l'id du risque")
+        #         raise
         
         def get_risque_with_idMateriel(cnx, idMat):
             try:
@@ -1574,6 +1574,7 @@ class Risques:
                 nomMateriel = ""
                 listBooleanTrue = []
                 result = cnx.execute(text("SELECT nomRisque, referenceMateriel, nomMateriel FROM MATERIEL natural join FDS natural join RISQUES Natural join RISQUE WHERE idFDS = " + str(idMat) + ";"))
+                
                 for row in result:
                     listBooleanTrue.append(row[0])
                     nomMateriel = row[2]
