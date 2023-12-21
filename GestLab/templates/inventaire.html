@@ -26,8 +26,8 @@
         </div>
     </div>
     <div class="item-container">
-        <p id="lenItem" class="{{ items[0][-1][0][0] }}" style="display: none;"></p>
-        {% for (item,count) in items[0] %}
+        <p id="lenItem" class="{{ items[0][0][0][0] }}" style="display: none;"></p>
+        {% for (item,count) in items %}
             <section class="section-contenu" id="{{ item[4] }}">
                 <div class="item" id="item_{{ item[0] }}">
                     <div class="item-properties">
