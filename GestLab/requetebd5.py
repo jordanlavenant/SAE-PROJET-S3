@@ -161,7 +161,8 @@ class Utilisateur:
                 cnx.execute(text("update UTILISATEUR set idStatut = '" + str(idSt) + "' where idUtilisateur = '" + str(idut) + "';"))
                 cnx.commit()
 
-                if idSt == 2 :
+
+                if idSt == 3 :
                     Utilisateur.Insert.ajout_laborantin_into_demande(cnx,idut)
                 if idSt == 4 :
                     Utilisateur.Insert.ajout_gest_into_boncommande(cnx,idut)
