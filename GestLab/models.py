@@ -205,7 +205,7 @@ def envoyer_mail_commentaire(mailreceveur, mailenvoyeur, text):
 
 
 
-def envoyer_mail_signalement(mailreceveur, mailenvoyeur, text, objet):
+def envoyer_mail_signalement(mailreceveur, mailenvoyeur, text, materiel):
     json_file = open('GestLab/static/data/configEmail.json')
     gmail_config = json.load(json_file)
 
@@ -238,10 +238,9 @@ def envoyer_mail_signalement(mailreceveur, mailenvoyeur, text, objet):
         </style>
     </head>
     <body>
-        <p>Votre compte a été crée avec succès voici les informations correspondants :</p>
         <p>Voici le signalement de la part de : {mailenvoyeur}</p>
-        <p>Voici l'objet concerné : {objet}</p>
-        <p>Voici le commentaire evec le signalement sur l'objet : {objet}</p>
+        <p>Voici l'objet concerné : {materiel}</p>
+        <p>Voici le commentaire avec le signalement sur l'objet : {materiel}</p>
         <p>{text}</p>
     </body>
     <footer>
