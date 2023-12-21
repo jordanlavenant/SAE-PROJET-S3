@@ -852,6 +852,21 @@ def etat(id):
     risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
     lenRisques = len(risques)
 
+    print("idFDS : ",idFDS)
+    print("risques : ",risques)
+    print("lenRisques : ",lenRisques)
+    print("referenceMateriel : ",referenceMateriel)
+    print("nomMateriel : ",nomMateriel)
+    print("estToxique : ",estToxique)
+    print("estInflamable : ",estInflamable)
+    print("estExplosif : ",estExplosif)
+    print("est_gaz_sous_pression : ",est_gaz_sous_pression)
+    print("est_CMR : ",est_CMR)
+    print("est_chimique_environement : ",est_chimique_environement)
+    print("est_dangereux : ",est_dangereux)
+    print("est_comburant : ",est_comburant)
+    print("est_corrosif : ",est_corrosif)
+
     return render_template(
         "etat.html",
         id=id,
@@ -1253,8 +1268,8 @@ def login():
         if user != None:
             #login_user(user)
             idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-            #session['utilisateur'] = ('Lallier', 3, 'mail@', 'Anna', 3)
             session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+            RELOAD.reload_alert(cnx)
             print("login : "+str(session['utilisateur']))
             next = f.next.data or url_for("base")
             return redirect(next)

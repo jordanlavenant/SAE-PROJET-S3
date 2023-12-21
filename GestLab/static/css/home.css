@@ -59,11 +59,19 @@ transform: scale(1.1);
     max-height: 50px;
 }
 
+.container-alertes-demandes {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-basis: 100%;
+    flex-grow: 1;
+}
+
 .section-alertes {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    flex-basis: 50%;
     justify-content: center;
     gap: 12px;
 }
@@ -84,7 +92,6 @@ transform: scale(1.1);
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    flex-basis: 50%;
     justify-content: center;
     gap: 12px;
 }

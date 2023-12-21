@@ -311,6 +311,12 @@ class Utilisateur:
                     bonCommande = cnx.execute(text("select idBonCommande from BONCOMMANDE where idUtilisateur = '" + str(idut) + "';"))
                     for row in bonCommande:
                         cnx.execute(text("delete from COMMANDE where idBonCommande = '" + str(row[0]) + "';"))
+                        
+                    demande = cnx.execute(text("select idDemande from DEMANDE where idUtilisateur = '" + str(idut) + "';"))
+                    for row in demande:
+                        cnx.execute(text("delete from AJOUTERMATERIEL where idDemande = '" + str(row[0]) + "';"))
+                    
+                    cnx.execute(text("delete from DEMANDE where idUtilisateur = '" + str(idut) + "';"))
                     cnx.execute(text("delete from BONCOMMANDE where idUtilisateur = '" + str(idut) + "';"))
                     cnx.execute(text("delete from 2FA where idUtilisateur = '" + str(idut) + "';"))
                     cnx.execute(text("delete from UTILISATEUR where idUtilisateur = '" + str(idut) + "';"))
@@ -876,7 +882,7 @@ class Recherche:
     def recherche_all_in_inventaire(cnx):
             try:
                 list = []
-                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural left join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE NATURAL LEFT JOIN FDS NATURAL JOIN RISQUES NATURAL JOIN RISQUE;"))
+                result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire,idFDS,0,referenceMateriel,seuilAlerte,caracteristiquesComplementaires,informationsComplementairesEtSecurite, idStock  from MATERIEL natural join STOCKLABORATOIRE NATURAL JOIN CATEGORIE NATURAL JOIN DOMAINE;"))
                 for row in result:
                     id = row[0]
                     result_count = cnx.execute(text("select idMateriel, count(*) from MATERIELUNIQUE natural join MATERIEL natural join CATEGORIE NATURAL join DOMAINE where idMateriel =" + str(id) + ";"))
