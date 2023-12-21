@@ -27,13 +27,13 @@
         <h2>Confirmation</h2>
         <p>Votre demande a bien été envoyé !</p>
         <div class="container-pdf">
-            <a class="btn-retour-popup" href="{{ url_for('base') }}">Retour accueil</a>
+            <a class="btn-retour-popup" href="{{ url_for('base') }}">retour accueil</a>
         </div>
     </div>
 </div>
 {% else %}
 <a id="btn-retour-rien" href="{{ url_for('demander') }}">retour</a>
-<p class="p-rien">Vous n'avez aucun materiel n'a été demander</p>
+<p class="p-rien">Vous n'avez aucun materiel dans le bon de commande</p>
 {% endif %}
 {% endblock %}
 {% block scripts %}
