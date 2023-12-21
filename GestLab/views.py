@@ -403,6 +403,59 @@ def ajouter_stock():
         chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
     )
 
+"""
+@app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
+def ajouter_materiel_unique(id):
+    f = AjouterMaterielUniqueForm()
+    f.materiel.choices = get_materiels_existants()
+    print(f.materiel.choices)
+    print(f.materiel.choices[0])
+    f.endroit.choices = get_endroit_choices() 
+    if id > 0 :
+        default_materiel = Materiel.Get.get_id_materiel_from_id_materiel_unique(get_cnx(), id)
+        
+        # Trouvez l'index de la valeur par défaut dans les choix
+        default_index = next((i for i, choice in enumerate(f.materiel.choices) if choice[0] == default_materiel), None)
+        print(default_index)
+
+        # Définissez la valeur par défaut en utilisant la méthode populate_obj
+        if default_index is not None:
+            print("ehhoooooo")
+            f.materiel.process_data(f.materiel.choices[default_index][0])
+
+    print("snif + " + str(Materiel.Get.get_id_materiel_from_id_materiel_unique(get_cnx(), id)))
+
+    if f.validate_on_submit() :
+        infosmateriel, position, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue = f.get_full_materiel_unique()
+        identifiant = infosmateriel[0]
+        print(identifiant) 
+        
+        if STOCKLABORATOIRE.Get.materiel_dans_stock(get_cnx(), identifiant) <= 0 :
+            STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant)
+        
+        liste_res = []
+        for i in range(int(quantite_recue)) :
+            nouvel_id = MaterielUnique.Insert.insere_materiel_unique(cnx, identifiant, position, date_reception, date_peremption, commentaire, quantite_approximative)
+            if nouvel_id > 0 :
+                res = ReserveLaboratoire.Insert.insere_materiel_unique_reserve(cnx, nouvel_id)
+                if res == False :
+                    print("Erreur lors de l'insertion du matériel unique d'id " + str(nouvel_id))
+                    return redirect(url_for('ajouter_materiel'))
+        
+        return redirect(url_for('etat', id=identifiant))
+        
+    else :
+        print("Erreur lors de la validation du formulaire")
+        print(f.errors)
+    return render_template(
+    "ajouterMaterielUnique.html",
+    title="Ajouter un matériel au stock",
+    AjouterMaterielUniqueForm=f,
+    id = id,
+    chemin = [("base", "Accueil")]
+    )
+"""
+
 def get_endroit_choices():
     query = text("SELECT endroit, idEndroit FROM ENDROIT;")
     result = cnx.execute(query)
@@ -1241,7 +1294,7 @@ def commentaire():
         chemin = [("base", "accueil"), ("commentaire", "envoyer un commentaire")],
         CommentaireForm=f
     )
-
+"""
 
 @app.route("/login/", methods=("GET","POST",))
 def login():
@@ -1270,8 +1323,8 @@ def login():
         fromChangerMail=changerMail,
         MdpOublierForm=mdpOublier
     )
-
 """
+
 @app.route("/login/", methods=("GET","POST",))
 def login():
     f = LoginForm ()
@@ -1281,12 +1334,12 @@ def login():
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
-        nom, idStatut, mail, prenom = f.get_authenticated_user()
-        user = nom, idStatut, mail, prenom
-        if user != None:
+        #nom, idStatut, mail, prenom = f.get_authenticated_user()
+        #user = nom, idStatut, mail, prenom
+        #if user != None:
             #login_user(user)
-            idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-            session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+            #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+            session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
             print("login : "+str(session['utilisateur']))
             RELOAD.reload_alert(cnx)
             next = f.next.data or url_for("base")
@@ -1299,7 +1352,6 @@ def login():
         fromChangerMail=changerMail,
         MdpOublierForm=mdpOublier
     )
-"""
 
 @app.route("/logout/")
 def logout():
