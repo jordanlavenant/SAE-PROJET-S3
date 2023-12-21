@@ -22,6 +22,33 @@ a {
     cursor: pointer;
 }
 
+.btns-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 25px;
+    margin: 2% 0;
+}
+
+.btns {
+    color: white;
+    background-color: #384274;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+}
+
+.btns:hover {
+    color: white;
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
 
 .inventaire-container-overall {
     margin: 5vh 5vw;

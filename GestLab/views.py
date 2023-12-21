@@ -379,9 +379,9 @@ def ajouter_endroit():
     else :
         return render_template(
         "ajouterEndroit.html",
-        title="ajouter au stock",
+        title="ajouter un endroit",
         AjouterEndroitForm=f,
-        chemin = [("base", "accueil")]
+        chemin = [("base", "accueil"),("inventaire", "inventaire"),("ajouter_endroit", "ajouter un endroit")]
     )
 
 @app.route("/ajouter-rangement", methods=("GET","POST",))
@@ -402,9 +402,9 @@ def ajouter_rangement():
     else :
         return render_template(
         "ajouterRangement.html",
-        title="ajouter au stock",
+        title="ajouter un rangement",
         AjouterRangementForm=f,
-        chemin = [("base", "accueil")]
+        chemin = [("base", "accueil"),("inventaire", "inventaire"),("ajouter_rangement", "ajouter un rangement")]
     )
 
 
