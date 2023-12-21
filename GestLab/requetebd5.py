@@ -143,8 +143,30 @@ class Utilisateur:
          
         def modification_droit_utilisateur(cnx, idut, idSt):
             try:
+
+                user = Utilisateur.Get.get_all_information_utilisateur_with_id(cnx,idut)
+                nomStatut = user[3]
+
+                if nomStatut ==  "Gestionnaire" :
+                    bonCommande = cnx.execute(text("select idBonCommande from BONCOMMANDE where idUtilisateur = '" + str(idut) + "';"))
+                    for row in bonCommande:
+                        cnx.execute(text("delete from COMMANDE where idBonCommande = '" + str(row[0]) + "';"))
+                    Bon_commande.Delete.delete_bonCommande(cnx,idut)
+
+                if nomStatut == "Laborantin" :
+                    demande = cnx.execute(text("select idDemande from DEMANDE where idUtilisateur = '" + str(idut) + "';"))
+                    for row in demande:
+                        cnx.execute(text("delete from AJOUTERMATERIEL where idDemande = '" + str(row[0]) + "';"))
+                    Demande.Delete.delete_demande(cnx,idut)
+
                 cnx.execute(text(  "update UTILISATEUR set idStatut = '" + str(idSt) + "' where idUtilisateur = '" + str(idut) + "';"))
                 cnx.commit()
+
+                if idSt == 2 :
+                    Demande.Insert.ajout_laborantin_into_demande(cnx,idut)
+                if idSt == 4 :
+                    Bon_commande.Insert.ajout_gest_into_boncommande(cnx,idut)
+
                 print("droit mis a jour")
             except:
                 print("erreur de mise a jour du droit")
