@@ -285,6 +285,30 @@ class FDSForm(FlaskForm):
         toxique = self.toxique.data
         return toxique, inflammable, explosif, gaz, CMR, environnement, chimique, comburant, corrosif
 
+class EndroitForm(FlaskForm):
+    endroit = StringField('endroit', validators=[DataRequired()])
+    submit = SubmitField('ajouter un endroit')
+    next = HiddenField()
+
+    def get_endroit(self):
+        endroit = self.endroit.data
+        return endroit
+    
+class RangementForm(FlaskForm):
+    endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
+    rangement = StringField('rangement', validators=[DataRequired()])
+    submit = SubmitField('ajouter un rangement')
+    next = HiddenField()
+
+    def get_rangement(self):
+        rangement = self.rangement.data
+        return rangement
+    
+    def get_full_rangement(self):
+        endroit = request.form['endroit']
+        rangement = request.form['rangement']
+        return (endroit, rangement)
+
 def get_domaine_choices():
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
     result = cnx.execute(query)
@@ -337,6 +361,50 @@ def ajouter_suggestion():
     FDSForm=FDSFormulaire,
     AjouterSuggestionForm=f,
     chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
+    )
+
+@app.route("/ajouter-endroit", methods=("GET","POST",))
+def ajouter_endroit():
+    f = EndroitForm()
+    if f.validate_on_submit() :
+        endroit = f.get_endroit()
+        res = Endroit.Insert.insere_endroit(get_cnx(), endroit)
+        print(endroit)
+
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de l'insertion de l'endroit")
+            return redirect(url_for('ajouter_endroit'))
+    else :
+        return render_template(
+        "ajouterEndroit.html",
+        title="ajouter au stock",
+        AjouterEndroitForm=f,
+        chemin = [("base", "accueil")]
+    )
+
+@app.route("/ajouter-rangement", methods=("GET","POST",))
+def ajouter_rangement():
+    f = RangementForm()
+    f.endroit.choices = get_endroit_choices() 
+
+    if f.validate_on_submit():
+        endroit, rangement = f.get_full_rangement()
+        
+        res = Rangement.Insert.insere_rangement(get_cnx(), endroit, rangement)
+        
+        if res:
+            return redirect(url_for('inventaire'))
+        else:
+            print("Erreur lors de l'insertion du rangement")
+            return redirect(url_for('ajouter_rangement'))
+    else :
+        return render_template(
+        "ajouterRangement.html",
+        title="ajouter au stock",
+        AjouterRangementForm=f,
+        chemin = [("base", "accueil")]
     )
 
 
@@ -869,21 +937,6 @@ def etat(id):
     risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
     lenRisques = len(risques)
 
-    # print("idFDS : ",idFDS)
-    # print("risques : ",risques)
-    # print("lenRisques : ",lenRisques)
-    # print("referenceMateriel : ",referenceMateriel)
-    # print("nomMateriel : ",nomMateriel)
-    # print("estToxique : ",estToxique)
-    # print("estInflamable : ",estInflamable)
-    # print("estExplosif : ",estExplosif)
-    # print("est_gaz_sous_pression : ",est_gaz_sous_pression)
-    # print("est_CMR : ",est_CMR)
-    # print("est_chimique_environement : ",est_chimique_environement)
-    # print("est_dangereux : ",est_dangereux)
-    # print("est_comburant : ",est_comburant)
-    # print("est_corrosif : ",est_corrosif)
-
     return render_template(
         "etat.html",
         id=id,
@@ -1278,6 +1331,7 @@ def commentaire():
         CommentaireForm=f
     )
 
+
 @app.route("/login/", methods=("GET","POST",))
 def login():
     f = LoginForm ()
@@ -1321,6 +1375,38 @@ def login():
         fromChangerMail=changerMail,
         MdpOublierForm=mdpOublier
     )
+
+"""
+
+@app.route("/login/", methods=("GET","POST",))
+def login():
+    f = LoginForm ()
+    changerMDP = ChangerMDPForm()
+    changerMail = ChangerMailForm()
+    mdpOublier = MdpOublierForm()
+    if not f.is_submitted():
+        f.next.data = request.args.get("next")
+    elif f.validate_on_submit():
+        #nom, idStatut, mail, prenom = f.get_authenticated_user()
+        #user = nom, idStatut, mail, prenom
+        #if user != None:
+            #login_user(user)
+            #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+            session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
+            print("login : "+str(session['utilisateur']))
+            RELOAD.reload_alert(cnx)
+            next = f.next.data or url_for("base")
+            return redirect(next)
+    return render_template(
+        "login.html",
+        title="profil",
+        form=f,
+        fromChangerMDP=changerMDP,
+        fromChangerMail=changerMail,
+        MdpOublierForm=mdpOublier
+    )
+
+    """
 
 @app.route("/logout/")
 def logout():

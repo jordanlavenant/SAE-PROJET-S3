@@ -1460,6 +1460,17 @@ class Rangement:
                 print("Erreur lors de la récupération de l'id de l'endroit")
                 raise
 
+    class Insert :
+        def insere_rangement(cnx, id_endroit, position) :
+            try :
+                print(text("INSERT INTO RANGEMENT (idEndroit, position) VALUES (" + str(id_endroit) + ", '" + str(position) + "');"))
+                cnx.execute(text("INSERT INTO RANGEMENT (idEndroit, position) VALUES (" + str(id_endroit) + ", '" + str(position) + "');"))
+                cnx.commit()
+                return True
+            except :
+                print("Erreur lors de l'insertion de l'endroit")
+                return False
+
 
 class Commande :
 
@@ -1794,7 +1805,6 @@ class Risques:
                 print("Erreur lors de l'ajout du risque")
                 raise
     class Delete:
-
         def delete_risque_with_idMateriel(cnx, idMat):
             try:
                 idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, idMat)
@@ -1803,6 +1813,34 @@ class Risques:
             except:
                 print("Erreur lors de la suppression du risque")
                 raise
+
+
+class Endroit :
+    class Insert :
+        def insere_endroit(cnx, endroit) :
+            try :
+                cnx.execute(text("INSERT INTO ENDROIT (endroit) VALUES ('" + endroit + "');"))
+                print(text("INSERT INTO ENDROIT (endroit) VALUES ('" + endroit + "');"))
+                cnx.commit()
+                return True
+            except :
+                print("Erreur lors de l'insertion de l'endroit")
+                return False
+            
+            
+# def get_all_information_to_Materiel(cnx, nomcat=None):
+#     my_list = []
+#     if nomcat is None:
+#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join MATERIELUNIQUE natural left join 
+# natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
+#         for row in result:
+#             print(row[1],row[2],row[6])
+#             my_list.append((row[1],row[2],row[6]))
+#     else:
+#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE  natural left join DOMAINE natural left join CATEGORIE natural join FDS where nomCategorie = '" + nomcat + "';"))
+#         for row in result:
+#             my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
+#     return my_list
 
 # Risques.Delete.delete_risque_with_idMateriel()
 # Materiel.Delete.delete_materiel()         

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterSuggestion.css') }}">
+{% endblock %}
+{% block content %}
+<a id="btn-back" href="{{ url_for('inventaire') }}">retour</a>
+<div class="ajouterSuggestion-container">
+    <form class="form-ajoutEndroit" role="form" method="POST" action="{{ url_for('ajouter_endroit') }}">
+        {{ AjouterEndroitForm.hidden_tag() }}
+
+        <div class="left-side-info">
+
+            <div class="pair-info">
+                <div class="user-box quantite-container">
+                    <p>Quantité Approximative : </p>
+                    <div>{{ AjouterEndroitForm.endroit(size=10, class_="form-control element") }}</div>
+                </div>
+            </div>
+
+            <div class="valid-container">
+                <input type="submit" value="MODIFIER MATERIEL" class="element submit">
+            </div>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}
