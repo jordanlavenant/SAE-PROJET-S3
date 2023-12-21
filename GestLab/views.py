@@ -863,6 +863,14 @@ def etat(id):
         chemin = [("base", "accueil"), ("inventaire", "inventaire"), ("inventaire", "etat")]
     )
 
+@app.route("/generer-fds/<int:idMat>")
+def generer_fds(idMat):
+    referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idMat)
+    PDF_BonCommande.genererpdfFDS(session['utilisateur'][0], session['utilisateur'][3], referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif)
+    return send_file("static/data/FDS.pdf", as_attachment=True)
+    # return redirect(url_for('inventaire'))
+
+
 @app.route("/ajouter-utilisateur/")
 def ajouter_utilisateur():
     f = AjouterUtilisateurForm()
