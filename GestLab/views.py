@@ -1133,6 +1133,7 @@ def supprimer_materiel_unique(id):
 @app.route("/supprimer-materiels-uniques/<int:id>", methods=("GET","POST",))
 def supprimer_materiels_uniques(id):
     MaterielUnique.Delete.delete_all_materiel_unique_with_idMateriel(cnx, id)
+    Materiel.Delete.delete_all_materiel_in_Stocklaboratoire_with_idMat(cnx, id)
     return redirect(url_for('inventaire'))
 
 @app.route("/demandes/")
@@ -1167,23 +1168,30 @@ def inventaire():
     rechercher = RechercherForm()
     items = Recherche.recherche_all_in_inventaire(get_cnx())
 
-    # N'affiche uniquement les matériels qui ont des unités supérieur à 0
-    final_items = list()
-    for (item,qt) in items[0]:
-        if qt > 0:
-            if (item,qt) not in final_items: # Eviter les doublons
-                final_items.append((item,qt))
+    print("items : ",items)
 
-    return render_template(
-        "inventaire.html",
-        RechercherForm=rechercher,
-        categories = Domaine.get_domaine(get_cnx()),
-        items = final_items,
-        nbMateriel = items[1],
-        alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
-        title="inventaire",
-        chemin = [("base", "accueil"), ("inventaire", "inventaire")]
-    )
+    # N'affiche uniquement les matériels qui ont des unités supérieur à 0
+
+    if items[1] != 0:
+
+        final_items = list()
+        for (item,qt) in items[0]:
+            if qt > 0:
+                if (item,qt) not in final_items: # Eviter les doublons
+                    final_items.append((item,qt))
+
+        return render_template(
+            "inventaire.html",
+            RechercherForm=rechercher,
+            categories = Domaine.get_domaine(get_cnx()),
+            items = final_items,
+            nbMateriel = items[1],
+            alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
+            title="inventaire",
+            chemin = [("base", "accueil"), ("inventaire", "inventaire")]
+        )
+    else:
+        return redirect(url_for('base'))
 
 @app.route("/rechercher-inventaire", methods=("GET","POST",))
 @csrf.exempt
