@@ -1460,6 +1460,17 @@ class Rangement:
                 print("Erreur lors de la récupération de l'id de l'endroit")
                 raise
 
+    class Insert :
+        def insere_rangement(cnx, id_endroit, position) :
+            try :
+                print(text("INSERT INTO RANGEMENT (idEndroit, position) VALUES (" + str(id_endroit) + ", '" + str(position) + "');"))
+                cnx.execute(text("INSERT INTO RANGEMENT (idEndroit, position) VALUES (" + str(id_endroit) + ", '" + str(position) + "');"))
+                cnx.commit()
+                return True
+            except :
+                print("Erreur lors de l'insertion de l'endroit")
+                return False
+
 
 class Commande :
 
@@ -1816,17 +1827,6 @@ class Endroit :
                 print("Erreur lors de l'insertion de l'endroit")
                 return False
             
-class Rangement :
-    class Insert :
-        def insere_rangement(cnx, id_endroit, position) :
-            try :
-                print(text("INSERT INTO RANGEMENT (idEndroit, position) VALUES (" + str(id_endroit) + ", '" + str(position) + "');"))
-                cnx.execute(text("INSERT INTO RANGEMENT (idEndroit, position) VALUES (" + str(id_endroit) + ", '" + str(position) + "');"))
-                cnx.commit()
-                return True
-            except :
-                print("Erreur lors de l'insertion de l'endroit")
-                return False
             
 # def get_all_information_to_Materiel(cnx, nomcat=None):
 #     my_list = []
