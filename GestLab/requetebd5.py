@@ -846,8 +846,12 @@ class MaterielUnique:
                 else:
                     date_peremption = f"'{str(date_peremption)}'"
 
+                nouvel_id = 0
                 dernier_id = MaterielUnique.Get.get_last_id(cnx) 
-                nouvel_id = dernier_id + 1
+                if dernier_id is None:
+                    dernier_id = 1
+                else:
+                    nouvel_id = dernier_id + 1
                 print("nouvel id" + str(nouvel_id))
 
                 query = (

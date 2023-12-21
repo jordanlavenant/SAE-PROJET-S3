@@ -36,7 +36,7 @@
     </div>
     <div class="container-contenu">
         {% for item in liste_materiel %}
-            <section class="section-contenu" id="{{ item[0] }}">
+            <section class="section-contenu" id="{{ item[6] }}">
                 <div class="top-side">
                     <h3>{{ item[1] }} - {{ item[3] }}</h3>
                     <a id="delete-suggestion-button" href="{{ url_for('supprimer_suggestion',id=item[0]) }}">
@@ -54,7 +54,7 @@
                         <p class="nb-choisit">{{ item[4] }}</p>
                         <button class="bouton-plus">+</button>
                     </div>
-                    <a class="{{ item[0] }} {{ item[4] }}" href="#"><button class="ajouter-demande" id="ajouter-demande">ajouter à la demande</button></a>
+                    <a id="ajouter-demande-content" class="{{ item[0] }} {{ item[4] }}" href="#"><button class="ajouter-demande" id="ajouter-demande">ajouter à la demande</button></a>
                 </div>
                 <script>
                     var maVariableJavaScript = "{{ item[4] }}"; 
