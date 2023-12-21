@@ -246,3 +246,10 @@ label {
     display: flex;
     flex-wrap: nowrap;
 }
+
+.erreur-fds {
+    color: #d35252;
+    font-size: 35px;
+    font-weight: bold;
+    margin: 2vh 0;
+}

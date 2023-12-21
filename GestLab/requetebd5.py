@@ -1655,12 +1655,12 @@ class Risques:
         #         print("Erreur lors de la récupération de l'id du risque")
         #         raise
         
-        def get_risque_with_idMateriel(cnx, idMat):
+        def get_risque_with_idMateriel(cnx, idFDS):
             try:
                 referenceMateriel = ""
                 nomMateriel = ""
                 listBooleanTrue = []
-                result = cnx.execute(text("SELECT nomRisque, referenceMateriel, nomMateriel FROM MATERIEL natural join FDS natural join RISQUES Natural join RISQUE WHERE idFDS = " + str(idMat) + ";"))
+                result = cnx.execute(text("SELECT nomRisque, referenceMateriel, nomMateriel FROM MATERIEL natural join FDS natural left join RISQUES Natural left join RISQUE WHERE idFDS = " + str(idFDS) + ";"))
                 
                 for row in result:
                     listBooleanTrue.append(row[0])
@@ -1717,6 +1717,7 @@ class Risques:
             except:
                 print("Erreur lors de la récupération du risque")
                 return None
+
     class Update:
         def update_risque_with_idMateriel(cnx, idMat, estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif):
             try:
