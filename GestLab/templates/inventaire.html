@@ -23,16 +23,18 @@
                     {% endfor %}
                 </select>
             </form>
-
-            <p><a href="{{ url_for('ajouter_endroit') }}">Ajouter un endroit</a></p>
-            <p><a href="{{ url_for('ajouter_rangement') }}">Ajouter un rangement</a></p>
         </div>
     </div>
+
+    <div class="btns-container">
+        <a class="btns" href="{{ url_for('ajouter_endroit') }}">AJOUTER UN ENDROIT</a>
+        <a class="btns" href="{{ url_for('ajouter_rangement') }}">AJOUTER UN RANGEMENT</a>
+    </div>
+
     <div class="item-container">
         <p id="lenItem" class="{{ items[-1][0][0] }}" style="display: none;"></p>
         {% for (item,count) in items %}
             <section class="section-contenu" id="{{ item[4] }}">
-                {{ item[0 ]}}
                 <div class="item" id="item_{{ item[0] }}">
                     <div class="item-properties">
                         <h2>{{ item[1] }}</h2>
