@@ -1207,7 +1207,6 @@ def supprimer_materiels_uniques(id):
 
 @app.route("/demandes/")
 def demandes():
-
     return render_template(
         "demandes.html",
         title="demandes",
@@ -1377,7 +1376,7 @@ def login():
                 fromChangerMDP=changerMDP,
                 fromChangerMail=changerMail,
                 MdpOublierForm=mdpOublier,
-                erreur = "Le mail ou le mot de passe est incorrect"
+                erreur = "le mail ou le mot de passe est incorrect"
             )
         
 # ---------------------- léo rajoute 

@@ -16,17 +16,13 @@
 
         <a href="{{ url_for('consulter_utilisateur') }}">
             <section class="carte-lien">
-                <h2>CONSULTER UTILISATEURS</h2>
-                <p>ajouter un compte</p>
-                <p>modifier un compte</p>
-                <p>gesions des droits</p>
+                <h2>CONSULTER UTILISATEUR</h2>
+                <p>gestion utilisateur</p>
             </section>
         </a>
         <a href="{{ url_for('ajouter_utilisateur') }}">
             <section class="carte-lien">
                 <h2>AJOUTER UN UTILISATEUR</h2>
-                <p>utilisateur</p>
-                <p>...</p>
             </section>
         {% endif %}
 
@@ -69,16 +65,16 @@
                 <p>matériel</p>
             </section>
         </a>
-        <a href="{{ url_for('ajouter_stock') }}">
-            <section class="carte-lien">
-                <h2>AJOUTER</h2>
-                <p>stock</p>
-            </section>
-        </a>
         <a href="{{ url_for('inventaire') }}">
             <section class="carte-lien">
                 <h2>INVENTAIRE</h2>
                 <p>consulter</p>
+            </section>
+        </a>
+        <a href="{{ url_for('ajouter_stock') }}">
+            <section class="carte-lien">
+                <h2>AJOUTER</h2>
+                <p>stock</p>
             </section>
         </a>
         <a href="{{ url_for('alertes') }}">

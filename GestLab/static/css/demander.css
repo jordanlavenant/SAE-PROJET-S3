@@ -190,12 +190,19 @@ a {
 #delete-suggestion-button {
     transition: .2s;
     scale: 1;
+    display: flex;
+    align-items: center;
 }
 
 #delete-suggestion-button:hover {
-    transform: scale(1.1);
+    transform: rotate(90deg);
     transition: .2s;
     cursor: pointer;
+}
+
+#croix {
+    width: 30px;
+    height: 30px;
 }
 
 .section-contenu h3 {

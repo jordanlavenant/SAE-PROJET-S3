@@ -40,10 +40,7 @@
                 <div class="top-side">
                     <h3>{{ item[1] }} - {{ item[3] }}</h3>
                     <a id="delete-suggestion-button" href="{{ url_for('supprimer_suggestion',id=item[0]) }}">
-                        <img src="{{ url_for('static',filename='./images/croix.png') }}" alt="croix"
-                            width="30"
-                            height="30"
-                        >
+                        <img src="{{ url_for('static',filename='./images/croix.png') }}" alt="croix" id="croix">
                     </a>
                 </div>
                 <h4>{{ item[2] }}</h4>
