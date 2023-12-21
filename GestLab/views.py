@@ -371,7 +371,7 @@ def ajouter_suggestion():
     title="ajouter une suggestion",
     FDSForm=FDSFormulaire,
     AjouterSuggestionForm=f,
-    chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
+    chemin = [("base", "accueil"), ("demander","demander"), ("ajouter_suggestion", "ajouter une suggestion")]
     )
 
 @app.route("/ajouter-endroit", methods=("GET","POST",))
@@ -588,7 +588,7 @@ def base():
     "home.html",
     alertes=str(nb_alertes),
     demandes=str(nb_demandes),
-    title="GestLab"
+    title="GESTLAB"
     )
 
 @app.route("/motdepasseoublie/", methods=("GET","POST",))
@@ -806,7 +806,7 @@ def bon_demande(id):
         title = "bon de demande",
         liste_materiel = liste_materiel,
         longueur = len(liste_materiel),
-        chemin = [("base", "accueil"), ("demander", "demander")]
+        chemin = [("base", "accueil"), ("demander", "demander"), ("demander","bon de demande")]
     )
 
 @app.route("/consulterBonCommande/")
@@ -887,7 +887,7 @@ def historique_bon_commande():
         infoUser = liste_info_user,
         listeetat = liste_etat_bon_commande,
         statutsCommande = Commande.Get.get_statut_from_commande(cnx),
-        # chemin = [("base", "accueil"), ("consulter_bon_commande, Consulter bon commande"), ("historique_bon_commande", "Historique des bon de commande")]
+        # chemin = [("base", "accueil"), ("consulter_bon_commande, consulter bon commande"), ("historique_bon_commande", "historique des bon de commande")]
     )
 
 @app.route("/delete-bon-commande/<int:id>", methods=("GET","POST",))
@@ -937,7 +937,7 @@ def alertes():
         nb_alerte = nb_alertes,
         info_materiels = info_materiel,
         title="alertes",
-        chemin = [("base", "accueil"), ("alertes", "Alertes")]
+        chemin = [("base", "accueil"), ("alertes", "alertes")]
     )
 
 @app.route("/etat/<int:id>")
@@ -976,7 +976,7 @@ def ajouter_utilisateur():
         "ajouterUtilisateur.html",
         title="ajouter un utilisateur",
         AjouterUtilisateurForm=f,
-        chemin = [("base", "accueil"), ("ajouter_utilisateur", "Ajouter un Utilisateur")]
+        chemin = [("base", "accueil"), ("ajouter_utilisateur", "ajouter un Utilisateur")]
     )
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
@@ -1164,7 +1164,7 @@ def modifier_materiel(id):
         est_dangereux = est_dangereux,
         est_comburant = est_comburant,
         est_corrosif = est_corrosif,
-        chemin = [("base", "accueil"),("inventaire", "Modifier un Matériel")]
+        chemin = [("base", "accueil"),("inventaire","inventaire"), ("inventaire", "modifier un matériel")]
     )
 
 @app.route("/modifier-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -1200,7 +1200,7 @@ def modifier_materiel_unique(id):
         title="Modifier les informations d'un matériel en stock",
         ModifierMaterielUniqueForm=f,
         id=id,
-        chemin=[("base", "accueil")]
+        chemin=[("base", "accueil"),("inventaire","inventaire"),("inventaire","modifier un matériel unique")]
     )
 
 @app.route("/supprimer-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -1297,7 +1297,7 @@ def recherche_inventaire():
             alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
             nbMateriel = items[1],
             RechercherForm=rechercher,
-            chemin = [("base", "Accueil"), ("inventaire", "Inventaire")]
+            chemin = [("base", "Accueil"), ("inventaire", "inventaire")]
         )
     return redirect(url_for('inventaire'))
   
