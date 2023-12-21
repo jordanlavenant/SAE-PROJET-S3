@@ -106,6 +106,14 @@ a {
     font-weight: bold;
 }
 
+.risques-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 5% 0;
+}
+
 .header-container {
     color: #fff;
     display: flex;

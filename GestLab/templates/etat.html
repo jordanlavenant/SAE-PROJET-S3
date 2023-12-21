@@ -35,6 +35,16 @@
                 <p>Informations complémentaires et sécurité : </p>
                 <p>{{ item_properties[-2] }}</p>
             </div>
+            <div class="risques-container">
+                {% for i in range(lenRisques) %}
+                    {% if risques[i] == True %}
+                        <img src="{{ path[i] }}" alt="{{ path[i] }}"
+                            width=90
+                            height=90
+                        >
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 
