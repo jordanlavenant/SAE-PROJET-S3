@@ -538,6 +538,18 @@ class Materiel:
                 print("Erreur lors de la suppression du matériel dans la commande")
                 raise
 
+        def delete_materiel(cnx, idMateriel):
+            try:
+                Materiel.Delete.delete_all_materiel_in_Stocklaboratoire_with_idMat(cnx, idMateriel)
+                Materiel.Delete.delete_all_materiel_in_Commande_with_idMat(cnx, idMateriel)
+                Materiel.Delete.delete_all_materiel_in_AjouterMateriel_with_idMat(cnx, idMateriel)
+                MaterielUnique.Delete.delete_all_materiel_unique_with_idMateriel(cnx, idMateriel)
+                cnx.execute(text("DELETE FROM MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel")
+                raise
+
         def delete_all_materiel_in_commande(cnx, idut):
             try:
                 idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idut)
@@ -555,6 +567,31 @@ class Materiel:
             except:
                 print("Erreur lors de la suppression du matériel dans la commande")
                 raise
+
+        def delete_all_materiel_in_AjouterMateriel_with_idMat( cnx, idMat):
+            try:
+                cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idMateriel = " + str(idMat) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel dans la commande")
+                raise
+        
+        def delete_all_materiel_in_Commande_with_idMat( cnx, idMat):
+            try:
+                cnx.execute(text("DELETE FROM COMMANDE WHERE idMateriel = " + str(idMat) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel dans la commande")
+                raise
+
+        def delete_all_materiel_in_Stocklaboratoire_with_idMat (cnx, idMat):
+            try:
+                cnx.execute(text("DELETE FROM STOCKLABORATOIRE WHERE idMateriel = " + str(idMat) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel dans le stock")
+                raise
+            
 
     class Update:
 
@@ -1495,6 +1532,7 @@ class DATE:
                 
             # Extraire la date du résultat
             date_res = date_result[0] if date_result else datetime.now().date()
+            return date_res
 
         def materiel_dans_stock(cnx, idMateriel):
             try:
@@ -1587,9 +1625,8 @@ class FDS:
         def update_FDS(cnx, idFDS, idMateriel):
             cnx.execute(text("UPDATE MATERIEL SET idFDS = '" + str(idFDS) + "' WHERE idMateriel = " + str(idMateriel) + ";"))
             cnx.commit()
+
         
-        
-            
 
 class Risques:
     
@@ -1665,7 +1702,47 @@ class Risques:
             except:
                 print("Erreur lors de la récupération du risque")
                 return None
-            
+    class Update:
+        def update_risque_with_idMateriel(cnx, idMat, estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif):
+            try:
+                idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, idMat)
+                listidRisque = []
+                listRisqueAMateriel = []
+                
+                if estToxique:
+                    listRisqueAMateriel.append("Toxicité aiguë")
+                if estInflamable:
+                    listRisqueAMateriel.append("Danger incendie")
+                if estExplosif:
+                    listRisqueAMateriel.append("Explosif")
+                if est_gaz_sous_pression:
+                    listRisqueAMateriel.append("Gaz sous pression")
+                if est_CMR:
+                    listRisqueAMateriel.append("Toxicité aquatique")
+                if est_chimique_environement:
+                    listRisqueAMateriel.append("Effets graves sur l'environement")           
+                if est_dangereux:
+                    listRisqueAMateriel.append("Altération de la santé humaine")          
+                if est_comburant:
+                    listRisqueAMateriel.append("Comburant")
+                if est_corrosif:
+                    listRisqueAMateriel.append("Corrosion")
+                    
+                resultRisque = cnx.execute(text("SELECT idRisque, nomRisque FROM RISQUE;"))
+                
+                for row in resultRisque:
+                    if row[1] in listRisqueAMateriel:
+                        listidRisque.append(row[0])
+                
+                cnx.execute(text("DELETE FROM RISQUES WHERE idFDS = " + str(idFDS) + ";"))
+                cnx.commit()
+                
+                for idRisque in listidRisque:
+                    Risques.Insert.ajout_risques_with_idFDS_and_idrisque(cnx, idRisque, idFDS)
+            except:
+                print("Erreur lors de la modification du risque")
+                raise
+        
     class Insert:
         def ajout_risques_with_idFDS_and_idrisque(cnx, idRisque, idFDS):
             try:
@@ -1712,33 +1789,16 @@ class Risques:
             except:
                 print("Erreur lors de l'ajout du risque")
                 raise
-            
-# def get_all_information_to_Materiel(cnx, nomcat=None):
-#     my_list = []
-#     if nomcat is None:
-#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join MATERIELUNIQUE natural left join 
-# natural left join DOMAINE natural left join CATEGORIE natural join FDS;"))
-#         for row in result:
-#             print(row[1],row[2],row[6])
-#             my_list.append((row[1],row[2],row[6]))
-#     else:
-#         result = cnx.execute(text("select idMateriel, nomMateriel, idCategorie,nomCategorie, idDomaine,nomDomaine,quantiteLaboratoire  from MATERIEL natural left join STOCKLABORATOIRE  natural left join DOMAINE natural left join CATEGORIE natural join FDS where nomCategorie = '" + nomcat + "';"))
-#         for row in result:
-#             my_list.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
-#     return my_list
+    class Delete:
 
-# get_info_demande(cnx)
+        def delete_risque_with_idMateriel(cnx, idMat):
+            try:
+                idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, idMat)
+                cnx.execute(text("DELETE FROM RISQUES WHERE idFDS = " + str(idFDS) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du risque")
+                raise
 
-# def get_domaine(cnx):
-# def get_info_demande(cnx):
-#     try:
-#         result = cnx.execute(text("SELECT idDemande, nom, prenom, idBonCommande from UTILISATEUR natural join DEMANDE, natural join BONCOMMANDE;"))
-#         info_commande = []
-#         for row in result:
-#             info_commande.append(row)
-#         return  info_commande
-#     except Exception as e:
-#         print("Erreur lors de la récupération des informations sur les commandes :", str(e))
-#         raise
-
-#faire trigger before insert pour que si on ajoute un materiel deja dans la commande, on update la quantite
+# Risques.Delete.delete_risque_with_idMateriel()
+# Materiel.Delete.delete_materiel()         
