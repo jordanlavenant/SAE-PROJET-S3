@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const boutonPlus = section.querySelector('.bouton-plus');
         const valeurParagraphe = section.querySelector('.nb-choisit');
         const boutonAjout = section.querySelector(".ajouter-demande");
-        const liens = section.querySelector('a');
+        const liens = section.querySelector("#ajouter-demande-content");
         let classes = liens.classList;
         let idMat = classes[0];
-        let valeur = classes[1];; 
+        let valeur = classes[1];
         console.log(maVariableJavaScript);
 
         boutonAjout.addEventListener("click", function() {

@@ -107,8 +107,10 @@ a {
 }
 
 .risques-container {
+    width: 100%;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     align-items: center;
     gap: 20px;
     padding: 5% 0;

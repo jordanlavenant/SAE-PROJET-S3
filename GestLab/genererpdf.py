@@ -177,12 +177,12 @@ class PDF_BonCommande:
                 x_position += 40  # Décaler horizontalement pour la prochaine image
             self.ln(70)  # Sauter une ligne dans le PDF
 
-            # Ajout des explications
-            self.set_font('Arial', '', 10)
-            for explication in list_explication:
+            # # Ajout des explications
+            # self.set_font('Arial', '', 10)
+            # for explication in list_explication:
                 
-                self.multi_cell(0, 5, explication)
-                self.ln(6)
+            #     self.multi_cell(0, 5, explication)
+            #     self.ln(6)
 
         def affiche_FDS_picatogramme(self):
         #image

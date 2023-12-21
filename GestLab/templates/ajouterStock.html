@@ -65,12 +65,10 @@
                         </div>
 
                         <div class="user-box quantite-container">
-                            <p>Quantité Reçue : </p>
-                            <div>{{ AjouterStockForm.quantite_recue(size=10, class_="form-control element", placeholder="Quantité Reçue", value=1) }}</div>
+                            <label for="qt-recu">quantité reçue : </label>
+                            <div>{{ AjouterStockForm.quantite_recue(size=10, class_="form-control element", id="qt-recu", placeholder="Quantité Reçue", value=1) }}</div>
                         </div>
                     </div>
-                </div>
-                
                 </div>
 
                 <div class="right-side-info">

@@ -22,6 +22,13 @@
     text-align: center;
 }
 
+.erreur-login {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 35px;
+}
+
 .user-box {
   position: relative;
 }

@@ -37,7 +37,15 @@
     <div class="container-contenu">
         {% for item in liste_materiel %}
             <section class="section-contenu" id="{{ item[6] }}">
-                <h3>{{ item[1] }} - {{ item[3] }}</h3>
+                <div class="top-side">
+                    <h3>{{ item[1] }} - {{ item[3] }}</h3>
+                    <a id="delete-suggestion-button" href="{{ url_for('supprimer_suggestion',id=item[0]) }}">
+                        <img src="{{ url_for('static',filename='./images/croix.png') }}" alt="croix"
+                            width="30"
+                            height="30"
+                        >
+                    </a>
+                </div>
                 <h4>{{ item[2] }}</h4>
                 <h4>{{ item[5] }}</h4>
                 <div class="bottom-side">
@@ -46,7 +54,7 @@
                         <p class="nb-choisit">{{ item[4] }}</p>
                         <button class="bouton-plus">+</button>
                     </div>
-                    <a class="{{ item[0] }} {{ item[4] }}" href="#"><button class="ajouter-demande" id="ajouter-demande">ajouter à la demande</button></a>
+                    <a id="ajouter-demande-content" class="{{ item[0] }} {{ item[4] }}" href="#"><button class="ajouter-demande" id="ajouter-demande">ajouter à la demande</button></a>
                 </div>
                 <script>
                     var maVariableJavaScript = "{{ item[4] }}"; 

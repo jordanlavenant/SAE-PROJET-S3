@@ -407,6 +407,15 @@ def ajouter_rangement():
         chemin = [("base", "accueil")]
     )
 
+
+@app.route("/supprimer-suggestion/<int:id>", methods=("GET","POST",))
+def supprimer_suggestion(id):
+    print("id supprimé : ",id)
+    Risques.Delete.delete_risque_with_idMateriel(get_cnx(),id)
+    Materiel.Delete.delete_materiel(get_cnx(),id)   
+
+    return redirect(url_for('demander'))
+
 def intersection(lst1, lst2): 
     return [item for item in lst1 if item not in lst2]
 
@@ -466,7 +475,7 @@ def ajouter_stock():
                         print("Erreur lors de l'insertion du matériel unique d'id " + str(nouvel_id))
                         return redirect(url_for('ajouter_materiel'))
             # ^ Probablement incorrect, quand on ajoute, on est effectivement redirigier vers la vue Etat mais elle n'aparaît pas dans l'inventaire
-        
+        RELOAD.reload_alert(cnx)
         return redirect(url_for('etat', id=materiel))
     else:
         print("Erreur lors de la validation du formulaire")
@@ -923,34 +932,17 @@ def alertes():
 @app.route("/etat/<int:id>")
 def etat(id):
 
-    # idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, id)
-    # referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
-    # risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
-    # lenRisques = len(risques)
-
-    """
-    print("idFDS : ",idFDS)
-    print("risques : ",risques)
-    print("lenRisques : ",lenRisques)
-    print("referenceMateriel : ",referenceMateriel)
-    print("nomMateriel : ",nomMateriel)
-    print("estToxique : ",estToxique)
-    print("estInflamable : ",estInflamable)
-    print("estExplosif : ",estExplosif)
-    print("est_gaz_sous_pression : ",est_gaz_sous_pression)
-    print("est_CMR : ",est_CMR)
-    print("est_chimique_environement : ",est_chimique_environement)
-    print("est_dangereux : ",est_dangereux)
-    print("est_comburant : ",est_comburant)
-    print("est_corrosif : ",est_corrosif)
-    """
+    idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, id)
+    referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
+    risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
+    lenRisques = len(risques)
 
     return render_template(
         "etat.html",
         id=id,
         title="etat",
-        risques = [],
-        lenRisques = 0,
+        risques = risques,
+        lenRisques = len(risques),
         path = ['../static/images/FDS/toxique.png', '../static/images/FDS/inflammable.png', '../static/images/FDS/explosion.png', '../static/images/FDS/gaz.png', '../static/images/FDS/CMR.png', '../static/images/FDS/environnement.png', '../static/images/FDS/chimique.png', '../static/images/FDS/comburant.png', '../static/images/FDS/corrosif.png'],
         item_properties = Materiel.Get.get_all_information_to_Materiel_with_id(cnx, id),
         items_unique = MaterielUnique.Get.get_all_information_to_MaterielUnique_with_id(cnx, id),
@@ -1110,6 +1102,7 @@ def modifier_utilisateur(id):
 
 @app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
 def modifier_materiel(id):
+    FDSFormulaire = FDSForm()
     materiel = Materiel.Get.get_materiel(cnx, id)
     idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
                          
@@ -1142,6 +1135,7 @@ def modifier_materiel(id):
         title="modifier un matériel",
         AjouterMaterielForm=f,
         id = idMateriel,
+        FDSForm=FDSFormulaire,
         chemin = [("base", "accueil"),("inventaire", "Modifier un Matériel")]
     )
 
@@ -1224,9 +1218,7 @@ def demande(idDemande):
 @csrf.exempt
 def inventaire():
     rechercher = RechercherForm()
-    # items = Materiel.Get.get_all_information_to_Materiel(get_cnx())
     items = Recherche.recherche_all_in_inventaire(get_cnx())
-    print("clesitems" + str(items))
 
     # N'affiche uniquement les matériels qui ont des unités supérieur à 0
     final_items = list()
@@ -1234,11 +1226,6 @@ def inventaire():
         if qt > 0:
             if (item,qt) not in final_items: # Eviter les doublons
                 final_items.append((item,qt))
-
-    print(len(final_items))
-
-
-    print("-------------------")
 
     return render_template(
         "inventaire.html",
@@ -1256,7 +1243,7 @@ def inventaire():
 def recherche_inventaire():
     rechercher = RechercherForm()
     value = rechercher.get_value()
-    items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(), value)
+    items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(),value)
     
     final_items = list()
     for (item,qt) in items[0]:
@@ -1346,16 +1333,32 @@ def login():
     if not f.is_submitted():
         f.next.data = request.args.get("next")
     elif f.validate_on_submit():
-        nom, idStatut, mail, prenom = f.get_authenticated_user()
-        user = nom, idStatut, mail, prenom
-        if user != None:
-            #login_user(user)
-            idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-            session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
-            RELOAD.reload_alert(cnx)
-            print("login : "+str(session['utilisateur']))
-            next = f.next.data or url_for("base")
-            return redirect(next)
+        try:
+            nom, idStatut, mail, prenom = f.get_authenticated_user()
+            user = nom, idStatut, mail, prenom
+            if user != None:
+                #login_user(user)
+                idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+                session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+                RELOAD.reload_alert(cnx)
+                print("login : "+str(session['utilisateur']))
+                next = f.next.data or url_for("base")
+                return redirect(next)
+        except:
+            print("erreur de connexion")
+            return render_template(
+                "login.html",
+                title="profil",
+                form=f,
+                fromChangerMDP=changerMDP,
+                fromChangerMail=changerMail,
+                MdpOublierForm=mdpOublier,
+                erreur = "Le mail ou le mot de passe est incorrect"
+            )
+        
+# ---------------------- léo rajoute 
+        
+        
     return render_template(
         "login.html",
         title="profil",
@@ -1364,6 +1367,7 @@ def login():
         fromChangerMail=changerMail,
         MdpOublierForm=mdpOublier
     )
+
 """
 
 @app.route("/login/", methods=("GET","POST",))
