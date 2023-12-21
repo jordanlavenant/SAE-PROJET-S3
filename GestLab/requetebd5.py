@@ -540,6 +540,7 @@ class Materiel:
 
         def delete_materiel(cnx, idMateriel):
             try:
+                Materiel.Delete.delete_all_materiel_in_AjouterMateriel_with_idMat(cnx, idMateriel)
                 MaterielUnique.Delete.delete_all_materiel_unique_with_idMateriel(cnx, idMateriel)
                 cnx.execute(text("DELETE FROM MATERIEL WHERE idMateriel = " + str(idMateriel) + ";"))
                 cnx.commit()
@@ -564,6 +565,15 @@ class Materiel:
             except:
                 print("Erreur lors de la suppression du matériel dans la commande")
                 raise
+
+        def delete_all_materiel_in_AjouterMateriel_with_idMat( cnx, idMat):
+            try:
+                cnx.execute(text("DELETE FROM AJOUTERMATERIEL WHERE idMateriel = " + str(idMat) + ";"))
+                cnx.commit()
+            except:
+                print("Erreur lors de la suppression du matériel dans la commande")
+                raise
+            
 
     class Update:
 
@@ -1772,5 +1782,5 @@ class Risques:
                 print("Erreur lors de la suppression du risque")
                 raise
 
-# Risques.Delete.delete_risque_with_idMateriel()
-# Materiel.Delete.delete_materiel()         
+Risques.Delete.delete_risque_with_idMateriel()
+Materiel.Delete.delete_materiel()         
