@@ -1504,6 +1504,7 @@ class DATE:
                 
             # Extraire la date du résultat
             date_res = date_result[0] if date_result else datetime.now().date()
+            return date_res
 
         def materiel_dans_stock(cnx, idMateriel):
             try:
@@ -1596,9 +1597,8 @@ class FDS:
         def update_FDS(cnx, idFDS, idMateriel):
             cnx.execute(text("UPDATE MATERIEL SET idFDS = '" + str(idFDS) + "' WHERE idMateriel = " + str(idMateriel) + ";"))
             cnx.commit()
+
         
-        
-            
 
 class Risques:
     
@@ -1674,7 +1674,47 @@ class Risques:
             except:
                 print("Erreur lors de la récupération du risque")
                 return None
-            
+    class Update:
+        def update_risque_with_idMateriel(cnx, idMat, estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif):
+            try:
+                idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, idMat)
+                listidRisque = []
+                listRisqueAMateriel = []
+                
+                if estToxique:
+                    listRisqueAMateriel.append("Toxicité aiguë")
+                if estInflamable:
+                    listRisqueAMateriel.append("Danger incendie")
+                if estExplosif:
+                    listRisqueAMateriel.append("Explosif")
+                if est_gaz_sous_pression:
+                    listRisqueAMateriel.append("Gaz sous pression")
+                if est_CMR:
+                    listRisqueAMateriel.append("Toxicité aquatique")
+                if est_chimique_environement:
+                    listRisqueAMateriel.append("Effets graves sur l'environement")           
+                if est_dangereux:
+                    listRisqueAMateriel.append("Altération de la santé humaine")          
+                if est_comburant:
+                    listRisqueAMateriel.append("Comburant")
+                if est_corrosif:
+                    listRisqueAMateriel.append("Corrosion")
+                    
+                resultRisque = cnx.execute(text("SELECT idRisque, nomRisque FROM RISQUE;"))
+                
+                for row in resultRisque:
+                    if row[1] in listRisqueAMateriel:
+                        listidRisque.append(row[0])
+                
+                cnx.execute(text("DELETE FROM RISQUES WHERE idFDS = " + str(idFDS) + ";"))
+                cnx.commit()
+                
+                for idRisque in listidRisque:
+                    Risques.Insert.ajout_risques_with_idFDS_and_idrisque(cnx, idRisque, idFDS)
+            except:
+                print("Erreur lors de la modification du risque")
+                raise
+        
     class Insert:
         def ajout_risques_with_idFDS_and_idrisque(cnx, idRisque, idFDS):
             try:
@@ -1731,7 +1771,6 @@ class Risques:
             except:
                 print("Erreur lors de la suppression du risque")
                 raise
-
 
 # Risques.Delete.delete_risque_with_idMateriel()
 # Materiel.Delete.delete_materiel()         
