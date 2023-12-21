@@ -849,25 +849,16 @@ def etat(id):
 
     idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, id)
     referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
-    
-    print("--------------------")
-    print(referenceMateriel)
-    print(nomMateriel)
-    print(estToxique)
-    print(estInflamable)
-    print(estExplosif)
-    print(est_gaz_sous_pression)
-    print(est_CMR)
-    print(est_chimique_environement)
-    print(est_dangereux)
-    print(est_comburant)
-    print(est_corrosif)
-    print("--------------------")
+    risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
+    lenRisques = len(risques)
 
     return render_template(
         "etat.html",
         id=id,
         title="etat",
+        risques = risques,
+        lenRisques = lenRisques,
+        path = ['../static/images/FDS/toxique.png', '../static/images/FDS/inflammable.png', '../static/images/FDS/explosion.png', '../static/images/FDS/gaz.png', '../static/images/FDS/CMR.png', '../static/images/FDS/environnement.png', '../static/images/FDS/chimique.png', '../static/images/FDS/comburant.png', '../static/images/FDS/corrosif.png'],
         item_properties = Materiel.Get.get_all_information_to_Materiel_with_id(cnx, id),
         items_unique = MaterielUnique.Get.get_all_information_to_MaterielUnique_with_id(cnx, id),
         alertes = Alert.nb_alert_par_materielUnique_dict(cnx),
