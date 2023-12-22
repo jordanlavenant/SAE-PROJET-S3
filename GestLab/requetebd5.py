@@ -1655,18 +1655,18 @@ class Risques:
         #         print("Erreur lors de la récupération de l'id du risque")
         #         raise
         
-        def get_risque_with_idMateriel(cnx, idFDS):
+        def get_risque_with_idMateriel(cnx, idMat):
             try:
                 referenceMateriel = ""
                 nomMateriel = ""
                 listBooleanTrue = []
-                result = cnx.execute(text("SELECT nomRisque, referenceMateriel, nomMateriel FROM MATERIEL natural join FDS natural left join RISQUES Natural left join RISQUE WHERE idFDS = " + str(idFDS) + ";"))
+                result = cnx.execute(text("SELECT nomRisque, referenceMateriel, nomMateriel FROM MATERIEL natural  join FDS natural left join  RISQUES Natural left join RISQUE WHERE idFDS = " + str(idMat) + ";"))
                 
                 for row in result:
                     listBooleanTrue.append(row[0])
                     nomMateriel = row[2]
                     referenceMateriel = row[1]
-                
+                    
                 listBoolean = []
                 if "Toxicité aiguë" in listBooleanTrue:
                     listBoolean.append(True)
@@ -1687,17 +1687,17 @@ class Risques:
                     listBoolean.append(True)
                 else :
                     listBoolean.append(False)
+                
+                if "Effets graves sur la senté" in listBooleanTrue:
+                    listBoolean.append(True)
+                else :
+                    listBoolean.append(False)
                     
                 if "Toxicité aquatique" in listBooleanTrue:
                     listBoolean.append(True)
                 else :
                     listBoolean.append(False)
-                    
-                if "Effets graves sur l'environement" in listBooleanTrue:
-                    listBoolean.append(True)
-                else :
-                    listBoolean.append(False)
-                    
+                
                 if "Altération de la santé humaine" in listBooleanTrue:
                     listBoolean.append(True)
                 else :
@@ -1717,7 +1717,6 @@ class Risques:
             except:
                 print("Erreur lors de la récupération du risque")
                 return None
-
     class Update:
         def update_risque_with_idMateriel(cnx, idMat, estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif):
             try:
@@ -1733,10 +1732,10 @@ class Risques:
                     listRisqueAMateriel.append("Explosif")
                 if est_gaz_sous_pression:
                     listRisqueAMateriel.append("Gaz sous pression")
-                if est_CMR:
-                    listRisqueAMateriel.append("Toxicité aquatique")
                 if est_chimique_environement:
-                    listRisqueAMateriel.append("Effets graves sur l'environement")           
+                    listRisqueAMateriel.append("Toxicité aquatique")
+                if est_CMR:
+                    listRisqueAMateriel.append("Effets graves sur la senté")           
                 if est_dangereux:
                     listRisqueAMateriel.append("Altération de la santé humaine")          
                 if est_comburant:
