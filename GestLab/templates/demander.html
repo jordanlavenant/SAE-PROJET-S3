@@ -13,7 +13,7 @@
         <form method="POST" action="{{ url_for('recherche_materiel_demander') }}" role="search">
             <div class="search-content">
                 {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar") }}
-                <button id="btn-search" type="submit">Rechercher</button>
+                <button id="btn-search" type="submit">RECHERCHER</button>
             </div>
         </form>
         <div class="filter-container">
@@ -40,10 +40,7 @@
                 <div class="top-side">
                     <h3>{{ item[1] }} - {{ item[3] }}</h3>
                     <a id="delete-suggestion-button" href="{{ url_for('supprimer_suggestion',id=item[0]) }}">
-                        <img src="{{ url_for('static',filename='./images/croix.png') }}" alt="croix"
-                            width="30"
-                            height="30"
-                        >
+                        <img src="{{ url_for('static',filename='./images/croix.png') }}" alt="croix" id="croix">
                     </a>
                 </div>
                 <h4>{{ item[2] }}</h4>

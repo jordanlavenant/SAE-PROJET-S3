@@ -16,6 +16,12 @@ main {
 
 a {
     text-decoration: none;
+    transition: .2s;
+}
+
+a:hover {
+    scale: 1.05;
+    transition: .2s;
 }
 
 #container-bouton-connexion {

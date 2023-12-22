@@ -23,7 +23,7 @@
 }
 
 .erreur-login {
-  color: red;
+  color: #d35252;
   text-align: center;
   margin-top: 10px;
   font-size: 35px;

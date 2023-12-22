@@ -18,7 +18,7 @@ cnx = get_cnx()
 
 class LoginForm(FlaskForm):
     email = StringField('email', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
     next = HiddenField()
 
     def get_authenticated_user(self):
@@ -574,7 +574,7 @@ def ajouter_materiel_unique(id):
 
 class A2FForm(FlaskForm):
     code = StringField('code', validators=[DataRequired()])
-    submit = SubmitField('Valider')
+    submit = SubmitField('valider')
 
     def get_code(self):
         code = self.code.data
@@ -881,7 +881,7 @@ def historique_bon_commande():
         liste_info_user.append(info_user)
     return render_template(
         "historiqueBonCommande.html",
-        title="Historique des Bon de Commande",
+        title="historique des bon de commande",
         len = len(info_bon_commande),
         bonCommande = info_bon_commande,
         infoUser = liste_info_user,
@@ -1197,7 +1197,7 @@ def modifier_materiel_unique(id):
         print(f.errors)
     return render_template(
         "modifierMaterielUnique.html",
-        title="Modifier les informations d'un matériel en stock",
+        title="modifier les informations d'un matériel en stock",
         ModifierMaterielUniqueForm=f,
         id=id,
         chemin=[("base", "accueil"),("inventaire","inventaire"),("inventaire","modifier un matériel unique")]
@@ -1220,7 +1220,6 @@ def supprimer_materiels_uniques(id):
 
 @app.route("/demandes/")
 def demandes():
-
     return render_template(
         "demandes.html",
         title="demandes",
@@ -1390,7 +1389,7 @@ def login():
                 fromChangerMDP=changerMDP,
                 fromChangerMail=changerMail,
                 MdpOublierForm=mdpOublier,
-                erreur = "Le mail ou le mot de passe est incorrect"
+                erreur = "le mail ou le mot de passe est incorrect"
             )
         
 # ---------------------- léo rajoute 
