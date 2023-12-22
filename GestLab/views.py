@@ -42,6 +42,15 @@ class LoginForm(FlaskForm):
     next = HiddenField()
 
     def get_authenticated_user(self):
+        """
+        Récupère l'utilisateur authentifié.
+
+        Cette méthode récupère l'utilisateur authentifié en utilisant l'adresse e-mail fournie.
+        Elle vérifie également si le mot de passe fourni correspond au mot de passe enregistré pour cet utilisateur.
+
+        Returns:
+            L'utilisateur authentifié si l'adresse e-mail et le mot de passe sont valides, sinon None.
+        """
         user = Bon_commande.Utilisateur.Utilisateur.Get.get_nom_and_statut_and_email(cnx, self.email.data)
         print(user)
         mdp = Bon_commande.Utilisateur.Utilisateur.Get.get_password_with_email(cnx, self.email.data)
@@ -58,6 +67,12 @@ class ChangerMDPForm(FlaskForm):
     next = HiddenField()
 
     def get_full_mdp(self):
+        """
+        Récupère les valeurs des champs ancienMDP, nouveauMDP et confirmerMDP.
+
+        Returns:
+            Tuple[str, str, str]: Un tuple contenant les valeurs des champs ancienMDP, nouveauMDP et confirmerMDP.
+        """
         ancienMDP = self.ancienMDP.data
         nouveauMDP = self.nouveauMDP.data
         confirmerMDP = self.confirmerMDP.data
@@ -71,6 +86,12 @@ class ChangerMailForm(FlaskForm):
     next = HiddenField()
 
     def get_full_mail(self):
+        """
+        Récupère les informations complètes du formulaire de modification d'email.
+
+        Returns:
+            tuple: Un tuple contenant les valeurs des champs ancienMail, nouveauMail, confirmerMail et mdp.
+        """
         ancienMail = self.ancienMail.data
         nouveauMail = self.nouveauMail.data
         confirmerMail = self.confirmerMail.data
@@ -92,14 +113,32 @@ class RechercherFormWithAssets(FlaskForm):
     submit = SubmitField('rechercher')
 
     def get_value(self):
-        value = self.value.data
-        return value
+            """
+            Renvoie la valeur actuelle de l'attribut 'value'.
+            
+            Returns:
+                La valeur actuelle de l'attribut 'value'.
+            """
+            value = self.value.data
+            return value
 
     def get_domaine(self):
+        """
+        Renvoie le domaine associé à l'objet.
+        
+        Returns:
+            str: Le domaine associé à l'objet.
+        """
         domaine = self.domaine.data
         return domaine
     
     def get_categorie(self):
+        """
+        Renvoie la catégorie sélectionnée.
+
+        Returns:
+            str: La catégorie sélectionnée.
+        """
         categorie = self.categorie.data
         return categorie
 
@@ -112,11 +151,17 @@ class AjouterUtilisateurForm(FlaskForm):
     next = HiddenField()
 
     def get_full_user(self):
-        nom = self.nom.data
-        prenom = self.prenom.data
-        email = self.email.data
-        statut = self.statut.data
-        return (nom, prenom, email, statut)
+            """
+            Récupère les informations complètes de l'utilisateur.
+
+            Returns:
+                Tuple[str, str, str, str]: Les informations de l'utilisateur sous forme de tuple.
+            """
+            nom = self.nom.data
+            prenom = self.prenom.data
+            email = self.email.data
+            statut = self.statut.data
+            return (nom, prenom, email, statut)
 
 class AjouterSuggestionForm(FlaskForm):
     domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
@@ -129,13 +174,25 @@ class AjouterSuggestionForm(FlaskForm):
     next = HiddenField()
 
     def get_full_materiel(self):
-        categorie = self.categorie.data
-        nom = self.nom.data
-        reference = self.reference.data
-        caracteristiques = self.caracteristiques.data
-        infossup = self.infossup.data
-        seuilalerte = self.seuilalerte.data
-        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+            """
+            Récupère les informations complètes du matériel.
+
+            Returns:
+                tuple: Un tuple contenant les informations suivantes:
+                    - categorie (str): La catégorie du matériel.
+                    - nom (str): Le nom du matériel.
+                    - reference (str): La référence du matériel.
+                    - caracteristiques (str): Les caractéristiques du matériel.
+                    - infossup (str): Les informations supplémentaires du matériel.
+                    - seuilalerte (int): Le seuil d'alerte du matériel.
+            """
+            categorie = self.categorie.data
+            nom = self.nom.data
+            reference = self.reference.data
+            caracteristiques = self.caracteristiques.data
+            infossup = self.infossup.data
+            seuilalerte = self.seuilalerte.data
+            return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
     
     def get_full_materiel_requestform(self):
         categorie = request.form['categorie']
@@ -152,6 +209,12 @@ class CommentaireForm(FlaskForm):
     submit = SubmitField('envoyer le commentaire')
 
     def get_text(self):
+        """
+        Récupère le texte et le gestionnaire associé.
+
+        Returns:
+            tuple: Un tuple contenant le texte et le gestionnaire.
+        """
         gest = self.gestionnaires.data
         text = self.text.data
         return text, gest
@@ -161,8 +224,14 @@ class MdpOublierForm(FlaskForm):
     submit = SubmitField('recevoir un nouveau mot de passe')
 
     def get_email(self):
-        email = self.email.data
-        return email
+            """
+            Récupère l'email stocké dans l'attribut email.
+
+            Returns:
+                str: L'adresse email.
+            """
+            email = self.email.data
+            return email
 
 class AjouterMaterielForm(FlaskForm):
     domaine = SelectField('ComboBox', choices=[], id="domaine", name="domaine", validators=[DataRequired()])
@@ -175,15 +244,39 @@ class AjouterMaterielForm(FlaskForm):
     next = HiddenField()
 
     def get_full_materiel(self):
-        categorie = self.categorie.data
-        nom = self.nom.data
-        reference = self.reference.data
-        caracteristiques = self.caracteristiques.data
-        infossup = self.infossup.data
-        seuilalerte = self.seuilalerte.data
-        return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
+            """
+            Récupère les informations complètes du matériel.
+
+            Returns:
+                tuple: Un tuple contenant les informations suivantes:
+                    - categorie (str): La catégorie du matériel.
+                    - nom (str): Le nom du matériel.
+                    - reference (str): La référence du matériel.
+                    - caracteristiques (str): Les caractéristiques du matériel.
+                    - infossup (str): Les informations supplémentaires du matériel.
+                    - seuilalerte (int): Le seuil d'alerte du matériel.
+            """
+            categorie = self.categorie.data
+            nom = self.nom.data
+            reference = self.reference.data
+            caracteristiques = self.caracteristiques.data
+            infossup = self.infossup.data
+            seuilalerte = self.seuilalerte.data
+            return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
     
     def get_full_materiel_requestform(self):
+        """
+        Récupère les informations complètes du formulaire de demande de matériel.
+
+        Returns:
+            tuple: Un tuple contenant les informations suivantes :
+                - categorie (str): La catégorie du matériel.
+                - nom (str): Le nom du matériel.
+                - reference (str): La référence du matériel.
+                - caracteristiques (str): Les caractéristiques du matériel.
+                - infossup (str): Les informations supplémentaires sur le matériel.
+                - seuilalerte (str): Le seuil d'alerte du matériel.
+        """
         categorie = request.form['categorie']
         nom = request.form['nom']
         reference = request.form['reference']
@@ -208,11 +301,30 @@ class AjouterStockForm(FlaskForm):
     next = HiddenField()
 
     def get_full_materiel(self):
+        """
+        Renvoie le domaine et la catégorie du matériel.
+
+        Returns:
+            tuple: Un tuple contenant le domaine et la catégorie du matériel.
+        """
         categorie = self.categorie.data
         domaine = self.domaine.data
-        return (domaine,categorie)
+        return (domaine, categorie)
     
     def get_full_materiel_requestform(self):
+        """
+        Récupère les informations complètes du formulaire de demande de matériel.
+
+        Returns:
+            Tuple[str, str, str, str, str, str, str]: Un tuple contenant les informations suivantes:
+                - materiel: le matériel demandé
+                - idRangement: l'endroit où ranger le matériel
+                - date_reception: la date de réception du matériel
+                - date_peremption: la date de péremption du matériel
+                - commentaire: un commentaire sur la demande de matériel
+                - quantite_approximative: la quantité approximative demandée
+                - quantite_recue: la quantité réellement reçue
+        """
         materiel = request.form['materiel']
         idRangement = request.form['endroit']
         date_reception = request.form['date_reception']
@@ -223,9 +335,15 @@ class AjouterStockForm(FlaskForm):
         return (materiel, idRangement, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue)
     
     def get_materiel(self):
+        """
+        Returns the data of the materiel.
+        """
         return self.materiel.data
     
     def get_endroit(self):
+        """
+        Returns the value of the 'endroit' data attribute.
+        """
         return self.endroit.data
     
 class AjouterMaterielUniqueForm(FlaskForm):
@@ -240,6 +358,18 @@ class AjouterMaterielUniqueForm(FlaskForm):
     next = HiddenField()
 
     def get_full_materiel_unique(self):
+        """
+        Renvoie les informations complètes d'un matériel unique.
+
+        Returns:
+            tuple: Un tuple contenant les informations suivantes:
+                - position (str): La position du matériel.
+                - date_reception (str): La date de réception du matériel.
+                - date_peremption (str): La date de péremption du matériel.
+                - commentaire (str): Le commentaire associé au matériel.
+                - quantite_approximative (int): La quantité approximative du matériel.
+                - quantite_recue (int): La quantité reçue du matériel.
+        """
         position = self.position.data
         date_reception = self.date_reception.data
         date_peremption = self.date_peremption.data
@@ -249,6 +379,18 @@ class AjouterMaterielUniqueForm(FlaskForm):
         return (position, date_reception, date_peremption, commentaire, quantite_approximative, quantite_recue)
     
     def get_full_materiel_unique_requestform(self):
+        """
+        Récupère les informations du formulaire de demande de matériel unique.
+
+        Returns:
+            Tuple: Un tuple contenant les informations suivantes:
+                - position (str): La position du matériel.
+                - date_reception (str): La date de réception du matériel.
+                - date_peremption (str): La date de péremption du matériel.
+                - commentaire (str): Le commentaire associé au matériel.
+                - quantite_approximative (str): La quantité approximative du matériel.
+                - quantite_recue (str): La quantité reçue du matériel.
+        """
         position = request.form['position']     
         date_reception = request.form['date_reception'] 
         date_peremption = request.form['date_peremption']
@@ -267,6 +409,17 @@ class ModifierMaterielUniqueForm(FlaskForm):
     next = HiddenField()
 
     def get_full_materiel_unique(self):
+        """
+        Récupère les informations complètes d'un matériel unique.
+
+        Returns:
+            Tuple: Un tuple contenant les informations suivantes:
+                - position: La position du matériel
+                - date_reception: La date de réception du matériel
+                - date_peremption: La date de péremption du matériel
+                - commentaire: Le commentaire associé au matériel
+                - quantite_approximative: La quantité approximative du matériel
+        """
         position = self.position.data
         date_reception = self.date_reception.data
         date_peremption = self.date_peremption.data
@@ -275,6 +428,17 @@ class ModifierMaterielUniqueForm(FlaskForm):
         return (position, date_reception, date_peremption, commentaire, quantite_approximative)
     
     def get_full_materiel_unique_requestform(self):
+        """
+        Récupère les informations complètes du formulaire de demande de matériel unique.
+
+        Returns:
+            tuple: Un tuple contenant les informations suivantes :
+                - position (str): La position du matériel.
+                - date_reception (str): La date de réception du matériel.
+                - date_peremption (str): La date de péremption du matériel.
+                - commentaire (str): Le commentaire associé au matériel.
+                - quantite_approximative (str): La quantité approximative du matériel.
+        """
         position = request.form['position']     
         date_reception = request.form['date_reception'] 
         date_peremption = request.form['date_peremption']
@@ -294,6 +458,12 @@ class FDSForm(FlaskForm):
     toxique = BooleanField('toxique')
    
     def get_full_fds(self):
+        """
+        Renvoie les informations complètes sur les FDS.
+
+        :return: Un tuple contenant les informations sur les substances toxiques, inflammables, explosives, les gaz, les CMR, l'environnement, les substances chimiques, les comburants et les substances corrosives.
+        :rtype: tuple
+        """
         comburant = self.comburant.data
         inflammable = self.inflammable.data
         explosif = self.explosif.data
@@ -311,8 +481,14 @@ class EndroitForm(FlaskForm):
     next = HiddenField()
 
     def get_endroit(self):
-        endroit = self.endroit.data
-        return endroit
+            """
+            Cette méthode renvoie l'endroit associé à l'objet.
+            
+            Returns:
+                L'endroit associé à l'objet.
+            """
+            endroit = self.endroit.data
+            return endroit
     
 class RangementForm(FlaskForm):
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
@@ -321,15 +497,32 @@ class RangementForm(FlaskForm):
     next = HiddenField()
 
     def get_rangement(self):
+        """
+        Cette méthode renvoie la valeur du rangement.
+
+        Returns:
+            rangement: La valeur du rangement.
+        """
         rangement = self.rangement.data
         return rangement
     
     def get_full_rangement(self):
+        """
+        Récupère les informations d'endroit et de rangement à partir du formulaire.
+
+        Returns:
+            Tuple[str, str]: Un tuple contenant les informations d'endroit et de rangement.
+        """
         endroit = request.form['endroit']
         rangement = request.form['rangement']
         return (endroit, rangement)
 
 def get_domaine_choices():
+    """
+    Récupère les choix de domaine à partir de la base de données.
+
+    :return: Une liste de tuples contenant les choix de domaine.
+    """
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
     result = cnx.execute(query)
     domaines =  [(str(id_), name) for name, id_ in result]
@@ -338,6 +531,12 @@ def get_domaine_choices():
 
 @app.route('/get_categorie_choices/', methods=['GET'])
 def get_categorie_choices():
+    """
+    Récupère les choix de catégories en fonction de l'identifiant de domaine sélectionné.
+
+    Returns:
+        jsonify: Les catégories sous forme de JSON.
+    """
     selected_domain_id = request.args.get('domaine_id')
     result = cnx.execute(text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine = " + str(selected_domain_id)))
     categories = {str(id_): name for name, id_ in result}
@@ -345,6 +544,15 @@ def get_categorie_choices():
 
 
 def get_categorie_choices_modifier_materiel(idDomaine):
+    """
+    Récupère les choix de catégorie pour la modification du matériel.
+
+    Args:
+        idDomaine (int): L'identifiant du domaine.
+
+    Returns:
+        list: Une liste de tuples contenant les noms et les identifiants des catégories.
+    """
     query = text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine =" + str(idDomaine) )
     result = cnx.execute(query)
     categories = [(str(id_), name) for name, id_ in result]
@@ -352,6 +560,12 @@ def get_categorie_choices_modifier_materiel(idDomaine):
 
 @app.route("/ajouter-suggestion/", methods=("GET","POST",))
 def ajouter_suggestion():
+    """
+    Cette fonction gère l'ajout d'une suggestion dans le système.
+    Elle affiche un formulaire pour saisir les informations nécessaires,
+    valide le formulaire et effectue les opérations d'insertion dans la base de données.
+    En cas d'erreur, elle affiche un message d'erreur approprié.
+    """
     FDSFormulaire = FDSForm()
     f = AjouterSuggestionForm()
     f.domaine.choices = get_domaine_choices() 
@@ -396,6 +610,15 @@ def ajouter_suggestion():
 
 @app.route("/ajouter-endroit", methods=("GET","POST",))
 def ajouter_endroit():
+    """
+    Fonction qui permet d'ajouter un endroit dans le système.
+
+    Returns:
+        - Si la validation du formulaire est réussie et l'insertion de l'endroit est effectuée avec succès,
+          la fonction redirige vers la page 'inventaire'.
+        - Si la validation du formulaire échoue, la fonction rend le template 'ajouterEndroit.html' avec le formulaire,
+          le titre et le chemin de navigation.
+    """
     f = EndroitForm()
     if f.validate_on_submit() :
         endroit = f.get_endroit()
@@ -417,6 +640,14 @@ def ajouter_endroit():
 
 @app.route("/ajouter-rangement", methods=("GET","POST",))
 def ajouter_rangement():
+    """
+    Cette fonction gère l'ajout d'un rangement dans le système.
+    Elle affiche un formulaire pour saisir les informations du rangement,
+    valide les données saisies, insère le rangement dans la base de données
+    et redirige l'utilisateur vers la page d'inventaire en cas de succès.
+    En cas d'échec, elle affiche un message d'erreur et redirige l'utilisateur
+    vers la page d'ajout de rangement.
+    """
     f = RangementForm()
     f.endroit.choices = get_endroit_choices() 
 
@@ -441,6 +672,15 @@ def ajouter_rangement():
 
 @app.route("/supprimer-suggestion/<int:id>", methods=("GET","POST",))
 def supprimer_suggestion(id):
+    """
+    Supprime une suggestion en fonction de son identifiant.
+
+    Args:
+        id (int): L'identifiant de la suggestion à supprimer.
+
+    Returns:
+        redirect: Une redirection vers la page 'demander'.
+    """
     print("id supprimé : ",id)
     Risques.Delete.delete_risque_with_idMateriel(get_cnx(),id)
     Materiel.Delete.delete_materiel(get_cnx(),id)   
@@ -453,6 +693,17 @@ def intersection(lst1, lst2):
 @app.route("/ajouter-stock/", methods=("GET","POST",))
 @csrf.exempt
 def ajouter_stock():
+    """
+    Fonction qui gère l'ajout de matériel au stock.
+
+    Cette fonction affiche un formulaire permettant de rechercher et filtrer les matériels existants,
+    puis d'ajouter un matériel au stock en spécifiant différentes informations telles que l'endroit de stockage,
+    la date de réception, la date de péremption, le commentaire, la quantité approximative et la quantité reçue.
+
+    Returns:
+        - Si le formulaire est valide et l'ajout est effectué avec succès, la fonction redirige vers la vue 'etat' du matériel ajouté.
+        - Sinon, la fonction affiche les erreurs de validation du formulaire et rend le template 'ajouterStock.html'.
+    """
     rechercherForm = RechercherFormWithAssets()
     rechercherForm.domaine.choices = get_domaine_choices() 
 
@@ -522,6 +773,13 @@ def ajouter_stock():
 
 
 def get_endroit_choices():
+    """
+    Récupère les choix d'endroits de rangement depuis la base de données.
+
+    Returns:
+        list: Une liste de tuples contenant les choix d'endroits de rangement.
+              Chaque tuple contient l'identifiant de l'endroit et son nom.
+    """
     query = text("SELECT endroit, idEndroit FROM ENDROIT;")
     result = cnx.execute(query)
     endroits =  [(str(id_), name) for name, id_ in result]
@@ -530,24 +788,54 @@ def get_endroit_choices():
 
 @app.route('/get_position_choices/', methods=['GET'])
 def get_position_choices():
+    """
+    Retrieves the position choices based on the selected endroit_id.
+
+    Returns:
+        A JSON response containing the positions and their corresponding idRangement.
+    """
     selected_endroit_id = request.args.get('endroit_id')
     result = cnx.execute(text("SELECT position, idRangement FROM RANGEMENT WHERE idEndroit = " + str(selected_endroit_id)))
     positions = {str(id_): name for name, id_ in result}
     return jsonify(positions)
 
 def get_position_choices_modifier_materiel(idEndroit):
+    """
+    Récupère les choix de position pour la modification du matériel.
+
+    Args:
+        idEndroit (int): L'identifiant de l'endroit.
+
+    Returns:
+        list: Une liste de tuples contenant les positions et les identifiants de rangement.
+    """
     query = text("SELECT position, idRangement FROM RANGEMENT WHERE idEndroit = " + str(idEndroit))
     result = cnx.execute(query)
     positions = [(str(id_), name) for name, id_ in result]
     return positions
 
 def get_materiels_existants():
+    """
+    Récupère les matériels existants dans la base de données.
+
+    Returns:
+        Une liste de tuples contenant le nom et l'identifiant de chaque matériel.
+    """
     query = text("SELECT nomMateriel, idMateriel FROM MATERIEL;")
     result = cnx.execute(query)
     materiels = [(str(id_), name) for name, id_ in result]
     return materiels
 
 def get_materiels_existants_with_search(search):
+    """
+    Récupère les matériels existants correspondant à une recherche donnée.
+
+    Args:
+        search (str): La chaîne de recherche.
+
+    Returns:
+        list: Une liste de tuples contenant l'identifiant et le nom des matériels correspondants.
+    """
     query = text("SELECT nomMateriel, idMateriel FROM MATERIEL where nomMateriel like'%" + search + "%';")
     result = cnx.execute(query)
     materiels = [(str(id_), name) for name, id_ in result]
@@ -555,6 +843,18 @@ def get_materiels_existants_with_search(search):
 
 @app.route("/ajouter-materiel-unique/<int:id>", methods=("GET","POST",))
 def ajouter_materiel_unique(id):
+    """
+    Ajoute un matériel unique au stock du laboratoire.
+
+    Args:
+        id (int): L'identifiant du matériel.
+
+    Returns:
+        flask.Response: Redirige vers la page d'état du matériel.
+
+    Raises:
+        None
+    """
     f = AjouterMaterielUniqueForm()
     f.endroit.choices = get_endroit_choices() 
 
@@ -566,7 +866,6 @@ def ajouter_materiel_unique(id):
             STOCKLABORATOIRE.Insert.insere_materiel_stock(get_cnx(), identifiant)
 
         liste_res = []
-
 
         for _ in range(int(quantite_recue)): # On insère autant de fois que la quantité est exigée
             print("----------------------------------------")
@@ -602,17 +901,28 @@ class A2FForm(FlaskForm):
 
 @app.route("/")
 def base():
+    """
+    Fonction qui renvoie le rendu du template "home.html" avec les informations suivantes :
+    - Le nombre d'alertes récupéré à partir de la méthode get_nb_alert de la classe Alert
+    - Le nombre de demandes récupéré à partir de la méthode get_nb_demande de la classe Demande
+    - Le titre de la page est défini comme "GESTLAB"
+    """
     nb_alertes = Alert.get_nb_alert(cnx)
     nb_demandes = Demande.Get.get_nb_demande(cnx)
     return render_template(
-    "home.html",
-    alertes=str(nb_alertes),
-    demandes=str(nb_demandes),
-    title="GESTLAB"
+        "home.html",
+        alertes=str(nb_alertes),
+        demandes=str(nb_demandes),
+        title="GESTLAB"
     )
 
 @app.route("/motdepasseoublie/", methods=("GET","POST",))
 def mot_de_passe_oublier():
+    """
+    Fonction qui gère la demande de réinitialisation du mot de passe.
+    Si le formulaire est valide, l'adresse e-mail est récupérée et la redirection est effectuée vers la page a2f avec l'e-mail et l'ID.
+    Sinon, le formulaire est renvoyé à la page de connexion.
+    """
     f = MdpOublierForm()
     if f.validate_on_submit():
         email = f.get_email()
@@ -623,6 +933,16 @@ def mot_de_passe_oublier():
 
 @app.route("/a2f/<string:mail>/<int:id>", methods=("GET","POST",))
 def a2f(mail, id):
+    """
+    Fonction qui gère l'authentification à deux facteurs (A2F).
+    
+    Args:
+        mail (str): L'adresse e-mail de l'utilisateur.
+        id (int): L'identifiant de l'action à effectuer (1: récupération de mot de passe, 2: changement de mot de passe, 3: changement d'adresse e-mail).
+    
+    Returns:
+        render_template: Le template HTML correspondant à la page A2F.
+    """
     oldMdp = request.args.get('oldMdp')
     newMdp = request.args.get('newMdp')
     newMail = request.args.get('newMail')
@@ -674,16 +994,43 @@ def a2f(mail, id):
 
 @app.route("/reinitialiser-bon-commande/<int:id>", methods=("GET","POST",))
 def reinitialiser_bon_commande(id):
+    """
+    Réinitialise le bon de commande en supprimant tous les matériels associés.
+
+    Args:
+        id (int): L'identifiant du bon de commande.
+
+    Returns:
+        redirect: Une redirection vers la page 'commander'.
+    """
     Materiel.Delete.delete_all_materiel_in_commande(cnx, id)
     return redirect(url_for('commander'))
 
 @app.route("/reinitialiser-demande/<int:id>", methods=("GET","POST",))
 def reinitialiser_demande(id):
+    """
+    Réinitialise la demande en supprimant tous les matériels ajoutés à la demande spécifiée.
+
+    Args:
+        id (int): L'identifiant de la demande à réinitialiser.
+
+    Returns:
+        redirect: Une redirection vers la page 'demander'.
+    """
     Materiel.Delete.delete_all_materiel_in_AjouterMateriel(cnx, id)
     return redirect(url_for('demander'))
 
 @app.route("/commander-materiel-unique/<int:id>", methods=("GET","POST",))
 def commander_materiel_unique(id):
+    """
+    Ajoute un matériel unique à une commande.
+
+    Args:
+        id (int): L'identifiant de la commande.
+
+    Returns:
+        redirect: Redirige vers la page 'commander'.
+    """
     idDemande = request.args.get('idDemande')
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
@@ -692,6 +1039,15 @@ def commander_materiel_unique(id):
 
 @app.route("/commander-demande-materiel-unique/<int:id>", methods=("GET","POST",))
 def commander_demande_materiel_unique(id):
+    """
+    Commande un matériel unique pour une demande spécifique.
+
+    Args:
+        id (int): L'identifiant de la demande.
+
+    Returns:
+        redirect: Redirige vers la page 'commander'.
+    """
     idDemande = request.args.get('idDemande')
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
@@ -701,6 +1057,15 @@ def commander_demande_materiel_unique(id):
 
 @app.route("/tout-commander-materiel-unique/<int:idDemande>", methods=("GET","POST",))
 def tout_commander_materiel_unique(idDemande):
+    """
+    Commande tout le matériel unique pour une demande spécifique.
+
+    Args:
+        idDemande (int): L'identifiant de la demande.
+
+    Returns:
+        redirect: Redirige vers la page 'commander'.
+    """
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     Demande.Update.tout_commander_with_idDemmande_and_idUt(cnx, idDemande, idUser)
     return redirect(url_for('commander'))
@@ -708,6 +1073,15 @@ def tout_commander_materiel_unique(idDemande):
 
 @app.route("/demander-materiel-unique/<int:id>", methods=("GET","POST",))
 def demander_materiel_unique(id):
+    """
+    Demande un matériel unique pour une demande spécifique.
+
+    Args:
+        id (int): L'identifiant de la demande.
+
+    Returns:
+        redirect: Redirige vers la page 'demander'.
+    """
     idDemande = request.args.get('idDemande')
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
@@ -727,6 +1101,12 @@ def demander_materiel_unique(id):
 @app.route("/commander/")
 @csrf.exempt
 def commander():
+    """
+    Fonction qui affiche la page de commande de matériel.
+
+    Returns:
+        render_template: Le template HTML de la page commander.html avec les données nécessaires.
+    """
     rechercher = RechercherForm()
     nb_alertes = Alert.get_nb_alert(cnx)
     nb_demandes = Demande.Get.get_nb_demande(cnx)
@@ -752,6 +1132,13 @@ def commander():
 @app.route("/recherche-materiel-demander", methods=("GET","POST",))
 @csrf.exempt
 def recherche_materiel_demander():
+    """
+    Fonction qui effectue une recherche de matériel demandé.
+
+    Returns:
+        - Si une valeur de recherche est spécifiée, renvoie la page "demander.html" avec les résultats de la recherche.
+        - Sinon, redirige vers la page "demander.html".
+    """
     rechercher = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
@@ -777,6 +1164,12 @@ def recherche_materiel_demander():
 @app.route("/recherche-materiel", methods=("GET","POST",))
 @csrf.exempt
 def recherche_materiel():
+    """
+    Cette fonction gère la recherche de matériel.
+    Elle récupère les informations de recherche, effectue la recherche dans la base de données,
+    et renvoie les résultats à la page commander.html.
+    Si aucune valeur de recherche n'est fournie, la fonction redirige vers la page commander.
+    """
     rechercher = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
@@ -801,6 +1194,15 @@ def recherche_materiel():
 
 @app.route("/bon-commande/<int:id>")
 def bon_commande(id):
+    """
+    Affiche le bon de commande avec les détails correspondants.
+
+    Args:
+        id (int): L'identifiant du bon de commande.
+
+    Returns:
+        render_template: Le template HTML pour afficher le bon de commande.
+    """
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     liste_materiel = Materiel.Get.get_materiel_commande(cnx, id)
     return render_template(
@@ -816,6 +1218,15 @@ def bon_commande(id):
 
 @app.route("/bon-demande/<int:id>")
 def bon_demande(id):
+    """
+    Affiche le bon de demande avec les détails de la demande.
+
+    Args:
+        id (int): L'identifiant de la demande.
+
+    Returns:
+        render_template: Le template HTML "bonDemande.html" avec les données nécessaires pour afficher le bon de demande.
+    """
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     liste_materiel = Materiel.Get.get_materiel_demande(cnx, id)
     return render_template(
@@ -831,6 +1242,12 @@ def bon_demande(id):
 
 @app.route("/consulterBonCommande/")
 def consulter_bon_commande():
+    """
+    Cette fonction permet de consulter les bons de commande.
+    Elle récupère les informations des bons de commande depuis la base de données,
+    puis les affiche dans un template HTML avec les informations des utilisateurs associés
+    et les états des bons de commande.
+    """
     info_bon_commande = Bon_commande.Bon_commande.Get.consulter_bon_commande_without_table(cnx)
     print(info_bon_commande)
     liste_info_user = []
@@ -856,6 +1273,11 @@ def consulter_bon_commande():
 
 @app.route("/changer-statut-bon-commande", methods=("GET","POST",))
 def changer_statut_bon_commande():
+    """
+    Change le statut d'un bon de commande en fonction des paramètres passés dans la requête.
+    
+    :return: Redirige vers la page de consultation du bon de commande.
+    """
     idbc = request.args.get('idbc')
     idStatut = request.args.get('statut')
     Bon_commande.Bon_commande.Update.changer_etat_bonCommande_with_id(cnx, idbc, idStatut)
@@ -863,16 +1285,46 @@ def changer_statut_bon_commande():
 
 @app.route("/delete-materiel/<int:idbc>/<int:idMat>", methods=("GET","POST",))
 def delete_materiel(idbc, idMat):
+    """
+    Supprime un matériel d'une commande en utilisant son identifiant de commande et son identifiant de matériel.
+
+    Args:
+        idbc (int): L'identifiant de la commande.
+        idMat (int): L'identifiant du matériel.
+
+    Returns:
+        redirect: Redirige vers la page de la commande après la suppression du matériel.
+    """
     Materiel.Delete.delete_materiel_in_BonCommande_whith_id(cnx, idMat, idbc)
     return redirect(url_for('bon_commande', id=idbc))
 
 @app.route("/delete-materiel-demande/<int:idDemande>/<int:idMat>", methods=("GET","POST",))
 def delete_materiel_demande(idDemande, idMat):
+    """
+    Supprime un matériel d'une demande spécifique.
+
+    Args:
+        idDemande (int): L'identifiant de la demande.
+        idMat (int): L'identifiant du matériel à supprimer.
+
+    Returns:
+        redirect: Redirige vers la page 'bon_demande' avec l'identifiant de la demande.
+    """
     Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande)
     return redirect(url_for('bon_demande', id=idDemande))
 
 @app.route("/delete-materiel-demandes/<int:idDemande>/<int:idMat>", methods=("GET","POST",))
 def delete_materiel_demandes(idDemande, idMat):
+    """
+    Supprime un matériel d'une demande spécifique.
+
+    Args:
+        idDemande (int): L'identifiant de la demande.
+        idMat (int): L'identifiant du matériel à supprimer.
+
+    Returns:
+        redirect: Redirige vers la page de base si la suppression est réussie, sinon redirige vers la page de la demande spécifique.
+    """
     res = Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande)
     if res:
         return redirect(url_for('base'))
@@ -880,6 +1332,11 @@ def delete_materiel_demandes(idDemande, idMat):
 
 @app.route("/bon-commande-unique", methods=("GET","POST",))
 def bon_commande_unique():
+    """
+    Affiche les détails d'un bon de commande unique.
+
+    :return: Le template "bonCommandeUnique.html" avec les détails du bon de commande.
+    """
     idbc = request.args.get('idbc')
     liste_materiel = Bon_commande.Bon_commande.Get.get_bon_commande_with_id(cnx, idbc)
     return render_template(
@@ -892,6 +1349,12 @@ def bon_commande_unique():
 
 @app.route("/historique-bon-commande")
 def historique_bon_commande():
+    """
+    Cette fonction renvoie l'historique des bons de commande.
+
+    Returns:
+        render_template: Le template "historiqueBonCommande.html" avec les données nécessaires.
+    """
     info_bon_commande = Bon_commande.Bon_commande.Get.get_bon_commande_with_statut(cnx, 4)
     liste_info_user = []
     liste_etat_bon_commande = []
@@ -912,11 +1375,29 @@ def historique_bon_commande():
 
 @app.route("/delete-bon-commande/<int:id>", methods=("GET","POST",))
 def delete_bon_commande(id):
+    """
+    Supprime un bon de commande avec l'ID spécifié.
+
+    Args:
+        id (int): L'ID du bon de commande à supprimer.
+
+    Returns:
+        redirect: Une redirection vers la page de consultation des bons de commande.
+    """
     Bon_commande.Bon_commande.Delete.delete_bonCommande_with_id(cnx, id)
     return redirect(url_for('consulter_bon_commande'))
 
 @app.route("/valider-bon-demande/<int:id>", methods=("GET","POST",))
 def valider_bon_demande(id):
+    """
+    Valide le bon de demande avec l'identifiant spécifié.
+
+    Args:
+        id (int): L'identifiant du bon de demande à valider.
+
+    Returns:
+        None
+    """
     idDemande = request.args.get('idDemande')
     Demande.Insert.changer_etat_demande(cnx, id)
     while True:
@@ -925,6 +1406,15 @@ def valider_bon_demande(id):
 
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
+    """
+    Valide un bon de commande en changeant son état et génère un PDF du bon de commande.
+
+    Args:
+        id (int): L'identifiant du bon de commande à valider.
+
+    Returns:
+        None
+    """
     idCommande = request.args.get('idCommande')
     liste_materiel = Materiel.Get.get_all_materiel_for_pdf_in_bon_commande(cnx, id)
     print(liste_materiel)
@@ -936,12 +1426,29 @@ def valider_bon_commande(id):
 
 @app.route("/valider-bon-commande-pdf/<int:id>", methods=("GET","POST",))
 def valider_bon_commande_pdf(id):
+    """
+    Génère un bon de commande au format PDF et renvoie le fichier en tant que téléchargement.
+
+    Args:
+        id (int): L'identifiant du bon de commande.
+
+    Returns:
+        flask.Response: Le fichier PDF du bon de commande en tant que téléchargement.
+    """
     liste_materiel = Materiel.Get.get_all_materiel_for_pdf_in_bon_commande_after(cnx, id)
     PDF_BonCommande.genererpdfBonCommande(session['utilisateur'][0], session['utilisateur'][3], liste_materiel, str(id))
     return send_file("static/data/bonCommande.pdf", as_attachment=True)
 
 @app.route("/fusion-bon-commande")
 def fusion_bon_commande():
+    """
+    Fusionne les bons de commande avec le statut de fusion 2.
+    
+    Récupère la liste des bons de commande avec le statut de fusion 2.
+    Affiche la liste des bons de commande.
+    Effectue la fusion des bons de commande.
+    Redirige vers la page de consultation des bons de commande.
+    """
     liste_bon_commande = Bon_commande.Bon_commande.Get.get_bon_commande_with_statut_fusion(cnx, 2)
     print(liste_bon_commande)
     Bon_commande.Bon_commande.Insert.fusion_bon_commande(cnx, liste_bon_commande, session['utilisateur'][4])
@@ -949,6 +1456,14 @@ def fusion_bon_commande():
 
 @app.route("/alertes/")
 def alertes():
+    """
+    Cette fonction renvoie la page des alertes.
+
+    Elle récupère le nombre d'alertes et les informations sur les matériels en alerte,
+    puis les transmet à la template "alertes.html" pour affichage.
+
+    :return: Le rendu de la template "alertes.html" avec les données nécessaires.
+    """
     nb_alertes = Alert.get_nb_alert(cnx)
     info_materiel = Alert.get_info_materiel_alert(cnx)
     return render_template(
@@ -962,7 +1477,15 @@ def alertes():
 
 @app.route("/etat/<int:id>")
 def etat(id):
+    """
+    Affiche l'état d'un matériel spécifique en fonction de son identifiant.
 
+    Args:
+        id (int): L'identifiant du matériel.
+
+    Returns:
+        render_template: Le template "etat.html" avec les informations nécessaires pour afficher l'état du matériel.
+    """
     idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, id)
     referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
     risques = [estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif]
@@ -983,6 +1506,15 @@ def etat(id):
 
 @app.route("/generer-fds/<int:idMat>")
 def generer_fds(idMat):
+    """
+    Génère la fiche de données de sécurité (FDS) pour un matériel donné.
+
+    Args:
+        idMat (int): L'identifiant du matériel.
+
+    Returns:
+        flask.Response: Le fichier PDF de la FDS en tant que réponse à télécharger.
+    """
     idFDS = FDS.Get.get_FDS_with_idMateriel(cnx, idMat)
     referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif = Risques.Get.get_risque_with_idMateriel(cnx, idFDS)
     PDF_BonCommande.genererpdfFDS(session['utilisateur'][0], session['utilisateur'][3], referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif)
@@ -991,17 +1523,28 @@ def generer_fds(idMat):
 
 @app.route("/ajouter-utilisateur/")
 def ajouter_utilisateur():
+    """
+    Cette fonction affiche le formulaire d'ajout d'un utilisateur et renvoie la page HTML correspondante.
+
+    :return: La page HTML avec le formulaire d'ajout d'un utilisateur.
+    """
     f = AjouterUtilisateurForm()
     return render_template(
         "ajouterUtilisateur.html",
         title="ajouter un utilisateur",
         AjouterUtilisateurForm=f,
-        chemin = [("base", "accueil"), ("ajouter_utilisateur", "ajouter un Utilisateur")]
+        chemin=[("base", "accueil"), ("ajouter_utilisateur", "ajouter un Utilisateur")]
     )
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
 @csrf.exempt
 def consulter_utilisateur():
+    """
+    Fonction qui permet de consulter les utilisateurs en fonction de la catégorie sélectionnée.
+
+    Returns:
+        render_template: Le template "consulterUtilisateur.html" avec les utilisateurs correspondants à la catégorie sélectionnée.
+    """
     f = RechercherForm()
     if 'cat' in request.form:
         selected_value = request.form['cat']
@@ -1060,6 +1603,12 @@ def consulter_utilisateur():
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
 @csrf.exempt
 def recherche_utilisateur():
+    """
+    Fonction qui gère la recherche d'utilisateurs dans le système.
+
+    Returns:
+        template: Le template HTML pour afficher les résultats de la recherche.
+    """
     f = RechercherForm()    
     value = f.get_value()
     print("value : "+value)
@@ -1086,12 +1635,31 @@ def recherche_utilisateur():
 
 @app.route("/supprimer-utilisateur/<int:id>", methods=("GET","POST",))
 def supprimer_utilisateur(id):
+    """
+    Supprime un utilisateur en utilisant son identifiant.
+
+    Args:
+        id (int): L'identifiant de l'utilisateur à supprimer.
+
+    Returns:
+        redirect: Une redirection vers la page de consultation des utilisateurs.
+    """
     Bon_commande.Utilisateur.Utilisateur.Delete.delete_utilisateur(cnx, id)
     print("supprimer utilisateur : "+str(id))
     return redirect(url_for('consulter_utilisateur'))
 
 @app.route("/modifier-utilisateur/<int:id>/", methods=("GET","POST",))
 def modifier_utilisateur(id):
+    """
+    Modifie un utilisateur en fonction de son identifiant.
+
+    Args:
+        id (int): L'identifiant de l'utilisateur à modifier.
+
+    Returns:
+        flask.Response: Une réponse de redirection vers la page 'consulter_utilisateur' en cas de succès, sinon une réponse de redirection vers la même page avec un message d'erreur.
+
+    """
     f = AjouterUtilisateurForm()
     if f.validate_on_submit():
         nom, prenom, email, statut = f.get_full_user()
@@ -1133,6 +1701,17 @@ def modifier_utilisateur(id):
 
 @app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
 def modifier_materiel(id):
+    """
+    Modifie un matériel dans la base de données en fonction de l'ID fourni.
+
+    Args:
+        id (int): L'ID du matériel à modifier.
+
+    Returns:
+        redirect: Redirige vers la page d'état du matériel modifié si la modification est réussie.
+        redirect: Redirige vers la page d'inventaire si la modification échoue.
+
+    """
     FDSFormulaire = FDSForm()
     materiel = Materiel.Get.get_materiel(cnx, id)
     idMateriel, referenceMateriel, idFDS, nomMateriel, idCategorie, seuilAlerte, caracteristiquesCompelmentaires, informationsComplementairesEtSecurite = materiel[0]
@@ -1189,6 +1768,16 @@ def modifier_materiel(id):
 
 @app.route("/modifier-materiel-unique/<int:id>", methods=("GET","POST",))
 def modifier_materiel_unique(id):
+    """
+    Modifie les informations d'un matériel unique en stock.
+
+    Args:
+        id (int): L'identifiant du matériel unique.
+
+    Returns:
+        flask.Response: La réponse de redirection vers la page d'état du matériel.
+
+    """
     materiel = MaterielUnique.Get.get_materiel_unique(cnx, id)
     idMaterielUnique, idMateriel, idRangement, dateReception, commentaireMateriel, quantiteApproximative, datePeremption = materiel[0]
     idEndroit = Rangement.Get.get_id_endroit_from_id_rangement(cnx, idRangement)
@@ -1225,6 +1814,15 @@ def modifier_materiel_unique(id):
 
 @app.route("/supprimer-materiel-unique/<int:id>", methods=("GET","POST",))
 def supprimer_materiel_unique(id):
+    """
+    Supprime un matériel unique de la base de données.
+
+    Args:
+        id (int): L'identifiant du matériel unique à supprimer.
+
+    Returns:
+        redirect: Une redirection vers la page d'état du matériel correspondant.
+    """
     print(1)
     id_materiel = Materiel.Get.get_id_materiel_from_id_materiel_unique(cnx, id)
     print(2)
@@ -1234,6 +1832,17 @@ def supprimer_materiel_unique(id):
 
 @app.route("/supprimer-materiels-uniques/<int:id>", methods=("GET","POST",))
 def supprimer_materiels_uniques(id):
+    """
+    Supprime tous les matériels uniques associés à un identifiant donné.
+    Supprime également tous les matériels en stock dans le laboratoire associés à cet identifiant.
+    Redirige vers la page d'inventaire après la suppression.
+    
+    Args:
+        id (int): L'identifiant du matériel à supprimer.
+    
+    Returns:
+        redirect: Une redirection vers la page d'inventaire.
+    """
     MaterielUnique.Delete.delete_all_materiel_unique_with_idMateriel(cnx, id)
     Materiel.Delete.delete_all_materiel_in_Stocklaboratoire_with_idMat(cnx, id)
     return redirect(url_for('inventaire'))
@@ -1297,6 +1906,12 @@ def inventaire():
 @app.route("/rechercher-inventaire", methods=("GET","POST",))
 @csrf.exempt
 def recherche_inventaire():
+    """
+    Fonction qui effectue une recherche dans l'inventaire et renvoie les résultats.
+
+    Returns:
+        Flask response: Le template "inventaire.html" avec les résultats de la recherche.
+    """
     rechercher = RechercherForm()
     value = rechercher.get_value()
     items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(),value)
@@ -1323,6 +1938,12 @@ def recherche_inventaire():
 @app.route("/demander/")
 @csrf.exempt
 def demander():
+    """
+    Cette fonction affiche la page de demande de matériel.
+    Elle récupère les informations nécessaires à l'affichage de la page,
+    telles que la liste du matériel disponible, l'identifiant de la demande actuelle,
+    et les informations de l'utilisateur connecté.
+    """
     recherche = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     liste_materiel = Demande.Get.afficher_demande(cnx, idUser)
@@ -1343,6 +1964,15 @@ def demander():
 
 @app.route("/ajouter-demande/<int:id>", methods=("GET","POST",))
 def ajouter_demande(id):
+    """
+    Ajoute une demande avec l'identifiant de la matière, la quantité et redirige vers la page 'demander'.
+    
+    Args:
+        id (int): L'identifiant de la matière.
+    
+    Returns:
+        redirect: Redirection vers la page 'demander'.
+    """
     idMat = request.args.get('idMat')
     qte = request.args.get('qte')
 
@@ -1353,8 +1983,19 @@ def ajouter_demande(id):
 
 @app.route("/commentaire/", methods=("GET","POST",))
 def commentaire():
+    """
+    Fonction qui gère l'envoi de commentaires ou de signalements.
+
+    Cette fonction récupère le matériel concerné depuis les arguments de la requête.
+    Ensuite, elle récupère les utilisateurs ayant le statut "Gestionnaire".
+    Elle crée une instance de CommentaireForm.
+    Si le formulaire est valide, elle récupère le texte et le gestionnaire sélectionné.
+    Si le texte et le gestionnaire sont renseignés, elle envoie un mail de commentaire ou de signalement.
+    Enfin, elle renvoie le template "commentaire.html" avec les utilisateurs, le titre, le matériel, le chemin et le formulaire.
+
+    :return: Le template "commentaire.html" avec les données nécessaires.
+    """
     materiel = request.args.get('materiel')
-    print(materiel)
     users = Bon_commande.Utilisateur.Utilisateur.Get.get_user_with_statut(get_cnx(), "Gestionnaire")
     f = CommentaireForm()
     if f.validate_on_submit():
@@ -1382,6 +2023,12 @@ def commentaire():
 
 @app.route("/login/", methods=("GET","POST",))
 def login():
+    """
+    Fonction qui gère la page de connexion.
+    Permet à l'utilisateur de se connecter en utilisant un formulaire de connexion.
+    Si les informations de connexion sont valides, l'utilisateur est redirigé vers la page suivante.
+    Sinon, un message d'erreur est affiché.
+    """
     f = LoginForm ()
     changerMDP = ChangerMDPForm()
     changerMail = ChangerMailForm()
@@ -1410,10 +2057,7 @@ def login():
                 fromChangerMail=changerMail,
                 MdpOublierForm=mdpOublier,
                 erreur = "le mail ou le mot de passe est incorrect"
-            )
-        
-# ---------------------- léo rajoute 
-        
+            )        
         
     return render_template(
         "login.html",
@@ -1458,11 +2102,21 @@ def login():
 
 @app.route("/logout/")
 def logout():
+    """
+    Déconnecte l'utilisateur en supprimant sa session et redirige vers la page de base.
+    """
     session.pop('utilisateur', None)
     return redirect(url_for('base'))
 
 @app.route("/changerMDP/", methods=("GET","POST",))
 def changerMDP():
+    """
+    Cette fonction affiche le formulaire de changement de mot de passe et gère la soumission du formulaire.
+
+    Returns:
+        Si le formulaire est soumis avec succès et les conditions sont remplies, la fonction redirige vers la page de confirmation de changement de mot de passe.
+        Sinon, la fonction rend le template "login.html" avec le formulaire de changement de mot de passe.
+    """
     f = ChangerMDPForm()
     if f.validate_on_submit():
         ancienMDP, nouveauMDP, confirmerMDP = f.get_full_mdp()
@@ -1475,6 +2129,13 @@ def changerMDP():
 
 @app.route("/changerMail/", methods=("GET","POST",))
 def changerMail():
+    """
+    Cette fonction gère le changement d'adresse e-mail de l'utilisateur.
+
+    Returns:
+        flask.Response: Redirige vers la page de vérification à deux facteurs si les conditions sont remplies.
+        flask.Response: Rend le template "login.html" avec le formulaire de changement d'adresse e-mail.
+    """
     f = ChangerMailForm()
     if f.validate_on_submit():
         ancienMail, nouveauMail, confirmerMail, mdp = f.get_full_mail()
@@ -1487,6 +2148,13 @@ def changerMail():
 
 @app.route("/ajouterUtilisateur/", methods=("GET","POST",))
 def ajouterUtilisateur():
+    """
+    Ajoute un utilisateur à la base de données en fonction des informations fournies dans le formulaire.
+    
+    Returns:
+        - Si l'ajout est réussi, redirige vers la page 'consulter_utilisateur'.
+        - Si l'ajout échoue, redirige vers la page 'consulter_utilisateur' et affiche un message d'erreur.
+    """
     f = AjouterUtilisateurForm()
     if f.validate_on_submit():
         nom, prenom, email, statut = f.get_full_user()
@@ -1517,6 +2185,11 @@ def ajouterUtilisateur():
         fromAjouterUtilisateur=f)
 
 def get_domaine_choices():
+    """
+    Récupère les choix de domaine à partir de la base de données.
+
+    :return: Une liste de tuples contenant les choix de domaine.
+    """
     query = text("SELECT nomDomaine, idDomaine FROM DOMAINE;")
     result = cnx.execute(query)
     domaines =  [(str(id_), name) for name, id_ in result]
@@ -1524,6 +2197,15 @@ def get_domaine_choices():
     return domaines
 
 def get_categorie_choices_modifier_materiel(idDomaine):
+    """
+    Récupère les choix de catégorie pour la modification du matériel.
+
+    Args:
+        idDomaine (int): L'identifiant du domaine.
+
+    Returns:
+        list: Une liste de tuples contenant les noms et les identifiants des catégories.
+    """
     query = text("SELECT nomCategorie, idCategorie FROM CATEGORIE WHERE idDomaine =" + str(idDomaine) )
     result = cnx.execute(query)
     categories = [(str(id_), name) for name, id_ in result]
