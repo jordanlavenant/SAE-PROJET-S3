@@ -7,35 +7,35 @@
 {% if 'utilisateur' in session %}
     <!-- admin -->
     {% if session['utilisateur'][1] == 1 %}
-    <p id="text-acceuil">Vous êtes connecté en tant qu'administrateur</p>
+    <p id="text-acceuil">vous êtes connecté en tant qu'administrateur</p>
     {% endif %}
 
     <!-- professeur -->
     {% if session['utilisateur'][1] == 2 %}
-    <p id="text-acceuil">Vous êtes connecté en tant que professeur</p>
+    <p id="text-acceuil">vous êtes connecté en tant que professeur</p>
     {% endif %}
 
     <!-- laborantin -->
     {% if session['utilisateur'][1] == 3 %}
-    <p id="text-acceuil">Vous êtes connecté en tant que laborantin</p>
+    <p id="text-acceuil">vous êtes connecté en tant que laborantin</p>
     {% endif %}
 
     <!-- gestionnaire -->
     {% if session['utilisateur'][1] == 4 %}
-    <p id="text-acceuil">Vous êtes connecté en tant que gestionnaire</p>
+    <p id="text-acceuil">vous êtes connecté en tant que gestionnaire</p>
     {% endif %}
 
     <!-- profil -->
     <div class="container-control-profil">
-      <a class="a-lien" id="seDeco" href="{{ url_for('logout') }}">Se déconnecter</a>
-      <a class="a-lien" id="lien-accueil" href="{{ url_for('base') }}">Retour à l'accueil</a>
-      <button id="btn-changer-mdp">Changer le mot de passe</button>
-      <button id="btn-changer-mail">Changer l'adresse email</button>
+      <a class="a-lien" id="seDeco" href="{{ url_for('logout') }}">SE DÉCONNECTER</a>
+      <a class="a-lien" id="lien-accueil" href="{{ url_for('base') }}">RETOUR À L'ACCUEIL</a>
+      <button id="btn-changer-mdp">CHANGER LE MOT DE PASSE</button>
+      <button id="btn-changer-mail">CHANGER L'ADRESSE EMAIL</button>
       <a id="btn-retour">retour</a>
       <!-- form changer mdp -->
       <div id="ChangerMDPForm">
         <div id="changerMDP-box">
-          <h2 class="element">Changer le mot de passe</h2>
+          <h2 class="element">changer le mot de passe</h2>
           <form class="form-changerMDP" role="form" method="POST" action ="{{ url_for('changerMDP') }}">
             {{ fromChangerMDP.hidden_tag() }}
             <div class="user-box">
@@ -81,29 +81,30 @@
 {% else %}
 <div id="login-container">
     <div id="login-box">
-        <h2 class="element">Connexion</h2>
+        <h2 class="element">connexion</h2>
         <form class="form-horizontal" role="form" method="POST" action ="{{ url_for('login') }}">
             {{ form.hidden_tag() }}
           <div class="user-box">
-            {{ form.email(size=50, class_="form-control element", placeholder="Email") }}
+            {{ form.email(size=50, class_="form-control element", placeholder="email") }}
           </div>
           <div class="user-box">
-            <div>{{ form.password(size=50, class_="form-control element", placeholder="Password") }}</div>
+            <div>{{ form.password(size=50, class_="form-control element", placeholder="password") }}</div>
           </div>
           <div class="valid-container">
-            <input type="submit" value="Se Connecter" class="element">
+            <input type="submit" value="se connecter" class="element">
           </div>
         </form>
         <div class="container-mdp-oublier">
           <button id="btn-mdp-oublier">mot de passe oublié ?</button>
         </div>
+        <p class="erreur-login">{{ erreur }}</p>
     </div>
 </div>
 <div id="mdp-container">
   <button id="btn-retour-mdp">retour</button>
   <div class="container-form-mdp">
     <div id="mdp-box">
-      <h2 class="element">Mot de passe oublié</h2>
+      <h2 class="element">mot de passe oublié</h2>
       <form class="form-horizontal" role="form" method="POST", action="{{ url_for('mot_de_passe_oublier') }}">
           {{ MdpOublierForm.hidden_tag() }}
         <div class="user-box">

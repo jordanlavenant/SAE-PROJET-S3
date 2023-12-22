@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static',filename='./css/bonDeCommande.css') }}">
+{% endblock %}
+{% block content %}
+{% if longueur > 0 %}
+<div class="container-valider">
+    <a id="btn-valider" href="/valider-bon-demande/{{ idUser }}?idDemande={{ id }}">valider la demande</a>
+</div>
+{% for item in liste_materiel %}
+<section class="section-contenu">
+    <div id="info">
+        <p class="texte_blanc">{{ item[2] }}</p>
+        <div class="container-qte">
+            <p class="texte_blanc"> Quantité :</p>
+            <!-- <button class="bouton-moins">-</button> -->
+            <p class="nb-choisit">{{ item[7] }}</p>
+            <!-- <button class="bouton-plus">+</button> -->
+        </div>
+    </div>
+    <a id="btn-voir" href="{{ url_for('delete_materiel_demande', idMat=item[0], idDemande=item[6]) }}">supprimer</a>
+</section>
+{%endfor%}
+<div class="popup" id="myPopup">
+    <div class="popup-content">
+        <h2>Confirmation</h2>
+        <p>Votre demande a bien été envoyé !</p>
+        <div class="container-pdf">
+            <a class="btn-retour-popup" href="{{ url_for('base') }}">retour accueil</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<a id="btn-retour-rien" href="{{ url_for('demander') }}">retour</a>
+<p class="p-rien">Vous n'avez aucun materiel dans le bon de commande</p>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='./js/popup.js') }}"></script>
+{% endblock %}

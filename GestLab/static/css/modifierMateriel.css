@@ -1,8 +1,7 @@
 p,
 label {
     color: white;
-    font-size: 25px;
-    margin: 2vh 0;
+    font-size: 35px;
     cursor: pointer;
 }
 
@@ -26,26 +25,33 @@ label {
     cursor: pointer;
 }
 
-.ajouterMateriel-container {
+.modifierMateriel-container {
+    background-color: #384274;
     display: flex;
     justify-content: center;
-    margin: 5%;
+    align-items: center;    
+    margin: 5% 5%;
+    padding: 5% 5%;
+    gap: 5vw;
 }
 
-.form-ajoutMateriel {
+.form-modifMateriel {
     background-color: #384274;
-    width: 80%;
-    padding: 3%;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
+    gap: 5vw;
+}
+
+.left-side-info {
+    /* width: 50%; */
 }
 
 .right-side-info {
     display: flex;
     flex-direction: column;
-    gap: 10px;
     justify-content: space-between;
+    /* width: 50%; */
 }
 
 .domaine-container,
@@ -154,4 +160,54 @@ label {
     .pair-info > div > p {
         text-align: center;
     }
+}
+
+/* pictogramme */
+
+.fds {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 80%;
+    padding: 0 0 2%;
+}
+
+.fds-text {
+    color: white;
+    font-size: 25px;
+    margin: 2vh 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkmark label {
+    margin: 0;
+    padding: 0;
+}
+
+.checkmark input {
+    height: 30px;
+    width: 30px;
+    accent-color: #d35252;
+}
+
+.checkmark div {
+    display: flex;
+    align-items: center;
+}
+
+.pictogramme {
+    width: 30px;
+    height: 30px;
+    align-items: center;
+}
+
+.pictogramme {
+    width: 30px;
+    height: 30px;
 }

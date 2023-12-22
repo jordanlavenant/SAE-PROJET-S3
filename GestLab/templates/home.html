@@ -7,33 +7,28 @@
     <!-- si l'utilisateur est connecter -->
     {% if 'utilisateur' in session %}
     <div class="container-main">
-    
+        
+        <!-- sous titre -->
+        <h2 class="sous-title">bienvenue  {{ session['utilisateur'][0] }} {{ session['utilisateur'][3] }} !</h2>
+
         <!-- admin -->
         {% if session['utilisateur'][1] == 1 %}
 
-        <!-- sous titre -->
-        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
-
-        <a href="{{ url_for('utilisateurs') }}">
+        <a href="{{ url_for('consulter_utilisateur') }}">
             <section class="carte-lien">
-                <h2>UTILISATEURS</h2>
-                <p>ajouter un compte</p>
-                <p>modifier un compte</p>
-                <p>gesions des droits</p>
+                <h2>CONSULTER UTILISATEUR</h2>
+                <p>gestion utilisateur</p>
             </section>
         </a>
         <a href="{{ url_for('ajouter_utilisateur') }}">
             <section class="carte-lien">
                 <h2>AJOUTER UN UTILISATEUR</h2>
-                <p>utilisateur</p>
-                <p>...</p>
             </section>
         {% endif %}
 
         <!-- professeur -->
         {% if session['utilisateur'][1] == 2 %}
-        <!-- sous titre -->
-        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
+
         <a href="{{ url_for('inventaire') }}">
             <section class="carte-lien">
                 <h2>INVENTAIRE</h2>
@@ -44,111 +39,107 @@
             <section class="carte-lien">
                 <h2>ENVOYER UN COMMENTAIRE</h2>
                 <p>aux gestionnaires</p>
-                <p>à l'administration</p>
             </section>
         </a>
         {% endif %}
 
         <!-- laborantin -->
         {% if session['utilisateur'][1] == 3 %}
-        <!-- sous titre -->
-        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
+        <div class="container-alertes-demandes">
+            <section class="section-alertes">
+                {% if alertes|int > 0 %}
+                    <img src="../static/images/attention-rouge.png" alt="logo alertes">
+                    {% if alertes|int == 1 %}
+                    <p>{{ alertes }} Alerte</p>
+                    {% else %}
+                    <p>{{ alertes }} Alertes</p>
+                    {% endif %}
+                    <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
+                {% endif %}
+            </section>
+        </div>
 
         <a href="{{ url_for('demander') }}">
             <section class="carte-lien">
                 <h2>DEMANDER</h2>
-                <p>produits</p>
-                <p>accessoires</p>
-                <p>verrerie</p>
-                <p>Matériel</p>
-                <p>médias</p>
-                <p>...</p>
-            </section>
-        </a>
-        <a href="{{ url_for('ajouter_materiel') }}">
-            <section class="carte-lien">
-                <h2>AJOUTER</h2>
-                <p>produits</p>
-                <p>accessoires</p>
-                <p>verrerie</p>
-                <p>Matériel</p>
-                <p>médias</p>
-                <p>...</p>
+                <p>matériel</p>
             </section>
         </a>
         <a href="{{ url_for('inventaire') }}">
             <section class="carte-lien">
                 <h2>INVENTAIRE</h2>
                 <p>consulter</p>
+            </section>
+        </a>
+        <a href="{{ url_for('ajouter_stock') }}">
+            <section class="carte-lien">
+                <h2>AJOUTER</h2>
+                <p>stock</p>
+            </section>
+        </a>
+        <a href="{{ url_for('alertes') }}">
+            <section class="carte-lien">
+                <h2>ALERTES</h2>
+                <p>consulter les alertes</p>
             </section>
         </a>
         {% endif %}
 
         <!-- gestionnaire -->
         {% if session['utilisateur'][1] == 4 %}
-        <section class="section-alertes">
-            {% if alertes|int > 0 %}
-                <img src="../static/images/attention-rouge.png" alt="logo alertes">
-                {% if alertes|int == 1 %}
-                <p>{{ alertes }} Alerte</p>
-                {% else %}
-                <p>{{ alertes }} Alertes</p>
+        <div class="container-alertes-demandes">
+            <section class="section-alertes">
+                {% if alertes|int > 0 %}
+                    <img src="../static/images/attention-rouge.png" alt="logo alertes">
+                    {% if alertes|int == 1 %}
+                    <p>{{ alertes }} Alerte</p>
+                    {% else %}
+                    <p>{{ alertes }} Alertes</p>
+                    {% endif %}
+                    <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
                 {% endif %}
-                <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
-            {% endif %}
-        </section>
-        <section class="section-demandes">
-            {% if demandes|int > 0 %}
-                <img src="../static/images/attention-orange.png" alt="logo demandes">
-                {% if demandes|int == 1 %}
-                <p>{{ demandes }} Demande</p>
-                {% else %}
-                <p>{{ demandes }} Demandes</p>
+            </section>
+            <section class="section-demandes">
+                {% if demandes|int > 0 %}
+                    <img src="../static/images/attention-orange.png" alt="logo demandes">
+                    {% if demandes|int == 1 %}
+                    <p>{{ demandes }} Demande</p>
+                    {% else %}
+                    <p>{{ demandes }} Demandes</p>
+                    {% endif %}
+                    <a href="{{ url_for('demandes') }}">Consulter les demandes ></a>
                 {% endif %}
-                <a href="{{ url_for('demandes') }}">Consulter les demandes ></a>
-            {% endif %}
-        </section>
-
-        <!-- sous titre -->
-        <h2 class="sous-title">Bienvenue  {{ session['utilisateur'][0] }} !</h2>
+            </section>
+        </div>
 
         <a href="{{ url_for('commander') }}">
             <section class="carte-lien">
                 <h2>COMMANDER</h2>
-                <p>produits</p>
-                <p>accessoires</p>
-                <p>verrerie</p>
-                <p>Matériel</p>
-                <p>médias</p>
-                <p>...</p>
+                <p>matériel</p>
             </section>
         </a>
         <a href="{{ url_for('alertes') }}">
             <section class="carte-lien">
                 <h2>ALERTES</h2>
-                <p>quantité</p>
-                <p>étalonnages</p>
-                <p>péremptions</p>
+                <p>consulter les alertes</p>
             </section>
         </a>
         <a href="{{ url_for('inventaire') }}">
             <section class="carte-lien">
                 <h2>INVENTAIRE</h2>
-                <p>consulter</p>
+                <p>consulter l'inventaire</p>
             </section>
         </a>
         <a href="{{ url_for('demandes') }}">
             <section class="carte-lien">
                 <h2>DEMANDES</h2>
-                <p>commandes</p>
-                <p>commentaires</p>
+                <p>consulter les demandes</p>
             </section>
         </a>
         <a href="{{ url_for('consulter_bon_commande') }}">
             <section class="carte-lien">
-                <h2>CONSULTER BON COMMANDE</h2>
-                <p>bon de commande</p>
-                <p>...</p>
+                <h2>BON DE COMMANDE</h2>
+                <p>consulter bon commande</p>
             </section>
         {% endif %}
     </div>
@@ -156,6 +147,6 @@
     <!-- si l'utilisateur n'est pas connecter -->
     {% else %}
     <h2 class="sous-title">Bienvenue !</h2>
-    <a id="container-bouton-connexion" href="{{ url_for('login') }}"><button id="btn-connexion">Se Connecter</button></a>
+    <a id="container-bouton-connexion" href="{{ url_for('login') }}"><button id="btn-connexion">se connecter</button></a>
     {% endif %}
 {% endblock %}

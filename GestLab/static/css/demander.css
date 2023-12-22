@@ -7,11 +7,19 @@ a {
 }
 
 .demander-container-overall {
-    margin: 10vh 5vw;
+    margin: 2% 5vw;
 }
 
 .header-container {
-    margin: 5vh 10vw;
+    margin: 5vh 10vw 0 10vw;
+}
+
+.container-top {
+    margin: 0 10vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .search-content {
@@ -50,17 +58,18 @@ a {
     cursor: pointer;
 }
 
-#btn-retour {
-    color: #fff;
+#btn-back {
+    color: white;
     background-color: #384274;
-    padding: 10px 20px;
-    margin: 10px 0px;
-    border-radius: 20px;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 25px;
     border: none;
     transition: 0.2s;
 }
 
-#btn-retour:hover {
+#btn-back:hover {
+    color: white;
     background-color: #009af0;
     box-shadow: 0 0 15px #009af0;
     transition: 0.2s;
@@ -68,16 +77,18 @@ a {
     cursor: pointer;
 }
 
-#btn-reset {
-    color: #fff;
+#btns {
+    color: white;
     background-color: #384274;
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 14px 40px;
+    border-radius: 25px;
+    font-size: 25px;
     border: none;
     transition: 0.2s;
 }
 
-#btn-reset:hover {
+#btns:hover {
+    color: white;
     background-color: #009af0;
     box-shadow: 0 0 15px #009af0;
     transition: 0.2s;
@@ -104,7 +115,7 @@ a {
     align-items: center;
 }
 
-#categorie-select {
+#domaine-select {
     color: #fff;
     background-color: #384274;
     border-radius: 20px;
@@ -113,7 +124,7 @@ a {
     border: none;
 }
 
-#categorie-select {
+#domaine-select {
     cursor: pointer;
     padding: 10px 60px;
 }
@@ -142,6 +153,12 @@ a {
 }
 
 
+.ajouter-materiel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3% 0;
+}
 
 /* partie item */
 
@@ -162,16 +179,49 @@ a {
     padding: 1%;
 }
 
+.top-side {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#delete-suggestion-button {
+    transition: .2s;
+    scale: 1;
+    display: flex;
+    align-items: center;
+}
+
+#delete-suggestion-button:hover {
+    transform: rotate(90deg);
+    transition: .2s;
+    cursor: pointer;
+}
+
+#croix {
+    width: 30px;
+    height: 30px;
+}
+
 .section-contenu h3 {
+    color: #fff;
+    font-size: 35px;
+    font-weight: 500;
+    flex-basis: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.section-contenu h4 {
     color: #fff;
     font-size: 30px;
     font-weight: 500;
     flex-basis: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-}
-
-.section-contenu h3 {
     font-weight: bold;
 }
 
@@ -188,6 +238,13 @@ a {
     cursor: pointer;
 }
 
+.section-contenu .bottom-side {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
 #ajouter-demande {
     margin-bottom: 10px;
     color: #384274;
@@ -195,6 +252,9 @@ a {
     border-radius: 10px;
     padding: 8px 30px;
     transition: 0.2s;
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 #ajouter-demande:hover {

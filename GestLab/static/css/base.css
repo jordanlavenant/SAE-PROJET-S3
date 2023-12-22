@@ -29,7 +29,7 @@ ul {
 
 header {
     position: relative;
-    margin-bottom: 2em;
+    margin-bottom: 0.5em;
 }
 
 ::selection {
@@ -40,18 +40,12 @@ header {
 /* titre */
 
 .title {
-    position: absolute;
-    color: #fff;
-    padding: 20px 70px;
-    top: 70%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1; /* Pour chevaucher le nav */
+    color: #111;
     text-align: center;
-    font-size: 30px;
-    font-weight: 300;
-    background-color: #384274;
-    border-radius: 40px;
+    font-size: 70px;
+    font-weight: 700;
+    margin-top: 0px;
+    margin-bottom: 5px;
 }
 
 
@@ -127,7 +121,7 @@ header {
     display: flex; 
     flex-wrap: nowrap;
     align-items: center;
-    margin: 0.5em;
+    margin: 10px;
 }
 
 #fil-ariane li {
@@ -144,7 +138,14 @@ header {
 }
 
 #fil-ariane a {
-    color: #000;
+    color: #384274;
+    transition: 0.2s;
+}
+
+#fil-ariane a:hover {
+    color: #009AF0;
+    transition: all 0.2s;
+    text-decoration: underline;
 }
 
 /* footer */

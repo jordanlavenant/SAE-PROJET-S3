@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterRangement.css') }}">
+{% endblock %}
+{% block content %}
+<a id="btn-back" href="{{ url_for('inventaire') }}">retour</a>
+<div class="ajouterRangement-container">
+    <form class="form-ajoutRangement" role="form" method="POST" action="{{ url_for('ajouter_rangement') }}">
+        {{ AjouterRangementForm.hidden_tag() }}
+        <div class="user-box">
+            <p>emplacement : </p>
+            <div>{{ AjouterRangementForm.endroit(size=auto, class_="comboBox emplacement-select", id="emplacement") }}</div>
+        </div>
+        <div class="user-box">
+            <p>rangement : </p>
+            <div>{{ AjouterRangementForm.rangement(size=10, class_="form-control element", placeholder="rangement, tiroir") }}</div>
+        </div>
+
+        <input type="submit" value="AJOUTER RANGEMENT" class="element submit">
+    </form>
+</div>
+
+
+{% endblock %}

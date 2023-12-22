@@ -4,15 +4,27 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/demande.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('demandes') }}">Retour</a>
+<div class="container-bouton-top">
+    <a id="btn-back" href="{{ url_for('demandes') }}">retour</a>
+    <a id="btn-tout-commander" href="{{ url_for('tout_commander_materiel_unique', idDemande=idDemande) }}">tout commander</a>
+</div>
 {% for i in range(0, longeur) %}
-<div id="container-objet">
-    <div id="info">
+<div class="container-objet">
+    <div class="info">
         <p class="texte_blanc"> {{infoCommande[i][3]}} - {{ infoCommande[i][5] }}</p>
         <p class="texte_blanc"> Quantité: {{infoCommande[i][2]}}</p>
     </div>
-    <a id="btn-voir" href="/commander-demande-materiel-unique/{{ idUser }}?idMat={{ infoCommande[i][4] }}&qte={{ infoCommande[i][2] }}&idDemande={{ idDemande }}">Commander</a>
-    <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}">Voir le stock</a>
+    <div class="btns-objet">
+        <a id="btn-voir" href="/commander-demande-materiel-unique/{{ idUser }}?idMat={{ infoCommande[i][4] }}&qte={{ infoCommande[i][2] }}&idDemande={{ idDemande }}">commander</a>
+        {% if infoCommande[i][-1] == 0 %}
+            <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}"
+                style="cursor: not-allowed;pointer-events: none;opacity: 0.5;"
+            >voir le stock</a>
+        {% else %}
+            <a id="btn-voir" href="{{ url_for('etat',id=infoCommande[i][4]) }}">voir le stock</a>
+        {% endif %}
+        <a id="btn-voir" href="{{ url_for('delete_materiel_demandes', idDemande=idDemande, idMat=infoCommande[i][4]) }}">supprimer</a>
+    </div>
 </div>
 {%endfor%}
 {% endblock %}

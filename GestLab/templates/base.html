@@ -26,7 +26,7 @@
 
                 <!-- admin -->
                 {% if session['utilisateur'][1] == 1 %} 
-                <li><a href="{{ url_for('utilisateurs') }}">utilisateurs</a></li>
+                <li><a href="{{ url_for('consulter_utilisateur') }}">consulter utilisateurs</a></li>
                 <li><a href="{{ url_for('ajouter_utilisateur') }}">ajouter utilisateur</a></li>
                 {% endif %}
 
@@ -38,9 +38,10 @@
 
                 <!-- laborantin -->
                 {% if session['utilisateur'][1] == 3 %}
-                <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
                 <li><a href="{{ url_for('demander') }}">demander</a></li>
-                <li><a href="{{ url_for('ajouter_materiel') }}">ajouter materiel</a></li>
+                <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
+                <li><a href="{{ url_for('ajouter_stock') }}">ajouter au stock</a></li>
+                <li><a href="{{ url_for('alertes') }}">alertes</a></li>
                 {% endif %}
 
                 <!-- gestionnaire -->
@@ -60,8 +61,8 @@
         </nav>
         <div id="fil-ariane">
             {% for elem in chemin %}
-            <li><a href="{{ url_for(elem[0]) }}">{{ elem[1] }}</a></li>
-            <li><img src="{{ url_for('static',filename='./images/chevron.png') }}"></li>
+                <li><a href="{{ url_for(elem[0]) }}">{{ elem[1] }}</a></li>
+                <li><img src="{{ url_for('static',filename='./images/chevron.png') }}"></li>
             {% endfor %}
         </div>
         <h1 class="title">{{ title }}</h1>
@@ -84,59 +85,61 @@
             </div>
             {% if 'utilisateur' in session %}
             <div class="plan-du-site">
-                <h4>Plan du site : </h4>
+                <h4>plan du site : </h4>
                 <!-- Admin -->
                 {% if session['utilisateur'][1] == 1 %}
                 <ul>
-                    <li><a href="{{ url_for('utilisateurs') }}">Utilisateurs</a></li>
+                    <li><a href="{{ url_for('consulter_utilisateur') }}">consulter utilisateur</a></li>
+                    <li><a href="{{ url_for('ajouter_utilisateur') }}">ajouter utilisateur</a></li>
                 </ul>
                 {% endif %}
                 
                 <!-- Professeur -->
                 {% if session['utilisateur'][1] == 2 %}
                 <ul>
-                    <li><a href="{{ url_for('inventaire') }}, target=_blank">Inventaire</a></li>
-                    <li><a href="{{ url_for('commentaire') }}">Commentaire</a></li>
-                </ul>
-                {% endif %}
-
-                <!-- Gestionnaire -->
-                {% if session['utilisateur'][1] == 3 %}
-                <ul>
-                    <li><a href="commander">Commander</a></li>
-                    <li><a href="inventaire">Inventaire</a></li>
-                    <li><a href="alertes">Alertes</a></li>
-                    <li><a href="demandes">Demandes</a></li>
+                    <li><a href="{{ url_for('inventaire') }}, target=_blank">inventaire</a></li>
+                    <li><a href="{{ url_for('commentaire') }}">commentaire</a></li>
                 </ul>
                 {% endif %}
 
                 <!-- Laborantin -->
+                {% if session['utilisateur'][1] == 3 %}
+                <ul>
+                    <li><a href="{{ url_for('demander') }}">demander</a></li>
+                    <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
+                    <li><a href="{{ url_for('ajouter_stock') }}">ajouter au stock</a></li>
+                    <li><a href="{{ url_for('alertes') }}">alertes</a></li>
+                </ul>
+                {% endif %}
+
+                <!-- Gestionnaire -->
                 {% if session['utilisateur'][1] == 4 %}
                 <ul>
-                    <li><a href="demander">Demander</a></li>
-                    <li><a href="inventaire">Inventaire</a></li>
-                    <li><a href="ajouter_materiel">Ajouter</a></li>
-                    <li><a href="commentaire">Commentaire</a></li>
+                    <li><a href="{{ url_for('consulter_bon_commande') }}">consulter bon de commande</a></li>
+                    <li><a href="{{ url_for('commander') }}">commander</a></li>
+                    <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
+                    <li><a href="{{ url_for('alertes') }}">alertes</a></li>
+                    <li><a href="{{ url_for('demandes') }}">demandes</a></li>
                 </ul>
                 {% endif %}
             </div>
             {% endif %}
             <div class="utilitaires">
-                <h4>Utilitaires : </h3>
+                <h4>utilitaires : </h3>
                 <ul>
-                    <li><a href="https://www.legtfrancoisvillon.fr/v3/">Lycée François Villon</a></li>                    
-                    <li><a href="https://ent.netocentre.fr/cas/login?service=https://lycees.netocentre.fr/portail/Login%3FrefUrl%3D%2Fportail%2Ff%2Faccueil%2Fnormal%2Frender.uP&token=020e78251cdefbdfe0365d73cad6a32e">ENT</a></li>                    
+                    <li><a target="_blank" href="https://www.legtfrancoisvillon.fr/v3/">Lycée François Villon</a></li>                    
+                    <li><a target="_blank" href="https://ent.netocentre.fr/cas/login?service=https://lycees.netocentre.fr/portail/Login%3FrefUrl%3D%2Fportail%2Ff%2Faccueil%2Fnormal%2Frender.uP&token=020e78251cdefbdfe0365d73cad6a32e">ENT</a></li>                    
                 </ul>
             </div>
 
             <div class="workers">
-                <h4>Réalisé par : </h3>
+                <h4>réalisé par : </h3>
                 <ul>
-                    <li>BLANDEAU Erwan</li>
-                    <li>LALLIER Anna</li>
-                    <li>LAVENANT Jordan</li>
-                    <li>LUCIDOR Léo</li>
-                    <li>PILET Colin</li>
+                    <li>BLANDEAU ERWAN</li>
+                    <li>LALLIER ANNA</li>
+                    <li>LAVENANT JORDAN</li>
+                    <li>LUCIDOR LEO</li>
+                    <li>PILET COLIN</li>
                 </ul>
             </div>
         </div>

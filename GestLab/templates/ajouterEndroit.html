@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterEndroit.css') }}">
+{% endblock %}
+{% block content %}
+<a id="btn-back" href="{{ url_for('inventaire') }}">retour</a>
+<div class="ajouterEndroit-container">
+    <form class="form-ajoutEndroit" role="form" method="POST" action="{{ url_for('ajouter_endroit') }}">
+        {{ AjouterEndroitForm.hidden_tag() }}
+        <p>description de l'endroit : </p>
+        {{ AjouterEndroitForm.endroit(size=100, class_="form-control element", placeholder="lieu, localisation") }}
+        <input type="submit" value="AJOUTER UN ENDROIT" class="element submit">
+    </form>
+</div>
+
+
+{% endblock %}

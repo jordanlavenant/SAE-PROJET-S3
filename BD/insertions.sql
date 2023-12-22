@@ -50,9 +50,15 @@ INSERT INTO UTILISATEUR (idStatut, nom, prenom, email, motDePasse) VALUES
 (2, 'Utilisateur', 'Standard', 'user@example.com', 'motdepasseuser');
 
 INSERT INTO RISQUE (nomRisque) VALUES
-('Toxicité'),
-('Feu'),
-('Radiation');
+('Comburant'),
+('Danger incendie'),
+('Explosif'),
+('Effets graves sur la santé'),
+('Altération de la santé humaine'),
+('Gaz sous pression'),
+('Corrosion'),
+('Toxicité aquatique'),
+('Toxicité aiguë');
 
 INSERT INTO FDS (nomFDS) VALUES
 ('FDS 1'),
@@ -61,6 +67,7 @@ INSERT INTO FDS (nomFDS) VALUES
 
 INSERT INTO RISQUES (idFDS, idRisque) VALUES
 (1, 1),
+(1, 2),
 (2, 2),
 (3, 3);
 
@@ -99,7 +106,6 @@ INSERT INTO MATERIELUNIQUE (idMateriel, idRangement, dateReception, commentaireM
 (3, 3, '2023-10-26 12:00:00', null, 1, NULL),
 (2, 2, '2023-10-26 11:00:00', 'Pipettes neuves', 10, '2023-10-30') ;
 
---éviter les insertions manuelles sur stocklaboratoire, exceptionnel ici pour les tests sur les alertes
 INSERT INTO STOCKLABORATOIRE(idMateriel, quantiteLaboratoire) VALUES
 (3, 1),
 (1, 0) ;
@@ -108,15 +114,13 @@ INSERT INTO FOURNISSEUR (nomFournisseur, adresseFournisseur, mailFournisseur, te
 ('Fournisseur 1', 'Adresse 1', 'fournisseur1@example.com', '1234567890'),
 ('Fournisseur 2', 'Adresse 2', 'fournisseur2@example.com', '9876543210');
 
-INSERT INTO DEMANDE (idUtilisateur, descriptionDemande) VALUES
-(2, 'Demande 1 de l''utilisateur standard'),
-(2, 'Demande 2 de l''utilisateur standard');
+INSERT INTO ETATDEMANDE(nomEtatD) 
+VALUES ('En attente de validation'),
+       ('Envoyée');
 
-INSERT INTO AJOUTERMATERIEL (idDemande, idMateriel, quantite) VALUES
-(2, 2, 2);
-
---(1, 1, 2),
---(1, 2, 5),
+INSERT INTO DEMANDE (idUtilisateur, descriptionDemande, idEtatD) VALUES
+(6, 'Demande 1 de l''utilisateur standard', 1),
+(6, 'Demande 2 de l''utilisateur standard', 2);
 
 INSERT INTO ETATCOMMANDE (nomEtat) VALUES
 ('En attente de la validation du Gestionnaire'),
@@ -124,25 +128,20 @@ INSERT INTO ETATCOMMANDE (nomEtat) VALUES
 ('Expédiée'),
 ('Livrée');
 
-INSERT INTO BONCOMMANDE (idEtat, idUtilisateur) VALUES
-(1, 1),
-(2, 1);
 
-INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES
-(1, 1, 2),
-(1, 2, 5);
+
+INSERT INTO BONCOMMANDE (idEtat, idUtilisateur, dateBonCommande) VALUES
+(1, 1, NULL),
+(2, 1, NULL);
+
+-- INSERT INTO COMMANDE (idBonCommande, idMateriel, quantite) VALUES
+-- (1, 1, 2),
+-- (1, 2, 5);
 
 INSERT INTO SUIVICOMMANDE (idBonCommande, localisation, numColis) VALUES
 (1, 'Entrepôt 1', 12345),
 (2, 'Entrepôt 2', 67890);
 
-INSERT INTO ENVOIFOURNISSEUR (idBonCommande, idFournisseur, facture) VALUES
-(1, 1, 'Facture 1'),
-(2, 2, 'Facture 2');
-
-INSERT INTO RESERVELABORATOIRE (idReserve, idMaterielUnique) VALUES
-(1, 2),
-(2, 3);
 
 INSERT INTO TYPESALERTES (idAlerte, descriptionAlerte) VALUES 
 (1, "Date de péremption dépassée"),
@@ -216,3 +215,5 @@ VALUES  ('Microscope'),
         ('Tubes de centrifugation'),
         ('Boîtes cryogéniques'),
         ('Flacons de stockage');
+
+

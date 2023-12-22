@@ -3,7 +3,7 @@ a {
     color: #384274;
 }
 
-#container-objet {
+.container-objet {
     margin: 3% 30vw 3% 30vw;
     padding: 1em;
     background-color: #384274;
@@ -13,14 +13,29 @@ a {
     align-items: center;
 }
 
-.texte_blanc {
-    padding: 0 0 5% 0;
-    margin: 0;
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     color: white;
+    font-size: 35px;
+}
+
+.btns-objet {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.container-bouton-top {
+    margin-left: 10vw;
+    margin-right: 10vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 #btn-back {
-    margin-left: 10vw;
     color: white;
     background-color: #384274;
     padding: 14px 40px;
@@ -39,12 +54,30 @@ a {
     cursor: pointer;
 }
 
+#btn-tout-commander {
+    color: #fff;
+    background-color: #384274;
+    border-radius: 25px;
+    padding: 14px 40px;
+    transition: 0.2s;
+    font-size: 25px;
+    text-align: center;
+}
+
+#btn-tout-commander:hover {
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
 #btn-voir {
-    margin-right: 1%;
     background-color: white;
     border-radius: 25px;
     padding: 14px 40px;
     transition: 0.2s;
+    text-align: center;
 }
 
 #btn-voir:hover {
@@ -53,4 +86,10 @@ a {
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
+}
+
+@media screen and (max-width: 1400px) {
+    .container-objet {
+        flex-direction: column;
+    }
 }
