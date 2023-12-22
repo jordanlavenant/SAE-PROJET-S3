@@ -1,3 +1,24 @@
+from sqlalchemy import text
+
+from GestLab.Classe_python.Alerte import Alert
+import GestLab.Classe_python.Authentification as Authentification
+import GestLab.Classe_python.BonCommande as Bon_commande 
+import GestLab.Classe_python.Commande as Commande
+import GestLab.Classe_python.Domaine as Domaine
+from GestLab.Classe_python.Endroit import Endroit
+from GestLab.Classe_python.FDS import FDS
+from GestLab.Classe_python.Demande import Demande
+from GestLab.Classe_python.Materiel import Materiel
+from GestLab.Classe_python.MaterielUnique import MaterielUnique
+from GestLab.Classe_python.MotDePasse import Mots_de_passe
+from GestLab.Classe_python.Rangement import Rangement
+from GestLab.Classe_python.Recherche import Recherche
+from GestLab.Classe_python.Reload import RELOAD
+from GestLab.Classe_python.ReserveLaboratoire import ReserveLaboratoire
+from GestLab.Classe_python.Risque import Risques
+from GestLab.Classe_python.StockLaboratoire import STOCKLABORATOIRE
+from GestLab.initialisation import get_cnx
+
 from .app import app, csrf #, db
 from flask import render_template, url_for, redirect, request, session, jsonify, send_file
 from flask_login import login_user, current_user, logout_user, login_required
@@ -7,7 +28,6 @@ from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitFie
 from wtforms.validators import DataRequired, Optional
 from wtforms import PasswordField
 from hashlib import sha256
-from .requetebd5 import *
 from .connexionPythonSQL import *
 from .models import *
 import time
@@ -22,9 +42,9 @@ class LoginForm(FlaskForm):
     next = HiddenField()
 
     def get_authenticated_user(self):
-        user = Utilisateur.Get.get_nom_and_statut_and_email(cnx, self.email.data)
+        user = Bon_commande.Utilisateur.Utilisateur.Get.get_nom_and_statut_and_email(cnx, self.email.data)
         print(user)
-        mdp = Utilisateur.Get.get_password_with_email(cnx, self.email.data)
+        mdp = Bon_commande.Utilisateur.Utilisateur.Get.get_password_with_email(cnx, self.email.data)
         if user is None:
             return None
         passwd = Mots_de_passe.hasher_mdp(self.password.data)
@@ -127,7 +147,7 @@ class AjouterSuggestionForm(FlaskForm):
         return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
 
 class CommentaireForm(FlaskForm):
-    gestionnaires = SelectField('ComboBox', choices=Utilisateur.Get.get_user_with_statut(get_cnx(), "Gestionnaire"))
+    gestionnaires = SelectField('ComboBox', choices=Bon_commande.Utilisateur.Utilisateur.Get.get_user_with_statut(get_cnx(), "Gestionnaire"))
     text = TextAreaField('text', validators=[DataRequired()])
     submit = SubmitField('envoyer le commentaire')
 
@@ -616,14 +636,14 @@ def a2f(mail, id):
     f = A2FForm()
     if f.validate_on_submit():
         code = f.get_code()
-        uri = Utilisateur.Get.get_uri_with_email(cnx, mail)
-        if Authentification.verify(uri, code):
+        uri = Bon_commande.Utilisateur.Utilisateur.Get.get_uri_with_email(cnx, mail)
+        if Authentification.Authentification.verify(uri, code):
             if id == 1:
                 Mots_de_passe.recuperation_de_mot_de_passe(cnx, mail)
                 print("code valide")
                 return redirect(url_for('login'))
             if id == 2:
-                res = Utilisateur.Update.update_mdp_utilisateur(cnx, session['utilisateur'][2], oldMdp, newMdp)
+                res = Bon_commande.Utilisateur.Utilisateur.Update.update_mdp_utilisateur(cnx, session['utilisateur'][2], oldMdp, newMdp)
                 if res:
                     session.pop('utilisateur', None)
                     return redirect(url_for('login'))
@@ -631,7 +651,7 @@ def a2f(mail, id):
                     print("erreur de changement de mdp")
                     return redirect(url_for('login'))
             if id == 3:
-                res = Utilisateur.Update.update_email_utilisateur(cnx, newMail, session['utilisateur'][0], mdp, oldMail)
+                res = Bon_commande.Utilisateur.Utilisateur.Update.update_email_utilisateur(cnx, newMail, session['utilisateur'][0], mdp, oldMail)
                 print(newMail, session['utilisateur'][0], mdp)
                 if res:
                     session.pop('utilisateur', None)
@@ -681,7 +701,7 @@ def commander_demande_materiel_unique(id):
 
 @app.route("/tout-commander-materiel-unique/<int:idDemande>", methods=("GET","POST",))
 def tout_commander_materiel_unique(idDemande):
-    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     Demande.Update.tout_commander_with_idDemmande_and_idUt(cnx, idDemande, idUser)
     return redirect(url_for('commander'))
 
@@ -710,15 +730,15 @@ def commander():
     rechercher = RechercherForm()
     nb_alertes = Alert.get_nb_alert(cnx)
     nb_demandes = Demande.Get.get_nb_demande(cnx)
-    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
-    idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
-    liste_materiel = Bon_commande.Get.afficher_bon_commande(cnx, idUser)
+    idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
+    liste_materiel = Bon_commande.Bon_commande.Get.afficher_bon_commande(cnx, idUser)
     nbMateriel = len(liste_materiel)
     print(liste_materiel)
     return render_template(
         "commander.html",
         title="commander du matériel",
-        categories = Domaine.get_domaine(get_cnx()),
+        categories = Domaine.Domaine.get_domaine(get_cnx()),
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
         idUser = idUser,
@@ -733,7 +753,7 @@ def commander():
 @csrf.exempt
 def recherche_materiel_demander():
     rechercher = RechercherForm()
-    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
     value = rechercher.get_value()
     print("value : "+value)
@@ -743,8 +763,8 @@ def recherche_materiel_demander():
             "demander.html",
             title="demander",
             idUser = idUser,
-            idDemande = Demande.Get.get_id_demande_actuel(cnx, Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
-            categories = Domaine.get_domaine(get_cnx()),
+            idDemande = Demande.Get.get_id_demande_actuel(cnx, Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
+            categories = Domaine.Domaine.get_domaine(get_cnx()),
             RechercherForm=rechercher,
             liste_materiel = liste_materiel,
             nbMateriel = len(liste_materiel),
@@ -758,8 +778,8 @@ def recherche_materiel_demander():
 @csrf.exempt
 def recherche_materiel():
     rechercher = RechercherForm()
-    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
-    idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
+    idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
     value = rechercher.get_value()
     print("value : "+value)
     if value != None:
@@ -768,8 +788,8 @@ def recherche_materiel():
             "commander.html",
             title="commander",
             idUser = idUser,
-            idbc = Bon_commande.Get.get_id_bonCommande_actuel(cnx, Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
-            categories = Domaine.get_domaine(get_cnx()),
+            idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
+            categories = Domaine.Domaine.get_domaine(get_cnx()),
             RechercherForm=rechercher,
             liste_materiel = liste_materiel,
             nbMateriel = len(liste_materiel),
@@ -781,13 +801,13 @@ def recherche_materiel():
 
 @app.route("/bon-commande/<int:id>")
 def bon_commande(id):
-    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     liste_materiel = Materiel.Get.get_materiel_commande(cnx, id)
     return render_template(
         "bonDeCommande.html",
         id = id,
         idUser = idUser,
-        categories = Domaine.get_domaine(get_cnx()),
+        categories = Domaine.Domaine.get_domaine(get_cnx()),
         title = "bon de commande",
         liste_materiel = liste_materiel,
         longueur = len(liste_materiel),
@@ -796,13 +816,13 @@ def bon_commande(id):
 
 @app.route("/bon-demande/<int:id>")
 def bon_demande(id):
-    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     liste_materiel = Materiel.Get.get_materiel_demande(cnx, id)
     return render_template(
         "bonDemande.html",
         id = id,
         idUser = idUser,
-        categories = Domaine.get_domaine(get_cnx()),
+        categories = Domaine.Domaine.get_domaine(get_cnx()),
         title = "bon de demande",
         liste_materiel = liste_materiel,
         longueur = len(liste_materiel),
@@ -811,7 +831,7 @@ def bon_demande(id):
 
 @app.route("/consulterBonCommande/")
 def consulter_bon_commande():
-    info_bon_commande = Bon_commande.Get.consulter_bon_commande_without_table(cnx)
+    info_bon_commande = Bon_commande.Bon_commande.Get.consulter_bon_commande_without_table(cnx)
     print(info_bon_commande)
     liste_info_user = []
     liste_etat_bon_commande = []
@@ -819,8 +839,8 @@ def consulter_bon_commande():
     for info in info_bon_commande:
         if info[1] == 2:
             nb_bon_commande_attente += 1
-        liste_etat_bon_commande.append(Commande.Get.get_statut_from_commande_with_id_etat(cnx, info[1]))
-        info_user = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), info[2])
+        liste_etat_bon_commande.append(Commande.Commande.Get.get_statut_from_commande_with_id_etat(cnx, info[1]))
+        info_user = Bon_commande.Utilisateur.Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), info[2])
         liste_info_user.append(info_user)
     return render_template(
         "consulterBonCommande.html",
@@ -830,7 +850,7 @@ def consulter_bon_commande():
         bonCommande = info_bon_commande,
         infoUser = liste_info_user,
         listeEtat = liste_etat_bon_commande,
-        statutsCommande = Commande.Get.get_statut_from_commande(cnx),
+        statutsCommande = Commande.Commande.Get.get_statut_from_commande(cnx),
         chemin = [("base", "accueil"), ('consulter_bon_commande', 'consulter bon de commande')]
     )
 
@@ -838,7 +858,7 @@ def consulter_bon_commande():
 def changer_statut_bon_commande():
     idbc = request.args.get('idbc')
     idStatut = request.args.get('statut')
-    Bon_commande.Update.changer_etat_bonCommande_with_id(cnx, idbc, idStatut)
+    Bon_commande.Bon_commande.Update.changer_etat_bonCommande_with_id(cnx, idbc, idStatut)
     return redirect(url_for('consulter_bon_commande'))
 
 @app.route("/delete-materiel/<int:idbc>/<int:idMat>", methods=("GET","POST",))
@@ -861,7 +881,7 @@ def delete_materiel_demandes(idDemande, idMat):
 @app.route("/bon-commande-unique", methods=("GET","POST",))
 def bon_commande_unique():
     idbc = request.args.get('idbc')
-    liste_materiel = Bon_commande.Get.get_bon_commande_with_id(cnx, idbc)
+    liste_materiel = Bon_commande.Bon_commande.Get.get_bon_commande_with_id(cnx, idbc)
     return render_template(
         "bonCommandeUnique.html",
         liste_materiel = liste_materiel,
@@ -872,12 +892,12 @@ def bon_commande_unique():
 
 @app.route("/historique-bon-commande")
 def historique_bon_commande():
-    info_bon_commande = Bon_commande.Get.get_bon_commande_with_statut(cnx, 4)
+    info_bon_commande = Bon_commande.Bon_commande.Get.get_bon_commande_with_statut(cnx, 4)
     liste_info_user = []
     liste_etat_bon_commande = []
     for info in info_bon_commande:
-        liste_etat_bon_commande.append(Commande.Get.get_statut_from_commande_with_id_etat(cnx, info[1]))
-        info_user = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), info[2])
+        liste_etat_bon_commande.append(Commande.Commande.Get.get_statut_from_commande_with_id_etat(cnx, info[1]))
+        info_user = Bon_commande.Utilisateur.Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), info[2])
         liste_info_user.append(info_user)
     return render_template(
         "historiqueBonCommande.html",
@@ -886,13 +906,13 @@ def historique_bon_commande():
         bonCommande = info_bon_commande,
         infoUser = liste_info_user,
         listeetat = liste_etat_bon_commande,
-        statutsCommande = Commande.Get.get_statut_from_commande(cnx),
+        statutsCommande = Commande.Commande.Get.get_statut_from_commande(cnx),
         # chemin = [("base", "accueil"), ("consulter_bon_commande, consulter bon commande"), ("historique_bon_commande", "historique des bon de commande")]
     )
 
 @app.route("/delete-bon-commande/<int:id>", methods=("GET","POST",))
 def delete_bon_commande(id):
-    Bon_commande.Delete.delete_bonCommande_with_id(cnx, id)
+    Bon_commande.Bon_commande.Delete.delete_bonCommande_with_id(cnx, id)
     return redirect(url_for('consulter_bon_commande'))
 
 @app.route("/valider-bon-demande/<int:id>", methods=("GET","POST",))
@@ -908,7 +928,7 @@ def valider_bon_commande(id):
     idCommande = request.args.get('idCommande')
     liste_materiel = Materiel.Get.get_all_materiel_for_pdf_in_bon_commande(cnx, id)
     print(liste_materiel)
-    Bon_commande.Update.changer_etat_bonCommande(cnx, id)
+    Bon_commande.Bon_commande.Update.changer_etat_bonCommande(cnx, id)
     PDF_BonCommande.genererpdfBonCommande(session['utilisateur'][0], session['utilisateur'][3], liste_materiel, str(idCommande))
     while True:
         pass  # Cette boucle ne se termine jamais  
@@ -922,9 +942,9 @@ def valider_bon_commande_pdf(id):
 
 @app.route("/fusion-bon-commande")
 def fusion_bon_commande():
-    liste_bon_commande = Bon_commande.Get.get_bon_commande_with_statut_fusion(cnx, 2)
+    liste_bon_commande = Bon_commande.Bon_commande.Get.get_bon_commande_with_statut_fusion(cnx, 2)
     print(liste_bon_commande)
-    Bon_commande.Insert.fusion_bon_commande(cnx, liste_bon_commande, session['utilisateur'][4])
+    Bon_commande.Bon_commande.Insert.fusion_bon_commande(cnx, liste_bon_commande, session['utilisateur'][4])
     return redirect(url_for('consulter_bon_commande'))
 
 @app.route("/alertes/")
@@ -989,8 +1009,8 @@ def consulter_utilisateur():
         if selected_value == "Tous":
             return render_template(
                 "consulterUtilisateur.html",
-                utilisateurs = Utilisateur.Get.get_all_user(get_cnx())[0],
-                nbUser = Utilisateur.Get.get_all_user(get_cnx())[1],
+                utilisateurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[0],
+                nbUser = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
@@ -999,8 +1019,8 @@ def consulter_utilisateur():
         elif selected_value == "Professeur":
             return render_template(
                 "consulterUtilisateur.html",
-                utilisateurs = Utilisateur.Get.get_all_user(get_cnx(), 2)[0],
-                nbUser = Utilisateur.Get.get_all_user(get_cnx(), 2)[1],
+                utilisateurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 2)[0],
+                nbUser = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 2)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
@@ -1009,8 +1029,8 @@ def consulter_utilisateur():
         elif selected_value == "Gestionnaire":
             return render_template(
                 "consulterUtilisateur.html",
-                utilisateurs = Utilisateur.Get.get_all_user(get_cnx(), 4)[0],
-                nbUser = Utilisateur.Get.get_all_user(get_cnx(), 4)[1],
+                utilisateurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 4)[0],
+                nbUser = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 4)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
@@ -1019,8 +1039,8 @@ def consulter_utilisateur():
         elif selected_value == "Laborantin":
             return render_template(
                 "consulterUtilisateur.html",
-                utilisateurs = Utilisateur.Get.get_all_user(get_cnx(), 3)[0],
-                nbUser = Utilisateur.Get.get_all_user(get_cnx(), 3)[1],
+                utilisateurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 3)[0],
+                nbUser = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 3)[1],
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
@@ -1029,8 +1049,8 @@ def consulter_utilisateur():
 
     return render_template(
         "consulterUtilisateur.html",
-        utilisateurs = Utilisateur.Get.get_all_user(get_cnx())[0],
-        nbUser = Utilisateur.Get.get_all_user(get_cnx())[1],
+        utilisateurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[0],
+        nbUser = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[1],
         categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
         title="consulter les utilisateurs",
         RechercherForm=f,
@@ -1056,8 +1076,8 @@ def recherche_utilisateur():
 
     return render_template(
         "consulterUtilisateur.html",
-        utilisateurs = Utilisateur.Get.get_all_user(get_cnx())[0],
-        nbUser = Utilisateur.Get.get_all_user(get_cnx())[1],
+        utilisateurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[0],
+        nbUser = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[1],
         categories = ["Tous", "Professeur", "Gestionnaire"],
         title="consulter les utilisateurs",
         RechercherForm=f,
@@ -1066,7 +1086,7 @@ def recherche_utilisateur():
 
 @app.route("/supprimer-utilisateur/<int:id>", methods=("GET","POST",))
 def supprimer_utilisateur(id):
-    Utilisateur.Delete.delete_utilisateur(cnx, id)
+    Bon_commande.Utilisateur.Utilisateur.Delete.delete_utilisateur(cnx, id)
     print("supprimer utilisateur : "+str(id))
     return redirect(url_for('consulter_utilisateur'))
 
@@ -1078,27 +1098,27 @@ def modifier_utilisateur(id):
         print(statut)
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
-                res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
+                res = Bon_commande.Utilisateur.Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 2, nom, prenom, email)
                 if res:
                     return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('consulter_utilisateur'))
             elif statut == "gestionnaire":
-                res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 4, nom, prenom, email)
+                res = Bon_commande.Utilisateur.Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 4, nom, prenom, email)
                 if res:
                     return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('consulter_utilisateur'))
             elif statut == "laborantin":
-                res = Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 3, nom, prenom, email)
+                res = Bon_commande.Utilisateur.Utilisateur.Update.update_all_information_utillisateur_with_id(cnx, id, 3, nom, prenom, email)
                 if res:
                     return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur de modification d'utilisateur")
                     return redirect(url_for('consulter_utilisateur'))
-    prenom, nom, email, statut = Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), id)
+    prenom, nom, email, statut = Bon_commande.Utilisateur.Utilisateur.Get.get_all_information_utilisateur_with_id(get_cnx(), id)
     return render_template(
         "modifierUtilisateur.html",
         title="modifier un utilisateur",
@@ -1121,7 +1141,7 @@ def modifier_materiel(id):
     print(estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif)
 
 
-    idDomaine = Domaine.get_id_domaine_from_categorie(cnx, idCategorie)
+    idDomaine = Domaine.Domaine.get_id_domaine_from_categorie(cnx, idCategorie)
     f = AjouterMaterielForm()
     f.nom.default = nomMateriel
     f.reference.default = referenceMateriel
@@ -1230,7 +1250,7 @@ def demandes():
 
 @app.route("/demande/<int:idDemande>")
 def demande(idDemande):
-    id_user = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    id_user = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     info_commande = Demande.Get.get_info_demande_with_id(get_cnx(), idDemande)
 
     return render_template(
@@ -1264,7 +1284,7 @@ def inventaire():
         return render_template(
             "inventaire.html",
             RechercherForm=rechercher,
-            categories = Domaine.get_domaine(get_cnx()),
+            categories = Domaine.Domaine.get_domaine(get_cnx()),
             items = final_items,
             nbMateriel = items[1],
             alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
@@ -1290,7 +1310,7 @@ def recherche_inventaire():
     if value != None:
         return render_template(
             "inventaire.html",
-            categories = Domaine.get_domaine(get_cnx()),
+            categories = Domaine.Domaine.get_domaine(get_cnx()),
             items = final_items,
             title="inventaire",
             alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
@@ -1304,7 +1324,7 @@ def recherche_inventaire():
 @csrf.exempt
 def demander():
     recherche = RechercherForm()
-    idUser = Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
+    idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     liste_materiel = Demande.Get.afficher_demande(cnx, idUser)
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
     print(liste_materiel)
@@ -1316,7 +1336,7 @@ def demander():
         liste_materiel = liste_materiel,
         nbMateriel = len(liste_materiel),
         RechercherForm=recherche,
-        categories = Domaine.get_domaine(get_cnx()),
+        categories = Domaine.Domaine.get_domaine(get_cnx()),
         idUser = idUser,
         chemin = [("base", "accueil"), ("demander", "demander")]
     )
@@ -1335,7 +1355,7 @@ def ajouter_demande(id):
 def commentaire():
     materiel = request.args.get('materiel')
     print(materiel)
-    users = Utilisateur.Get.get_user_with_statut(get_cnx(), "Gestionnaire")
+    users = Bon_commande.Utilisateur.Utilisateur.Get.get_user_with_statut(get_cnx(), "Gestionnaire")
     f = CommentaireForm()
     if f.validate_on_submit():
         text, gest = f.get_text()
@@ -1374,7 +1394,7 @@ def login():
             user = nom, idStatut, mail, prenom
             if user != None:
                 #login_user(user)
-                idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+                idUt = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, user[2])
                 session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
                 RELOAD.reload_alert(cnx)
                 print("login : "+str(session['utilisateur']))
@@ -1472,21 +1492,21 @@ def ajouterUtilisateur():
         nom, prenom, email, statut = f.get_full_user()
         if nom != None and prenom != None and email != None and statut != None:
             if statut == "professeur":
-                res = Utilisateur.Insert.ajout_professeur(cnx, nom, prenom, email)
+                res = Bon_commande.Utilisateur.Utilisateur.Insert.ajout_professeur(cnx, nom, prenom, email)
                 if res:
                     return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur d'insertion d'utilisateur")
                     return redirect(url_for('consulter_utilisateur'))
             elif statut == "gestionnaire":
-                res = Utilisateur.Insert.ajout_gestionnaire(cnx, nom, prenom, email)
+                res = Bon_commande.Utilisateur.Utilisateur.Insert.ajout_gestionnaire(cnx, nom, prenom, email)
                 if res:
                     return redirect(url_for('consulter_utilisateur'))
                 else:
                     print("erreur d'insertion d'utilisateur")
                     return redirect(url_for('consulter_utilisateur'))
             elif statut == "laborantin":
-                res = Utilisateur.Insert.ajout_laborantin(cnx, nom, prenom, email)
+                res = Bon_commande.Utilisateur.Utilisateur.Insert.ajout_laborantin(cnx, nom, prenom, email)
                 if res:
                     return redirect(url_for('consulter_utilisateur'))
                 else:
