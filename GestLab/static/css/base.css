@@ -13,9 +13,12 @@ button {
     font-size: 30px;
 }
 
-input {
+input,
+select,
+textarea {
     font-family: 'Alumni Sans', sans-serif;
     font-size: 30px;
+    border-radius: 5px;
 }
 
 a {
