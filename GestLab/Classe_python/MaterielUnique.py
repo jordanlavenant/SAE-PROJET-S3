@@ -269,5 +269,7 @@ class MaterielUnique:
             except sqlalchemy.exc.IntegrityError as e:
                 print(f"SQL IntegrityError: {e}")
                 return -1
+            
+     
 
 
