@@ -18,6 +18,7 @@ from GestLab.Classe_python.ReserveLaboratoire import ReserveLaboratoire
 from GestLab.Classe_python.Risque import Risques
 from GestLab.Classe_python.StockLaboratoire import STOCKLABORATOIRE
 from GestLab.Classe_python.ImportCSV import ImportCSV
+from GestLab.Classe_python.ExportCSV import ExportCSV
 from GestLab.Classe_python.Table import Table
 from GestLab.initialisation import get_cnx
 
@@ -444,6 +445,7 @@ def exporter_csv():
     if f.validate_on_submit():
         tables = f.get_tables()
         print(tables)
+        ExportCSV.Get.exporter_csv(cnx, tables)
         return redirect(url_for('exporter_csv'))
     return render_template(
         "exporterCsv.html",
