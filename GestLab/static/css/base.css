@@ -37,6 +37,16 @@ header {
     color: #384274; /* Couleur du texte en surbrillance */
 }
 
+:root {
+    --text: white;
+    --background: #384274;
+    --background-hover: #0e1b60;
+    --dark-background: #262e58;
+    --border: #384274;
+    --border-hover: #009AF0;
+    --shadow: 0 0 10px #384274;
+}
+
 /* titre */
 
 .title {
