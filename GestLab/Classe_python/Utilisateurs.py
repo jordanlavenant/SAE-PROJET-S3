@@ -171,6 +171,21 @@ class Utilisateur:
             except:
                 print("erreur de l'id")
                 raise
+
+        def get_statut_with_idDemande(cnx, idDemande):
+            """
+            Récupère le statut de l'utilisateur qui a fait la demande.
+
+            Args:
+                cnx (object): Objet de connexion à la base de données.
+                idDemande (int): Identifiant de la demande.
+
+            Returns:
+                str: Le statut de l'utilisateur qui a fait la demande.
+            """
+            result = cnx.execute(text("select idStatut from UTILISATEUR natural join STATUT natural join DEMANDE where idDemande = " + str(idDemande) + ";"))
+            for row in result:
+                return int(row[0])
            
     class Update:
         
