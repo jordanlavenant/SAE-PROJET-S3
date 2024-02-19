@@ -1,12 +1,8 @@
-const item = document.getElementById("lenItem");
-const value = parseInt(item.className)
-
-for (let i=1;i<=value;i++) {
-    if (document.getElementById(`item_${i}`) != null) {
-        if (document.getElementById(`alerts_count_${i}`) != null) {
-            document.getElementById(`item_${i}`).style.borderLeft = "#d35252 solid 15px";
-        } else {
-            document.getElementById(`item_${i}`).style.borderLeft = "#2EDD94 solid 15px";
-        }
+const alerts = document.querySelectorAll('.alerts_count').forEach(alert => {
+    let parent = alert;
+    // On remonte 5 fois pour arriver à la div parent #item
+    for (let i = 0; i < 5 ; i++){
+        parent = parent.parentElement;
     }
-}
+    parent.style.borderLeft = "15px solid #d35252";
+});
