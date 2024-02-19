@@ -121,11 +121,27 @@ a {
 }
 
 .item-container {
+    width: 100%;
+}
+
+.item-container table {
+    width: 100%;
+    border: 1px solid var(--background);
+}
+
+.item-container > table > thead {
+    border-bottom: 1px solid var(--background);
+    padding-bottom: 50px;
+}
+
+.item-container tr {
+    text-align: left;
+}
+
+.item-container td > div {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 25px;
+    gap: 10px;
+    align-items: center;
 }
 
 .item {

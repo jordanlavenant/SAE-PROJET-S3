@@ -25,13 +25,15 @@ a {
 
 .container-all {
     display: flex;
+    flex-direction: row;
+    /* align-items: center; */
     flex-wrap: nowrap;
     padding: 50px 10vw;
     gap: 50px;
 }
 
 .container-left {
-    max-height: 60vh;
+    max-height: 50vh;
     background-color: var(--background);
     flex-basis: 60%;
     padding: 0 50px 20px 50px;
@@ -72,7 +74,7 @@ a {
 .container-right {
     overflow: auto;
     flex-grow: 1;
-    max-height: 60vh;
+    max-height: 50vh;
     flex-basis: 40%;
     background-color: var(--background);
     box-shadow: 5px 10px 10px var(--background);
