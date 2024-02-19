@@ -1,3 +1,10 @@
+- [nom table]
+[nom Colonne1], [nom Colonne2], ....
+[valeur1], [valeur2], ....
+[valeur1], [valeur2], ....
+[valeur1], [valeur2], ....
+
+
 idDomaine,nomDomaine
 1,Appareillage
 2,Électricité
@@ -6,6 +13,8 @@ idDomaine,nomDomaine
 5,Produits chimiques
 6,Verrerie et associés
 
+
+- 
 idCategorie,idDomaine,nomCategorie
 1,1,Observation
 2,1,Mesures
