@@ -17,6 +17,7 @@ from GestLab.Classe_python.Reload import RELOAD
 from GestLab.Classe_python.ReserveLaboratoire import ReserveLaboratoire
 from GestLab.Classe_python.Risque import Risques
 from GestLab.Classe_python.StockLaboratoire import STOCKLABORATOIRE
+from GestLab.Classe_python.ImportCSV import ImportCSV
 from GestLab.initialisation import get_cnx
 
 from .app import app, csrf #, db
@@ -26,6 +27,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField, BooleanField
 from wtforms.validators import DataRequired, Optional
+from flask_wtf.file import FileRequired, FileAllowed
 from wtforms import PasswordField
 from hashlib import sha256
 from .connexionPythonSQL import *
@@ -345,7 +347,50 @@ class AjouterStockForm(FlaskForm):
         Returns the value of the 'endroit' data attribute.
         """
         return self.endroit.data
+
+
+class ImporterCsvForm(FlaskForm):
+    fichier = FileField('fichier', validators=[])
+    submit = SubmitField('importer')
+    next = HiddenField()
+
+    def get_fichier(self):
+        """
+        Récupère le fichier associé à l'objet.
+
+        Returns:
+            Le fichier associé à l'objet.
+        """
+        fichier = self.fichier.data
+        return fichier
     
+    def get_nom_fichier(self):
+        """
+        Récupère le nom du fichier associé à l'objet.
+
+        Returns:
+            Le nom du fichier associé à l'objet.
+        """
+        if self.fichier != None :
+            try :
+                if self.fichier.data.filename != None:
+                    return "self.fichier.data.filename"
+            except:
+                return "None"
+        else:
+            return "None"
+    
+    def get_full_fichier(self):
+        """
+        Récupère les informations complètes du formulaire d'importation de fichier.
+
+        Returns:
+            Tuple: Un tuple contenant les informations suivantes :
+                - fichier (File): Le fichier à importer.
+        """
+        fichier = request.files['fichier']
+        return (fichier,)
+
 class AjouterMaterielUniqueForm(FlaskForm):
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
     position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
@@ -2068,37 +2113,36 @@ def login():
         MdpOublierForm=mdpOublier
     )
 
-"""
 
-@app.route("/login/", methods=("GET","POST",))
-def login():
-    f = LoginForm ()
-    changerMDP = ChangerMDPForm()
-    changerMail = ChangerMailForm()
-    mdpOublier = MdpOublierForm()
-    if not f.is_submitted():
-        f.next.data = request.args.get("next")
-    elif f.validate_on_submit():
-        #nom, idStatut, mail, prenom = f.get_authenticated_user()
-        #user = nom, idStatut, mail, prenom
-        #if user != None:
-            #login_user(user)
-            #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-            session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
-            print("login : "+str(session['utilisateur']))
-            RELOAD.reload_alert(cnx)
-            next = f.next.data or url_for("base")
-            return redirect(next)
-    return render_template(
-        "login.html",
-        title="profil",
-        form=f,
-        fromChangerMDP=changerMDP,
-        fromChangerMail=changerMail,
-        MdpOublierForm=mdpOublier
-    )
 
-    """
+# @app.route("/login/", methods=("GET","POST",))
+# def login():
+#     f = LoginForm ()
+#     changerMDP = ChangerMDPForm()
+#     changerMail = ChangerMailForm()
+#     mdpOublier = MdpOublierForm()
+#     if not f.is_submitted():
+#         f.next.data = request.args.get("next")
+#     elif f.validate_on_submit():
+#         #nom, idStatut, mail, prenom = f.get_authenticated_user()
+#         #user = nom, idStatut, mail, prenom
+#         #if user != None:
+#             #login_user(user)
+#             #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+#             session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
+#             print("login : "+str(session['utilisateur']))
+#             RELOAD.reload_alert(cnx)
+#             next = f.next.data or url_for("base")
+#             return redirect(next)
+#     return render_template(
+#         "login.html",
+#         title="profil",
+#         form=f,
+#         fromChangerMDP=changerMDP,
+#         fromChangerMail=changerMail,
+#         MdpOublierForm=mdpOublier
+#     )
+
 
 @app.route("/logout/")
 def logout():
@@ -2210,3 +2254,27 @@ def get_categorie_choices_modifier_materiel(idDomaine):
     result = cnx.execute(query)
     categories = [(str(id_), name) for name, id_ in result]
     return categories
+
+@app.route("/importer-csv/", methods=("GET","POST",))
+@csrf.exempt
+def importer_csv():
+    
+    importerForm = ImporterCsvForm()
+
+    try:
+        if importerForm.validate_on_submit():
+            fichier = importerForm.get_fichier()
+            #if fichier is not None:
+            ImportCSV.Insert.importer_csv(cnx, fichier)
+            return redirect(url_for('inventaire'))
+        else :
+            print("non valide LOL")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    return render_template(
+        "importerCsv.html",
+        title="importer un fichier csv",
+        ImporterCsvForm=importerForm,
+        chemin = [("base", "accueil"), ("importer_csv", "importer un fichier csv")]
+    )
