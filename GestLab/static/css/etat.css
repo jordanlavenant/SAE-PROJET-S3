@@ -33,7 +33,7 @@ a {
 }
 
 .container-left {
-    max-height: 50vh;
+    max-height: auto;
     background-color: var(--background);
     flex-basis: 60%;
     padding: 0 50px 20px 50px;

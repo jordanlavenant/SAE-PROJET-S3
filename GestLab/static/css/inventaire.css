@@ -4,7 +4,7 @@ a {
 
 #btn-back {
     color: white;
-    background-color: var(--background);
+    background-color: #384274;
     padding: 14px 40px;
     font-size: 25px;
     border: none;
@@ -14,8 +14,8 @@ a {
 
 #btn-back:hover {
     color: white;
-    background-color: var(--secondary);
-    box-shadow: 0 0 15px var(--secondary);
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -31,7 +31,7 @@ a {
 
 .btns {
     color: white;
-    background-color: var(--background);
+    background-color: #384274;
     padding: 14px 40px;
     font-size: 25px;
     border: none;
@@ -40,8 +40,8 @@ a {
 
 .btns:hover {
     color: white;
-    background-color: var(--secondary);
-    box-shadow: 0 0 15px var(--secondary);
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -75,8 +75,8 @@ a {
 #btn-search {
     flex-basis: 20%;
     max-height: 50px;
-    color: var(--text);
-    background-color: var(--background);
+    color: #fff;
+    background-color: #384274;
     padding: 0px 0px;
     font-size: 25px;
     border: none;
@@ -84,8 +84,8 @@ a {
 }
 
 #btn-search:hover {
-    background-color: var(--secondary);
-    box-shadow: 0 0 15px var(--secondary);
+    background-color: #009af0;
+    box-shadow: 0 0 15px #009af0;
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -94,13 +94,14 @@ a {
 .filter-container {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     gap: 25px;
     margin-bottom: 25px;
     align-items: center;
 }
 
 .filter-container > p {
-    color: var(--background);
+    color: #384274;
     font-size: 40px;
     margin: 0;
     padding: 0;
@@ -108,7 +109,7 @@ a {
 
 #domaine-select {
     color: #fff;
-    background-color: var(--background);
+    background-color: #384274;
     font-family: 'Alumni Sans', sans-serif;
     font-size: 25px;
     padding: 10px 60px;
@@ -121,27 +122,11 @@ a {
 }
 
 .item-container {
-    width: 100%;
-}
-
-.item-container table {
-    width: 100%;
-    border: 1px solid var(--background);
-}
-
-.item-container > table > thead {
-    border-bottom: 1px solid var(--background);
-    padding-bottom: 50px;
-}
-
-.item-container tr {
-    text-align: left;
-}
-
-.item-container td > div {
     display: flex;
-    gap: 10px;
-    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
 }
 
 .item {
@@ -150,9 +135,8 @@ a {
     display: flex;
     flex-direction: row;
     padding: 0;
-    background-color: var(--background);
+    background-color: #384274;
     border-left: 15px #2EDD94 solid;
-    box-shadow: 5px 10px 10px var(--background);
 }
 
 #img-item {
@@ -171,14 +155,14 @@ a {
 .item-properties > h2 {
     font-size: 30px;
     margin: 0;
-    color: var(--text);
+    color: white;
 }
 
 .quantity-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    color: var(--text);
+    color: white;
     font-size: 25px;
 }
 
@@ -190,22 +174,22 @@ a {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    color: var(--text);
+    color: white;
     font-size: 25px;
 }
 
 #btn-redirect-item {
-    color: var(--background);
-    background-color: var(--text);
-    padding: 14px 40px;
+    color: #384274;
+    background-color: white;
+    padding: 15px 40px;
     font-size: 25px;
     border: none;
     transition: 0.2s;
 }
 
 #btn-redirect-item:hover {
-    background-color: var(--text);
-    box-shadow: 0 0 15px var(--text);
+    background-color: white;
+    box-shadow: 0 0 15px white;
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
