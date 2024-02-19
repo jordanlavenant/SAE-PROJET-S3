@@ -4,7 +4,13 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/exporterCsv.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('csv') }}">retour</a>
+
+<div class="btn-container">
+    <a id="btn-back" href="{{ url_for('csv') }}">retour</a>
+    <button id="checkAllButton">Tout Cocher</button>
+    <button id="uncheckAllButton" style="display: none;">Tout décocher</button>
+</div>
+
 
 <div class="ajouterMateriel-container">
     <div class="ajouterMateriel-content">
@@ -23,4 +29,52 @@
         </form>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkAllButton = document.getElementById('checkAllButton');
+        const uncheckAllButton = document.getElementById('uncheckAllButton');
+        var checkboxes = document.querySelectorAll('.custom-checkbox');
+        
+        checkAllButton.addEventListener('click', function() {
+            
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = true;
+            }
+            checkAllButton.style.display = 'none';
+            uncheckAllButton.style.display = 'block';
+        });
+
+        uncheckAllButton.addEventListener('click', function() {
+            var checkboxes = document.querySelectorAll('.custom-checkbox');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = false;
+            }
+            checkAllButton.style.display = 'block';
+            uncheckAllButton.style.display = 'none';
+        });
+
+        // Fonction pour vérifier si toutes les cases sont cochées
+        function allChecked() {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (!checkboxes[i].checked) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            // Ajoute un écouteur d'événements à chaque case
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    if (allChecked()) {
+                        document.getElementById('uncheckAllButton').style.display = 'block';
+                        document.getElementById('checkAllButton').style.display = 'none';
+                    } else {
+                        document.getElementById('uncheckAllButton').style.display = 'none';
+                        document.getElementById('checkAllButton').style.display = 'block';
+                    }
+                });
+            });
+    });
+</script>
 {% endblock %}

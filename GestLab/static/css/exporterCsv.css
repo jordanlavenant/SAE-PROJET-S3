@@ -1,16 +1,16 @@
 p {
     color: white;
     font-size: 35px;
-    margin: 15px 0;
+    margin: 10px 0;
 }
 
 .titre-container {
     flex-basis: 100%;
     text-align: center;
+    font-size: 60px;
 }
 
-#btn-back {
-    margin-left: 10vw;
+#btn-back, #checkAllButton, #uncheckAllButton {
     color: white;
     background-color: #384274;
     padding: 14px 40px;
@@ -20,7 +20,7 @@ p {
     transition: 0.2s;
 }
 
-#btn-back:hover {
+#btn-back:hover, #checkAllButton:hover, #uncheckAllButton:hover {
     color: white;
     background-color: #009af0;
     box-shadow: 0 0 15px #009af0;
@@ -104,5 +104,14 @@ p {
 .container-submit {
     flex-basis: 100%;
     text-align: center;
+    margin: 20px;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-basis: 100%;
+    gap: 20px;  
     margin: 20px;
 }
