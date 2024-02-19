@@ -6,10 +6,11 @@ a {
     color: white;
     background-color: #384274;
     padding: 14px 40px;
-    font-size: 25px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
     margin: 10vh 10vw;
+    border-radius: 10px;
 }
 
 #btn-back:hover {
@@ -36,6 +37,7 @@ a {
     font-size: 25px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 .btns:hover {
@@ -81,6 +83,7 @@ a {
     font-size: 25px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 #btn-search:hover {
@@ -185,6 +188,7 @@ a {
     font-size: 25px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 #btn-redirect-item:hover {

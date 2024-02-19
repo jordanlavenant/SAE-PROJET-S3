@@ -15,3 +15,7 @@ for (id in id_array) {
         item.style.borderLeft = "#d35252 solid 15px";
     }
 }
+
+function togglePopup() {
+    document.querySelector('.popup').classList.toggle('open');
+}

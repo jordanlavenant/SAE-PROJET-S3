@@ -1,6 +1,6 @@
 p,
 label {
-    color: white;
+    color: var(--text);
     font-size: 35px;
     margin: 15px 0;
 }
@@ -8,17 +8,18 @@ label {
 #btn-back {
     margin-left: 10vw;
     color: white;
-    background-color: #384274;
+    background-color: var(--background);
     padding: 14px 40px;
-    font-size: 25px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 #btn-back:hover {
     color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -53,8 +54,8 @@ label {
 #btn-search {
     flex-basis: 20%;
     max-height: 50px;
-    color: #384274;
-    background-color: white;
+    color: var(--background);
+    background-color: var(--text);
     padding: 10px 0px;
     font-size: 25px;
     border: none;
@@ -62,9 +63,9 @@ label {
 }
 
 #btn-search:hover {
-    background-color: #009af0;
-    color: white;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    color: var(--text);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -96,7 +97,7 @@ label {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px;
+    border-radius: 10px;
 }
 
 .header-popup {
@@ -131,19 +132,20 @@ label {
 }
 
 #submit-ez-search {
-    color: #384274;
+    color: var(--background);
     background-color: white;
     padding: 14px 20px;
     font-size: 25px;
     border: none;
     transition: 0.2s;
     text-align: center;
+    border-radius: 10px;
 }
 
 #submit-ez-search:hover {
     color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -151,12 +153,13 @@ label {
 
 
 .ajouterMateriel-content {
-    background-color: #384274;
+    background-color: var(--background);
     min-width: 80%;
     padding: 0 3%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    border-radius: 10px;
 }
 
 .main-container {
@@ -187,8 +190,8 @@ label {
 
 .dom-select, 
 .cat-select {
-    color: #384274;
-    background-color: #fff;
+    color: var(--background);
+    background-color: var(--text);
     font-size: 25px;
     padding: 10px;
     border: none;
@@ -202,7 +205,7 @@ label {
     border: 0;
     padding: 10px;
     font-size: 25px;
-    color: #384274;
+    color: var(--background);
     width: 175px;
 }
 
@@ -234,8 +237,8 @@ label {
 }
 
 .submit {
-    color: #384274;
-    background-color: white;
+    color: var(--background);
+    background-color: var(--text);
     padding: 14px 20px;
     font-size: 25px;
     border: none;
@@ -245,9 +248,9 @@ label {
 }
 
 .submit:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
