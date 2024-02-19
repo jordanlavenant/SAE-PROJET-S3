@@ -1,7 +1,7 @@
 login = "blandeau" # pip install pymysql
 passwd = "Loulou34230."
 serveur= "mysql-blandeau.alwaysdata.net"
-bd = "blandeau_gestlab20"
+bd = "blandeau_gestlab21"
 
 def getLogin():
     return login
