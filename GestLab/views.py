@@ -430,7 +430,7 @@ def csv():
     return render_template(
         "CSV.html",
         title="CSV",
-        chemin = [("base", "accueil"), ("csv", "CSV")]
+        chemin = [("base", "accueil"), ("csv", "csv")]
     )
 
 @app.route("/exporter-csv/", methods=("GET","POST",))
@@ -451,7 +451,7 @@ def exporter_csv():
         ExporterCsvForm=f,
         liste_tables = f.liste_tables,
         longueurListe = len(f.liste_tables),    
-        chemin = [("base", "accueil"), ("csv", "CSV"), ("exporter_csv", "exporter un fichier csv")]
+        chemin = [("base", "accueil"), ("csv", "csv"), ("exporter_csv", "exporter un fichier csv")]
     )        
 
 @app.route("/importer-csv/", methods=("GET","POST",))
@@ -475,7 +475,7 @@ def importer_csv():
         "importerCsv.html",
         title="importer un fichier csv",
         ImporterCsvForm=importerForm,
-        chemin = [("base", "accueil"), ("csv", "CSV"), ("importer_csv", "importer un fichier csv")]
+        chemin = [("base", "accueil"), ("csv", "csv"), ("importer_csv", "importer un fichier csv")]
     )
 
 class AjouterMaterielUniqueForm(FlaskForm):
