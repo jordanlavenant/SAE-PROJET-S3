@@ -1,7 +1,7 @@
 from sqlalchemy import text
 import sqlalchemy
-
 import GestLab.Classe_python.Demande as Demande
+import GestLab.Classe_python.Utilisateurs as Utilisateur
 
 
 class Materiel:
@@ -351,7 +351,7 @@ class Materiel:
                 result = cnx.execute(text("SELECT COUNT(*) FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) +  ";"))
                 for row in result:
                     nbmat_in_demande = row[0]
-                if nbmat_in_demande == 0:
+                if nbmat_in_demande == 0 and Utilisateur.Utilisateur.Get.get_statut_with_idDemande(cnx, idDemande) == 4:
                     Demande.Demande.Delete.delete_demande(cnx,idDemande)
                     print("Materiel & Demande supprimée")
                     cnx.commit()
