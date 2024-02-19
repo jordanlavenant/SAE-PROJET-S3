@@ -32,9 +32,13 @@ from wtforms import PasswordField
 from hashlib import sha256
 from .connexionPythonSQL import *
 from .models import *
+from .genererpdf import *
+
 import time
 import datetime
-from .genererpdf import *
+import os
+from werkzeug.utils import secure_filename
+
 
 cnx = get_cnx()
 
@@ -371,25 +375,55 @@ class ImporterCsvForm(FlaskForm):
         Returns:
             Le nom du fichier associé à l'objet.
         """
-        if self.fichier != None :
-            try :
-                if self.fichier.data.filename != None:
-                    return "self.fichier.data.filename"
+        if self.fichier.data is not None:
+            try:
+                if self.fichier.data.filename is not None:
+                    return self.fichier.data.filename
             except:
                 return "None"
         else:
             return "None"
-    
-    def get_full_fichier(self):
+        
+    def get_contenu_fichier(self):
         """
-        Récupère les informations complètes du formulaire d'importation de fichier.
+        Saves the uploaded file to the server.
 
         Returns:
-            Tuple: Un tuple contenant les informations suivantes :
-                - fichier (File): Le fichier à importer.
+            The path where the file was saved.
         """
-        fichier = request.files['fichier']
-        return (fichier,)
+        fichier = self.fichier.data
+        if fichier and hasattr(fichier, 'filename'):
+            filepath = "./temp/" + fichier.filename
+            fichier.save(filepath)
+            return filepath
+        else:
+            print("2bad")
+            return None
+        
+
+@app.route("/importer-csv/", methods=("GET","POST",))
+@csrf.exempt
+def importer_csv():
+    importerForm = ImporterCsvForm()
+
+    try:
+        if importerForm.validate_on_submit():
+            fichier = importerForm.fichier.data
+            if fichier:
+                filename = secure_filename(fichier.filename)
+                filepath = os.path.join('./temp', filename)
+                fichier.save(filepath)
+                ImportCSV.Insert.importer_csv(cnx, filepath)
+                return redirect(url_for('inventaire'))
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    return render_template(
+        "importerCsv.html",
+        title="importer un fichier csv",
+        ImporterCsvForm=importerForm,
+        chemin = [("base", "accueil"), ("importer_csv", "importer un fichier csv")]
+    )
 
 class AjouterMaterielUniqueForm(FlaskForm):
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
@@ -2254,27 +2288,3 @@ def get_categorie_choices_modifier_materiel(idDomaine):
     result = cnx.execute(query)
     categories = [(str(id_), name) for name, id_ in result]
     return categories
-
-@app.route("/importer-csv/", methods=("GET","POST",))
-@csrf.exempt
-def importer_csv():
-    
-    importerForm = ImporterCsvForm()
-
-    try:
-        if importerForm.validate_on_submit():
-            fichier = importerForm.get_fichier()
-            #if fichier is not None:
-            ImportCSV.Insert.importer_csv(cnx, fichier)
-            return redirect(url_for('inventaire'))
-        else :
-            print("non valide LOL")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-    return render_template(
-        "importerCsv.html",
-        title="importer un fichier csv",
-        ImporterCsvForm=importerForm,
-        chemin = [("base", "accueil"), ("importer_csv", "importer un fichier csv")]
-    )

@@ -2,6 +2,7 @@ from sqlalchemy import text
 import sqlalchemy
 import GestLab.Classe_python.Materiel as Materiel 
 import GestLab.Classe_python.MaterielUnique as MaterielUnique
+import csv
 
 
 
@@ -14,7 +15,7 @@ class ImportCSV:
                 reader = csv.reader(file)
                 for row in reader:
                     print(row)
-            print("heee heee")
+            print(data)
             
      
 

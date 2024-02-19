@@ -8,9 +8,7 @@
 
 <div class="ajouterMateriel-container">
     <div class="ajouterMateriel-content">
-
-
-        <form class="form-importCsv" role="form" method="POST" action="{{ url_for('importer_csv') }}">
+        <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('importer_csv') }}">
             {{ ImporterCsvForm.hidden_tag() }}                        
             <div class="main-container">
             </div>
