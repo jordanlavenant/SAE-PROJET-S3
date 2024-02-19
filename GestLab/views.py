@@ -18,6 +18,7 @@ from GestLab.Classe_python.ReserveLaboratoire import ReserveLaboratoire
 from GestLab.Classe_python.Risque import Risques
 from GestLab.Classe_python.StockLaboratoire import STOCKLABORATOIRE
 from GestLab.Classe_python.ImportCSV import ImportCSV
+from GestLab.Classe_python.Table import Table
 from GestLab.initialisation import get_cnx
 
 from .app import app, csrf #, db
@@ -401,8 +402,26 @@ class ImporterCsvForm(FlaskForm):
             return None
 
 class ExporterCsvForm(FlaskForm):
+    liste_tables = Table.Get.get_AllTable(cnx)
+    table_fields = {}  # Créer un dictionnaire pour stocker les champs de table
+    
+    for table in liste_tables:
+        table_fields[table] = StringField(table, validators=[])
+        
     submit = SubmitField('exporter')
     next = HiddenField()
+
+    def get_tables(self):
+        """
+        Récupère les tables sélectionnées.
+
+        Returns:
+            list: Une liste contenant les tables sélectionnées.
+        """
+        tables = []
+        for table in self.table_fields:
+            tables.append(table)
+        return tables
 
 @app.route("/csv")
 def csv():
@@ -421,12 +440,14 @@ def exporter_csv():
     """
     f = ExporterCsvForm()
     if f.validate_on_submit():
-        print("exporter")
+        tables = f.get_tables()
+        print(tables)
         return redirect(url_for('exporter_csv'))
     return render_template(
         "exporterCsv.html",
         title="exporter un fichier csv",
         ExporterCsvForm=f,
+        liste_tables = f.liste_tables,
         chemin = [("base", "accueil"), ("csv", "CSV"), ("exporter_csv", "exporter un fichier csv")]
     )        
 

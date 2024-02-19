@@ -11,6 +11,9 @@
         <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('exporter_csv') }}">
             {{ ExporterCsvForm.hidden_tag() }}                        
             <div class="main-container">
+                {% for table in liste_tables %}
+                    <p>test : {{ ExporterCsvForm[table] }}</p>
+                {% endfor %}
             </div>
             <div class="user-box">
                 <p>Exporter la BDD au format CSV : </p>
