@@ -406,7 +406,7 @@ class ExporterCsvForm(FlaskForm):
     table_fields = {}  # Créer un dictionnaire pour stocker les champs de table
     
     for table in liste_tables:
-        table_fields[table] = StringField(table, validators=[])
+        table_fields[table] = BooleanField(table, default=False)
         
     submit = SubmitField('exporter')
     next = HiddenField()

@@ -12,7 +12,7 @@
             {{ ExporterCsvForm.hidden_tag() }}                        
             <div class="main-container">
                 {% for table in liste_tables %}
-                    <p>test : {{ ExporterCsvForm[table] }}</p>
+                    <p>test : {{ ExporterCsvForm.table_fields[table] }}</p>
                 {% endfor %}
             </div>
             <div class="user-box">
