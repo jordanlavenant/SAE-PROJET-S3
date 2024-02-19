@@ -25,15 +25,49 @@
         </div>
     </div>
     <div class="container-info-utilisateur">
-        {% for utilisateur in utilisateurs %}
-            <section id="{{ utilisateur[0] }}" class="sous-container-info-utilisateur">
-                <p>{{ utilisateur[2] }} {{ utilisateur[3] }}</p>
-                <div class="container-modification">
-                    <a href="{{ url_for('modifier_utilisateur', id=utilisateur[1]) }}"><button>modifier</button></a>
-                    <a href="{{ url_for('supprimer_utilisateur', id=utilisateur[1]) }}"><button>supprimer</button></a>
-                </div>
-            </section>
-        {% endfor %}
+        <div class="professeur">
+            <h1>Professeurs</h1>
+            <div class="scroll_info_utilisateur">
+                {% for professeur in professeurs %}
+                    <section id="{{ professeur[0] }}" class="sous-container-info-utilisateur">
+                        <p>{{ professeur[2] }} {{ professeur[3] }}</p>
+                        <div class="container-modification">
+                            <a href="{{ url_for('modifier_utilisateur', id=professeur[1]) }}"><button>modifier</button></a>
+                            <a href="{{ url_for('supprimer_utilisateur', id=professeur[1]) }}"><button>supprimer</button></a>
+                        </div>
+                    </section>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="laborantin">
+            <h1>Laborantins</h1>
+            <div class="scroll_info_utilisateur">
+                {% for laborantin in laborantins %}
+                    <section id="{{ laborantin[0] }}" class="sous-container-info-utilisateur">
+                        <p>{{ laborantin[2] }} {{ laborantin[3] }}</p>
+                        <div class="container-modification">
+                            <a href="{{ url_for('modifier_utilisateur', id=laborantin[1]) }}"><button>modifier</button></a>
+                            <a href="{{ url_for('supprimer_utilisateur', id=laborantin[1]) }}"><button>supprimer</button></a>
+                        </div>
+                    </section>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="gestionnaire">
+            <h1>Gestionnaires</h1>
+            <div class="scroll_info_utilisateur">
+                {% for gestionnaire in gestionnaires %}
+                    <section id="{{ gestionnaire[0] }}" class="sous-container-info-utilisateur">
+                        <p>{{ gestionnaire[2] }} {{ gestionnaire[3] }}</p>
+                        <div class="container-modification">
+                            <a href="{{ url_for('modifier_utilisateur', id=gestionnaire[1]) }}"><button>modifier</button></a>
+                            <a href="{{ url_for('supprimer_utilisateur', id=gestionnaire[1]) }}"><button>supprimer</button></a>
+                        </div>
+                    </section>
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
 </div>
 {% endblock %}

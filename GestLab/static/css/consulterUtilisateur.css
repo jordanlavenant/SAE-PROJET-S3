@@ -1,5 +1,5 @@
 .utilisateur-container-overall {
-    margin: 15vh 5vw;
+    margin: 0 5vw;
 }
 
 .header-container {
@@ -93,7 +93,7 @@
     margin-right: 10vw;
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: space-between;
 }
 
@@ -135,6 +135,16 @@
     cursor: pointer;
 }
 
+.scroll_info_utilisateur {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.professeur, .laborantin, .gestionnaire {
+    border: 1px solid #384274;
+    padding: 10px;
+    border-radius: 20px;
+    margin: 10px;
+}
 @media screen and (max-width: 1800px) {
     .container-info-utilisateur {
         flex-direction: column;
