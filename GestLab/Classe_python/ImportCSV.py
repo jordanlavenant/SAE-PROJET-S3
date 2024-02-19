@@ -18,7 +18,7 @@ class ImportCSV:
                 if item.isdigit():
                     formatted_data.append(item)
                 else:
-                    formatted_data.append("'" + item + "'") 
+                    formatted_data.append('"' + item + '"') 
             query = f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({', '.join(formatted_data)});"
             print(query)
             cnx.execute(text(f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({', '.join(formatted_data)});"))

@@ -411,7 +411,7 @@ def importer_csv():
             fichier = importerForm.fichier.data
             if fichier:
                 filename = secure_filename(fichier.filename)
-                filepath = os.path.join('./temp', filename)
+                filepath = os.path.join('..\\temp', filename)
                 fichier.save(filepath)
                 ImportCSV.Insert.importer_csv(cnx, filepath)
                 return redirect(url_for('inventaire'))
