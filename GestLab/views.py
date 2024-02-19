@@ -402,12 +402,12 @@ class ImporterCsvForm(FlaskForm):
             return None
 
 class ExporterCsvForm(FlaskForm):
-    liste_tables = Table.Get.get_AllTable(cnx)
-    table_fields = {}  # Créer un dictionnaire pour stocker les champs de table
-    
+    liste_tables = Table.Get.get_AllTable(cnx) 
+
+    # Créer des champs de formulaire pour chaque table
     for table in liste_tables:
-        table_fields[table] = BooleanField(table, default=False)
-        
+        locals()[table] = BooleanField(table, default=False)
+
     submit = SubmitField('exporter')
     next = HiddenField()
 
@@ -419,9 +419,11 @@ class ExporterCsvForm(FlaskForm):
             list: Une liste contenant les tables sélectionnées.
         """
         tables = []
-        for table in self.table_fields:
-            tables.append(table)
+        for table in self.liste_tables:
+            if getattr(self, table).data is True:
+                tables.append(table)
         return tables
+
 
 @app.route("/csv")
 def csv():
@@ -448,6 +450,7 @@ def exporter_csv():
         title="exporter un fichier csv",
         ExporterCsvForm=f,
         liste_tables = f.liste_tables,
+        longueurListe = len(f.liste_tables),    
         chemin = [("base", "accueil"), ("csv", "CSV"), ("exporter_csv", "exporter un fichier csv")]
     )        
 
