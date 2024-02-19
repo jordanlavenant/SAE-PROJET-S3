@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterStock.css') }}">
+{% endblock %}
+{% block content %}
+<a id="btn-back" href="{{ url_for('csv') }}">retour</a>
+
+<div class="ajouterMateriel-container">
+    <div class="ajouterMateriel-content">
+        <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('exporter_csv') }}">
+            {{ ExporterCsvForm.hidden_tag() }}                        
+            <div class="main-container">
+            </div>
+            <div class="user-box">
+                <p>Exporter la BDD au format CSV : </p>
+                <div>{{ ExporterCsvForm.submit(class_="btn btn-primary") }}</div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

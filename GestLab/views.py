@@ -399,7 +399,36 @@ class ImporterCsvForm(FlaskForm):
         else:
             print("2bad")
             return None
-        
+
+class ExporterCsvForm(FlaskForm):
+    submit = SubmitField('exporter')
+    next = HiddenField()
+
+@app.route("/csv")
+def csv():
+    return render_template(
+        "CSV.html",
+        title="CSV",
+        chemin = [("base", "accueil"), ("csv", "CSV")]
+    )
+
+@app.route("/exporter-csv/", methods=("GET","POST",))
+def exporter_csv():
+    """
+    Cette fonction gère l'exportation des données de la base de données dans un fichier CSV.
+    Elle affiche un formulaire permettant de sélectionner les tables à exporter, valide le formulaire,
+    effectue l'exportation des données dans un fichier CSV et renvoie le fichier CSV à l'utilisateur.
+    """
+    f = ExporterCsvForm()
+    if f.validate_on_submit():
+        print("exporter")
+        return redirect(url_for('exporter_csv'))
+    return render_template(
+        "exporterCsv.html",
+        title="exporter un fichier csv",
+        ExporterCsvForm=f,
+        chemin = [("base", "accueil"), ("csv", "CSV"), ("exporter_csv", "exporter un fichier csv")]
+    )        
 
 @app.route("/importer-csv/", methods=("GET","POST",))
 @csrf.exempt
@@ -422,7 +451,7 @@ def importer_csv():
         "importerCsv.html",
         title="importer un fichier csv",
         ImporterCsvForm=importerForm,
-        chemin = [("base", "accueil"), ("importer_csv", "importer un fichier csv")]
+        chemin = [("base", "accueil"), ("csv", "CSV"), ("importer_csv", "importer un fichier csv")]
     )
 
 class AjouterMaterielUniqueForm(FlaskForm):
