@@ -464,7 +464,7 @@ def importer_csv():
                 if bb_vide == "oui":
                     ImportCSV.Insert.importer_csv_bd_vide(cnx, filepath)
                 elif bb_vide == "non":
-                    ImportCSV.Insert.importer_csv(cnx, filepath)
+                    ImportCSV.Insert.importer_csv_bd_plein(cnx, filepath)
                 return redirect(url_for('inventaire'))
 
     except Exception as e:
