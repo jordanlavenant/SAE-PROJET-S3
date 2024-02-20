@@ -10,13 +10,19 @@ class ImportCSV:
             
     class Insert:
                 
-        def importer_csv(cnx, data) :
+        def importer_csv_bd_vide(cnx, data) :
             with open(data, 'r') as file:
                 reader = csv.reader(file)
                 for row in reader:
                     print(row)
             print(data)
             
+        def importer_csv(cnx, data) :
+            with open(data, 'r') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    print(row)
+            print(data)
      
 
 

@@ -27,7 +27,7 @@ from flask import render_template, url_for, redirect, request, session, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField, BooleanField
+from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField, BooleanField, RadioField
 from wtforms.validators import DataRequired, Optional
 from flask_wtf.file import FileRequired, FileAllowed
 from wtforms import PasswordField
@@ -356,9 +356,11 @@ class AjouterStockForm(FlaskForm):
 
 
 class ImporterCsvForm(FlaskForm):
+    
     fichier = FileField('fichier', validators=[])
     submit = SubmitField('importer')
     next = HiddenField()
+    bd_option = RadioField('Commencer avec une base de données vide?', choices=[('oui','Oui'),('non','Non')], default='non')
 
     def get_fichier(self):
         """
@@ -370,37 +372,16 @@ class ImporterCsvForm(FlaskForm):
         fichier = self.fichier.data
         return fichier
     
-    def get_nom_fichier(self):
+    def get_bd_option(self):
         """
-        Récupère le nom du fichier associé à l'objet.
+        Récupère l'option de base de données associée à l'objet.
 
         Returns:
-            Le nom du fichier associé à l'objet.
+            L'option de base de données associée à l'objet.
         """
-        if self.fichier.data is not None:
-            try:
-                if self.fichier.data.filename is not None:
-                    return self.fichier.data.filename
-            except:
-                return "None"
-        else:
-            return "None"
-        
-    def get_contenu_fichier(self):
-        """
-        Saves the uploaded file to the server.
-
-        Returns:
-            The path where the file was saved.
-        """
-        fichier = self.fichier.data
-        if fichier and hasattr(fichier, 'filename'):
-            filepath = "./temp/" + fichier.filename
-            fichier.save(filepath)
-            return filepath
-        else:
-            print("2bad")
-            return None
+        bd_option = self.bd_option.data
+        return bd_option
+    
 
 class ExporterCsvForm(FlaskForm):
     liste_tables = Table.Get.get_AllTable(cnx) 
@@ -464,12 +445,17 @@ def importer_csv():
     try:
         if importerForm.validate_on_submit():
             fichier = importerForm.fichier.data
+            bb_vide = importerForm.bd_option.data
             if fichier:
                 filename = secure_filename(fichier.filename)
                 filepath = os.path.join('./temp', filename)
                 fichier.save(filepath)
-                ImportCSV.Insert.importer_csv(cnx, filepath)
+                if bb_vide == "oui":
+                    ImportCSV.Insert.importer_csv_bd_vide(cnx, filepath)
+                elif bb_vide == "non":
+                    ImportCSV.Insert.importer_csv(cnx, filepath)
                 return redirect(url_for('inventaire'))
+
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -2155,57 +2141,14 @@ def commentaire():
     )
 
 
-@app.route("/login/", methods=("GET","POST",))
-def login():
-    """
-    Fonction qui gère la page de connexion.
-    Permet à l'utilisateur de se connecter en utilisant un formulaire de connexion.
-    Si les informations de connexion sont valides, l'utilisateur est redirigé vers la page suivante.
-    Sinon, un message d'erreur est affiché.
-    """
-    f = LoginForm ()
-    changerMDP = ChangerMDPForm()
-    changerMail = ChangerMailForm()
-    mdpOublier = MdpOublierForm()
-    if not f.is_submitted():
-        f.next.data = request.args.get("next")
-    elif f.validate_on_submit():
-        try:
-            nom, idStatut, mail, prenom = f.get_authenticated_user()
-            user = nom, idStatut, mail, prenom
-            if user != None:
-                #login_user(user)
-                idUt = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, user[2])
-                session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
-                RELOAD.reload_alert(cnx)
-                print("login : "+str(session['utilisateur']))
-                next = f.next.data or url_for("base")
-                return redirect(next)
-        except:
-            print("erreur de connexion")
-            return render_template(
-                "login.html",
-                title="profil",
-                form=f,
-                fromChangerMDP=changerMDP,
-                fromChangerMail=changerMail,
-                MdpOublierForm=mdpOublier,
-                erreur = "le mail ou le mot de passe est incorrect"
-            )        
-        
-    return render_template(
-        "login.html",
-        title="profil",
-        form=f,
-        fromChangerMDP=changerMDP,
-        fromChangerMail=changerMail,
-        MdpOublierForm=mdpOublier
-    )
-
-
-
 # @app.route("/login/", methods=("GET","POST",))
 # def login():
+#     """
+#     Fonction qui gère la page de connexion.
+#     Permet à l'utilisateur de se connecter en utilisant un formulaire de connexion.
+#     Si les informations de connexion sont valides, l'utilisateur est redirigé vers la page suivante.
+#     Sinon, un message d'erreur est affiché.
+#     """
 #     f = LoginForm ()
 #     changerMDP = ChangerMDPForm()
 #     changerMail = ChangerMailForm()
@@ -2213,16 +2156,29 @@ def login():
 #     if not f.is_submitted():
 #         f.next.data = request.args.get("next")
 #     elif f.validate_on_submit():
-#         #nom, idStatut, mail, prenom = f.get_authenticated_user()
-#         #user = nom, idStatut, mail, prenom
-#         #if user != None:
-#             #login_user(user)
-#             #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-#             session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
-#             print("login : "+str(session['utilisateur']))
-#             RELOAD.reload_alert(cnx)
-#             next = f.next.data or url_for("base")
-#             return redirect(next)
+#         try:
+#             nom, idStatut, mail, prenom = f.get_authenticated_user()
+#             user = nom, idStatut, mail, prenom
+#             if user != None:
+#                 #login_user(user)
+#                 idUt = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, user[2])
+#                 session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+#                 RELOAD.reload_alert(cnx)
+#                 print("login : "+str(session['utilisateur']))
+#                 next = f.next.data or url_for("base")
+#                 return redirect(next)
+#         except:
+#             print("erreur de connexion")
+#             return render_template(
+#                 "login.html",
+#                 title="profil",
+#                 form=f,
+#                 fromChangerMDP=changerMDP,
+#                 fromChangerMail=changerMail,
+#                 MdpOublierForm=mdpOublier,
+#                 erreur = "le mail ou le mot de passe est incorrect"
+#             )        
+        
 #     return render_template(
 #         "login.html",
 #         title="profil",
@@ -2231,6 +2187,36 @@ def login():
 #         fromChangerMail=changerMail,
 #         MdpOublierForm=mdpOublier
 #     )
+
+
+
+@app.route("/login/", methods=("GET","POST",))
+def login():
+    f = LoginForm ()
+    changerMDP = ChangerMDPForm()
+    changerMail = ChangerMailForm()
+    mdpOublier = MdpOublierForm()
+    if not f.is_submitted():
+        f.next.data = request.args.get("next")
+    elif f.validate_on_submit():
+        #nom, idStatut, mail, prenom = f.get_authenticated_user()
+        #user = nom, idStatut, mail, prenom
+        #if user != None:
+            #login_user(user)
+            #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+            session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
+            print("login : "+str(session['utilisateur']))
+            RELOAD.reload_alert(cnx)
+            next = f.next.data or url_for("base")
+            return redirect(next)
+    return render_template(
+        "login.html",
+        title="profil",
+        form=f,
+        fromChangerMDP=changerMDP,
+        fromChangerMail=changerMail,
+        MdpOublierForm=mdpOublier
+    )
 
 
 @app.route("/logout/")
