@@ -1,1 +1,142 @@
+-A
+ 
+-A
+ 
 -2
+ 
+-A
+ 
+-A
+ 
+-A
+ 
+-A
+ 
+-A
+ 
+-B
+ 
+-C
+1,1,Observation
+2,1,Mesures
+3,1,ExAO
+4,1,Multimédia
+5,1,Expérimentation
+6,1,Divers
+7,6,Verrerie
+8,6,Associés
+9,5,Produits organiques
+10,5,Produits minéraux
+11,5,Enzymes
+12,5,Colorants
+13,5,Entretien
+14,5,Autres
+15,3,Appareils de labo
+16,3,Sécurité
+17,3,Fournitures
+18,3,Mobilier
+19,3,Divers
+20,4,Logiciels
+21,4,DVD/VHS
+22,4,Manuels scolaires
+23,4,Livres scientifiques
+24,4,Cartes/Posters
+25,4,Divers
+26,2,Générateurs
+27,2,Mesures
+28,2,Récepteurs
+29,2,Connectique
+30,2,Métaux
+31,2,Divers
+ 
+-C
+ 
+-D
+ 
+-D
+1,Appareillage
+2,Électricité
+3,Matériel de laboratoire
+4,Médias
+5,Produits chimiques
+6,Verrerie et associés
+ 
+-E
+ 
+-E
+ 
+-E
+ 
+-E
+ 
+-F
+29,Acide chloridrique
+25,Alimentation et Générateur de courant AC/DC
+28,Becher 500ml
+26,Becher 800ml
+30,clavier
+20,iPad
+8,iPhone
+11,JLK
+23,Microscope
+27,Pipette graduée
+24,Sulfate de cuivre anhydre
+21,test
+22,test2
+ 
+-F
+ 
+-M
+ 
+-M
+ 
+-R
+ 
+-R
+ 
+-R
+ 
+-R
+29,Comburant
+30,Danger incendie
+31,Explosif
+32,Effets graves sur la senté
+33,Altération de la santé humaine
+34,Gaz sous pression
+35,Corrosion
+36,Toxicité aquatique
+37,Toxicité aiguë
+ 
+-R
+ 
+-S
+1,Administrateur
+2,Professseur
+3,Laborantin
+4,Gestionnaire
+ 
+-S
+ 
+-S
+ 
+-T
+ 
+-U
+1,1,Admin,Admin,erwan.blandeau28@gmail.com,3e296ab5e8a9c95df44c8839a3c42e3fb4614f25eedcdd5211b621b8b9f9f198
+2,4,leo,lucidor,leo.lucidor@gmail.com,8535e86c8118bbbb0a18ac72d15d3a2b37b18d1bce1611fc60165f322cf57386
+7,3,pilet,colin,colin.pilet1@gmail.com,4c1001c251c1c923bca00789638afb17e908d526bf3e9975407c65d2b03f4b10
+8,2,lavenant,jordan,jordan.lavenant@laposte.net,136c67657614311f32238751044a0a3c0294f2a521e573afa8e496992d3786ba
+9,4,Francois,Romain,romain.2991@gmail.com,c759caf45d10f1d4ada42e37e770af9ea52b57a89db7bad4c22188b0de166a85
+10,4,noblesse,oscar,oscar.noblesse@gmail.com,66d30e3065861108fd19646d84d68acd238e002dbd49ee76edf0483cf638647e
+11,4,Erwan,Blandeau,erwan.blandeaujs@gmail.com,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+12,2,Maupou,Cassandra,cassandra.maupou@gmail.com,89d6df5b8d2f54531adc4fac2e73636c20cfe53eb286e267d49c6a35bbb6332f
+13,3,lavenant,jordan,kubikcube18@gmail.com,f99d0161bcc02c6f1d9667486965dad265e7640e3ab15844310f9972697cc7e5
+ 
+-2FA
+ 
+-RECHERCHEMATERIELS
+ 
+-2FA
+ 
+-RECHERCHEMATERIELS
+ 

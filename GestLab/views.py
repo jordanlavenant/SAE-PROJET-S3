@@ -429,7 +429,7 @@ class ExporterCsvForm(FlaskForm):
 @app.route("/csv")
 def csv():
     return render_template(
-        "CSV.html",
+        "csv.html",
         title="CSV",
         chemin = [("base", "accueil"), ("csv", "csv")]
     )
