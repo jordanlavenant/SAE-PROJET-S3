@@ -132,7 +132,7 @@ a {
 #btn-back {
     color: var(--text);
     background-color: var(--background);
-    padding: 14px 40px;
+    padding: 10px 20px;
     font-size: 35px;
     border: none;
     transition: 0.2s;

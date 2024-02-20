@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterSuggestion.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('demander') }}">retour</a>
+<a id="btn-back" href="{{ url_for('demander') }}">RETOUR</a>
 <div class="ajouterSuggestion-container">
     <form class="form-ajoutSuggestion" role="form" method="POST" action="{{ url_for('ajouter_suggestion') }}">
         {{ AjouterSuggestionForm.hidden_tag() }}
