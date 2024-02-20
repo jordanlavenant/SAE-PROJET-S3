@@ -11,13 +11,17 @@
         <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('importer_csv') }}">
             {{ ImporterCsvForm.hidden_tag() }}                        
             <div class="main-container">
+                <!-- add the RadioField bd_option-->
+                <div class="user-box">
+                    {{ ImporterCsvForm.bd_option.label(class_="form-check-label") }}
+                    {{ ImporterCsvForm.bd_option(class_="form-check-input") }}
+                    <p>importer un fichier CSV : </p>
+                    <div>{{ ImporterCsvForm.fichier(size=20, class_="form-control element", placeholder="Fichier CSV") }}</div>
+                    <p>fichier</p>
+                    <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
+                </div>
             </div>
-            <div class="user-box">
-                <p>importer un fichier CSV : </p>
-                <div>{{ ImporterCsvForm.fichier(size=20, class_="form-control element", placeholder="Fichier CSV") }}</div>
-                <p>fichier</p>
-                <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
-            </div>
+            
         </form>
     </div>
 </div>
