@@ -3,11 +3,6 @@
   price_including_tax: "1\u202F180,00\_\u20AC"
   sku: N/A
   url: https://jeulin.com/jeulin_fr/577001.html
-- name: "Pile saline 3R12 - 4,5 V (\xE0 l\u2019unit\xE9)"
-  price_excluding_tax: "1,17\_\u20AC"
-  price_including_tax: "1,40\_\u20AC"
-  sku: N/A
-  url: https://jeulin.com/jeulin_fr/283548.html
 - name: "Pile 9 V type 6F22 alcaline (\xE0 l'unit\xE9)"
   price_excluding_tax: "2,92\_\u20AC"
   price_including_tax: "3,50\_\u20AC"
@@ -83,9 +78,13 @@
   price_including_tax: "3,90\_\u20AC"
   sku: N/A
   url: https://jeulin.com/jeulin_fr/263014.html
-- name: "Mallette Microcontr\xF4leur Arduino Python\n                            \
-    \                    Seconde et Premi\xE8re Physique-Chimie"
+- name: "Mallette Microcontr\xF4leur Arduino Python  Seconde et Premi\xE8re Physique-Chimie"
   price_excluding_tax: "165,83\_\u20AC"
   price_including_tax: "199,00\_\u20AC"
   sku: N/A
   url: https://jeulin.com/jeulin_fr/276903.html
+- name: "\xC9lectrodes en graphite (charbon) (Lot de 2)"
+  price_excluding_tax: "2,92\_\u20AC"
+  price_including_tax: "3,50\_\u20AC"
+  sku: N/A
+  url: https://jeulin.com/jeulin_fr/283088.html
