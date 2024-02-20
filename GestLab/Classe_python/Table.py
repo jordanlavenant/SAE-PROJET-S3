@@ -28,3 +28,10 @@ class Table:
             except:
                 print("Erreur lors de l'affichage de la table")
                 raise
+        
+        def get_AllTable(cnx):
+            AllTable = cnx.execute(text("SHOW TABLES;"))
+            res = []
+            for table in AllTable:
+                res.append(table[0])
+            return res
