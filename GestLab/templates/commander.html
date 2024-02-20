@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 
-<div class="popup popupCommander">
+<div class="popup popupInfo">
     <div class="popup-content">
         <div class="header-popup">
             <p>INFORMATIONS DU MATÉRIEL</p>
@@ -112,7 +112,7 @@
 
                 <script>
                     function togglePopupCommander(caracteristiques,informations) {
-                        document.querySelector(".popupCommander").classList.toggle("open");
+                        document.querySelector(".popupInfo").classList.toggle("open");
                         document.querySelector("html").classList.toggle("scroll-lock");
                         document.querySelector(".caracteristiques-materiel-content").textContent = caracteristiques;
                         document.querySelector(".informations-materiel-content").textContent = informations;
