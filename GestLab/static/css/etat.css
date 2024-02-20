@@ -121,7 +121,7 @@ a {
 
 .header-buttons #btn-delete:hover {
     cursor: pointer;
-    color: #d35252;
+    color: var(--error);
     transition: .2s;
 }
 

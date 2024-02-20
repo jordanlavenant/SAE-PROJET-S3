@@ -1,12 +1,12 @@
 a {
     text-decoration: none;
-    color: #384274;
+    color: var(--background);
 }
 
 .container-objet {
     margin: 3% 30vw 3% 30vw;
     padding: 1em;
-    background-color: #384274;
+    background-color: var(--background);
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -17,7 +17,7 @@ a {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    color: white;
+    color: var(--text);
     font-size: 35px;
 }
 
@@ -36,8 +36,8 @@ a {
 }
 
 #btn-back {
-    color: white;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 14px 40px;
     border-radius: 25px;
     font-size: 25px;
@@ -46,17 +46,17 @@ a {
 }
 
 #btn-back:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
 }
 
 #btn-tout-commander {
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     border-radius: 25px;
     padding: 14px 40px;
     transition: 0.2s;
@@ -65,15 +65,15 @@ a {
 }
 
 #btn-tout-commander:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
 }
 
 #btn-voir {
-    background-color: white;
+    background-color: var(--text);
     border-radius: 25px;
     padding: 14px 40px;
     transition: 0.2s;
@@ -81,8 +81,8 @@ a {
 }
 
 #btn-voir:hover {
-    background-color: white;
-    box-shadow: 0 0 15px white;
+    background-color: var(--text);
+    box-shadow: 0 0 15px var(--text);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;

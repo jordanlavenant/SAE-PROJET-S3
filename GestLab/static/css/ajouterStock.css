@@ -86,8 +86,6 @@ label {
     display: none;
 }
 
-
-
 .popup #ez-search-form {
     max-width: 800px;
     width: 100%;
@@ -133,7 +131,7 @@ label {
 
 #submit-ez-search {
     color: var(--background);
-    background-color: white;
+    background-color: var(--text);
     padding: 14px 20px;
     font-size: 25px;
     border: none;
@@ -143,7 +141,7 @@ label {
 }
 
 #submit-ez-search:hover {
-    color: white;
+    color: var(--text);
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
