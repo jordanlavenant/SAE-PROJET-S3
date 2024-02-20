@@ -13,8 +13,17 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(maVariableJavaScript);
 
         boutonAjout.addEventListener("click", function() {
-            url = `/commander-materiel-unique/${idUser}?idMat=${idMat}&qte=${maVariableJavaScript}`;
-            window.location.href = url;
+            $.ajax({
+                url: '/commander-materiel-unique/'+idUser,
+                type: 'POST',
+                data: {
+                    idMat: idMat,
+                    qte: maVariableJavaScript
+                },
+                success: function(response) {
+                    console.log(response);
+                }
+            });
         });
 
         boutonMoins.addEventListener('click', function() {
