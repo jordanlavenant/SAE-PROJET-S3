@@ -96,8 +96,7 @@
 
     function togglePopup() {
         document.querySelector('.popup').classList.toggle('open');
-        const html = document.querySelector('html');
-        html.style.overflow = html.style.overflow === 'hidden' ? 'auto' : 'hidden';
+        const html = document.querySelector('html').classList.toggle('scroll-lock');
     }
 
     document.addEventListener("DOMContentLoaded", function() {

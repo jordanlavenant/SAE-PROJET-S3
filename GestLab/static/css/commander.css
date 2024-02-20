@@ -180,21 +180,6 @@ a {
     text-align: center;
 }
 
-.bouton-moins {
-    margin-left: 1em;
-    margin-right: 5px;
-    color: var(--text);
-    background-color: var(--background);
-    border: none;
-}
-
-.bouton-plus {
-    margin-left: 5px;
-    color: var(--text);
-    background-color: var(--background);
-    border: none;
-}
-
 .container-top {
     margin: 50px 0;
     display: flex;
@@ -245,66 +230,90 @@ svg {
 
 /* partie item */
 
+h2 {
+    margin: 25px 10vw;
+    color: var(--background);
+    font-size: 50px;
+    padding: 0;
+}
+
 .container-contenu {
-    margin-top: 50px;
+    margin: 50px 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    gap: 10px;
 }
 
 .section-contenu {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    flex-direction: column;
+    gap: 10px;
     flex-basis: 45%;
-    background-color: var(--background);
-    margin-bottom: 10px;
+    background-color: #384274;
     border-radius: 10px;
     padding: 1%;
 }
 
-.section-contenu h3 {
-    color: var(--text);
-    font-size: 35px;
-    font-weight: 500;
-    flex-basis: 100%;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-.section-contenu h4 {
-    color: var(--text);
-    font-size: 30px;
-    font-weight: 500;
-    flex-basis: 100%;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-
-.choisir-item {
+.section-contenu #header-props {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
 }
 
-.section-contenu button {
-    border: none;
-    background-color: transparent;
+.section-contenu h3 {
+    margin: 0;
+    padding: 0;
     color: var(--text);
-    cursor: pointer;
 }
 
-.section-contenu .bottom-side {
+.section-contenu h4 {
+    margin: 0;
+    color: var(--secondary-button);
+    background-color: var(--background-hover);
+    padding: 0 20px;
+    border-radius: 100px;
+}
+
+.choisir-item {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 100%;
+    width: 200px;
+    align-items: center;
+    border: 1px solid var(--text);
+    border-radius: 10px;
+    background-color: var(--background);
 }
 
-#ajouter-commande {
+.bouton-moins,
+.bouton-plus {
+    color: var(--text);
+    background-color: transparent;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.bouton-moins:hover,
+.bouton-plus:hover {
+    transition: 0.2s;
+    cursor: pointer;
+    scale: 1.5;
+}
+
+.section-contenu #tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+#ajouter-demande {
     margin-bottom: 10px;
     color: var(--background);
     background-color: var(--text);
@@ -312,20 +321,16 @@ svg {
     padding: 8px 30px;
     transition: 0.2s;
     pointer-events: none;
-    cursor: not-allowed; 
+    cursor: not-allowed;
     opacity: 0.5;
 }
 
-#ajouter-commande:hover {
+#ajouter-demande:hover {
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
+    cursor: pointer;
     color: var(--text);
-}
-
-.section-contenu a {
-    pointer-events: none;
-    cursor: not-allowed; 
 }
 
 .section-contenu p {
