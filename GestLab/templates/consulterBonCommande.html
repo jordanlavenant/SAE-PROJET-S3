@@ -16,24 +16,42 @@
         <a class="btn-generic" href="{{ url_for('historique_bon_commande') }}">HISTORIQUE</a>
     </div>
 </div>
-<section class="info">
-    {% for i in range(0, len) %}
-    <div class="info-bon">
-        <p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p>
-        <p class="info-date para">Date : {{bonCommande[i][3]}}</p>
-        <a id="suppr-bon" href="{{ url_for('delete_bon_commande', id=bonCommande[i][0]) }}">supprimer</a>
-        <select name="" id="statut" class="statut {{ bonCommande[i][0] }}">
-            {% for statut in statutsCommande %}
-                {% if listeEtat[i][0] == statut[0] %}
-                    <option selected="selected" value="{{ statut[0] }}">{{ statut[1] }}</option>
-                {% elif statut[0] != 1 %}
-                    <option value="{{ statut[0] }}">{{ statut[1] }}</option>
-                {% endif %}
+<section class="bons-container">
+    <table>
+        <thead>
+            <tr>
+                <th>auteur</th>
+                <th>date</th>
+                <th>statut</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(0, len) %}
+            <tr onclick="document.location='/bon-commande-unique?idbc={{ bonCommande[i][0] }}'" class="info-bon">
+                <td><p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p></td>
+                <td><p class="info-date para">{{bonCommande[i][3]}}</p></td>
+                <td>
+                    <select name="" id="statut" class="statut {{ bonCommande[i][0] }}" onclick="event.stopPropagation()">
+                    {% for statut in statutsCommande %}
+                        {% if listeEtat[i][0] == statut[0] %}
+                            <option selected="selected" value="{{ statut[0] }}">{{ statut[1] }}</option>
+                        {% elif statut[0] != 1 %}
+                            <option value="{{ statut[0] }}">{{ statut[1] }}</option>
+                        {% endif %}
+                    {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <div class="suppr-bon-container" onclick="deleteBonCommande('{{ bonCommande[i][0] }}')">
+                        <p>SUPPRIMER</p>
+                        <svg onclick="" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: ;transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
+                    </div>
+                </td>
+            </tr>
             {% endfor %}
-        </select>
-        <a class="btn-consulter" href="/bon-commande-unique?idbc={{ bonCommande[i][0] }}">Consulter le bon></a>
-    </div>
-    {% endfor %}
+        </tbody>
+    </table>
 </section>
 {% endblock %}
 
