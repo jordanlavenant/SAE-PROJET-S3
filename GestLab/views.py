@@ -448,7 +448,7 @@ def importer_csv():
             bb_vide = importerForm.bd_option.data
             if fichier:
                 filename = secure_filename(fichier.filename)
-                filepath = os.path.join('./temp', filename)
+                filepath = os.path.join('..\\temp', filename)
                 fichier.save(filepath)
                 if bb_vide == "oui":
                     ImportCSV.Insert.importer_csv_bd_vide(cnx, filepath)

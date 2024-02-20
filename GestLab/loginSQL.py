@@ -1,7 +1,7 @@
-login = "pilet" # pip install pymysql
-passwd = "pilet"
-serveur= "servinfo-maria"
-bd = "DBpilet"
+login = "blandeau" # pip install pymysql
+passwd = "Loulou34230."
+serveur= "mysql-blandeau.alwaysdata.net"
+bd = "blandeau_gestlab21"
 
 def getLogin():
     return login
