@@ -440,6 +440,15 @@ def exporter_csv():
 @app.route("/importer-csv/", methods=("GET","POST",))
 @csrf.exempt
 def importer_csv():
+    def os_choice(filename):
+        if os.name == 'posix':  
+            filepath = os.path.join('./temp', filename)
+        elif os.name == 'nt':  
+            filepath = os.path.join('..\\temp', filename)
+        else:
+            filepath = os.path.join('./temp', filename)
+        return filepath
+    
     importerForm = ImporterCsvForm()
 
     try:
@@ -448,7 +457,9 @@ def importer_csv():
             bb_vide = importerForm.bd_option.data
             if fichier:
                 filename = secure_filename(fichier.filename)
-                filepath = os.path.join('..\\temp', filename)
+                
+                filepath = os_choice(filename)
+
                 fichier.save(filepath)
                 if bb_vide == "oui":
                     ImportCSV.Insert.importer_csv_bd_vide(cnx, filepath)
