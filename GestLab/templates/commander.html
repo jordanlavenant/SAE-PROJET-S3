@@ -4,6 +4,24 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/commander.css') }}">
 {% endblock %}
 {% block content %}
+
+<div class="popup">
+    <div class="popup-content">
+        <div class="header-popup">
+            <p>INFORMATIONS DU MATÉRIEL</p>
+            <svg onclick='togglePopup()' id='popup-exit' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
+        </div>
+        <div class="info">
+            <p>caractèristiques complémentaires</p>
+            <p class="caracteristiques-materiel-content"></p>
+        </div>
+        <div class="info">
+            <p>informations complémentaires et sécurité</p>
+            <p class="informations-materiel-content"></p>
+        </div>
+    </div>
+</div>
+
 <div class="commander-container-overall">
     <div class="header-container">
         <div class="container-alertes-demandes">
@@ -63,8 +81,11 @@
     <div class="container-contenu">
         {% for item in liste_materiel %}
             <section class="section-contenu" id="{{ item[6] }}">
-                <div id="header-props">
-                    <h3>{{ item[1] }}</h3>
+                  <div class="header-props" onclick='togglePopup("{{ item[2] }}","{{ item[5] }}",)'>
+                    <div class="desc-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: transform: ;msFilter:;"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path></svg>
+                        <h3>{{ item[1] }}</h3>
+                    </div>
                     <h4 class="ref">{{ item[3] }}</h4>
                 </div>
                 <div id="tools">
@@ -77,6 +98,12 @@
                 </div>
 
                 <script>
+                    function togglePopup(caracteristiques,informations) {
+                        document.querySelector(".popup").classList.toggle("open");
+                        document.querySelector("html").classList.toggle("scroll-lock");
+                        document.querySelector(".caracteristiques-materiel-content").textContent = caracteristiques;
+                        document.querySelector(".informations-materiel-content").textContent = informations;
+                    }
                     var maVariableJavaScript = "{{ item[4] }}"; 
                     var idUser = "{{ idUser }}"; 
                 </script>

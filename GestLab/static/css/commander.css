@@ -255,12 +255,45 @@ h2 {
     padding: 1%;
 }
 
-.section-contenu #header-props {
+.section-contenu .header-props {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
 }
+
+.desc-button {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.desc-button svg {
+    fill: var(--text);
+    transition: .2s;
+}
+
+.desc-button h3 {
+    margin: 0;
+    padding: 0;
+    color: var(--text);
+    font-size: 35px;
+    transition: .2s;
+}
+
+.desc-button:hover svg {
+    fill: var(--secondary);
+    transition: .2s;
+    cursor: pointer;
+}
+
+.desc-button:hover h3 {
+    color: var(--secondary);
+    transition: .2s;
+    cursor: pointer;
+}
+
 
 .section-contenu h3 {
     margin: 0;
@@ -337,4 +370,81 @@ h2 {
     color: var(--text);
     font-size: 30px;
     margin: 0;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .7);
+    z-index: 100;
+    display: none;
+}
+
+
+
+.popup .popup-content {
+    max-width: 800px;
+    width: 100%;
+    padding: 30px;
+    background-color: var(--background);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+}
+
+.header-popup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--background);
+}
+
+.header-popup > p {
+    margin: 0;
+    font-size: 50px;
+    color: var(--text);
+}
+
+.popup #popup-exit {
+    padding: 10px;
+}
+
+.popup #popup-exit:hover {
+    cursor: pointer;
+}
+
+.popup.open{
+    display: block;
+}
+
+.popup-content p {
+    margin: 0;
+    padding: 0;
+    color: var(--text);
+    font-size: 40px;
+}
+
+.info {
+    margin-top: 50px;
+    position: relative;
+}
+
+.popup-content .info p:first-child {
+    position: absolute;
+    top: -25px;
+    left: 20px;
+    background-color: var(--background);
+    padding: 0 10px;
+    color: var(--secondary);
+}
+
+.popup-content .info p:last-child {
+    top: 20px;
+    padding: 20px;
+    border: 1px solid var(--text);
 }
