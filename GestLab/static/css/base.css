@@ -42,7 +42,10 @@ header {
     --dark-background: #262e58;
     --border: #384274;
     --secondary: #009AF0;
-    --shadow: 0 0 10px #384274;
+    --shadow: #384274;
+    --secondary-button: rgb(164,164,164);
+    --success: #2EDD94;
+    --error: #d35252;
 }
 
 /* titre */

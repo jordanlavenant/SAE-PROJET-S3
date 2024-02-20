@@ -18,4 +18,5 @@ for (id in id_array) {
 
 function togglePopup() {
     document.querySelector('.popup').classList.toggle('open');
+    html.style.overflow = html.style.overflow === 'hidden' ? 'auto' : 'hidden';
 }

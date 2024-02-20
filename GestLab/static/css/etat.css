@@ -69,7 +69,7 @@ a {
 
 .popup #choices > a:last-child {
     color: var(--text);
-    background-color: #d35252;
+    background-color: var(--error);
     padding: 14px 40px;
     font-size: 25px;
     border: none;
@@ -78,7 +78,7 @@ a {
 }
 
 .popup #choices > a:last-child:hover {
-    box-shadow: 0 0 15px #d35252;
+    box-shadow: 0 0 15px var(--error);
     transition: .2s;
 }
 
@@ -104,21 +104,56 @@ a {
 .header-buttons > .btns-header {
     display: flex;
     align-items: center;
+    flex-direction: row-reverse;
     gap: 20px;
 }
 
 .header-buttons #btn-delete {
-    border-left: 1px solid rgb(164, 164, 164);
-    padding: 0 40px;
+    padding: 0 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: rgb(164, 164, 164);
+    color: var(--secondary-button);
+    transition: .2s;
 }
 
 .header-buttons #btn-delete:hover {
     cursor: pointer;
+    color: #d35252;
+    transition: .2s;
+}
+
+svg {
+    fill: var(--secondary-button);
+    transition: .2s;
+}
+
+.header-buttons #btn-delete:hover > svg {
+    fill: var(--error);
+    transition: .2s;
+}
+
+.header-buttons #btn-edit-materiel {
+    border-right: 1px solid var(--secondary-button);
+    padding: 0 40px 0 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--secondary-button);
+    transition: .2s;
+}
+
+.header-buttons #btn-edit-materiel:hover {
+    cursor: pointer;
+    color: var(--background);
+    transition: .2s;
+}
+
+.header-buttons #btn-edit-materiel:hover > svg {
+    fill: var(--background);
+    transition: .2s;
 }
 
 /* container */
@@ -192,7 +227,7 @@ a {
 }
 
 #btn-back:hover {
-    color: white;
+    color: var(--text);
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
@@ -236,20 +271,20 @@ a {
 
 .header-container a {
     display: flex;
-    color: #2EDD94;
+    color: var(--success);
 }
 
-#btn-edit-materiel {
+.generic-button {
     color: var(--text);
     background-color: var(--background);
     padding: 14px 40px;
-    font-size: 25px;
+    font-size: 30px;
     border: none;
     transition: 0.2s;
     border-radius: 10px;
 }
 
-#btn-edit-materiel:hover {
+.generic-button:hover {
     color: var(--text);
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
@@ -258,10 +293,6 @@ a {
     cursor: pointer;
 }
 
-#btn-edit-materiel:hover:nth-child(4) {
-    background-color: #d35252;
-    box-shadow: 0 0 15px #d35252;
-}
 
 #report-redirect-img {
     width: 20px;    
@@ -279,7 +310,6 @@ a {
 
 .item-card {
     background-color: var(--background-hover);
-    /* border: 1px solid #d35252; */
     min-width: 400px; 
 }
 
@@ -289,7 +319,7 @@ a {
     align-items: center;
     justify-content: space-between;
     padding: 0 0 0 10px;
-    color: white;
+    color: var(--text);
     background-color: var(--background-hover);
     height: 50px;
 }
@@ -304,7 +334,7 @@ a {
     height: 100%;
     font-variant: small-caps;
     background-color: var(--background-hover);
-    color: white;
+    color: var(--text);
     border: none;
 }
 
@@ -334,7 +364,7 @@ a {
 }
 
 .item-card-toggle > .date-reception-content {
-    color: white;
+    color: var(--text);
 }
 
 .item-properties {
@@ -344,7 +374,7 @@ a {
 .item-properties > h2 {
     font-size: 30px;
     margin: 0;
-    color: white;
+    color: var(--text);
 }
 
 .date-reception, 
@@ -355,7 +385,7 @@ a {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    color: white;
+    color: var(--text);
     font-size: 30px;
 }
 
@@ -363,7 +393,7 @@ a {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    color: white;
+    color: var(--text);
     font-size: 30px;
 }
 
@@ -403,13 +433,13 @@ a {
 }
 
 .alerts_count{
-    color: #d35252;
+    color: var(--error);
     align-items: center;
     margin: 0;
 }
 
 .texte_rouge{
-    color: #d35252;
+    color: var(--error);
     align-items: center;
 }
 
@@ -420,8 +450,8 @@ a {
 }
 
 #btn-redirect-order {
-    color: #384274;
-    background-color: white;
+    color: var(--background);
+    background-color: var(--text);
     padding: 10px 20px;
     font-size: 25px;
     border: none;
@@ -429,8 +459,8 @@ a {
 }
 
 #btn-redirect-order:hover {
-    background-color: white;
-    box-shadow: 0 0 15px white;
+    background-color: var(--text);
+    box-shadow: 0 0 15px var(--text);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
