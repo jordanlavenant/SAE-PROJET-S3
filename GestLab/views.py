@@ -17,6 +17,9 @@ from GestLab.Classe_python.Reload import RELOAD
 from GestLab.Classe_python.ReserveLaboratoire import ReserveLaboratoire
 from GestLab.Classe_python.Risque import Risques
 from GestLab.Classe_python.StockLaboratoire import STOCKLABORATOIRE
+from GestLab.Classe_python.ImportCSV import ImportCSV
+from GestLab.Classe_python.ExportCSV import ExportCSV
+from GestLab.Classe_python.Table import Table
 from GestLab.initialisation import get_cnx
 
 from .app import app, csrf #, db
@@ -24,15 +27,20 @@ from flask import render_template, url_for, redirect, request, session, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField, BooleanField
+from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField, BooleanField, RadioField
 from wtforms.validators import DataRequired, Optional
+from flask_wtf.file import FileRequired, FileAllowed
 from wtforms import PasswordField
 from hashlib import sha256
 from .connexionPythonSQL import *
 from .models import *
+from .genererpdf import *
+
 import time
 import datetime
-from .genererpdf import *
+import os
+from werkzeug.utils import secure_filename
+
 
 cnx = get_cnx()
 
@@ -345,7 +353,134 @@ class AjouterStockForm(FlaskForm):
         Returns the value of the 'endroit' data attribute.
         """
         return self.endroit.data
+
+
+class ImporterCsvForm(FlaskForm):
     
+    fichier = FileField('fichier', validators=[])
+    submit = SubmitField('importer')
+    next = HiddenField()
+    bd_option = RadioField('Commencer avec une base de données vide?', choices=[('oui','Oui'),('non','Non')], default='non')
+
+    def get_fichier(self):
+        """
+        Récupère le fichier associé à l'objet.
+
+        Returns:
+            Le fichier associé à l'objet.
+        """
+        fichier = self.fichier.data
+        return fichier
+    
+    def get_bd_option(self):
+        """
+        Récupère l'option de base de données associée à l'objet.
+
+        Returns:
+            L'option de base de données associée à l'objet.
+        """
+        bd_option = self.bd_option.data
+        return bd_option
+    
+
+class ExporterCsvForm(FlaskForm):
+    liste_tables = Table.Get.get_AllTable(cnx) 
+
+    # Créer des champs de formulaire pour chaque table
+    for table in liste_tables:
+        locals()[table] = BooleanField(table, default=False)
+
+    submit = SubmitField('exporter')
+    next = HiddenField()
+
+    def get_tables(self):
+        """
+        Récupère les tables sélectionnées.
+
+        Returns:
+            list: Une liste contenant les tables sélectionnées.
+        """
+        tables = []
+        for table in self.liste_tables:
+            if getattr(self, table).data is True:
+                tables.append(table)
+        return tables
+
+
+@app.route("/csv")
+def csv():
+    return render_template(
+        "csv.html",
+        title="CSV",
+        chemin = [("base", "accueil"), ("csv", "csv")]
+    )
+
+@app.route("/exporter-csv/", methods=("GET","POST",))
+def exporter_csv():
+    """
+    Cette fonction gère l'exportation des données de la base de données dans un fichier CSV.
+    Elle affiche un formulaire permettant de sélectionner les tables à exporter, valide le formulaire,
+    effectue l'exportation des données dans un fichier CSV et renvoie le fichier CSV à l'utilisateur.
+    """
+    f = ExporterCsvForm()
+    if f.validate_on_submit():
+        tables = f.get_tables()
+        print(tables)
+        ExportCSV.Get.exporter_csv(cnx, tables)
+        return redirect(url_for('exporter_csv'))
+    return render_template(
+        "exporterCsv.html",
+        title="exporter un fichier csv",
+        ExporterCsvForm=f,
+        liste_tables = f.liste_tables,
+        longueurListe = len(f.liste_tables),    
+        chemin = [("base", "accueil"), ("csv", "csv"), ("exporter_csv", "exporter un fichier csv")]
+    )        
+
+@app.route("/importer-csv/", methods=("GET","POST",))
+@csrf.exempt
+def importer_csv():
+    def os_choice(filename):
+        if os.name == 'posix':  
+            filepath = os.path.join('./temp', filename)
+        elif os.name == 'nt':  
+            filepath = os.path.join('..\\temp', filename)
+        else:
+            filepath = os.path.join('./temp', filename)
+        return filepath
+    
+    importerForm = ImporterCsvForm()
+
+    try:
+        if importerForm.validate_on_submit():
+            fichier = importerForm.fichier.data
+            bb_vide = importerForm.bd_option.data
+            if fichier:
+                filename = secure_filename(fichier.filename)
+                
+                filepath = os_choice(filename)
+
+                fichier.save(filepath)
+                if bb_vide == "oui":
+                    ImportCSV.Insert.importer_csv_bd_vide(cnx, filepath)
+                elif bb_vide == "non":
+                    ImportCSV.Insert.importer_csv(cnx, filepath)
+                return redirect(url_for('inventaire'))
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    return render_template(
+        "importerCsv.html",
+        title="importer un fichier csv",
+        ImporterCsvForm=importerForm,
+        chemin = [("base", "accueil"), ("csv", "csv"), ("importer_csv", "importer un fichier csv")]
+    )
+
+@app.route("/manuel-csv")
+def manuel_csv():
+    return send_file('../data/manuel-csv.pdf', as_attachment=True)
+
 class AjouterMaterielUniqueForm(FlaskForm):
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
     position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
@@ -2068,37 +2203,36 @@ def login():
         MdpOublierForm=mdpOublier
     )
 
-"""
 
-@app.route("/login/", methods=("GET","POST",))
-def login():
-    f = LoginForm ()
-    changerMDP = ChangerMDPForm()
-    changerMail = ChangerMailForm()
-    mdpOublier = MdpOublierForm()
-    if not f.is_submitted():
-        f.next.data = request.args.get("next")
-    elif f.validate_on_submit():
-        #nom, idStatut, mail, prenom = f.get_authenticated_user()
-        #user = nom, idStatut, mail, prenom
-        #if user != None:
-            #login_user(user)
-            #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-            session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
-            print("login : "+str(session['utilisateur']))
-            RELOAD.reload_alert(cnx)
-            next = f.next.data or url_for("base")
-            return redirect(next)
-    return render_template(
-        "login.html",
-        title="profil",
-        form=f,
-        fromChangerMDP=changerMDP,
-        fromChangerMail=changerMail,
-        MdpOublierForm=mdpOublier
-    )
 
-    """
+# @app.route("/login/", methods=("GET","POST",))
+# def login():
+#     f = LoginForm ()
+#     changerMDP = ChangerMDPForm()
+#     changerMail = ChangerMailForm()
+#     mdpOublier = MdpOublierForm()
+#     if not f.is_submitted():
+#         f.next.data = request.args.get("next")
+#     elif f.validate_on_submit():
+#         #nom, idStatut, mail, prenom = f.get_authenticated_user()
+#         #user = nom, idStatut, mail, prenom
+#         #if user != None:
+#             #login_user(user)
+#             #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+#             session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
+#             print("login : "+str(session['utilisateur']))
+#             RELOAD.reload_alert(cnx)
+#             next = f.next.data or url_for("base")
+#             return redirect(next)
+#     return render_template(
+#         "login.html",
+#         title="profil",
+#         form=f,
+#         fromChangerMDP=changerMDP,
+#         fromChangerMail=changerMail,
+#         MdpOublierForm=mdpOublier
+#     )
+
 
 @app.route("/logout/")
 def logout():
