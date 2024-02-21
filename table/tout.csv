@@ -2,6 +2,189 @@
 *email
 *uri
 *idUtilisateur
+Exemple : cassandra.maupou@gmail.com,test,12
+ 
+-AJOUTERMATERIEL
+*idDemande
+*idMateriel
+*quantite
+Exemple : 26,36,2
+ 
+-ALERTESENCOURS
+*idAlerte
+*idMaterielUnique
+Exemple : 1,276
+ 
+-ARCHIVEBONCOMMANDE
+*idArchiveBonCommande
+*idBonCommande
+*idEtat
+*idUtilisateur
+*dateArchiveBonCommande
+Exemple : 1,2,4,3,2023-12-21
+ 
+-ARCHIVECOMMANDE
+*idArchiveBonCommande
+*idMateriel
+*quantite
+Exemple : 1,21,7
+ 
+-ARCHIVECOMMANDEANCIEN
+*numColis
+*idFournisseur
+*nomFournisseur
+*adresseFournisseur
+*mailFournisseur
+*telFournisseur
+*facture
+Exemple : 
+ 
+-BONCOMMANDE
+*idBonCommande
+*idEtat
+*idUtilisateur
+*dateBonCommande
+Exemple : 8,4,2,2023-12-22
+ 
+-CATEGORIE
+*idCategorie
+*idDomaine
+*nomCategorie
+Exemple : 1,1,Observation
+ 
+-COMMANDE
+*idBonCommande
+*idMateriel
+*quantite
+Exemple : 18,34,4
+ 
+-DEMANDE
+*idDemande
+*idUtilisateur
+*descriptionDemande
+*idEtatD
+Exemple : 26,11,,2
+ 
+-DOMAINE
+*idDomaine
+*nomDomaine
+Exemple : 1,Appareillage
+ 
+-ENDROIT
+*idEndroit
+*endroit
+Exemple : 6,008
+ 
+-ENVOIFOURNISSEUR
+*idBonCommande
+*idFournisseur
+*facture
+Exemple : 
+ 
+-ETATCOMMANDE
+*idEtat
+*nomEtat
+Exemple : 1,En attente de la validation du Gestionnaire
+ 
+-ETATDEMANDE
+*idEtatD
+*nomEtatD
+Exemple : 1,En attente de validation
+ 
+-FDS
+*idFDS
+*nomFDS
+Exemple : 29,Acide chloridrique
+ 
+-FOURNISSEUR
+*idFournisseur
+*nomFournisseur
+*adresseFournisseur
+*mailFournisseur
+*telFournisseur
+Exemple : 
+ 
+-MATERIEL
+*idMateriel
+*referenceMateriel
+*idFDS
+*nomMateriel
+*idCategorie
+*seuilAlerte
+*caracteristiquesComplementaires
+*informationsComplementairesEtSecurite
+Exemple : 34,REF123,24,Sulfate de cuivre anhydree,9,2,Sulfate de cuivre anhydre,Le sulfate de cuivre (II) anhydre est blanc et ne devient bleu que lorsqu'il est combiné avec des molécules d'eau
+ 
+-MATERIELUNIQUE
+*idMaterielUnique
+*idMateriel
+*idRangement
+*dateReception
+*commentaireMateriel
+*quantiteApproximative
+*datePeremption
+Exemple : 257,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
+ 
+-RANGEMENT
+*idRangement
+*idEndroit
+*position
+Exemple : 1,1,haut
+ 
+-RECHERCHEMATERIELS
+*materielRecherche
+Exemple : Agitateurs à hélice
+ 
+-RESERVELABORATOIRE
+*idReserve
+*idMaterielUnique
+Exemple : 11,257
+
+-RISQUE
+*idRisque
+*nomRisque
+Exemple : 29,Comburant
+ 
+-RISQUES
+*idrisques
+*idFDS
+*idRisque
+Exemple : 440,29,35
+ 
+-STATUT
+*idStatut
+*nomStatut
+Exemple : 1,Administrateur
+ 
+-STOCKLABORATOIRE
+*idStock
+*idMateriel
+*quantiteLaboratoire
+Exemple : 26,40,20
+ 
+-SUIVICOMMANDE
+*idBonCommande
+*localisation
+*numColis
+ 
+-TYPESALERTES
+*idAlerte
+*descriptionAlerte
+Exemple : 1,Date de péremption dépassée
+ 
+-UTILISATEUR
+*idUtilisateur
+*idStatut
+*nom
+*prenom
+*email
+*motDePasse
+Exemple : 2,4,leo,lucidor,leo.lucidor@gmail.com,test
+=======
+-2FA
+*email
+*uri
+*idUtilisateur
 cassandra.maupou@gmail.com,XM6JZCJDOOGVM4R3BHJLFWRJIEQEGDZA,12
 erwan.blandeau@etu.univ-orleans.fr,KUMRIWB7GF2FEWSTBFAXOUZBLG7QZXSG,7
 erwan.blandeaujs@gmail.com,TGWCUQMXRU2FHZZRHMSMWT2A6WQAM2AK,11
@@ -816,115 +999,3 @@ Tubes à essai à fond rond
 Tubes capillaires
 Tubes de centrifugation
 Tubes Nessler
- 
--RESERVELABORATOIRE
-*idReserve
-*idMaterielUnique
-11,257
-12,258
-13,259
-14,260
-15,261
-16,262
-17,263
-18,264
-19,265
-20,266
-21,267
-22,268
-23,269
-24,270
-25,271
-26,272
-27,273
-28,274
-29,275
-30,276
-31,277
-32,278
-33,279
-34,280
-35,281
-36,282
-37,283
-38,284
-39,285
-40,286
-41,287
-42,288
- 
--RISQUE
-*idRisque
-*nomRisque
-29,Comburant
-30,Danger incendie
-31,Explosif
-32,Effets graves sur la senté
-33,Altération de la santé humaine
-34,Gaz sous pression
-35,Corrosion
-36,Toxicité aquatique
-37,Toxicité aiguë
- 
--RISQUES
-*idrisques
-*idFDS
-*idRisque
-440,29,35
-442,24,29
-443,24,30
-444,24,33
-445,30,35
-455,26,33
-456,26,34
-457,26,35
-458,26,37
-459,31,31
-460,31,36
- 
--STATUT
-*idStatut
-*nomStatut
-1,Administrateur
-2,Professseur
-3,Laborantin
-4,Gestionnaire
- 
--STOCKLABORATOIRE
-*idStock
-*idMateriel
-*quantiteLaboratoire
-26,40,20
-27,36,10
-28,35,2
- 
--SUIVICOMMANDE
-*idBonCommande
-*localisation
-*numColis
- 
--TYPESALERTES
-*idAlerte
-*descriptionAlerte
-1,Date de péremption dépassée
-2,Date de péremption dépassée dans 10 jours
-3,Quantité en dessous du seuil minimal
-4,Quantité de l'objet à 0
- 
--UTILISATEUR
-*idUtilisateur
-*idStatut
-*nom
-*prenom
-*email
-*motDePasse
-1,1,Admin,Admin,erwan.blandeau28@gmail.com,3e296ab5e8a9c95df44c8839a3c42e3fb4614f25eedcdd5211b621b8b9f9f198
-2,4,leo,lucidor,leo.lucidor@gmail.com,8535e86c8118bbbb0a18ac72d15d3a2b37b18d1bce1611fc60165f322cf57386
-7,3,pilet,colin,colin.pilet1@gmail.com,4c1001c251c1c923bca00789638afb17e908d526bf3e9975407c65d2b03f4b10
-8,2,lavenant,jordan,jordan.lavenant@laposte.net,136c67657614311f32238751044a0a3c0294f2a521e573afa8e496992d3786ba
-9,4,Francois,Romain,romain.2991@gmail.com,c759caf45d10f1d4ada42e37e770af9ea52b57a89db7bad4c22188b0de166a85
-10,4,noblesse,oscar,oscar.noblesse@gmail.com,66d30e3065861108fd19646d84d68acd238e002dbd49ee76edf0483cf638647e
-11,4,Erwan,Blandeau,erwan.blandeaujs@gmail.com,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
-12,2,Maupou,Cassandra,cassandra.maupou@gmail.com,89d6df5b8d2f54531adc4fac2e73636c20cfe53eb286e267d49c6a35bbb6332f
-13,3,lavenant,jordan,kubikcube18@gmail.com,f99d0161bcc02c6f1d9667486965dad265e7640e3ab15844310f9972697cc7e5
- 

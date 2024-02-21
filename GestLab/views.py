@@ -27,7 +27,7 @@ from flask import render_template, url_for, redirect, request, session, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField, BooleanField
+from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField, BooleanField, RadioField
 from wtforms.validators import DataRequired, Optional
 from flask_wtf.file import FileRequired, FileAllowed
 from wtforms import PasswordField
@@ -356,9 +356,11 @@ class AjouterStockForm(FlaskForm):
 
 
 class ImporterCsvForm(FlaskForm):
+    
     fichier = FileField('fichier', validators=[])
     submit = SubmitField('importer')
     next = HiddenField()
+    bd_option = RadioField('Commencer avec une base de données vide?', choices=[('oui','Oui'),('non','Non')], default='non')
 
     def get_fichier(self):
         """
@@ -370,37 +372,16 @@ class ImporterCsvForm(FlaskForm):
         fichier = self.fichier.data
         return fichier
     
-    def get_nom_fichier(self):
+    def get_bd_option(self):
         """
-        Récupère le nom du fichier associé à l'objet.
+        Récupère l'option de base de données associée à l'objet.
 
         Returns:
-            Le nom du fichier associé à l'objet.
+            L'option de base de données associée à l'objet.
         """
-        if self.fichier.data is not None:
-            try:
-                if self.fichier.data.filename is not None:
-                    return self.fichier.data.filename
-            except:
-                return "None"
-        else:
-            return "None"
-        
-    def get_contenu_fichier(self):
-        """
-        Saves the uploaded file to the server.
-
-        Returns:
-            The path where the file was saved.
-        """
-        fichier = self.fichier.data
-        if fichier and hasattr(fichier, 'filename'):
-            filepath = "./temp/" + fichier.filename
-            fichier.save(filepath)
-            return filepath
-        else:
-            print("2bad")
-            return None
+        bd_option = self.bd_option.data
+        return bd_option
+    
 
 class ExporterCsvForm(FlaskForm):
     liste_tables = Table.Get.get_AllTable(cnx) 
@@ -459,17 +440,33 @@ def exporter_csv():
 @app.route("/importer-csv/", methods=("GET","POST",))
 @csrf.exempt
 def importer_csv():
+    def os_choice(filename):
+        if os.name == 'posix':  
+            filepath = os.path.join('./temp', filename)
+        elif os.name == 'nt':  
+            filepath = os.path.join('..\\temp', filename)
+        else:
+            filepath = os.path.join('./temp', filename)
+        return filepath
+    
     importerForm = ImporterCsvForm()
 
     try:
         if importerForm.validate_on_submit():
             fichier = importerForm.fichier.data
+            bb_vide = importerForm.bd_option.data
             if fichier:
                 filename = secure_filename(fichier.filename)
-                filepath = os.path.join('./temp', filename)
+                
+                filepath = os_choice(filename)
+
                 fichier.save(filepath)
-                ImportCSV.Insert.importer_csv(cnx, filepath)
+                if bb_vide == "oui":
+                    ImportCSV.Insert.importer_csv_bd_vide(cnx, filepath)
+                elif bb_vide == "non":
+                    ImportCSV.Insert.importer_csv_bd_plein(cnx, filepath)
                 return redirect(url_for('inventaire'))
+
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -479,6 +476,10 @@ def importer_csv():
         ImporterCsvForm=importerForm,
         chemin = [("base", "accueil"), ("csv", "csv"), ("importer_csv", "importer un fichier csv")]
     )
+
+@app.route("/manuel-csv")
+def manuel_csv():
+    return send_file('../data/manuel-csv.pdf', as_attachment=True)
 
 class AjouterMaterielUniqueForm(FlaskForm):
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
