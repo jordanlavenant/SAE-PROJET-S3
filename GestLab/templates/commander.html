@@ -104,10 +104,10 @@
                 <div id="tools">
                     <div class="choisir-item">
                         <button class="bouton-moins">-</button>
-                        <p class="nb-choisit">{{ item[4] }}</p>
+                        <input type="number" class="nb-choisit" value="{{ item[4] }}" min="0" max="100">
                         <button class="bouton-plus">+</button>
                     </div>
-                    <a id="ajouter-demande-content" class="{{ item[0] }} {{ item[4] }}" href="#"><p class="ajouter-commande" id="ajouter-demande">AJOUTER A LA COMMANDE</p></a>
+                    <a class="{{ item[0] }} {{ item[4] }}" style="display: none;"><button class="ajouter-commande" id="ajouter-commande">ajouter à la commande</button></a>
                 </div>
 
                 <script>

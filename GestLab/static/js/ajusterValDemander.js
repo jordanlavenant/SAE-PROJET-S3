@@ -13,12 +13,14 @@ document.addEventListener('DOMContentLoaded', function() {
         let valeur = classes[1];
         console.log(maVariableJavaScript);
 
-        boutonAjout.addEventListener("click", function() {
-            url = `/demander-materiel-unique/${idUser}?idMat=${idMat}&qte=${maVariableJavaScript}`;
-            window.location.href = url;
-        });
-
         boutonMoins.addEventListener('click', function() {
+            boutonMoins.style.pointerEvents = "none";
+            boutonMoins.style.cursor = "not-allowed";
+            boutonMoins.style.opacity = "0.5";
+
+            boutonPlus.style.pointerEvents = "none";
+            boutonPlus.style.cursor = "not-allowed";
+            boutonPlus.style.opacity = "0.5";
             if (valeur > 0) {
                 // Appliquer les règles CSS
                 boutonAjout.style.pointerEvents = "all";
@@ -37,13 +39,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 boutonAjout.style.opacity = "0.5";
                 ref.style.color = "rgb(164,164,164)";
             }
+            $.ajax({
+                url: '/demander-materiel-unique/'+idUser+'?idMat='+idMat+'&qte='+maVariableJavaScript,
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    boutonMoins.style.pointerEvents = "all";
+                    boutonMoins.style.cursor = "pointer";
+                    boutonMoins.style.opacity = "1";
+
+                    boutonPlus.style.pointerEvents = "all";
+                    boutonPlus.style.cursor = "pointer";
+                    boutonPlus.style.opacity = "1";
+                }
+            });
         });
 
         boutonPlus.addEventListener('click', function() {
             // Appliquer les règles CSS
-            boutonAjout.style.pointerEvents = "all";
-            boutonAjout.style.cursor = "pointer";
-            boutonAjout.style.opacity = "1";
+            boutonMoins.style.pointerEvents = "none";
+            boutonMoins.style.cursor = "not-allowed";
+            boutonMoins.style.opacity = "0.5";
+
+            boutonPlus.style.pointerEvents = "none";
+            boutonPlus.style.cursor = "not-allowed";
+            boutonPlus.style.opacity = "0.5";
             valeur++;
             valeurParagraphe.textContent = valeur;
             maVariableJavaScript = valeur;
@@ -56,6 +76,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 boutonAjout.style.opacity = "0.5";
                 ref.style.color = "rgb(164,164,164)";
             }
+            $.ajax({
+                url: '/demander-materiel-unique/'+idUser+'?idMat='+idMat+'&qte='+maVariableJavaScript,
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    boutonMoins.style.pointerEvents = "all";
+                    boutonMoins.style.cursor = "pointer";
+                    boutonMoins.style.opacity = "1";
+
+                    boutonPlus.style.pointerEvents = "all";
+                    boutonPlus.style.cursor = "pointer";
+                    boutonPlus.style.opacity = "1";
+                }
+            });
         });
     });
 });
