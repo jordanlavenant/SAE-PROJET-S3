@@ -3,20 +3,20 @@ a {
 }
 
 #btn-back {
-    color: white;
-    background-color: #384274;
-    padding: 14px 40px;
-    border-radius: 25px;
-    font-size: 25px;
+    color: var(--text);
+    background-color: var(--background);
+    padding: 10px 20px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
     margin: 10vh 10vw;
+    border-radius: 10px;
 }
 
 #btn-back:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -31,19 +31,19 @@ a {
 }
 
 .btns {
-    color: white;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 14px 40px;
-    border-radius: 25px;
     font-size: 25px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 .btns:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -68,7 +68,6 @@ a {
     flex-basis: 80%;
     width: calc(100% - 60px);
     height: 50px;
-    border-radius: 20px;
     border: none;
     padding: 0 30px;
     font-size: 25px;
@@ -78,18 +77,18 @@ a {
 #btn-search {
     flex-basis: 20%;
     max-height: 50px;
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 0px 0px;
-    border-radius: 20px;
     font-size: 25px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 #btn-search:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -98,23 +97,23 @@ a {
 .filter-container {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     gap: 25px;
     margin-bottom: 25px;
     align-items: center;
 }
 
 .filter-container > p {
-    color: #384274;
+    color: var(--background);
     font-size: 40px;
     margin: 0;
     padding: 0;
 }
 
 #domaine-select {
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     font-family: 'Alumni Sans', sans-serif;
-    border-radius: 20px;
     font-size: 25px;
     padding: 10px 60px;
     border: none;
@@ -139,8 +138,8 @@ a {
     display: flex;
     flex-direction: row;
     padding: 0;
-    background-color: #384274;
-    border-left: 15px #2EDD94 solid;
+    background-color: var(--background);
+    border-left: 15px var(--success) solid;
 }
 
 #img-item {
@@ -159,14 +158,14 @@ a {
 .item-properties > h2 {
     font-size: 30px;
     margin: 0;
-    color: white;
+    color: var(--text);
 }
 
 .quantity-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    color: white;
+    color: var(--text);
     font-size: 25px;
 }
 
@@ -178,23 +177,23 @@ a {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    color: white;
+    color: var(--text);
     font-size: 25px;
 }
 
 #btn-redirect-item {
-    color: #384274;
-    background-color: white;
-    padding: 14px 40px;
-    border-radius: 25px;
+    color: var(--background);
+    background-color: var(--text);
+    padding: 15px 40px;
     font-size: 25px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 #btn-redirect-item:hover {
-    background-color: white;
-    box-shadow: 0 0 15px white;
+    background-color: var(--text);
+    box-shadow: 0 0 15px var(--text);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -218,13 +217,13 @@ a {
 }
 
 .alerts_count{
-    color: #d35252;
+    color: var(--error);
     align-items: center;
     margin: 0;
 }
 
 .texte_rouge{
-    color: #d35252;
+    color: var(--error);
     align-items: center;
     margin: 0;
 }

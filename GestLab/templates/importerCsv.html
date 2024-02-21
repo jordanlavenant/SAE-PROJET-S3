@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterStock.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/importerCSV.css') }}">
 {% endblock %}
 {% block content %}
 <a id="btn-back" href="{{ url_for('csv') }}">retour</a>
@@ -13,11 +13,14 @@
             <div class="main-container">
                 <!-- add the RadioField bd_option-->
                 <div class="user-box">
-                    {{ ImporterCsvForm.bd_option.label(class_="form-check-label") }}
-                    {{ ImporterCsvForm.bd_option(class_="form-check-input") }}
-                    <p>importer un fichier CSV : </p>
-                    <div>{{ ImporterCsvForm.fichier(size=20, class_="form-control element", placeholder="Fichier CSV") }}</div>
-                    <p>fichier</p>
+                    <div>
+                        {{ ImporterCsvForm.bd_option.label(class_="form-check-label") }}
+                        {{ ImporterCsvForm.bd_option(class_="form-check-input") }}
+                    </div>
+                    <div>
+                        <p>importer un fichier CSV : </p>
+                        {{ ImporterCsvForm.fichier(size=10, class_="form-control element", placeholder="Fichier CSV") }}
+                    </div>
                     <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
                 </div>
             </div>

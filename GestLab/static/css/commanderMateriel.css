@@ -34,8 +34,8 @@ a {
 #btn-search {
     flex-basis: 20%;
     max-height: 50px;
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 0px 0px;
     border-radius: 20px;
     font-size: 20px;
@@ -44,16 +44,16 @@ a {
 }
 
 #btn-search:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
 }
 
 #btn-retour {
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 10px 20px;
     margin: 10px 0px;
     border-radius: 20px;
@@ -62,8 +62,8 @@ a {
 }
 
 #btn-retour:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -78,15 +78,15 @@ a {
 }
 
 .filter-container > p {
-    color: #384274;
+    color: var(--background);
     font-size: 40px;
     margin: 0;
     padding: 0;
 }
 
 #categorie-select {
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     border-radius: 20px;
     font-size: 20px;
     padding: 10px 60px;
@@ -135,7 +135,7 @@ a {
 
 .section-alertes a {
     text-decoration: underline;
-    color: #384274;
+    color: var(--background);
     font-size: 35px;
 }
 
@@ -156,7 +156,7 @@ a {
 
 .section-demandes a {
     text-decoration: underline;
-    color: #384274;
+    color: var(--background);
     font-size: 35px;
 }
 
@@ -180,13 +180,13 @@ a {
     flex-wrap: wrap;
     justify-content: space-around;
     flex-basis: 40%;
-    background-color: #384274;
+    background-color: var(--background);
     margin-bottom: 10px;
     border-radius: 10px;
 }
 
 .section-contenu h3 {
-    color: #fff;
+    color: var(--text);
     font-size: 30px;
     font-weight: 500;
     flex-basis: 100%;
@@ -204,21 +204,21 @@ a {
 .section-contenu button {
     border: none;
     background-color: transparent;
-    color: #fff;
+    color: var(--text);
     cursor: pointer;
 }
 
 #ajouter-commande {
     margin-bottom: 10px;
-    color: #384274;
-    background-color: #fff;
+    color: var(--background);
+    background-color: var(--text);
     border-radius: 20px;
     padding-left: 10px;
     padding-right: 10px; 
 }
 
 .section-contenu p {
-    color: #fff;
+    color: var(--text);
     font-size: 20px;
     margin: 0;
 }
