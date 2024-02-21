@@ -427,7 +427,7 @@ def exporter_csv():
         tables = f.get_tables()
         print(tables)
         ExportCSV.Get.exporter_csv(cnx, tables)
-        return redirect(url_for('exporter_csv'))
+        return send_file("../table/tout.csv", as_attachment=True)
     return render_template(
         "exporterCsv.html",
         title="exporter un fichier csv",
