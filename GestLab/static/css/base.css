@@ -164,6 +164,7 @@ header {
     display: flex;
     align-items: center; /* aligne les éléments verticalement au centre */
     justify-content: space-between; /* répartit uniformément les éléments horizontalement avec un espace égal entre eux */
+    padding: 10px;
 }
 
 /* fil d'ariane */
@@ -172,7 +173,6 @@ header {
     display: flex; 
     flex-wrap: nowrap;
     align-items: center;
-    margin: 10px;
 }
 
 #fil-ariane li {

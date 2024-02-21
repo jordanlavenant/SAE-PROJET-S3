@@ -19,8 +19,8 @@
 <body>
     <header class="header">
         <nav class="nav">
-            <a href="{{ url_for('base') }}"><img src="{{ url_for('static',filename='./images/logo-GestLab.png') }}" alt="logo GestLab"></a>
-            <ul>
+            <a href="{{ url_for('base') }}"><img class="icon-logo-gestlab" src="{{ url_for('static',filename='./images/logo-GestLab.png') }}" alt="logo GestLab"></a>
+            <ul class="nav-liste-elem">
                 <li><a href="{{ url_for('base') }}">accueil</a></li>
                 {% if 'utilisateur' in session %}
 
@@ -56,11 +56,11 @@
 
 
                 {% endif %}
-                <li><a class="profil" href="{{ url_for('login') }}"><img src="{{ url_for('static',filename='./images/compte.png') }}" alt="logo compte"></a></li>
+                <li><a class="profil" href="{{ url_for('login') }}"><img class="img-compte" src="{{ url_for('static',filename='./images/compte.png') }}" alt="logo compte"></a></li>
                 
             </ul>
         </nav>
-        <div class = "sous-header"> 
+        <div class ="sous-header"> 
             <div id="fil-ariane">
                 {% for elem in chemin %}
                     <li><a href="{{ url_for(elem[0]) }}">{{ elem[1] }}</a></li>

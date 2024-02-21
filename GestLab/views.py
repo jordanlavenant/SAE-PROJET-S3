@@ -1049,7 +1049,8 @@ def base():
         "home.html",
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
-        title="GESTLAB"
+        title="GESTLAB",
+        chemin = [("base", "accueil")]
     )
 
 @app.route("/motdepasseoublie/", methods=("GET","POST",))
