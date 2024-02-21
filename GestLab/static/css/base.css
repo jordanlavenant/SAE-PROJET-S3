@@ -59,13 +59,13 @@ header {
 }
 
 .dark {
-    --text: black;
-    --main-background: #1a1a1a;
+    --text: white;
+    --main-background: #0d0d0d;
     --background: #2c2c2c;
     --background-hover: #1a1a1a;
     --dark-background: #111;
     --border: #2c2c2c;
-    --secondary: #00BFFF;
+    --secondary: #009AF0;
     --shadow: #111;
     --secondary-button: rgb(100,100,100);
     --success: #008000;
