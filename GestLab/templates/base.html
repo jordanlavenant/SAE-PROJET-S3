@@ -44,7 +44,11 @@
                 <li><a href="{{ url_for('csv') }}">csv</a></li>
                 <li id="alertes-li">
                     <a href="{{ url_for('alertes') }}">alertes</a>
-                    <span class="tooltip-alerte">{{ alerte_tl }} alertes</span>
+                    {% if alerte_tl|int == 0 %}
+                        <span class="tooltip-alerte void">{{ alerte_tl }} alerte</span>
+                    {% else %}
+                        <span class="tooltip-alerte">{{ alerte_tl }} alertes</span>
+                    {% endif %}                
                 </li>
                 {% endif %}
 
@@ -55,11 +59,19 @@
                 <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
                 <li id="alertes-li">
                     <a href="{{ url_for('alertes') }}">alertes</a>
-                    <span class="tooltip-alerte">{{ alerte_tl }} alertes</span>
+                    {% if alerte_tl|int == 0 %}
+                        <span class="tooltip-alerte void">{{ alerte_tl }} alerte</span>
+                    {% else %}
+                        <span class="tooltip-alerte">{{ alerte_tl }} alertes</span>
+                    {% endif %}                
                 </li>
                 <li id="demandes-li">
                     <a href="{{ url_for('demandes') }}">demandes</a>
+                    {% if demande_tl == 0 %}
+                    <span class="tooltip-demande void">{{ demande_tl }} demande</span>
+                    {% else %}
                     <span class="tooltip-demande">{{ demande_tl }} demandes</span>
+                    {% endif %}
                 </li>
                 {% endif %}
 

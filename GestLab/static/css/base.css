@@ -143,8 +143,16 @@ header {
     color: var(--error);
 }
 
+.tooltip-alerte.void {
+    color: var(--success);
+}
+
 .tooltip-demande {
     color: #FFC700;
+}
+
+.tooltip-demande.void {
+    color: var(--success);
 }
 
 .tooltip-alerte::after,

@@ -219,17 +219,18 @@ a {
 }
 
 #btn-retour-rien {
-    margin-top: 0.5em;
-    margin-left: 30vw;
-    color: var(--text);
+    color:var(--text);
     background-color: var(--background);
     padding: 10px 20px;
-    border-radius: 10px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
+    margin: 10vh 10vw;
+    border-radius: 10px;
 }
 
 #btn-retour-rien:hover {
+    color: var(--text);
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
