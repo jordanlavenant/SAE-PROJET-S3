@@ -9,7 +9,7 @@ html.scroll-lock {
 body {
     padding: 0;
     margin: 0;
-    background-color: #e0e0e0;
+    background-color: var(--main-background);
     font-family: 'Alumni Sans', sans-serif;
     font-variant: small-caps;
     font-weight: 500;
@@ -45,6 +45,7 @@ header {
 
 :root {
     --text: white;
+    --main-background: #e0e0e0;
     --background: #384274;
     --background-hover: #0e1b60;
     --dark-background: #262e58;
@@ -54,6 +55,7 @@ header {
     --secondary-button: rgb(164,164,164);
     --success: #2EDD94;
     --error: #d35252;
+    --title: #111;
 }
 
 
@@ -83,7 +85,7 @@ header {
 /* titre */
 
 .title {
-    color: #111;
+    color: var(--title);
     text-align: center;
     font-size: 70px;
     font-weight: 700;
@@ -104,7 +106,7 @@ header {
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center; 
-    background-color: #009AF0;
+    background-color: var(--secondary);
     padding: 0 10px;
 }
 
@@ -120,18 +122,18 @@ header {
 
 .nav ul a {
     text-decoration: none;
-    color: #fff;
+    color: var(--text);
     border-bottom: 2px solid transparent;
     font-size: 30px;
 }
 
 .nav ul a:hover {
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid var(--text);
     transition: 0.2s;
 }
 
 .active {
-    color: white;
+    color: var(--text);
 }
 
 .nav a img {
@@ -181,12 +183,12 @@ header {
 }
 
 #fil-ariane a {
-    color: #384274;
+    color: var(--background);
     transition: 0.2s;
 }
 
 #fil-ariane a:hover {
-    color: #009AF0;
+    color: var(--secondary);
     transition: all 0.2s;
     text-decoration: underline;
 }
@@ -194,13 +196,13 @@ header {
 /* footer */
 
 .footer-haut {
-    background-color: #384274;
+    background-color: var(--background);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     padding: 1% 3%;
     justify-content: space-between;
-    color: #fff;
+    color: var(--text);
 }
 
 .footer-haut > * {
@@ -210,14 +212,14 @@ header {
 .footer-haut a {
     margin: 0;
     padding: 0;
-    color: #fff;
+    color: var(--text);
     transition: 0.2s;
 }
 
 .footer-haut a:hover {
     margin: 0;
     padding: 0;
-    color: #009AF0;
+    color: var(--secondary);
 }
 
 .footer-haut h4 {
@@ -236,7 +238,7 @@ header {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: white;
+    background-color: var(--text);
 }
 
 #republique_francaise_banner, 
@@ -268,7 +270,7 @@ header {
 }
 
 .footer-bas p {
-    color: white;
+    color: var(--text);
     text-align: center;
     margin: 0;
     padding: 10px 0;

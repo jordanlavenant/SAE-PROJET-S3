@@ -13,11 +13,8 @@
 }
 
 main > section {
-    margin-left: 26vw;
-    margin-right: 30vw;
-    margin-bottom: 3%;
-    margin-top: 3%;
-    width: 50%;
+    margin: 50px 20vw;
+    width: auto;
     border: solid var(--background) 1px;
     padding:  1%;
 }
@@ -31,7 +28,7 @@ main > section {
 
 .container-objet:hover {
     cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, .05);
     transition: .2s;
 }
 
@@ -45,14 +42,14 @@ main > section {
 .texte_rouge {
     margin: 0;
     font-weight: bold;
-    color: #d35252;
+    color: var(--error);
     align-items: center;
 }
 
 .texte_bleu {
     margin: 0;
     font-weight: bold;
-    color: #384274;
+    color: var(--background);
     padding-right: 1em;
 }
 
@@ -62,8 +59,8 @@ main > section {
 }
 
 #btn-back {
-    color: white;
-    background-color: #384274;
+    color:var(--text);
+    background-color: var(--background);
     padding: 10px 20px;
     font-size: 35px;
     border: none;
@@ -73,7 +70,7 @@ main > section {
 }
 
 #btn-back:hover {
-    color: white;
+    color: var(--text);
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;

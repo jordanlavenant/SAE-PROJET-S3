@@ -34,8 +34,8 @@ a {
 #btn-search {
     flex-basis: 20%;
     max-height: 50px;
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 0px 0px;
     border-radius: 20px;
     border: none;
@@ -43,16 +43,16 @@ a {
 }
 
 #btn-search:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
 }
 
 #btn-retour {
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 10px 20px;
     margin: 10px 0px;
     border-radius: 20px;
@@ -61,8 +61,8 @@ a {
 }
 
 #btn-retour:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -77,15 +77,15 @@ a {
 }
 
 .filter-container > p {
-    color: #384274;
+    color: var(--background);
     font-size: 40px;
     margin: 0;
     padding: 0;
 }
 
 #categorie-select {
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     border-radius: 20px;
     font-size: 20px;
     padding: 10px 60px;
@@ -107,8 +107,8 @@ a {
 }
 
 #btn-pdf {
-    color: #fff;
-    background-color: #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
     padding: 10px 20px;
     margin: 10px 0px;
     border-radius: 20px;
@@ -117,16 +117,16 @@ a {
 }
 
 #btn-pdf:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
 }
 
 #btn-valider {
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 10px 20px;
     margin: 10px 0px;
     border-radius: 20px;
@@ -135,8 +135,8 @@ a {
 }
 
 #btn-valider:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -145,15 +145,15 @@ a {
 .bouton-moins {
     margin-left: 1em;
     margin-right: 5px;
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     border: none;
 }
 
 .bouton-plus {
     margin-left: 5px;
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     border: none;
 }
 
@@ -168,7 +168,7 @@ a {
 .container-qte p {
     margin: 0;
     padding: 0;
-    color: #fff;
+    color: var(--text);
 }
 
 /* item */
@@ -176,7 +176,7 @@ a {
 .section-contenu {
     margin: 3% 30vw 3% 30vw;
     padding: 1em;
-    background-color: #384274;
+    background-color: var(--background);
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -186,13 +186,13 @@ a {
 
 .texte_blanc {
     margin: 0;
-    color: white;
+    color: var(--text);
 }
 
 #btn-back {
     margin-left: 10vw;
-    color: white;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 14px 40px;
     border-radius: 25px;
     font-size: 25px;
@@ -201,9 +201,9 @@ a {
 }
 
 #btn-back:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -211,16 +211,16 @@ a {
 
 #btn-voir {
     margin-right: 1%;
-    background-color: white;
+    background-color: var(--text);
     border-radius: 25px;
     padding: 14px 40px;
     transition: 0.2s;
-    color: #384274;
+    color: var(--background);
 }
 
 #btn-voir:hover {
-    background-color: white;
-    box-shadow: 0 0 15px white;
+    background-color: var(--text);
+    box-shadow: 0 0 15px var(--text);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -239,8 +239,8 @@ a {
 #btn-retour-rien {
     margin-top: 0.5em;
     margin-left: 30vw;
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 10px 20px;
     border-radius: 20px;
     border: none;
@@ -248,8 +248,8 @@ a {
 }
 
 #btn-retour-rien:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -259,14 +259,14 @@ a {
 /* popup */
 
 .popup {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(5px);
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .7);
+    z-index: 100;
+    display: none;
 }
 
 .popup-content {
@@ -274,8 +274,8 @@ a {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
-    background: #384274;
+    color: var(--text);
+    background: var(--background);
     padding: 20px;
     border: none;
     border-radius: 20px;
@@ -284,8 +284,8 @@ a {
 
 .btn-retour-popup {
     margin-right: 30px;
-    color: #fff;
-    background-color: #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
     padding: 10px 20px;
     border-radius: 20px;
     border: none;
@@ -293,8 +293,8 @@ a {
 }
 
 .btn-retour-popup:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;

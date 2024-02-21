@@ -113,8 +113,8 @@ a {
 #btn-search {
     flex-basis: 20%;
     max-height: 50px;
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 0px 0px;
     border-radius: 10px;
     border: none;
@@ -122,8 +122,8 @@ a {
 }
 
 #btn-search:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -155,7 +155,7 @@ a {
 }
 
 .filter-sous-container > p {
-    color: #384274;
+    color: var(--background);
     font-size: 40px;
     margin: 0;
     padding: 0;
@@ -168,8 +168,8 @@ a {
 }
 
 #domaine-select {
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     border-radius: 10px;
     font-size: 20px;
     padding: 10px 60px;
@@ -203,7 +203,7 @@ h2 {
     flex-direction: column;
     gap: 10px;
     flex-basis: 45%;
-    background-color: #384274;
+    background-color: var(--background);
     border-radius: 5px;
     padding: 1%;
 }

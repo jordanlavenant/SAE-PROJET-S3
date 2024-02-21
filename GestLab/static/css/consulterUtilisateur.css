@@ -26,8 +26,8 @@
 #btn-search {
     flex-basis: 20%;
     max-height: 50px;
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 0px 0px;
     border-radius: 20px;
     border: none;
@@ -35,16 +35,16 @@
 }
 
 #btn-search:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
 }
 
 #btn-retour {
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 10px 20px;
     margin: 10px 0px;
     border-radius: 20px;
@@ -53,8 +53,8 @@
 }
 
 #btn-retour:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -69,7 +69,7 @@
 }
 
 .filter-container > p {
-    color: #384274;
+    color: var(--background);
     font-size: 40px;
     margin: 0;
     padding: 0;
@@ -77,8 +77,8 @@
 
 #categorie-select {
     cursor: pointer;
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     border-radius: 20px;
     font-size: 20px;
     padding: 10px 60px;
@@ -105,7 +105,7 @@
     gap: 50px;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid #384274;
+    border: 1px solid var(--background);
     padding: 10px;
     border-radius: 20px;
 }
@@ -115,12 +115,12 @@
     padding: 0;
     font-size: 40px;
     font-weight: bold;
-    color: #384274;
+    color: var(--background);
 }
 
 .sous-container-info-utilisateur button {
-    color: #fff;
-    background-color: #384274;
+    color: var(--text);
+    background-color: var(--background);
     padding: 10px 20px;
     margin: 10px 0px;
     border-radius: 20px;
@@ -129,8 +129,8 @@
 }
 
 .sous-container-info-utilisateur button:hover {
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     cursor: pointer;
 }

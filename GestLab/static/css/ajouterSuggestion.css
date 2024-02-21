@@ -1,6 +1,6 @@
 p,
 label {
-    color: white;
+    color: var(--text);
     font-size: 25px;
     margin: 15px 0;
     cursor: pointer;
@@ -38,7 +38,7 @@ label {
 
 #btn-back {
     margin-left: 10vw;
-    color: white;
+    color: var(--text);
     background-color: var(--background);
     padding: 10px 20px;
     font-size: 35px;
@@ -48,7 +48,7 @@ label {
 }
 
 #btn-back:hover {
-    color: white;
+    color: var(--text);
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
@@ -95,7 +95,7 @@ label {
 
 .dom-select, 
 .cat-select {
-    color: #384274;
+    color: var(--background);
     background-color: var(--text);
     border-radius: 10px;
     font-size: 25px;
@@ -153,7 +153,7 @@ label {
 }
 
 .submit:hover {
-    color: white;
+    color: var(--text);
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
