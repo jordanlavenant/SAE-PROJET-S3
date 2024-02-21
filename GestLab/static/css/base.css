@@ -56,6 +56,30 @@ header {
     --error: #d35252;
 }
 
+
+.theme>.logo {
+	display: flex;
+	justify-content: space-between;
+	padding: 3px;
+}
+
+.theme>.cercle {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 24px;
+	height: 24px;
+	margin: -2px;
+	border-radius: 100%;
+	background: radial-gradient(farthest-corner at 6px 0px, #09c, #c90);
+	box-shadow: 0 2px 2px #222;
+	transition: 0.2s;
+	transition-timing-function: cubic-bezier(0.67, 1.75, 0.76, 0.92);
+}
+.dark .theme>.cercle {
+	transform: translateX(26px);
+}
+
 /* titre */
 
 .title {
