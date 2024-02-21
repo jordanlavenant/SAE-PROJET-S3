@@ -1540,14 +1540,15 @@ def valider_bon_demande(id):
         pass
     return redirect(url_for('base'))
 
-@app.route("/update-theme/<int:id>", methods=["POST"])
+@app.route("/update-theme/<int:id>", methods=("GET","POST",))
 def update_theme(id):
     try:
-        theme = request.json.get("theme")
-        Utilisateur.Update.update_theme_utilisateur(cnx, id, theme)
-        return jsonify({"success": True})
+        Utilisateur.Update.update_theme_utilisateur(cnx, session['utilisateur'][4], id)
+        return redirect(url_for('base'))
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)})
+        print("An error occurred:", e)
+        return redirect(url_for('base'))
+
 
 
 

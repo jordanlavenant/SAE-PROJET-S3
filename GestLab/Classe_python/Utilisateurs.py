@@ -191,11 +191,11 @@ class Utilisateur:
 
         def update_theme_utilisateur(cnx, id, theme):
             try :
-                print("update UTILISATEUR set themeLight = '" + theme + "' where idUtilisateur = '" + str(id) + "';")
-                cnx.execute(text("update UTILISATEUR set themeLight = '" + theme + "' where idUtilisateur = '" + str(id) + "';"))
+                cnx.execute(text(("update UTILISATEUR set themeLight = " + str(theme) + " where idUtilisateur = " + str(id) + ";")))
                 cnx.commit()
-            except:
-                print("erreur de mise a jour du theme")
+            except Exception as e:
+                print(e)
+                print("Erreur de mise a jour du theme")
                 raise
         
         def update_email_utilisateur(cnx,new_email,nom,mdp, old_email):

@@ -4,25 +4,29 @@ if (localStorage.getItem("theme")) {
     document.body.classList.add("dark");
 }
 
-function toggleTheme(userId) {
-	console.log(userId);
+function toggleTheme() {
     const body = document.body;
-	const url = "/update-theme/" + userId;
 
-    if (body.classList.toggle("dark")) {
-        applyTheme("dark");
-        localStorage.setItem("theme", "dark");
-		$.ajax({
-			url: url,
-			type: 'POST',
-			success: function(response) {
-				console.log(response);
-			}
-		});
-    } else {
-        applyTheme("default");
-        localStorage.setItem("theme", "default");
-    }
+	if (body.classList.toggle("dark")) {
+		applyTheme("dark");
+		localStorage.setItem("theme", "dark");
+		url_redirection = "/update-theme/0";
+	} 
+	else {
+		applyTheme("default");
+		localStorage.setItem("theme", "default");
+		url_redirection = "/update-theme/1";
+	}
+
+	$.ajax({
+		url: url_redirection,
+		type: 'GET',
+		contentType: 'application/json',
+		success: function(response) {
+			console.log(response);
+		},
+	});
+	
 }
 
 
