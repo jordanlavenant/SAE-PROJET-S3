@@ -427,7 +427,7 @@ def exporter_csv():
         tables = f.get_tables()
         print(tables)
         ExportCSV.Get.exporter_csv(cnx, tables)
-        return redirect(url_for('exporter_csv'))
+        return send_file("../table/tout.csv", as_attachment=True)
     return render_template(
         "exporterCsv.html",
         title="exporter un fichier csv",
@@ -464,7 +464,7 @@ def importer_csv():
                 if bb_vide == "oui":
                     ImportCSV.Insert.importer_csv_bd_vide(cnx, filepath)
                 elif bb_vide == "non":
-                    ImportCSV.Insert.importer_csv(cnx, filepath)
+                    ImportCSV.Insert.importer_csv_bd_plein(cnx, filepath)
                 return redirect(url_for('inventaire'))
 
     except Exception as e:
