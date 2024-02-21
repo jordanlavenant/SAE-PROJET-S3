@@ -64,7 +64,7 @@
                 <div class="bottom-side">
                     <div class="choisir-item">
                         <button class="bouton-moins">-</button>
-                        <p class="nb-choisit">{{ item[4] }}</p>
+                        <input type="number" class="nb-choisit" value="{{ item[4] }}" min="0" max="100">
                         <button class="bouton-plus">+</button>
                     </div>
                     <a class="{{ item[0] }} {{ item[4] }}" style="display: none;"><button class="ajouter-commande" id="ajouter-commande">ajouter à la commande</button></a>

@@ -18,3 +18,12 @@ window.addEventListener("scroll", function () {
         boutonHautPage.style.display = "none";
     }
 });
+
+let docTitle = document.title;
+window.addEventListener("blur", function () {
+    document.title = "Come back 🙄";
+});
+
+window.addEventListener("focus", function () {
+    document.title = docTitle;
+});
