@@ -13,22 +13,21 @@
 
 
 <div class="ajouterMateriel-container">
-    <div class="ajouterMateriel-content">
-        <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('exporter_csv') }}">
-            {{ ExporterCsvForm.hidden_tag() }}                        
-            <div class="main-container">
-                <p class="titre-container">Choisir les tables à exporter :</p>
-                {% for table in ExporterCsvForm.liste_tables %}
-                    <div class="checkbox-container">
-                        <p>{{ table }}</p>
-                        {{ ExporterCsvForm[table](class="custom-checkbox") }}
-                    </div>
-                {% endfor %}
-            </div>
-                <div class="container-submit">{{ ExporterCsvForm.submit() }}</div>
-        </form>
-    </div>
+    <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('exporter_csv') }}">
+        {{ ExporterCsvForm.hidden_tag() }}     
+        <p class="titre-container">choisir les tables à exporter</p>                   
+        <div class="main-container">
+            {% for table in ExporterCsvForm.liste_tables %}
+                <div class="checkbox-container">
+                    {{ ExporterCsvForm[table](class="custom-checkbox") }}
+                    <label for="{{ table }}">{{ table }}</label>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="container-submit">{{ ExporterCsvForm.submit() }}</div>
+    </form>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const checkAllButton = document.getElementById('checkAllButton');

@@ -7,26 +7,20 @@
 <a id="btn-back" href="{{ url_for('csv') }}">RETOUR</a>
 
 <div class="ajouterMateriel-container">
-    <div class="ajouterMateriel-content">
-        <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('importer_csv') }}">
-            {{ ImporterCsvForm.hidden_tag() }}                        
-            <div class="main-container">
-                <!-- add the RadioField bd_option-->
-                <div class="user-box">
-                    <div>
-                        {{ ImporterCsvForm.bd_option.label(class_="form-check-label") }}
-                        {{ ImporterCsvForm.bd_option(class_="form-check-input") }}
-                    </div>
-                    <div>
-                        <p>importer un fichier CSV</p>
-                        {{ ImporterCsvForm.fichier(size=10, class_="form-control element", placeholder="Fichier CSV") }}
-                    </div>
-                    <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
-                </div>
+    <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('importer_csv') }}">
+        {{ ImporterCsvForm.hidden_tag() }}                        
+        <div class="user-box">
+            <div>
+                {{ ImporterCsvForm.bd_option.label(class_="form-check-label") }}
+                {{ ImporterCsvForm.bd_option(class_="form-check-input") }}
             </div>
-            
-        </form>
-    </div>
+            <div>
+                <p>importer un fichier CSV</p>
+                {{ ImporterCsvForm.fichier(size=10, class_="form-control element", placeholder="Fichier CSV") }}
+            </div>
+        </div>
+        <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
+    </form>
 </div>
 
 <script>

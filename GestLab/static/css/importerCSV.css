@@ -37,6 +37,7 @@
 
 .form-check-input input:checked + label {
     background-color: var(--secondary);
+    transition: .2s;
 }
 
 .form-check-input li {
@@ -51,15 +52,9 @@
 
 .user-box{
     display: flex;
-    flex-direction: flex-start;
+    flex-direction: column;
+    justify-content: center;
     flex-wrap: wrap;
-}
-
-.user-box > div {
-    flex-basis: 100%;
-    align-items: center;
-    text-align: center;
-
 }
 
 p , label{
@@ -94,89 +89,49 @@ p , label{
     cursor: pointer;
 }
 
-.main-container {
+.ajouterMateriel-container {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-    gap: 50px;
+    margin: 50px 0 100px;
+}
+
+.form-importCsv {
     background-color: var(--background);
-    margin: 50px 10vw;
+    border-radius: 10px;
     padding: 3%;
-    border-radius: 10px;
+    box-shadow: 5px 10px 10px var(--background);
 }
 
-.checkbox-container {
+.user-box div {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     align-items: center;
-    flex-basis: 20%;
+    justify-content: space-between;
+}
+
+.user-box input[type='file'] {
     display: flex;
 }
 
-.custom-checkbox {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    outline: none;
-    cursor: pointer;
-    vertical-align: middle;
-    position: relative;
+.form-importCsv div:last-child {
+    display: flex;
+    justify-content: flex-end;
 }
 
-.custom-checkbox:checked::before {
-    content: "\2713";
-    font-size: 14px;
-    color: #fff;
-    line-height: 20px;
-    text-align: center;
-    position: absolute;
-    top: -1px;
-    left: 2px;
-}
-
-.custom-checkbox:checked {
-    background-color: var(--secondary); /* Couleur de fond lorsque la case est cochée */
-    border-color: var(--secondary); /* Couleur de bordure lorsque la case est cochée */
-}
-
-#submit {
-    color: var(--text);
-    background-color: var(--secondary);
-    padding: 14px 20px;
-    border-radius: 10px;
+.form-importCsv div:last-child input {
+    color: var(--background);
+    background-color: var(--text);
+    padding: 15px 40px;
     font-size: 25px;
     border: none;
     transition: 0.2s;
-    text-align: center;
-    margin-top: 30px;
+    border-radius: 10px;
 }
 
-#submit:hover {
-    color: white;
-    background-color: #ff0000;
-    box-shadow: 0 0 15px #ff0000;
+.form-importCsv > div:last-child input:hover {
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
+    color: var(--text);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
-}
-
-.container-submit {
-    flex-basis: 100%;
-    text-align: center;
-    margin: 20px;
-}
-
-.btn-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-basis: 100%;
-    gap: 20px;  
-    margin: 20px;
 }

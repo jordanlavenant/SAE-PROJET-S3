@@ -359,7 +359,7 @@ class AjouterStockForm(FlaskForm):
 class ImporterCsvForm(FlaskForm):
     
     fichier = FileField('fichier', validators=[])
-    submit = SubmitField('importer')
+    submit = SubmitField('IMPORTER')
     next = HiddenField()
     bd_option = RadioField('voulez-vous remplacer les données existantes ?', choices=[('oui','oui'),('non','non')], default='non')
 
@@ -391,7 +391,7 @@ class ExporterCsvForm(FlaskForm):
     for table in liste_tables:
         locals()[table] = BooleanField(table, default=False)
 
-    submit = SubmitField('exporter')
+    submit = SubmitField('EXPORTER')
     next = HiddenField()
 
     def get_tables(self):
