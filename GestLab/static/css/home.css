@@ -126,6 +126,7 @@ a:hover {
     background-color: var(--background);
     width: 250px;
     height: 300px;
+    box-shadow: 5px 10px 10px var(--background);
 }
 
  .carte-lien h2 {

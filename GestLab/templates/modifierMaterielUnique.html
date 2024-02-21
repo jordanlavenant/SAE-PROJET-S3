@@ -4,37 +4,37 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterMaterielUnique.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('inventaire') }}">retour</a>
+<a id="btn-back" href="{{ url_for('inventaire') }}">RETOUR</a>
 <div class="ajouterMateriel-container">
     <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('modifier_materiel_unique', id=id) }}">
         {{ ModifierMaterielUniqueForm.hidden_tag() }}
 
         <div class="left-side-info">
             <div class="user-box domaine-container">
-                <p>Emplacement : </p>
+                <p>emplacement</p>
                 <div>{{ ModifierMaterielUniqueForm.endroit(size="auto", class_="comboBox cat-select") }}</div>
             </div>
 
             <div class="user-box categorie-container">
-                <p>Position : </p>
+                <p>position</p>
                 <div>{{ ModifierMaterielUniqueForm.position(size=auto, class_="comboBox cat-select") }}</div>
             </div>
 
             <div class="pair-info">
                 <div class="user-box date-reception-container">
-                    <p>Date de réception : </p>
+                    <p>date de réception</p>
                     <div>{{ ModifierMaterielUniqueForm.date_reception(size=10, class_="form-control element") }}</div>
                 </div>
 
                 <div class="user-box date-peremption-container">
-                    <p>Date de péremption / étalonnage : </p>
+                    <p>date de péremption / étalonnage</p>
                     <div>{{ ModifierMaterielUniqueForm.date_peremption(size=10, class_="form-control element") }}</div>
                 </div>
             </div>
         
             <div class="pair-info">
                 <div class="user-box quantite-container">
-                    <p>Quantité Approximative : </p>
+                    <p>quantité approximative</p>
                     <div>{{ ModifierMaterielUniqueForm.quantite_approximative(size=10, class_="form-control element") }}</div>
                 </div>
             </div>

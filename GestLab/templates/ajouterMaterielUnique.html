@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterMaterielUnique.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('etat',id=id) }}">retour</a>
+<a id="btn-back" href="{{ url_for('etat',id=id) }}">RETOUR</a>
 <div class="ajouterMateriel-container">
     <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('ajouter_materiel_unique', id=id) }}">
         {{ AjouterMaterielUniqueForm.hidden_tag() }}
@@ -15,35 +15,35 @@
             </div>
 
             <div class="user-box domaine-container">
-                <p>emplacement : </p>
+                <p>emplacement</p>
                 <div>{{ AjouterMaterielUniqueForm.endroit(size=auto, class_="comboBox dom-select") }}</div>
             </div>
 
             <div class="user-box categorie-container">
-                <p>position : </p>
+                <p>position</p>
                 <div>{{ AjouterMaterielUniqueForm.position(size=auto, class_="comboBox cat-select") }}</div>
             </div>
 
             <div class="pair-info">
                 <div class="user-box date-reception-container">
-                    <p>date de réception : </p>
+                    <p>date de réception</p>
                     <div>{{ AjouterMaterielUniqueForm.date_reception(size=10, class_="form-control element", placeholder="Date de réception") }}</div>
                 </div>
 
                 <div class="user-box date-peremption-container">
-                    <p>date de péremption / étalonnage : </p>
+                    <p>date de péremption / étalonnage</p>
                     <div>{{ AjouterMaterielUniqueForm.date_peremption(size=10, class_="form-control element", placeholder="Date de péremption / étalonnage") }}</div>
                 </div>
             </div>
         
             <div class="pair-info">
                 <div class="user-box quantite-container">
-                    <p>Quantité Approximative : </p>
+                    <p>quantité approximative</p>
                     <div>{{ AjouterMaterielUniqueForm.quantite_approximative(size=10, class_="form-control element", placeholder="Quantité Approximative", value=quantite_approximative) }}</div>
                 </div>
 
                 <div class="user-box quantite-container">
-                    <p>Quantité Reçue : </p>
+                    <p>quantité reçue</p>
                     <div>{{ AjouterMaterielUniqueForm.quantite_recue(size=10, class_="form-control element", placeholder="Quantité Reçue", value=1) }}</div>
                 </div>
             </div>
