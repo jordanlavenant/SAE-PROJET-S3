@@ -146,7 +146,11 @@
     
     <!-- si l'utilisateur n'est pas connecter -->
     {% else %}
-    <h2 class="sous-title">Bienvenue !</h2>
-    <a id="container-bouton-connexion" href="{{ url_for('login') }}"><button id="btn-connexion">se connecter</button></a>
+    <div id="welcome-board">
+        <h2 class="sous-title">bienvenue !</h2>
+        <div id="container-bouton-connexion">
+            <a href="{{ url_for('login') }}" id="btn-connexion">SE CONNECTER</a>
+        </div>
+    </div>
     {% endif %}
 {% endblock %}
