@@ -42,7 +42,10 @@
                 <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
                 <li><a href="{{ url_for('ajouter_stock') }}">ajouter au stock</a></li>
                 <li><a href="{{ url_for('csv') }}">csv</a></li>
-                <li><a href="{{ url_for('alertes') }}">alertes</a></li>
+                <li id="alertes-li">
+                    <a href="{{ url_for('alertes') }}">alertes</a>
+                    <span class="tooltip-alerte">{{ alerte_tl }} alertes</span>
+                </li>
                 {% endif %}
 
                 <!-- gestionnaire -->
@@ -50,8 +53,14 @@
                 <li><a href="{{ url_for('consulter_bon_commande') }}">consulter bon de commande</a></li>
                 <li><a href="{{ url_for('commander') }}">commander</a></li>
                 <li><a href="{{ url_for('inventaire') }}">inventaire</a></li>
-                <li><a href="{{ url_for('alertes') }}">alertes</a></li>
-                <li><a href="{{ url_for('demandes') }}">demandes</a></li>
+                <li id="alertes-li">
+                    <a href="{{ url_for('alertes') }}">alertes</a>
+                    <span class="tooltip-alerte">{{ alerte_tl }} alertes</span>
+                </li>
+                <li id="demandes-li">
+                    <a href="{{ url_for('demandes') }}">demandes</a>
+                    <span class="tooltip-demande">{{ demande_tl }} demandes</span>
+                </li>
                 {% endif %}
 
 

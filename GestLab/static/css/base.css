@@ -117,7 +117,55 @@ header {
 }
 
 .nav li {
+    position: relative;
+    display: inline-block;
     padding: 0 10px;
+}
+
+.tooltip-alerte,
+.tooltip-demande {
+    visibility: hidden;
+    width: 120px;
+    background-color: var(--main-background);
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 10px;
+    position: absolute;
+    top: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity .2s;
+    border: 1px solid var(--background);
+}
+
+.tooltip-alerte {
+    color: var(--error);
+}
+
+.tooltip-demande {
+    color: #FFC700;
+}
+
+.tooltip-alerte::after,
+.tooltip-demande::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+}
+
+.nav ul #demandes-li:hover .tooltip-demande {
+    visibility: visible;
+    opacity: 1;
+    transition: .2s;
+}
+
+.nav ul #alertes-li:hover .tooltip-alerte {
+    visibility: visible;
+    opacity: 1;
+    transition: .2s;
 }
 
 .nav ul a {

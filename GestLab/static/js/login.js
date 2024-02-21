@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let estAfficherMDP = false;
     const btnChangerMDP = document.getElementById("btn-changer-mdp");
     const btnChangerMail = document.getElementById("btn-changer-mail");
-    const btnRetour = document.getElementById("btn-retour");
+    const btnRetour = document.getElementById("btn-back");
     const lienDeco = document.getElementById("seDeco");
     const lienAccueil = document.getElementById("lien-accueil");
     const formChangerMDP = document.getElementById("ChangerMDPForm");
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
             lienAccueil.style.display = "none";
             btnChangerMDP.style.display = "none";
             btnChangerMail.style.display = "none";
-            btnRetour.style.display = "block";
+            btnRetour.style.display = "inline";
             formChangerMDP.style.display = "flex";
             estAfficher = true;
         }
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 lienAccueil.style.display = "none";
                 btnChangerMDP.style.display = "none";
                 btnChangerMail.style.display = "none";
-                btnRetour.style.display = "block";
+                btnRetour.style.display = "inline";
                 formChangerMail.style.display = "flex";
                 estAfficher = true;
             } 

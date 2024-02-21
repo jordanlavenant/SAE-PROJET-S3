@@ -26,12 +26,12 @@
     {% endif %}
 
     <!-- profil -->
+    <a id="btn-back">RETOUR</a>
     <div class="container-control-profil">
       <a class="a-lien" id="seDeco" href="{{ url_for('logout') }}">SE DÉCONNECTER</a>
       <a class="a-lien" id="lien-accueil" href="{{ url_for('base') }}">RETOUR À L'ACCUEIL</a>
-      <button id="btn-changer-mdp">CHANGER LE MOT DE PASSE</button>
-      <button id="btn-changer-mail">CHANGER L'ADRESSE EMAIL</button>
-      <a id="btn-retour">retour</a>
+      <button class="a-lien" id="btn-changer-mdp">CHANGER LE MOT DE PASSE</button>
+      <button class="a-lien" id="btn-changer-mail">CHANGER L'ADRESSE EMAIL</button>
       <!-- form changer mdp -->
       <div id="ChangerMDPForm">
         <div id="changerMDP-box">
@@ -56,7 +56,7 @@
       <!-- form changer mail -->
       <div id="ChangerMailForm">
         <div id="changerMail-box">
-          <h2 class="element">Changer l'adresse email</h2>
+          <h2 class="element">changer l'adresse email</h2>
           <form class="form-changerMail" role="form" method="POST" action ="{{ url_for('changerMail') }}">
             {{ fromChangerMail.hidden_tag() }}
             <div class="user-box">
@@ -91,7 +91,7 @@
             <div>{{ form.password(size=50, class_="form-control element", placeholder="password") }}</div>
           </div>
           <div class="valid-container">
-            <input type="submit" value="se connecter" class="element">
+            <input type="submit" value="SE CONNECTER" class="element">
           </div>
         </form>
         <div class="container-mdp-oublier">
@@ -101,7 +101,6 @@
     </div>
 </div>
 <div id="mdp-container">
-  <button id="btn-retour-mdp">retour</button>
   <div class="container-form-mdp">
     <div id="mdp-box">
       <h2 class="element">mot de passe oublié</h2>

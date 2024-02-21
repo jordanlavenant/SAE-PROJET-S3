@@ -6,14 +6,14 @@ label {
 }
 
 #btn-back {
-    margin-left: 10vw;
     color: var(--text);
     background-color: var(--background);
-    padding: 14px 40px;
-    border-radius: 25px;
-    font-size: 25px;
+    padding: 10px 20px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
+    margin: 50px 10vw;
 }
 
 #btn-back:hover {
@@ -30,9 +30,11 @@ label {
     display: flex;
     justify-content: center;
     align-items: center;    
-    margin: 5% 5%;
-    padding: 5% 5%;
+    padding: 5%;
     gap: 5vw;
+    margin: 50px 10vw;
+    border-radius: 10px;
+    box-shadow: 5px 10px 10px var(--background);
 }
 
 .form-modifMateriel {
@@ -93,7 +95,7 @@ label {
 .text-area {
     width: calc(100% - 20px);
     height: 150px;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 10px;
     border: none;
     outline: none;
@@ -112,7 +114,7 @@ label {
     color: var(--background);
     background-color: white;
     padding: 14px 20px;
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 25px;
     border: none;
     margin-top: 30px;
@@ -188,12 +190,33 @@ label {
 .checkmark label {
     margin: 0;
     padding: 0;
+    user-select: none;
+    transition: .2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+}
+
+.checkmark label p {
+    margin: 0;
+    padding: 0;
 }
 
 .checkmark input {
     height: 30px;
     width: 30px;
     accent-color: var(--error);
+    display: none;
+}
+
+.checkmark label:hover {
+    background-color: var(--error);
+}
+
+.checkmark input:checked ~ label{
+    background-color: var(--error);
+    transition: .2s;
 }
 
 .checkmark div {

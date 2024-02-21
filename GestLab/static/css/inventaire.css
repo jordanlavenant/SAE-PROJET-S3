@@ -9,7 +9,7 @@ a {
     font-size: 35px;
     border: none;
     transition: 0.2s;
-    margin: 10vh 10vw;
+    margin: 50px 10vw;
     border-radius: 10px;
 }
 
@@ -51,11 +51,7 @@ a {
 
 
 .inventaire-container-overall {
-    margin: 5vh 5vw;
-}
-
-.header-container {
-    margin: 5vh 10vw;
+    margin: 50px 10vw;
 }
 
 .search-content {
@@ -127,19 +123,20 @@ a {
 .item-container {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     flex-wrap: wrap;
-    gap: 25px;
+    gap: 30px;
 }
 
 .item {
-    width: 750px;
+    width: 700px;
     height: 200px;
     display: flex;
     flex-direction: row;
     padding: 0;
     background-color: var(--background);
     border-left: 15px var(--success) solid;
+    box-shadow: 5px 10px 10px var(--background);
 }
 
 #img-item {

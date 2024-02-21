@@ -459,6 +459,7 @@ svg {
     font-size: 25px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 #btn-redirect-order:hover {

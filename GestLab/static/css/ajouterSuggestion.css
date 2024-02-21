@@ -71,6 +71,7 @@ label {
     gap: 10px;
     width: 100%;
     border-radius: 10px;
+    box-shadow: 5px 10px 10px var(--background);
 }
 
 .left-side-info {

@@ -4,36 +4,36 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/modifierMateriel.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('etat',id=id) }}">retour</a>
+<a id="btn-back" href="{{ url_for('etat',id=id) }}">RETOUR</a>
 <div class="modifierMateriel-container">
     <form class="form-modifMateriel" role="form" method="POST" action="{{ url_for('modifier_materiel', id=id) }}">
         {{ AjouterMaterielForm.hidden_tag() }}
 
         <div class="left-side-info">
             <div class="user-box">
-                <label for="domaine">domaine :</label>
+                <label for="domaine">domaine</label>
                 <div>{{ AjouterMaterielForm.domaine(size=0, class_="comboBox element") }}</div>
             </div>
             <div class="user-box">
-                <label for="categorie">catégorie :</label>
+                <label for="categorie">catégorie</label>
                 <div>{{ AjouterMaterielForm.categorie(size=0, class_="comboBox element") }}</div>
             </div>
             <div class="user-box">
-                <label for="nom">nom :</label>
+                <label for="nom">nom</label>
                 <div>{{ AjouterMaterielForm.nom(size=50, class_="form-control element") }}</div>
             </div>
             <div class="user-box">
-                <label for="reference">référence :</label>
+                <label for="reference">référence</label>
                 <div>{{ AjouterMaterielForm.reference(size=50, class_="form-control element") }}</div>
             </div>
             <div class="user-box">
-                <label for="seuilalerte">seuil d'alerte quantité :</label>
+                <label for="seuilalerte">seuil d'alerte quantité</label>
                 <div>{{ AjouterMaterielForm.seuilalerte(size=50, class_="form-control element") }}</div>
             </div>
         </div>
 
         <div class="fds">
-            <label>fiche de sécurité :</label>
+            <label>fiche de sécurité</label>
             <form method="POST" action="#">
                 {{ FDSForm.hidden_tag() }}
                 <div class="checkmark">
@@ -42,8 +42,10 @@
                     {% else %}
                         {{ FDSForm.comburant(size=auto, id="comburant", value="1") }}
                     {% endif %}
-                    <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/comburant.png') }}" alt="pictogramme">
-                    <label for="comburant">comburant</label>
+                    <label for="comburant">
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/comburant.png') }}" alt="pictogramme">
+                        <p>comburant</p>
+                    </label>
                 </div>
                 <div class="checkmark">
                     {% if estInflamable %}
@@ -51,8 +53,10 @@
                     {% else %}
                         {{ FDSForm.inflammable(size=auto, id="inflammable", value="2") }}
                     {% endif %}
-                    <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/inflammable.png') }}" alt="pictogramme">
-                    <label for="inflammable">danger incendie</label>
+                    <label for="inflammable">
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/inflammable.png') }}" alt="pictogramme">
+                        <p>danger incendie</p>
+                    </label>
                 </div>
                 <div class="checkmark">
                     {% if estExplosif %}
@@ -60,8 +64,10 @@
                     {% else %}
                         {{ FDSForm.explosif(size=auto, id="explosif", value="3") }}
                     {% endif %}
-                    <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/explosion.png') }}" alt="pictogramme">
-                    <label for="explosif">explosif</label>
+                    <label for="explosif">
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/explosion.png') }}" alt="pictogramme">
+                        <p>explosif</p>
+                    </label>
                 </div>
                 <div class="checkmark">
                     {% if est_CMR %}
@@ -69,8 +75,10 @@
                     {% else %}
                         {{ FDSForm.CMR(size=auto, id="CMR", value="4") }}
                     {% endif %}
-                    <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/CMR.png') }}" alt="pictogramme">
-                    <label for="CMR">effets graves sur la santé</label>
+                    <label for="CMR">
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/CMR.png') }}" alt="pictogramme">
+                        <p>effets graves sur la santé</p>
+                    </label>
                 </div>
                 <div class="checkmark">
                     {% if est_chimique_environement %}
@@ -78,8 +86,10 @@
                     {% else %}
                         {{ FDSForm.chimique(size=auto, id="chimique", value="5") }}
                     {% endif %}
-                    <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/chimique.png') }}" alt="pictogramme">
-                    <label for="chimique">altération de la santé humaine</label>
+                    <label for="chimique">
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/chimique.png') }}" alt="pictogramme">
+                        <p>altération de la santé humaine</p>
+                    </label>
                 </div>
                 <div class="checkmark">
                     {% if est_gaz_sous_pression %}
@@ -87,8 +97,10 @@
                     {% else %}
                         {{ FDSForm.gaz(size=auto, id="gaz", value="6") }}
                     {% endif %}
-                    <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/gaz.png') }}" alt="pictogramme">
-                    <label for="gaz">gaz sous pression</label><br/>
+                    <label for="gaz">
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/gaz.png') }}" alt="pictogramme">
+                        <p>gaz sous pression</p>
+                    </label>
                 </div>
                 <div class="checkmark">
                     {% if est_corrosif %}
@@ -96,8 +108,10 @@
                     {% else %}
                         {{ FDSForm.corrosif(size=auto, id="corrosif", value="7") }}
                     {% endif %}
-                    <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/corrosif.png') }}" alt="pictogramme">
-                    <label for="corrosif">corrosion</label><br/>
+                    <label for="corrosif">
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/corrosif.png') }}" alt="pictogramme">
+                        <p>corrosion</p>
+                    </label>
                 </div>
                 <div class="checkmark">
                     {% if est_dangereux %}
@@ -105,8 +119,10 @@
                     {% else %}
                         {{ FDSForm.environnement(size=auto, id="environnement", value="8") }}
                     {% endif %}
-                    <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/environnement.png') }}" alt="pictogramme">
-                    <label for="environnement">toxicité aquatique</label><br/>
+                    <label for="environnement">
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/environnement.png') }}" alt="pictogramme">
+                        <p>toxicité aquatique</p>
+                    </label>
                 </div>
                 <div class="checkmark">
                     {% if estToxique %}
@@ -114,18 +130,20 @@
                     {% else %}
                         {{ FDSForm.toxique(size=auto, id="toxique", value="9") }}
                     {% endif %}
-                    <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/toxique.png') }}" alt="pictogramme">
-                    <label for="toxique">toxicité aiguë</label><br/>
+                    <label for="toxique">
+                        <img class="pictogramme" src="{{ url_for('static',filename='./images/FDS/toxique.png') }}" alt="pictogramme">
+                        <p>toxicité aiguë</p>
+                    </label>
                 </div>
         </div>
 
         <div class="right-side-info">
             <div class="user-box">
-                <label for="caracteristiques">caractéristiques :</label>
+                <label for="caracteristiques">caractéristiques</label>
                 <div>{{ AjouterMaterielForm.caracteristiques(size=50, class_="form-control text-area") }}</div>
             </div>
             <div class="user-box">
-                <label for="infossup">informations complémentaires :</label>
+                <label for="infossup">informations complémentaires</label>
                 <div>{{ AjouterMaterielForm.infossup(size=50, class_="form-control text-area") }}</div>
             </div>
             <!--modifier une façon d'uploader une fds ???-->
