@@ -16,7 +16,7 @@
     flex-basis: 80%;
     width: calc(100% - 60px);
     height: 50px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
     padding: 0 30px;
     font-size: 20px;
@@ -29,7 +29,7 @@
     color: var(--text);
     background-color: var(--background);
     padding: 0px 0px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
     transition: 0.2s;
 }
@@ -42,17 +42,19 @@
     cursor: pointer;
 }
 
-#btn-retour {
+#btn-back {
+    margin-left: 10vw;
     color: var(--text);
     background-color: var(--background);
     padding: 10px 20px;
-    margin: 10px 0px;
-    border-radius: 20px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
-#btn-retour:hover {
+#btn-back:hover {
+    color: var(--text);
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
@@ -79,7 +81,7 @@
     cursor: pointer;
     color: var(--text);
     background-color: var(--background);
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 20px;
     padding: 10px 60px;
     border: none;
@@ -107,7 +109,7 @@
     justify-content: space-between;
     border: 1px solid var(--background);
     padding: 10px;
-    border-radius: 20px;
+    border-radius: 10px;
 }
 
 .sous-container-info-utilisateur p {
@@ -123,7 +125,7 @@
     background-color: var(--background);
     padding: 10px 20px;
     margin: 10px 0px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
     transition: 0.2s;
 }
