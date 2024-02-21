@@ -56,6 +56,10 @@ header {
     --success: #2EDD94;
     --error: #d35252;
     --title: #111;
+    --theme-button-background: #FFF;
+    --theme-button-box-shadow: inset 0 2px 2px #444;
+    --theme-button-cercle-background: radial-gradient(farthest-corner at 6px 0px, #b8ebfc, #09c);
+    --theme-button-cercle-box-shadow: 0 2px 2px #222;
 }
 
 .dark {
@@ -71,6 +75,11 @@ header {
     --success: #008000;
     --error: #FF0000;
     --title: #fff;
+    --theme-button-background: #1d1d1d;
+    --theme-button-box-shadow: inset 0 2px 2px #444;
+    --theme-button-cercle-background: radial-gradient(farthest-corner at 6px 0px, #5b7ff3, rgb(19, 27, 134));
+    --theme-button-cercle-box-shadow: 0 2px 2px #222;
+
 }
 
 /* titre */
@@ -198,8 +207,8 @@ header {
 	height: 20px;
 	margin: 10px;
 	border-radius: 10px;
-	background: #FFF;
-	box-shadow: inset 0 2px 2px #444;
+	background: var(--theme-button-background);
+	box-shadow: var(--theme-button-box-shadow);
 	cursor: pointer;
 }
 
@@ -217,8 +226,8 @@ header {
 	height: 24px;
 	margin: -2px;
 	border-radius: 100%;
-	background: radial-gradient(farthest-corner at 6px 0px, #cef3ff, #09c);
-	box-shadow: 0 2px 2px #222;
+	background: var(--theme-button-cercle-background);
+	box-shadow:var(theme-button-cercle-box-shadow);
 	transition: 0.2s;
 	transition-timing-function: cubic-bezier(0.67, 1.75, 0.76, 0.92);
 }
