@@ -20,6 +20,7 @@ from GestLab.Classe_python.StockLaboratoire import STOCKLABORATOIRE
 from GestLab.Classe_python.ImportCSV import ImportCSV
 from GestLab.Classe_python.ExportCSV import ExportCSV
 from GestLab.Classe_python.Table import Table
+from GestLab.Classe_python.Utilisateurs import Utilisateur
 from GestLab.initialisation import get_cnx
 
 from .app import app, csrf #, db
@@ -1538,6 +1539,17 @@ def valider_bon_demande(id):
     while True:
         pass
     return redirect(url_for('base'))
+
+@app.route("/update-theme/<int:id>", methods=["POST"])
+def update_theme(id):
+    try:
+        theme = request.json.get("theme")
+        Utilisateur.Update.update_theme_utilisateur(cnx, id, theme)
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
 
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):

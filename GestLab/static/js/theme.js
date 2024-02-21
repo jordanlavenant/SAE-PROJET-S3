@@ -4,7 +4,8 @@ if (localStorage.getItem("theme")) {
     document.body.classList.add("dark");
 }
 
-function toggleTheme() {
+function toggleTheme(userId) {
+	console.log(userId);
     const body = document.body;
 
     if (body.classList.toggle("dark")) {
