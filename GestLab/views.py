@@ -361,7 +361,7 @@ class ImporterCsvForm(FlaskForm):
     fichier = FileField('fichier', validators=[])
     submit = SubmitField('importer')
     next = HiddenField()
-    bd_option = RadioField('Commencer avec une base de données vide?', choices=[('oui','Oui'),('non','Non')], default='non')
+    bd_option = RadioField('voulez-vous remplacer les données existantes ?', choices=[('oui','oui'),('non','non')], default='non')
 
     def get_fichier(self):
         """
@@ -413,7 +413,9 @@ def csv():
     return render_template(
         "csv.html",
         title="CSV",
-        chemin = [("base", "accueil"), ("csv", "csv")]
+        chemin = [("base", "accueil"), ("csv", "csv")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/exporter-csv/", methods=("GET","POST",))
@@ -435,7 +437,9 @@ def exporter_csv():
         ExporterCsvForm=f,
         liste_tables = f.liste_tables,
         longueurListe = len(f.liste_tables),    
-        chemin = [("base", "accueil"), ("csv", "csv"), ("exporter_csv", "exporter un fichier csv")]
+        chemin = [("base", "accueil"), ("csv", "csv"), ("exporter_csv", "exporter un fichier csv")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )        
 
 @app.route("/importer-csv/", methods=("GET","POST",))
@@ -475,7 +479,9 @@ def importer_csv():
         "importerCsv.html",
         title="importer un fichier csv",
         ImporterCsvForm=importerForm,
-        chemin = [("base", "accueil"), ("csv", "csv"), ("importer_csv", "importer un fichier csv")]
+        chemin = [("base", "accueil"), ("csv", "csv"), ("importer_csv", "importer un fichier csv")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/manuel-csv")

@@ -5,18 +5,38 @@
     border-radius: 10px;
     border: none;
     outline: none;
-    background-color: #384274;
-    color: white;
+    background-color: var(--background);
+    color: var(--text);
     transition: 0.2s;
 }
-
-
 
 .form-check-input{
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+}
+
+.form-check-input label {
+    user-select: none;
+    padding: 5px 30px;
+    transition: .2s;
+}
+
+.form-check-input label:hover {
+    background-color: var(--secondary);
+    cursor: pointer;
+    transition: .2s;
+}
+
+.form-check-input input {
+    display: none;
+}
+
+.form-check-input input:checked + label {
+    background-color: var(--secondary);
 }
 
 .form-check-input li {
@@ -25,7 +45,7 @@
     list-style: none;
     margin: 10px;
     font-size: 25px;
-    color: white;
+    color: var(--text);
 
 }
 
@@ -43,7 +63,7 @@
 }
 
 p , label{
-    color: white;
+    color: var(--text);
     font-size: 35px;
     margin: 10px 0;
 }
@@ -55,19 +75,20 @@ p , label{
 }
 
 #btn-back, #checkAllButton, #uncheckAllButton {
-    color: white;
-    background-color: #384274;
-    padding: 14px 40px;
-    border-radius: 25px;
-    font-size: 25px;
+    margin-left: 10vw;
+    color: var(--text);
+    background-color: var(--background);
+    padding: 10px 20px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 #btn-back:hover, #checkAllButton:hover, #uncheckAllButton:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -77,10 +98,11 @@ p , label{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     gap: 50px;
-    background-color: #384274;
-    margin: 20px;
-    padding: 20px;
+    background-color: var(--background);
+    margin: 50px 10vw;
+    padding: 3%;
     border-radius: 10px;
 }
 
@@ -119,15 +141,15 @@ p , label{
 }
 
 .custom-checkbox:checked {
-    background-color: #009af0; /* Couleur de fond lorsque la case est cochée */
-    border-color: #009af0; /* Couleur de bordure lorsque la case est cochée */
+    background-color: var(--secondary); /* Couleur de fond lorsque la case est cochée */
+    border-color: var(--secondary); /* Couleur de bordure lorsque la case est cochée */
 }
 
 #submit {
-    color: #fff;
-    background-color: #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
     padding: 14px 20px;
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 25px;
     border: none;
     transition: 0.2s;
@@ -143,9 +165,6 @@ p , label{
     transform: scale(1.1);
     cursor: pointer;
 }
-
-
-
 
 .container-submit {
     flex-basis: 100%;

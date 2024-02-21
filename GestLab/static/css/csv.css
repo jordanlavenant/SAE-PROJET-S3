@@ -13,9 +13,10 @@
     text-align: center; 
     justify-content: center;
     margin-top: 2em;
-    background-color: #384274;
+    background-color: var(--background);
     width: 250px;
     height: 300px;
+    box-shadow: 5px 10px 10px var(--background);
 }
 
  .carte-lien h2 {
@@ -29,5 +30,5 @@
 } 
 
 .carte-lien h2, .carte-lien p {
-    color: #fff;
+    color: var(--text);
 } 
