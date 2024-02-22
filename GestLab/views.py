@@ -2025,6 +2025,8 @@ def demande(idDemande):
 @csrf.exempt
 def inventaire():
     rechercher = RechercherForm()
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
     items = Recherche.recherche_all_in_inventaire(get_cnx())
 
     print("items : ",items)
@@ -2038,12 +2040,16 @@ def inventaire():
             if qt > 0:
                 if (item,qt) not in final_items: # Eviter les doublons
                     final_items.append((item,qt))
+        liste_items = paginate_list(final_items, page, per_page)
+        total_pages = len(final_items) // per_page + (1 if len(final_items) % per_page > 0 else 0)
 
         return render_template(
             "inventaire.html",
+            page=page,
+            total_pages=total_pages,
             RechercherForm=rechercher,
             categories = Domaine.Domaine.get_domaine(get_cnx()),
-            items = final_items,
+            items = liste_items,
             nbMateriel = items[1],
             alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
             title="inventaire",
@@ -2103,17 +2109,19 @@ def demander():
     et les informations de l'utilisateur connecté.
     """
     page = request.args.get('page', 1, type=int)
-    per_page = 2
+    per_page = 4
     recherche = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     liste = Demande.Get.afficher_demande(cnx, idUser)
     liste_materiel = paginate_list(liste, page, per_page)
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
+    total_pages = len(liste_materiel) // per_page + (1 if len(liste_materiel) % per_page > 0 else 0)
     print(liste_materiel)
     print(len(liste_materiel))
     return render_template(
         "demander.html",
         page=page,
+        total_pages=total_pages,
         title="demander",
         idDemande = idDemande,
         liste_materiel = liste_materiel,
