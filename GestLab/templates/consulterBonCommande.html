@@ -17,6 +17,7 @@
     </div>
 </div>
 <section class="bons-container">
+    {% if len > 0 %}
     <table>
         <thead>
             <tr>
@@ -52,6 +53,12 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <div class="no-bon">
+        <p>il n'y a pas de bon de commande en attente</p>
+        <p></p>
+    </div>
+    {% endif %}
 </section>
 {% endblock %}
 

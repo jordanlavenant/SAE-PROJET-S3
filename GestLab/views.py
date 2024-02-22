@@ -2141,7 +2141,6 @@ def demander():
         title="demander",
         idDemande = idDemande,
         liste_materiel = liste_materiel,
-        total_pages=total_pages,
         nbMateriel = len(liste_materiel),
         RechercherForm=recherche,
         categories = Domaine.Domaine.get_domaine(get_cnx()),
