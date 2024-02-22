@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/modifierUtilisateur.css') }}">
 {% endblock %}
 {% block content %}
+<a id="btn-back" href="{{ url_for('consulter_utilisateur') }}">RETOUR</a>
 <div id="ajouterUtilisateur-container">
-    <a id="btn-retour" href="{{ url_for('consulter_utilisateur') }}">retour</a>
     <div id="ajouterUtilisateur-box">
         <form class="form-ajoutUtilisateur" role="form" method="POST" action ="{{ url_for('modifier_utilisateur', id=id) }}">
             {{ AjouterUtilisateurForm.hidden_tag() }}
@@ -22,7 +22,7 @@
                 <div>{{ AjouterUtilisateurForm.statut(size=0, class_="comboBox") }}</div>
             </div>
             <div class="valid-container">
-                <input type="submit" value="modifier l'utilisateur" class="element">
+                <input type="submit" value="MODIFIER L'UTILISATEUR" class="element">
             </div>
         </form>
     </div>
