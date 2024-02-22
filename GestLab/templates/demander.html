@@ -52,10 +52,10 @@
 
 <div class="demander-container-overall">
     <div class="header-container">
-        <form>
+        <form method="POST" action="{{ url_for('recherche_materiel_demander') }}" role="search">
             <div class="search-content">
                 {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar") }}
-                <button id="btn-search" type="button">RECHERCHER</button>
+                <button id="btn-search" type="submit">RECHERCHER</button>
             </div>
         </form>
         <div class="filter-container">
@@ -111,6 +111,7 @@
             </section>
         {% endfor %}
        
+        {% if pageRechercher != True %}
         <div class="container-pagination">
             {% for item in range(total_pages) %}
                 {% if valueSearch != None %}
@@ -120,6 +121,23 @@
                 {% endif %}
             {% endfor %}
         </div>
+        {% else %}
+        <div class="container-pagination">
+            {% for item in range(total_pages) %}
+                <div class="sous-container-pagination">
+                {% if valueSearch != None %}
+                    <button class="lien-recherche-demande">{{ item+1 }}</button>
+                {% else %}
+                    <button class="lien-recherche-demande">{{ item+1 }}</button>
+                {% endif %}
+                </div>
+                <script>
+                    var pageNEXT = "{{ item+1 }}";
+                </script>
+            {% endfor %}
+        </div>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}

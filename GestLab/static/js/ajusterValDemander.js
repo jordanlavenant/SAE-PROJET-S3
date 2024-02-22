@@ -133,27 +133,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    const searchBar = document.getElementById('search-bar');
-    const searchBtn = document.getElementById('btn-search');
+    let sousContainerPaginations = document.querySelectorAll('.sous-container-pagination');
 
-    // Obtenez la chaîne de requête de l'URL
-    var queryString = window.location.search;
-
-    // Créez un objet URLSearchParams à partir de la chaîne de requête
-    var params = new URLSearchParams(queryString);
-
-    // Obtenez la valeur de la variable 'value'
-    var valueSearch = params.get('value');
-    searchBar.value = valueSearch;
-
-    searchBtn.addEventListener('click', function() {
-        $.ajax({
-            url: '/recherche-materiel-demander?value=' + valueSearch,
-            type: 'GET',
-            success: function(response) {
-                console.log(response);
-                // window.location.reload();
-            }
+    sousContainerPaginations.forEach(function(sousContainerPagination) {
+        let lienRechercheDemande = sousContainerPagination.querySelector('.lien-recherche-demande');
+        let searchValue = document.querySelector('#search-bar').value;
+        lienRechercheDemande.addEventListener('click', function() {
+            console.log(searchValue);
+            window.location.href = '/recherche-materiel-demander?page='+pageNEXT+'&value=' + searchValue;
         });
     });
 });

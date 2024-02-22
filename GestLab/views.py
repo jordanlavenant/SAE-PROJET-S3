@@ -1291,9 +1291,10 @@ def recherche_materiel_demander():
     rechercher = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
-    value = request.args.get('value')
-    print("value : "+value)
-    if value != "" and value != None:
+    value = rechercher.get_value()
+    if value == None:
+        value = request.args.get('value')
+    if value != None:
         liste = Recherche.recherche_all_in_materiel_demande_with_search(get_cnx(), idDemande, value)
         liste_materiel = paginate_list(liste, page, per_page)
         total_items = len(liste)
@@ -1303,8 +1304,8 @@ def recherche_materiel_demander():
         return render_template(
             "demander.html",
             title="demander",
+            pageRechercher=True,
             total_pages=total_pages,
-            page=page,
             idUser = idUser,
             idDemande = Demande.Get.get_id_demande_actuel(cnx, Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
             categories = Domaine.Domaine.get_domaine(get_cnx()),
@@ -2129,30 +2130,25 @@ def demander():
     """
     valueSearch = request.args.get('value')
     page = request.args.get('page', 1, type=int)
-    per_page = 2
+    per_page = 4
     recherche = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
-    start = (page - 1) * per_page
-    liste_materiel = Demande.Get.afficher_demande_pagination(cnx, idUser, start, per_page )
-    # liste_materiel = paginate_list(liste, page, per_page)
+    liste = Demande.Get.afficher_demande(cnx, idUser)
+    liste_materiel = paginate_list(liste, page, per_page)
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
-    # print(liste_materiel)
-    # print(len(liste_materiel))
-    total_items = Demande.Get.get_nb_sugestions(cnx, idDemande)
+    total_items = len(liste)
     total_pages = total_items // per_page
     if total_items % per_page > 0:
         total_pages += 1
-    # print("total_pages : "+str(total_pages))
-    # print("page choisit : "+str(page))
     return render_template(
         "demander.html",
         valueSearch = valueSearch,
         page=page,
-        total_pages=total_pages,
         title="demander",
         idDemande = idDemande,
         liste_materiel = liste_materiel,
-        nbMateriel = total_items,
+        total_pages=total_pages,
+        nbMateriel = len(liste_materiel),
         RechercherForm=recherche,
         categories = Domaine.Domaine.get_domaine(get_cnx()),
         idUser = idUser,
