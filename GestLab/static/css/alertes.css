@@ -49,7 +49,7 @@ main > section {
 .texte_bleu {
     margin: 0;
     font-weight: bold;
-    color: var(--background);
+    color: var(--sous-texte);
     padding-right: 1em;
 }
 
