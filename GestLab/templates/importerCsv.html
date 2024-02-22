@@ -17,9 +17,10 @@
                         {{ ImporterCsvForm.bd_option.label(class_="form-check-label") }}
                         {{ ImporterCsvForm.bd_option(class_="form-check-input") }}
                     </div>
-                    <div>
-                        <p>importer un fichier CSV : </p>
-                        {{ ImporterCsvForm.fichier(size=10, class_="form-control element", placeholder="Fichier CSV") }}
+                    
+                    <div id="dropZone" class="drop-zone">
+                        <p>Glissez et déposez un fichier CSV ici ou cliquez pour télécharger</p>
+                        <input type="file" name="file" id="fileInput" />
                     </div>
                     <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
                 </div>
@@ -30,6 +31,27 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropZone = document.getElementById('dropZone');
+        var fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', function () {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            var files = e.dataTransfer.files;
+            fileInput.files = files;
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", function() {
         const endroitSelect = document.getElementById("emplacement");
         const positionSelect = document.getElementById("position");
