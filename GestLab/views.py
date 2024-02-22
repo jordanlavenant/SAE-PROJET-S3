@@ -359,9 +359,9 @@ class AjouterStockForm(FlaskForm):
 class ImporterCsvForm(FlaskForm):
     
     fichier = FileField('fichier', validators=[])
-    submit = SubmitField('importer')
+    submit = SubmitField('IMPORTER')
     next = HiddenField()
-    bd_option = RadioField('Commencer avec une base de données vide?', choices=[('oui','Oui'),('non','Non')], default='non')
+    bd_option = RadioField('voulez-vous remplacer les données existantes ?', choices=[('oui','oui'),('non','non')], default='non')
 
     def get_fichier(self):
         """
@@ -391,7 +391,7 @@ class ExporterCsvForm(FlaskForm):
     for table in liste_tables:
         locals()[table] = BooleanField(table, default=False)
 
-    submit = SubmitField('exporter')
+    submit = SubmitField('EXPORTER')
     next = HiddenField()
 
     def get_tables(self):
@@ -413,7 +413,9 @@ def csv():
     return render_template(
         "csv.html",
         title="CSV",
-        chemin = [("base", "accueil"), ("csv", "csv")]
+        chemin = [("base", "accueil"), ("csv", "csv")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/exporter-csv/", methods=("GET","POST",))
@@ -435,7 +437,9 @@ def exporter_csv():
         ExporterCsvForm=f,
         liste_tables = f.liste_tables,
         longueurListe = len(f.liste_tables),    
-        chemin = [("base", "accueil"), ("csv", "csv"), ("exporter_csv", "exporter un fichier csv")]
+        chemin = [("base", "accueil"), ("csv", "csv"), ("exporter_csv", "exporter un fichier csv")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )        
 
 @app.route("/importer-csv/", methods=("GET","POST",))
@@ -475,7 +479,9 @@ def importer_csv():
         "importerCsv.html",
         title="importer un fichier csv",
         ImporterCsvForm=importerForm,
-        chemin = [("base", "accueil"), ("csv", "csv"), ("importer_csv", "importer un fichier csv")]
+        chemin = [("base", "accueil"), ("csv", "csv"), ("importer_csv", "importer un fichier csv")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/manuel-csv")
@@ -731,17 +737,21 @@ def ajouter_suggestion():
                 FDSForm=FDSFormulaire,
                 AjouterSuggestionForm=f,
                 erreur="Le nom du materiel ou la reference est deja existante",
-                chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
+                chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")],
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )
     else :
         print("Erreur lors de la validation du formulaire")
         print(f.errors)
     return render_template(
-    "ajouterSuggestion.html",
-    title="ajouter une suggestion",
-    FDSForm=FDSFormulaire,
-    AjouterSuggestionForm=f,
-    chemin = [("base", "accueil"), ("demander","demander"), ("ajouter_suggestion", "ajouter une suggestion")]
+        "ajouterSuggestion.html",
+        title="ajouter une suggestion",
+        FDSForm=FDSFormulaire,
+        AjouterSuggestionForm=f,
+        chemin = [("base", "accueil"), ("demander","demander"), ("ajouter_suggestion", "ajouter une suggestion")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/ajouter-endroit", methods=("GET","POST",))
@@ -771,7 +781,9 @@ def ajouter_endroit():
         "ajouterEndroit.html",
         title="ajouter un endroit",
         AjouterEndroitForm=f,
-        chemin = [("base", "accueil"),("inventaire", "inventaire"),("ajouter_endroit", "ajouter un endroit")]
+        chemin = [("base", "accueil"),("inventaire", "inventaire"),("ajouter_endroit", "ajouter un endroit")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/ajouter-rangement", methods=("GET","POST",))
@@ -802,7 +814,9 @@ def ajouter_rangement():
         "ajouterRangement.html",
         title="ajouter un rangement",
         AjouterRangementForm=f,
-        chemin = [("base", "accueil"),("inventaire", "inventaire"),("ajouter_rangement", "ajouter un rangement")]
+        chemin = [("base", "accueil"),("inventaire", "inventaire"),("ajouter_rangement", "ajouter un rangement")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 
@@ -904,7 +918,9 @@ def ajouter_stock():
         title="ajouter au stock",
         AjouterStockForm=ajouterForm,
         RechercherFormWithAssets=rechercherForm,
-        chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
+        chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 
@@ -1024,7 +1040,9 @@ def ajouter_materiel_unique(id):
         AjouterMaterielUniqueForm=f,
         id = id,
         materiel = Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(), id)[1],
-        chemin = [("base", "accueil"),("inventaire", "inventaire")]
+        chemin = [("base", "accueil"),("inventaire", "inventaire")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 class A2FForm(FlaskForm):
@@ -1050,7 +1068,9 @@ def base():
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
         title="GESTLAB",
-        chemin = [("base", "accueil")]
+        chemin = [("base", "accueil")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/motdepasseoublie/", methods=("GET","POST",))
@@ -1066,7 +1086,10 @@ def mot_de_passe_oublier():
         return redirect(url_for('a2f', mail=email, id=1))
     return render_template(
         "login.html",
-        MdpOublierForm=f)
+        MdpOublierForm=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )
 
 @app.route("/a2f/<string:mail>/<int:id>", methods=("GET","POST",))
 def a2f(mail, id):
@@ -1127,6 +1150,8 @@ def a2f(mail, id):
         oldMail=oldMail,
         mdp=mdp,
         A2FForm=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/reinitialiser-bon-commande/<int:id>", methods=("GET","POST",))
@@ -1263,7 +1288,9 @@ def commander():
         liste_materiel = liste_materiel,
         nbMateriel = nbMateriel,
         RechercherForm=rechercher,
-        chemin = [("base", "accueil"), ("commander", "commander")]
+        chemin = [("base", "accueil"), ("commander", "commander")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/recherche-materiel-demander", methods=("GET","POST",))
@@ -1294,7 +1321,9 @@ def recherche_materiel_demander():
             nbMateriel = len(liste_materiel),
             alertes = Alert.get_nb_alert(cnx),
             demandes = Demande.Get.get_nb_demande(cnx),
-            chemin = [("base", "accueil"), ("demander", "demander")]
+            chemin = [("base", "accueil"), ("demander", "demander")],
+            alerte_tl = Alert.get_nb_alert(cnx),
+            demande_tl = Demande.Get.get_nb_demande(cnx)
         )
     return redirect(url_for('demander'))
 
@@ -1325,7 +1354,9 @@ def recherche_materiel():
             nbMateriel = len(liste_materiel),
             alertes = Alert.get_nb_alert(cnx),
             demandes = Demande.Get.get_nb_demande(cnx),
-            chemin = [("base", "accueil"), ("commander", "commander")]
+            chemin = [("base", "accueil"), ("commander", "commander")],
+            alerte_tl = Alert.get_nb_alert(cnx),
+            demande_tl = Demande.Get.get_nb_demande(cnx)
         )
     return redirect(url_for('commander'))
 
@@ -1350,7 +1381,9 @@ def bon_commande(id):
         title = "bon de commande",
         liste_materiel = liste_materiel,
         longueur = len(liste_materiel),
-        chemin = [("base", "accueil"), ("commander", "commander"), ('demandes', 'bon de commande')]
+        chemin = [("base", "accueil"), ("commander", "commander"), ('demandes', 'bon de commande')],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/bon-demande/<int:id>")
@@ -1374,7 +1407,9 @@ def bon_demande(id):
         title = "bon de demande",
         liste_materiel = liste_materiel,
         longueur = len(liste_materiel),
-        chemin = [("base", "accueil"), ("demander", "demander"), ("demander","bon de demande")]
+        chemin = [("base", "accueil"), ("demander", "demander"), ("demander","bon de demande")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/consulterBonCommande/")
@@ -1405,7 +1440,9 @@ def consulter_bon_commande():
         infoUser = liste_info_user,
         listeEtat = liste_etat_bon_commande,
         statutsCommande = Commande.Commande.Get.get_statut_from_commande(cnx),
-        chemin = [("base", "accueil"), ('consulter_bon_commande', 'consulter bon de commande')]
+        chemin = [("base", "accueil"), ('consulter_bon_commande', 'consulter bon de commande')],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/changer-statut-bon-commande", methods=("GET","POST",))
@@ -1481,7 +1518,9 @@ def bon_commande_unique():
         liste_materiel = liste_materiel,
         title="bon de commande n°"+str(idbc),
         idbc = idbc,
-        chemin = [("base", "accueil"), ("consulter_bon_commande", "consulter bon de commande"), ("bon_commande_unique", "bon de commande")]
+        chemin = [("base", "accueil"), ("consulter_bon_commande", "consulter bon de commande"), ("bon_commande_unique", "bon de commande")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/historique-bon-commande")
@@ -1507,7 +1546,9 @@ def historique_bon_commande():
         infoUser = liste_info_user,
         listeetat = liste_etat_bon_commande,
         statutsCommande = Commande.Commande.Get.get_statut_from_commande(cnx),
-        # chemin = [("base", "accueil"), ("consulter_bon_commande, consulter bon commande"), ("historique_bon_commande", "historique des bon de commande")]
+        # chemin = [("base", "accueil"), ("consulter_bon_commande, consulter bon commande"), ("historique_bon_commande", "historique des bon de commande")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/delete-bon-commande/<int:id>", methods=("GET","POST",))
@@ -1621,7 +1662,9 @@ def alertes():
         nb_alerte = nb_alertes,
         info_materiels = info_materiel,
         title="alertes",
-        chemin = [("base", "accueil"), ("alertes", "alertes")]
+        chemin = [("base", "accueil"), ("alertes", "alertes")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/etat/<int:id>")
@@ -1650,7 +1693,9 @@ def etat(id):
         item_properties = Materiel.Get.get_all_information_to_Materiel_with_id(cnx, id),
         items_unique = MaterielUnique.Get.get_all_information_to_MaterielUnique_with_id(cnx, id),
         alertes = Alert.nb_alert_par_materielUnique_dict(cnx),
-        chemin = [("base", "accueil"), ("inventaire", "inventaire"), ("inventaire", "etat")]
+        chemin = [("base", "accueil"), ("inventaire", "inventaire"), ("inventaire", "etat")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/generer-fds/<int:idMat>")
@@ -1682,7 +1727,9 @@ def ajouter_utilisateur():
         "ajouterUtilisateur.html",
         title="ajouter un utilisateur",
         AjouterUtilisateurForm=f,
-        chemin=[("base", "accueil"), ("ajouter_utilisateur", "ajouter un Utilisateur")]
+        chemin=[("base", "accueil"), ("ajouter_utilisateur", "ajouter un Utilisateur")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
@@ -1706,7 +1753,9 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )
         elif selected_value == "Professeur":
             return render_template(
@@ -1716,7 +1765,9 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )
         elif selected_value == "Gestionnaire":
             return render_template(
@@ -1726,7 +1777,9 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )
         elif selected_value == "Laborantin":
             return render_template(
@@ -1736,7 +1789,9 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )
 
     return render_template(
@@ -1746,7 +1801,9 @@ def consulter_utilisateur():
         categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
         title="consulter les utilisateurs",
         RechercherForm=f,
-        chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+        chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
@@ -1769,7 +1826,9 @@ def recherche_utilisateur():
             categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
             title="consulter les utilisateurs",
             RechercherForm=f,
-            chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+            chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+            alerte_tl = Alert.get_nb_alert(cnx),
+            demande_tl = Demande.Get.get_nb_demande(cnx)
         )
 
     return render_template(
@@ -1779,7 +1838,9 @@ def recherche_utilisateur():
         categories = ["Tous", "Professeur", "Gestionnaire"],
         title="consulter les utilisateurs",
         RechercherForm=f,
-        chemin = [("base", "accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "consulter les utilisateurs")]
+        chemin = [("base", "accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "consulter les utilisateurs")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/supprimer-utilisateur/<int:id>", methods=("GET","POST",))
@@ -1845,7 +1906,9 @@ def modifier_utilisateur(id):
         email=email,
         statut=statut,
         id=id,
-        chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs"), ("consulter_utilisateur", "modifier un utilisateur")] 
+        chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs"), ("consulter_utilisateur", "modifier un utilisateur")], 
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
@@ -1912,7 +1975,9 @@ def modifier_materiel(id):
         est_dangereux = est_dangereux,
         est_comburant = est_comburant,
         est_corrosif = est_corrosif,
-        chemin = [("base", "accueil"),("inventaire","inventaire"), ("inventaire", "modifier un matériel")]
+        chemin = [("base", "accueil"),("inventaire","inventaire"), ("inventaire", "modifier un matériel")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/modifier-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -1958,7 +2023,9 @@ def modifier_materiel_unique(id):
         title="modifier les informations d'un matériel en stock",
         ModifierMaterielUniqueForm=f,
         id=id,
-        chemin=[("base", "accueil"),("inventaire","inventaire"),("inventaire","modifier un matériel unique")]
+        chemin=[("base", "accueil"),("inventaire","inventaire"),("inventaire","modifier un matériel unique")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/supprimer-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -2003,7 +2070,9 @@ def demandes():
         title="demandes",
         nb_demande = int(Demande.Get.get_nb_demande(cnx)),
         info_demande = Demande.Get.get_info_demande(cnx),
-        chemin = [("base", "accueil"), ("demandes", "demandes")]
+        chemin = [("base", "accueil"), ("demandes", "demandes")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/demande/<int:idDemande>")
@@ -2018,7 +2087,9 @@ def demande(idDemande):
         longeur = len(info_commande),
         idUser = id_user,
         title = "demande de "+ info_commande[0][0] + " " + info_commande[0][1],
-        chemin = [("base", "accueil"), ("demandes", "demandes"), ('demandes', 'demandes')]
+        chemin = [("base", "accueil"), ("demandes", "demandes"), ('demandes', 'demandes')],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/inventaire/")
@@ -2047,7 +2118,9 @@ def inventaire():
             nbMateriel = items[1],
             alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
             title="inventaire",
-            chemin = [("base", "accueil"), ("inventaire", "inventaire")]
+            chemin = [("base", "accueil"), ("inventaire", "inventaire")],
+            alerte_tl = Alert.get_nb_alert(cnx),
+            demande_tl = Demande.Get.get_nb_demande(cnx)
         )
     else:
         return redirect(url_for('base'))
@@ -2080,7 +2153,9 @@ def recherche_inventaire():
             alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
             nbMateriel = items[1],
             RechercherForm=rechercher,
-            chemin = [("base", "Accueil"), ("inventaire", "inventaire")]
+            chemin = [("base", "Accueil"), ("inventaire", "inventaire")],
+            alerte_tl = Alert.get_nb_alert(cnx),
+            demande_tl = Demande.Get.get_nb_demande(cnx)
         )
     return redirect(url_for('inventaire'))
   
@@ -2108,7 +2183,9 @@ def demander():
         RechercherForm=recherche,
         categories = Domaine.Domaine.get_domaine(get_cnx()),
         idUser = idUser,
-        chemin = [("base", "accueil"), ("demander", "demander")]
+        chemin = [("base", "accueil"), ("demander", "demander")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/ajouter-demande/<int:id>", methods=("GET","POST",))
@@ -2166,7 +2243,9 @@ def commentaire():
         title ="envoyer un commentaire",
         materiel = materiel,
         chemin = [("base", "accueil"), ("commentaire", "envoyer un commentaire")],
-        CommentaireForm=f
+        CommentaireForm=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 
@@ -2205,7 +2284,9 @@ def login():
                 fromChangerMDP=changerMDP,
                 fromChangerMail=changerMail,
                 MdpOublierForm=mdpOublier,
-                erreur = "le mail ou le mot de passe est incorrect"
+                erreur = "le mail ou le mot de passe est incorrect",
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )        
         
     return render_template(
@@ -2214,7 +2295,9 @@ def login():
         form=f,
         fromChangerMDP=changerMDP,
         fromChangerMail=changerMail,
-        MdpOublierForm=mdpOublier
+        MdpOublierForm=mdpOublier,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 
@@ -2273,7 +2356,10 @@ def changerMDP():
                 return redirect('/a2f/'+session['utilisateur'][2]+'/2?oldMdp='+ancienMDP+'&newMdp='+nouveauMDP)
     return render_template(
         "login.html",
-        fromChangerMDP=f)
+        fromChangerMDP=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )
 
 @app.route("/changerMail/", methods=("GET","POST",))
 def changerMail():
@@ -2292,7 +2378,10 @@ def changerMail():
                 return redirect('/a2f/'+session['utilisateur'][2]+'/3?newMail='+nouveauMail+'&oldMail='+ancienMail+'&mdp='+mdp)
     return render_template(
         "login.html",
-        fromChangerMail=f)
+        fromChangerMail=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )
 
 @app.route("/ajouterUtilisateur/", methods=("GET","POST",))
 def ajouterUtilisateur():
@@ -2330,7 +2419,10 @@ def ajouterUtilisateur():
                     return redirect(url_for('consulter_utilisateur'))
     return render_template(
         "ajouterUtilisateur.html",
-        fromAjouterUtilisateur=f)
+        fromAjouterUtilisateur=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )
 
 def get_domaine_choices():
     """

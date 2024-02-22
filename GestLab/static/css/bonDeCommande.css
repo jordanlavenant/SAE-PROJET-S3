@@ -24,7 +24,7 @@ a {
     flex-basis: 80%;
     width: calc(100% - 60px);
     height: 50px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
     padding: 0 30px;
     font-size: 20px;
@@ -37,7 +37,7 @@ a {
     color: var(--text);
     background-color: var(--background);
     padding: 0px 0px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
     transition: 0.2s;
 }
@@ -50,17 +50,19 @@ a {
     cursor: pointer;
 }
 
-#btn-retour {
+#btn-back {
     color: var(--text);
     background-color: var(--background);
     padding: 10px 20px;
-    margin: 10px 0px;
-    border-radius: 20px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
+    margin: 50px 10vw;
 }
 
-#btn-retour:hover {
+#btn-back:hover {
+    color: var(--text);
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
@@ -86,7 +88,7 @@ a {
 #categorie-select {
     color: var(--text);
     background-color: var(--background);
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 20px;
     padding: 10px 60px;
     border: none;
@@ -111,7 +113,7 @@ a {
     background-color: var(--secondary);
     padding: 10px 20px;
     margin: 10px 0px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
     transition: 0.2s;
 }
@@ -129,7 +131,7 @@ a {
     background-color: var(--background);
     padding: 10px 20px;
     margin: 10px 0px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
     transition: 0.2s;
 }
@@ -189,30 +191,10 @@ a {
     color: var(--text);
 }
 
-#btn-back {
-    margin-left: 10vw;
-    color: var(--text);
-    background-color: var(--background);
-    padding: 14px 40px;
-    border-radius: 25px;
-    font-size: 25px;
-    border: none;
-    transition: 0.2s;
-}
-
-#btn-back:hover {
-    color: var(--text);
-    background-color: var(--secondary);
-    box-shadow: 0 0 15px var(--secondary);
-    transition: 0.2s;
-    transform: scale(1.1);
-    cursor: pointer;
-}
-
 #btn-voir {
     margin-right: 1%;
     background-color: var(--text);
-    border-radius: 25px;
+    border-radius: 10px;
     padding: 14px 40px;
     transition: 0.2s;
     color: var(--background);
@@ -237,17 +219,18 @@ a {
 }
 
 #btn-retour-rien {
-    margin-top: 0.5em;
-    margin-left: 30vw;
-    color: var(--text);
+    color:var(--text);
     background-color: var(--background);
     padding: 10px 20px;
-    border-radius: 20px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
+    margin: 10vh 10vw;
+    border-radius: 10px;
 }
 
 #btn-retour-rien:hover {
+    color: var(--text);
     background-color: var(--secondary);
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
@@ -278,7 +261,7 @@ a {
     background: var(--background);
     padding: 20px;
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     text-align: center;
 }
 
@@ -287,7 +270,7 @@ a {
     color: var(--text);
     background-color: var(--secondary);
     padding: 10px 20px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
     transition: 0.2s;
 }

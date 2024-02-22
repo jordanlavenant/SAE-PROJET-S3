@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 <div class="container-valider">
-    <a id="btn-retour" href="{{ url_for('consulter_bon_commande') }}">retour</a>
+    <a id="btn-back" href="{{ url_for('consulter_bon_commande') }}">RETOUR</a>
     <a id="btn-valider" href="{{ url_for('valider_bon_commande_pdf', id=idbc) }}">Générer le bon de commande</a>
 </div>
 {% for item in liste_materiel %}
