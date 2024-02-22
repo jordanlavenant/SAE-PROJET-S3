@@ -56,7 +56,7 @@
     {% else %}
     <div class="no-bon">
         <p>il n'y a pas de bon de commande en attente</p>
-        <p></p>
+        <p>voulez-vous consulter les <a href="{{ url_for('historique_bon_commande') }}">bon de commande archivés</a> ?</p>
     </div>
     {% endif %}
 </section>

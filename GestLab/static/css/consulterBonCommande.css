@@ -171,3 +171,22 @@ tbody td:last-child {
     justify-content: center;
     align-items: center;
 }
+
+.no-bon p {
+    font-size: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+.no-bon a {
+    color: var(--secondary);
+    font-size: 40px;
+    margin: 0;
+    padding: 0;
+    transition: .2s;
+}
+
+.no-bon a:hover {
+    text-decoration: underline;
+    transition: .2s;
+}
