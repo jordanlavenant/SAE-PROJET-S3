@@ -486,7 +486,7 @@ def importer_csv():
 
 @app.route("/manuel-csv")
 def manuel_csv():
-    return send_file('../data/manuel-csv.pdf', as_attachment=True)
+    return send_file('../data/module_csv.zip', as_attachment=True)
 
 class AjouterMaterielUniqueForm(FlaskForm):
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
