@@ -1586,6 +1586,14 @@ def valider_bon_demande(id):
 def update_theme(id):
     try:
         Utilisateur.Update.update_theme_utilisateur(cnx, session['utilisateur'][4], id)
+        print(session['theme'])
+        print(session['theme'])
+        print(session['theme'])
+        session['theme'] = id
+        print(session['theme'])
+        print(session['theme'])
+        print(session['theme'])
+
         return redirect(url_for('base'))
     except Exception as e:
         print("An error occurred:", e)
@@ -2270,7 +2278,9 @@ def login():
             if user != None:
                 #login_user(user)
                 idUt = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, user[2])
+                theme = Bon_commande.Utilisateur.Utilisateur.Get.get_font(cnx, idUt)
                 session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+                session['theme'] = (theme)
                 RELOAD.reload_alert(cnx)
                 print("login : "+str(session['utilisateur']))
                 next = f.next.data or url_for("base")
@@ -2336,6 +2346,7 @@ def logout():
     """
     Déconnecte l'utilisateur en supprimant sa session et redirige vers la page de base.
     """
+    
     session.pop('utilisateur', None)
     return redirect(url_for('base'))
 
