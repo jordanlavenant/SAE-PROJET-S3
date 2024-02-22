@@ -1,9 +1,5 @@
-.utilisateur-container-overall {
-    margin: 15vh 5vw;
-}
-
 .header-container {
-    margin: 5vh 10vw;
+    margin: 50px 10vw;
 }
 
 .search-content {
@@ -43,7 +39,6 @@
 }
 
 #btn-back {
-    margin-left: 10vw;
     color: var(--text);
     background-color: var(--background);
     padding: 10px 20px;
@@ -51,6 +46,7 @@
     border: none;
     transition: 0.2s;
     border-radius: 10px;
+    margin-bottom: 50px;
 }
 
 #btn-back:hover {
