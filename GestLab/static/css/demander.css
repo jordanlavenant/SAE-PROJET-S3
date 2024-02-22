@@ -255,12 +255,31 @@ h2 {
     color: var(--text);
 }
 
+.section-contenu .ref-del {
+    display: flex;
+}
+
+.section-contenu .ref-del a {
+    display: flex;
+    align-items: center;
+    transition: .2s;
+}
+
+.section-contenu .ref-del a:hover {
+    cursor: pointer;
+    scale: 1.05;
+    transition: .2s;
+}
+
+
 .section-contenu h4 {
     margin: 0;
     color: var(--secondary-button);
     background-color: var(--background-hover);
     padding: 0 20px;
     border-radius: 100px;
+    display: flex;
+    align-items: center;
 }
 
 .choisir-item {
