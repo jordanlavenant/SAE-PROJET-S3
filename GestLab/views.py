@@ -1276,16 +1276,25 @@ def recherche_materiel_demander():
         - Si une valeur de recherche est spécifiée, renvoie la page "demander.html" avec les résultats de la recherche.
         - Sinon, redirige vers la page "demander.html".
     """
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
     rechercher = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
-    value = rechercher.get_value()
+    value = request.args.get('value')
     print("value : "+value)
-    if value != None:
-        liste_materiel = Recherche.recherche_all_in_materiel_demande_with_search(get_cnx(), idDemande, value)
+    if value != "" and value != None:
+        liste = Recherche.recherche_all_in_materiel_demande_with_search(get_cnx(), idDemande, value)
+        liste_materiel = paginate_list(liste, page, per_page)
+        total_items = len(liste)
+        total_pages = total_items // per_page
+        if total_items % per_page > 0:
+            total_pages += 1
         return render_template(
             "demander.html",
             title="demander",
+            total_pages=total_pages,
+            page=page,
             idUser = idUser,
             idDemande = Demande.Get.get_id_demande_actuel(cnx, Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
             categories = Domaine.Domaine.get_domaine(get_cnx()),
@@ -2102,6 +2111,7 @@ def demander():
     telles que la liste du matériel disponible, l'identifiant de la demande actuelle,
     et les informations de l'utilisateur connecté.
     """
+    valueSearch = request.args.get('value')
     page = request.args.get('page', 1, type=int)
     per_page = 4
     recherche = RechercherForm()
@@ -2119,6 +2129,7 @@ def demander():
     # print("page choisit : "+str(page))
     return render_template(
         "demander.html",
+        valueSearch = valueSearch,
         page=page,
         title="demander",
         idDemande = idDemande,

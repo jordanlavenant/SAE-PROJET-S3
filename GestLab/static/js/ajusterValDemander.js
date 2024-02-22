@@ -132,4 +132,28 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    const searchBar = document.getElementById('search-bar');
+    const searchBtn = document.getElementById('btn-search');
+
+    // Obtenez la chaîne de requête de l'URL
+    var queryString = window.location.search;
+
+    // Créez un objet URLSearchParams à partir de la chaîne de requête
+    var params = new URLSearchParams(queryString);
+
+    // Obtenez la valeur de la variable 'value'
+    var valueSearch = params.get('value');
+    searchBar.value = valueSearch;
+
+    searchBtn.addEventListener('click', function() {
+        $.ajax({
+            url: '/recherche-materiel-demander?value=' + valueSearch,
+            type: 'GET',
+            success: function(response) {
+                console.log(response);
+                // window.location.reload();
+            }
+        });
+    });
 });
