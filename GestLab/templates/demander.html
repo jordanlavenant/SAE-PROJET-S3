@@ -29,8 +29,21 @@
             <svg onclick='togglePopupReset()' id='popup-exit' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
         </div>
         <div id="choices">
-            <a onclick="togglePopupReset()">annuler</a>
+            <a onclick="togglePopupReset()">ANNULER</a>
             <a href="{{ url_for('reinitialiser_demande', id=idUser) }}">RÉINITIALISER</a>
+        </div>
+    </div>
+</div>
+
+<div class="popup popupDelete">
+    <div id="delete-confirm">
+        <div class="header-popup">
+            <p>voulez-vous vraiment supprimer <span id="materiel"></span> ?</p>
+            <svg onclick='togglePopupDelete()' id='popup-exit' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
+        </div>
+        <div id="choices">
+            <a onclick="togglePopupDelete()">ANNULER</a>
+            <a id="delete-sugg" href="">SUPPRIMER</a>
         </div>
     </div>
 </div>
@@ -83,7 +96,12 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: transform: ;msFilter:;"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path></svg>
                         <h3 onclick='togglePopup("{{ item[2] }}","{{ item[5] }}",)'>{{ item[1] }}</h3>
                     </div>
-                    <h4 class="ref">{{ item[3] }}</h4>
+                    <div class="ref-del">
+                        <h4 class="ref">{{ item[3] }}</h4>
+                        <a class="delete-suggestion" onclick="togglePopupDelete('{{ item[0] }}','{{ item[1] }}')">
+                            <svg id='croix' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
+                        </a>
+                    </div>
                 </div>
                 <div id="tools">
                     <div class="choisir-item">
@@ -105,6 +123,14 @@
                         document.querySelector(".popupReset").classList.toggle("open");
                         document.querySelector("html").classList.toggle("scroll-lock");
                     }
+
+                    function togglePopupDelete(idSugg, mat) {
+                        document.querySelector(".popupDelete").classList.toggle("open");
+                        document.querySelector("#delete-sugg").href = `/supprimer-suggestion/${idSugg}`;
+                        document.querySelector("#materiel").textContent = mat;
+                        document.querySelector("html").classList.toggle("scroll-lock");
+                    }
+
                     var maVariableJavaScript = "{{ item[4] }}"; 
                     var idUser = "{{ idUser }}"; 
                 </script>

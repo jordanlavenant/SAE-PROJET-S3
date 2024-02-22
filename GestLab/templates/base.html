@@ -84,8 +84,8 @@
         <div class ="sous-header"> 
             <div id="fil-ariane">
                 {% for elem in chemin %}
-                    <li><a href="{{ url_for(elem[0]) }}">{{ elem[1] }}</a></li>
-                    <li><img src="{{ url_for('static',filename='./images/chevron.png') }}"></li>
+                    <li><a class="page" href="{{ url_for(elem[0]) }}">{{ elem[1] }}</a></li>
+                    <li><svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: ;transform: ;msFilter:;"><path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path></svg></li>
                 {% endfor %}
             </div>
 

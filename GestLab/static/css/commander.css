@@ -349,7 +349,6 @@ h2 {
     color: var(--text);
 }
 
-/* Chrome, Safari, Edge, Opera */
 .nb-choisit::-webkit-outer-spin-button,
 .nb-choisit::-webkit-inner-spin-button {
     -webkit-appearance: none;

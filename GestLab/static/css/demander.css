@@ -255,12 +255,31 @@ h2 {
     color: var(--text);
 }
 
+.section-contenu .ref-del {
+    display: flex;
+}
+
+.section-contenu .ref-del a {
+    display: flex;
+    align-items: center;
+    transition: .2s;
+}
+
+.section-contenu .ref-del a:hover {
+    cursor: pointer;
+    scale: 1.05;
+    transition: .2s;
+}
+
+
 .section-contenu h4 {
     margin: 0;
     color: var(--secondary-button);
     background-color: var(--background-hover);
     padding: 0 20px;
     border-radius: 100px;
+    display: flex;
+    align-items: center;
 }
 
 .choisir-item {
@@ -289,6 +308,22 @@ h2 {
     transition: 0.2s;
     cursor: pointer;
     scale: 1.5;
+}
+
+.nb-choisit {
+    width: 100px;
+    text-align: center;
+    -moz-appearance: textfield;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: var(--text);
+}
+
+.nb-choisit::-webkit-outer-spin-button,
+.nb-choisit::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .section-contenu #tools {

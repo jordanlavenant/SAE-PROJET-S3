@@ -10,6 +10,7 @@ main {
     margin: 20px 0;
     font-weight: 300;
     flex-basis: 100%;
+    color: var(--text-inverse);
 }
 
 /*  bouton se connecter */
@@ -85,7 +86,7 @@ a:hover {
 
 .section-alertes a {
     text-decoration: underline;
-    color: var(--background);
+    color: var(--sous-texte);
     font-size: 35px;
 }
 
