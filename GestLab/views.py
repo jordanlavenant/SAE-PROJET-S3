@@ -20,6 +20,7 @@ from GestLab.Classe_python.StockLaboratoire import STOCKLABORATOIRE
 from GestLab.Classe_python.ImportCSV import ImportCSV
 from GestLab.Classe_python.ExportCSV import ExportCSV
 from GestLab.Classe_python.Table import Table
+from GestLab.Classe_python.Utilisateurs import Utilisateur
 from GestLab.initialisation import get_cnx
 
 from .app import app, csrf #, db
@@ -1048,7 +1049,8 @@ def base():
         "home.html",
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
-        title="GESTLAB"
+        title="GESTLAB",
+        chemin = [("base", "accueil")]
     )
 
 @app.route("/motdepasseoublie/", methods=("GET","POST",))
@@ -1538,6 +1540,18 @@ def valider_bon_demande(id):
     while True:
         pass
     return redirect(url_for('base'))
+
+@app.route("/update-theme/<int:id>", methods=("GET","POST",))
+def update_theme(id):
+    try:
+        Utilisateur.Update.update_theme_utilisateur(cnx, session['utilisateur'][4], id)
+        return redirect(url_for('base'))
+    except Exception as e:
+        print("An error occurred:", e)
+        return redirect(url_for('base'))
+
+
+
 
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):

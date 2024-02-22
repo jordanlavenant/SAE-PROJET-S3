@@ -1,7 +1,15 @@
+html {
+    overflow: auto;
+}
+
+html.scroll-lock {
+    overflow: hidden;
+}
+
 body {
     padding: 0;
     margin: 0;
-    background-color: #e0e0e0;
+    background-color: var(--main-background);
     font-family: 'Alumni Sans', sans-serif;
     font-variant: small-caps;
     font-weight: 500;
@@ -13,9 +21,12 @@ button {
     font-size: 30px;
 }
 
-input {
+input,
+select,
+textarea {
     font-family: 'Alumni Sans', sans-serif;
     font-size: 30px;
+    border-radius: 5px;
 }
 
 a {
@@ -32,15 +43,49 @@ header {
     margin-bottom: 0.5em;
 }
 
-::selection {
-    background-color: #FFFF00; /* Jaune */
-    color: #384274; /* Couleur du texte en surbrillance */
+:root {
+    --text: white;
+    --main-background: #e0e0e0;
+    --background: #384274;
+    --background-hover: #0e1b60;
+    --dark-background: #262e58;
+    --border: #384274;
+    --secondary: #009AF0;
+    --shadow: #384274;
+    --secondary-button: rgb(164,164,164);
+    --success: #2EDD94;
+    --error: #d35252;
+    --title: #111;
+    --theme-button-background: #FFF;
+    --theme-button-box-shadow: inset 0 2px 2px #444;
+    --theme-button-cercle-background: radial-gradient(farthest-corner at 6px 0px, #b8ebfc, #09c);
+    --theme-button-cercle-box-shadow: 0 2px 2px #222;
+}
+
+.dark {
+    --text: white;
+    --main-background: #0d0d0d;
+    --background: #2c2c2c;
+    --background-hover: #1a1a1a;
+    --dark-background: #111;
+    --border: #2c2c2c;
+    --secondary: #009AF0;
+    --shadow: #111;
+    --secondary-button: rgb(100,100,100);
+    --success: #008000;
+    --error: #FF0000;
+    --title: #fff;
+    --theme-button-background: #1d1d1d;
+    --theme-button-box-shadow: inset 0 2px 2px #444;
+    --theme-button-cercle-background: radial-gradient(farthest-corner at 6px 0px, #5b7ff3, rgb(19, 27, 134));
+    --theme-button-cercle-box-shadow: 0 2px 2px #222;
+
 }
 
 /* titre */
 
 .title {
-    color: #111;
+    color: var(--title);
     text-align: center;
     font-size: 70px;
     font-weight: 700;
@@ -61,7 +106,7 @@ header {
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center; 
-    background-color: #009AF0;
+    background-color: var(--secondary);
     padding: 0 10px;
 }
 
@@ -77,18 +122,18 @@ header {
 
 .nav ul a {
     text-decoration: none;
-    color: #fff;
+    color: var(--text);
     border-bottom: 2px solid transparent;
     font-size: 30px;
 }
 
 .nav ul a:hover {
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid var(--text);
     transition: 0.2s;
 }
 
 .active {
-    color: white;
+    color: var(--text);
 }
 
 .nav a img {
@@ -115,13 +160,19 @@ header {
     padding-top: 8px;
 }
 
+.sous-header {
+    display: flex;
+    align-items: center; /* aligne les éléments verticalement au centre */
+    justify-content: space-between; /* répartit uniformément les éléments horizontalement avec un espace égal entre eux */
+    padding: 10px;
+}
+
 /* fil d'ariane */
 
 #fil-ariane {
     display: flex; 
     flex-wrap: nowrap;
     align-items: center;
-    margin: 10px;
 }
 
 #fil-ariane li {
@@ -138,26 +189,62 @@ header {
 }
 
 #fil-ariane a {
-    color: #384274;
+    color: var(--background);
     transition: 0.2s;
 }
 
 #fil-ariane a:hover {
-    color: #009AF0;
+    color: var(--secondary);
     transition: all 0.2s;
     text-decoration: underline;
+}
+
+/* bouton themes */
+.theme {
+	position: absolute;
+	right: 0;
+	width: 48px;
+	height: 20px;
+	margin: 10px;
+	border-radius: 10px;
+	background: var(--theme-button-background);
+	box-shadow: var(--theme-button-box-shadow);
+	cursor: pointer;
+}
+
+.theme>.logo {
+	display: flex;
+	justify-content: space-between;
+	padding: 3px;
+}
+
+.theme>.cercle {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 24px;
+	height: 24px;
+	margin: -2px;
+	border-radius: 100%;
+	background: var(--theme-button-cercle-background);
+	box-shadow:var(theme-button-cercle-box-shadow);
+	transition: 0.2s;
+	transition-timing-function: cubic-bezier(0.67, 1.75, 0.76, 0.92);
+}
+.dark .theme>.cercle {
+	transform: translateX(26px);
 }
 
 /* footer */
 
 .footer-haut {
-    background-color: #384274;
+    background-color: var(--background);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     padding: 1% 3%;
     justify-content: space-between;
-    color: #fff;
+    color: var(--text);
 }
 
 .footer-haut > * {
@@ -167,14 +254,14 @@ header {
 .footer-haut a {
     margin: 0;
     padding: 0;
-    color: #fff;
+    color: var(--text);
     transition: 0.2s;
 }
 
 .footer-haut a:hover {
     margin: 0;
     padding: 0;
-    color: #009AF0;
+    color: var(--secondary);
 }
 
 .footer-haut h4 {
@@ -193,7 +280,7 @@ header {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: white;
+    background-color: var(--text);
 }
 
 #republique_francaise_banner, 
@@ -225,7 +312,7 @@ header {
 }
 
 .footer-bas p {
-    color: white;
+    color: var(--text);
     text-align: center;
     margin: 0;
     padding: 10px 0;

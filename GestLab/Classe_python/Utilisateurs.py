@@ -10,6 +10,21 @@ class Utilisateur:
     
     class Get :
 
+        def get_font(cnx, email):
+            """
+            Récupère le thème de l'utilisateur.
+
+            Args:
+                cnx (object): Objet de connexion à la base de données.
+                email (str): Adresse e-mail de l'utilisateur.
+
+            Returns:
+                int: Le thème de l'utilisateur.
+            """
+            result = cnx.execute(text("select themeLight from UTILISATEUR where email = '" + email + "';"))
+            for row in result:
+                return row[0]
+
         def get_nom_whith_email(cnx, email):
             """
             Récupère le nom de l'utilisateur correspondant à l'adresse e-mail donnée.
@@ -188,6 +203,15 @@ class Utilisateur:
                 return int(row[0])
            
     class Update:
+
+        def update_theme_utilisateur(cnx, id, theme):
+            try :
+                cnx.execute(text(("update UTILISATEUR set themeLight = " + str(theme) + " where idUtilisateur = " + str(id) + ";")))
+                cnx.commit()
+            except Exception as e:
+                print(e)
+                print("Erreur de mise a jour du theme")
+                raise
         
         def update_email_utilisateur(cnx,new_email,nom,mdp, old_email):
             """
@@ -644,3 +668,97 @@ class Utilisateur:
                 except:
                     print("erreur de suppression de l'utilisateur")
                     raise
+    
+    class TestCrud:
+        class Insert:
+
+            def test_insert(cnx):
+                """
+                Teste l'ajout d'un utilisateur dans la base de données.
+
+                Args:
+                    cnx (object): Objet de connexion à la base de données.
+
+                Returns:
+                    bool: True si le test a réussi, False sinon.
+                """
+                input_nom = input("Entrez le nom de l'utilisateur à ajouter : ")
+                input_prenom = input("Entrez le prénom de l'utilisateur à ajouter : ")
+                input_email = input("Entrez l'adresse e-mail de l'utilisateur à ajouter : ")
+                input_statut = input("Entrez le statut de l'utilisateur à ajouter. \n1 : Administrateur\n2 : Professeur\n3 : Laborantin\n4 : Gestionnaire\n\n Votre choix : ")  
+
+                def switch(input_statut, input_nom, input_prenom, input_email):
+                    switcher = {
+                        1: Utilisateur.Insert.ajout_administrateur(cnx, input_nom, input_prenom, input_email),
+                        2: Utilisateur.Insert.ajout_professeur(cnx, input_nom, input_prenom, input_email),
+                        3: Utilisateur.Insert.ajout_laborantin(cnx, input_nom, input_prenom, input_email),
+                        4: Utilisateur.Insert.ajout_gestionnaire(cnx, input_nom, input_prenom, input_email)
+                    }
+                    return switcher.get(input_statut, "Statut invalide")
+                
+                switch(input_statut, input_nom, input_prenom, input_email)
+
+                if Utilisateur.Get.get_id_utilisateur_from_email(cnx, input_email) is not None:
+                    print("Utilisateur ajouté avec succès")
+                    print("Test réussi")
+                    return True
+                else:
+                    print("Erreur lors de l'ajout de l'utilisateur")
+                    print("Test échoué")
+                    return False
+                
+        class Delete:
+
+            def test_delete(cnx):
+                """
+                Teste la suppression d'un utilisateur de la base de données.
+
+                Args:
+                    cnx (object): Objet de connexion à la base de données.
+
+                Returns:
+                    bool: True si le test a réussi, False sinon.
+                """
+                input_email = input("Entrez l'adresse e-mail de l'utilisateur à supprimer : ")
+                Utilisateur.Delete.delete_utilisateur_with_email(cnx, input_email)
+
+                if Utilisateur.Get.get_id_utilisateur_from_email(cnx, input_email) is None:
+                    print("Utilisateur supprimé avec succès")
+                    print("Test réussi")
+                    return True
+                else:
+                    print("Erreur lors de la suppression de l'utilisateur")
+                    print("Test échoué")
+                    return False
+                
+        class Update:
+
+            def test_update(cnx):
+                """
+                Teste la mise à jour des informations d'un utilisateur dans la base de données.
+
+                Args:
+                    cnx (object): Objet de connexion à la base de données.
+
+                Returns:
+                    bool: True si le test a réussi, False sinon.
+                """
+                input_email = input("Entrez l'adresse e-mail de l'utilisateur à mettre à jour : ")
+                input_nom = input("Entrez le nouveau nom de l'utilisateur : ")
+                input_prenom = input("Entrez le nouveau prénom de l'utilisateur : ")
+                input_mdp = input("Entrez le mot de passe actuel de l'utilisateur : ")
+                input_new_mdp = input("Entrez le nouveau mot de passe de l'utilisateur : ")
+                input_new_email = input("Entrez la nouvelle adresse e-mail de l'utilisateur : ")
+
+                if Utilisateur.Update.update_email_utilisateur(cnx, input_new_email, input_nom, input_mdp, input_email) and Utilisateur.Update.update_mdp_utilisateur(cnx, input_email, input_mdp, input_new_mdp) and Utilisateur.Update.update_nom_utilisateur(cnx, input_email, input_nom) and Utilisateur.Update.update_prenom_utilisateur(cnx, input_email, input_prenom):
+                    print("Utilisateur mis à jour avec succès")
+                    print("Test réussi")
+                    return True
+                else:
+                    print("Erreur lors de la mise à jour de l'utilisateur")
+                    print("Test échoué")
+                    return False
+                
+                
+                
+                

@@ -7,24 +7,27 @@ document.addEventListener('DOMContentLoaded', function() {
         const valeurParagraphe = section.querySelector('.nb-choisit');
         const boutonAjout = section.querySelector(".ajouter-demande");
         const liens = section.querySelector("#ajouter-demande-content");
+        const ref = section.querySelector(".ref");
         let classes = liens.classList;
         let idMat = classes[0];
         let valeur = classes[1];
         console.log(maVariableJavaScript);
 
-        boutonAjout.addEventListener("click", function() {
-            url = `/demander-materiel-unique/${idUser}?idMat=${idMat}&qte=${maVariableJavaScript}`;
-            window.location.href = url;
-        });
+        valeurParagraphe.addEventListener('change', function() {
+            boutonMoins.style.pointerEvents = "none";
+            boutonMoins.style.cursor = "not-allowed";
+            boutonMoins.style.opacity = "0.5";
 
-        boutonMoins.addEventListener('click', function() {
+            boutonPlus.style.pointerEvents = "none";
+            boutonPlus.style.cursor = "not-allowed";
+            boutonPlus.style.opacity = "0.5";
             if (valeur > 0) {
                 // Appliquer les règles CSS
                 boutonAjout.style.pointerEvents = "all";
                 boutonAjout.style.cursor = "pointer";
                 boutonAjout.style.opacity = "1";
-                valeur--;
-                valeurParagraphe.textContent = valeur;
+                valeur = valeurParagraphe.value;
+                // valeurParagraphe.value = valeur;
                 maVariableJavaScript = valeur;
                 console.log(maVariableJavaScript);
             }
@@ -34,23 +37,99 @@ document.addEventListener('DOMContentLoaded', function() {
                 boutonAjout.style.cursor = "not-allowed";
                 boutonAjout.style.opacity = "0.5";
             }
+            $.ajax({
+                url: '/demander-materiel-unique/'+idUser+'?idMat='+idMat+'&qte='+maVariableJavaScript,
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    boutonMoins.style.pointerEvents = "all";
+                    boutonMoins.style.cursor = "pointer";
+                    boutonMoins.style.opacity = "1";
+
+                    boutonPlus.style.pointerEvents = "all";
+                    boutonPlus.style.cursor = "pointer";
+                    boutonPlus.style.opacity = "1";
+                }
+            });
         });
 
-        boutonPlus.addEventListener('click', function() {
-            // Appliquer les règles CSS
-            boutonAjout.style.pointerEvents = "all";
-            boutonAjout.style.cursor = "pointer";
-            boutonAjout.style.opacity = "1";
-            valeur++;
-            valeurParagraphe.textContent = valeur;
-            maVariableJavaScript = valeur;
-            console.log(maVariableJavaScript);
+        boutonMoins.addEventListener('click', function() {
+            boutonMoins.style.pointerEvents = "none";
+            boutonMoins.style.cursor = "not-allowed";
+            boutonMoins.style.opacity = "0.5";
+
+            boutonPlus.style.pointerEvents = "none";
+            boutonPlus.style.cursor = "not-allowed";
+            boutonPlus.style.opacity = "0.5";
+            if (valeur > 0) {
+                // Appliquer les règles CSS
+                boutonAjout.style.pointerEvents = "all";
+                boutonAjout.style.cursor = "pointer";
+                boutonAjout.style.opacity = "1";
+                valeur--;
+                valeurParagraphe.value = valeur;
+                maVariableJavaScript = valeur;
+                ref.style.color = "white";
+                console.log(maVariableJavaScript);
+            }
             if (valeur == 0) {
                 // Appliquer les règles CSS
                 boutonAjout.style.pointerEvents = "none";
                 boutonAjout.style.cursor = "not-allowed";
                 boutonAjout.style.opacity = "0.5";
+                ref.style.color = "rgb(164,164,164)";
             }
+            $.ajax({
+                url: '/demander-materiel-unique/'+idUser+'?idMat='+idMat+'&qte='+maVariableJavaScript,
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    boutonMoins.style.pointerEvents = "all";
+                    boutonMoins.style.cursor = "pointer";
+                    boutonMoins.style.opacity = "1";
+
+                    boutonPlus.style.pointerEvents = "all";
+                    boutonPlus.style.cursor = "pointer";
+                    boutonPlus.style.opacity = "1";
+                }
+            });
+        });
+
+        boutonPlus.addEventListener('click', function() {
+            // Appliquer les règles CSS
+            boutonMoins.style.pointerEvents = "none";
+            boutonMoins.style.cursor = "not-allowed";
+            boutonMoins.style.opacity = "0.5";
+
+            boutonPlus.style.pointerEvents = "none";
+            boutonPlus.style.cursor = "not-allowed";
+            boutonPlus.style.opacity = "0.5";
+            valeur++;
+            valeurParagraphe.value = valeur;
+            maVariableJavaScript = valeur;
+            console.log(maVariableJavaScript);
+            ref.style.color = "white";
+            if (valeur == 0) {
+                // Appliquer les règles CSS
+                boutonAjout.style.pointerEvents = "none";
+                boutonAjout.style.cursor = "not-allowed";
+                boutonAjout.style.opacity = "0.5";
+                ref.style.color = "rgb(164,164,164)";
+            }
+            $.ajax({
+                url: '/demander-materiel-unique/'+idUser+'?idMat='+idMat+'&qte='+maVariableJavaScript,
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    boutonMoins.style.pointerEvents = "all";
+                    boutonMoins.style.cursor = "pointer";
+                    boutonMoins.style.opacity = "1";
+
+                    boutonPlus.style.pointerEvents = "all";
+                    boutonPlus.style.cursor = "pointer";
+                    boutonPlus.style.opacity = "1";
+                }
+            });
         });
     });
 });

@@ -14,3 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+function deleteBonCommande(idbc) {
+    event.stopPropagation();
+    console.log(idbc);
+    document.location=`/delete-bon-commande/${idbc}`;
+}

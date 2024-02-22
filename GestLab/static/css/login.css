@@ -10,20 +10,20 @@
     margin: 2em 0 5em 0;
     width: 400px;
     padding: 40px;
-    background: #009af0;
-    box-shadow: 0 15px 25px #384274;
+    background: var(--secondary);
+    box-shadow: 0 15px 25px var(--background);
     /* border-radius: 10px; */
     }
 
 #login-box h2 {
     margin: 0 0 30px;
     padding: 0;
-    color: #fff;
+    color: var(--text);
     text-align: center;
 }
 
 .erreur-login {
-  color: #d35252;
+  color: var(--error);
   text-align: center;
   margin-top: 10px;
   font-size: 35px;
@@ -37,10 +37,10 @@
   width: 100%;
   padding: 10px 0;
   font-size: 30px;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 30px;
   border: none;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid var(--text);
   outline: none;
   background: transparent;
 }
@@ -54,26 +54,26 @@
 
 .valid-container input {
   padding: 10px 20px;  
-  color: #fff;
+  color: var(--text);
   font-size: 30px;
   text-decoration: none;
   transition: .5s;
-  background-color: #384274;
+  background-color: var(--background);
   border-radius: 5px;
   border: 0;
 }
 
 .valid-container input:hover {
-  box-shadow: 0 0 15px #384274;
+  box-shadow: 0 0 15px var(--background);
 }
 
 .valid-container a {
   text-decoration: none;
-  color: #fff;
+  color: var(--text);
 }
 
 .valid-container a:hover {
-  color: #384274;
+  color: var(--background);
   transition: 0.2s;
 }
   
@@ -91,15 +91,15 @@
   margin-bottom: 5em;
   width: 400px;
   padding: 40px;
-  background: #009af0;
-  box-shadow: 0 15px 25px #384274;
+  background: var(--secondary);
+  box-shadow: 0 15px 25px var(--background);
   border-radius: 10px;
 }
 
 #changerMDP-box h2 {
   margin: 0 0 30px;
   padding: 0;
-  color: #fff;
+  color: var(--text);
   text-align: center;
 }
 
@@ -117,15 +117,15 @@
   margin-bottom: 5em;
   width: 400px;
   padding: 40px;
-  background: #009af0;
-  box-shadow: 0 15px 25px #384274;
+  background: var(--secondary);
+  box-shadow: 0 15px 25px var(--background);
   border-radius: 10px;
 }
 
 #changerMail-box h2 {
   margin: 0 0 30px;
   padding: 0;
-  color: #fff;
+  color: var(--text);
   text-align: center;
 }
 
@@ -135,7 +135,7 @@
   text-align: center;
   font-size: 40px;
   margin-top: 20px;
-  color: #000;
+  color: var(--title);
 }
 
 .container-control-profil {
@@ -149,8 +149,8 @@
 
 .a-lien {
   text-decoration: none;
-  color: #fff;
-  background-color: #009af0;
+  color: var(--text);
+  background-color: var(--secondary);
   padding: 10px 20px;
   border-radius: 20px;
   font-size: 30px;
@@ -158,15 +158,15 @@
 }
 
 .a-lien:hover {
-  background-color: #384274;
-  box-shadow: 0 0 15px #384274;
+  background-color: var(--background);
+  box-shadow: 0 0 15px var(--background);
   transition: 0.2s;
   transform: scale(1.1);
 }
 
 #btn-changer-mdp {
-  color: #fff;
-  background-color: #009af0;
+  color: var(--text);
+  background-color: var(--secondary);
   padding: 14px 20px;
   border-radius: 20px;
   font-size: 30px;
@@ -175,15 +175,15 @@
 }
 
 #btn-changer-mdp:hover {
-  background-color: #384274;
-  box-shadow: 0 0 15px #384274;
+  background-color: var(--background);
+  box-shadow: 0 0 15px var(--background);
   transition: 0.2s;
   transform: scale(1.1);
 }
 
 #btn-changer-mail {
-  color: #fff;
-  background-color: #009af0;
+  color: var(--text);
+  background-color: var(--secondary);
   padding: 14px 20px;
   border-radius: 20px;
   font-size: 30px;
@@ -192,8 +192,8 @@
 }
 
 #btn-changer-mail:hover {
-  background-color: #384274;
-  box-shadow: 0 0 15px #384274;
+  background-color: var(--background);
+  box-shadow: 0 0 15px var(--background);
   transition: 0.2s;
   transform: scale(1.1);
 }
@@ -204,15 +204,15 @@
   border: none;
   cursor: pointer;
   transition: 0.2s;
-  color: #fff;
-  background-color: #384274;
+  color: var(--text);
+  background-color: var(--background);
   border-radius: 20px;
   padding: 10px 20px;
 }
 
 #btn-retour:hover {
-  background-color: #009af0;
-  box-shadow: 0 0 15px #009af0;
+  background-color: var(--secondary);
+  box-shadow: 0 0 15px var(--secondary);
   transition: 0.2s;
   transform: scale(1.1);
   cursor: pointer;
@@ -239,7 +239,7 @@
 #btn-mdp-oublier {
   background: none;
   border: none;
-  color: #fff;
+  color: var(--text);
   cursor: pointer;
   z-index: 100;
 }
@@ -255,8 +255,8 @@
   margin-bottom: 5em;
   width: 600px;
   padding: 40px;
-  background: #009af0;
-  box-shadow: 0 15px 25px #384274;
+  background: var(--secondary);
+  box-shadow: 0 15px 25px var(--background);
   border-radius: 10px;
   }
 
@@ -271,7 +271,7 @@
   #mdp-box h2 {
       margin: 0 0 30px;
       padding: 0;
-      color: #fff;
+      color: var(--text);
       text-align: center;
   }
   
@@ -280,15 +280,15 @@
   border: none;
   cursor: pointer;
   transition: 0.2s;
-  color: #fff;
-  background-color: #384274;
+  color: var(--text);
+  background-color: var(--background);
   border-radius: 20px;
   padding: 10px 20px;
 }
 
 #btn-retour-mdp:hover {
-  background-color: #009af0;
-  box-shadow: 0 0 15px #009af0;
+  background-color: var(--secondary);
+  box-shadow: 0 0 15px var(--secondary);
   transition: 0.2s;
   transform: scale(1.1);
   cursor: pointer;
