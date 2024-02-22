@@ -14,8 +14,10 @@ function toggleTheme() {
 	} 
 	else {
 		applyTheme("default");
+		body.classList.remove("dark");
 		localStorage.setItem("theme", "default");
 		url_redirection = "/update-theme/1";
+
 	}
 
 	$.ajax({

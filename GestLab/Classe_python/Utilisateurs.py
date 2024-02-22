@@ -10,7 +10,7 @@ class Utilisateur:
     
     class Get :
 
-        def get_font(cnx, email):
+        def get_font(cnx, id):
             """
             Récupère le thème de l'utilisateur.
 
@@ -21,7 +21,7 @@ class Utilisateur:
             Returns:
                 int: Le thème de l'utilisateur.
             """
-            result = cnx.execute(text("select themeLight from UTILISATEUR where email = '" + email + "';"))
+            result = cnx.execute(text("select themeLight from UTILISATEUR where idUtilisateur = '" + str(id) + "';"))
             for row in result:
                 return row[0]
 
