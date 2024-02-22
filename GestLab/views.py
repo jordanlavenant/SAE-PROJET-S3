@@ -1225,15 +1225,6 @@ def demander_materiel_unique(id):
     Materiel.Insert.ajout_materiel_in_AjouterMateriel(cnx, idMat, id, qte, False)
     return redirect(url_for('demander'))
 
-#Pour le bouton commander tout les materiels 
-
-# @app.route("/commander-all-materiel-unique/<int:id>", methods=("GET","POST",))
-# def commander_all_materiel_unique(id):
-#     idMat = request.args.get('idMat')
-#     qte = request.args.get('qte')
-#     ajout_materiel_in_commande(cnx, idMat, id, qte, False)
-#     set_all_quantite_from_ajouterMat_to_boncommande(cnx, idemande, id)  #---------------------------------------------------LEO-----AIDE--------------------------------------#  
-#     return redirect(url_for('commander'))
 
 @app.route("/commander/")
 @csrf.exempt
@@ -1244,17 +1235,27 @@ def commander():
     Returns:
         render_template: Le template HTML de la page commander.html avec les données nécessaires.
     """
+    valueSearch = request.args.get('value')
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
     rechercher = RechercherForm()
     nb_alertes = Alert.get_nb_alert(cnx)
     nb_demandes = Demande.Get.get_nb_demande(cnx)
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
-    liste_materiel = Bon_commande.Bon_commande.Get.afficher_bon_commande(cnx, idUser)
+    liste = Bon_commande.Bon_commande.Get.afficher_bon_commande(cnx, idUser)
+    liste_materiel = paginate_list(liste, page, per_page)
     nbMateriel = len(liste_materiel)
-    print(liste_materiel)
+    total_items = len(liste)
+    total_pages = total_items // per_page
+    if total_items % per_page > 0:
+        total_pages += 1
     return render_template(
         "commander.html",
         title="commander du matériel",
+        valueSearch = valueSearch,
+        page=page,
+        total_pages=total_pages,
         categories = Domaine.Domaine.get_domaine(get_cnx()),
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
@@ -1328,16 +1329,27 @@ def recherche_materiel():
     et renvoie les résultats à la page commander.html.
     Si aucune valeur de recherche n'est fournie, la fonction redirige vers la page commander.
     """
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
     rechercher = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
     value = rechercher.get_value()
-    print("value : "+value)
-    if value != None:
-        liste_materiel = Recherche.recherche_all_in_materiel_with_search(get_cnx(), idbc, value)
+    if value == None:
+        value = request.args.get('value')
+    if value != None and value != "":
+        liste = Recherche.recherche_all_in_materiel_with_search(get_cnx(), idbc, value)
+        liste_materiel = paginate_list(liste, page, per_page)
+        total_items = len(liste)
+        total_pages = total_items // per_page
+        if total_items % per_page > 0:
+            total_pages += 1
         return render_template(
             "commander.html",
             title="commander",
+            pageRechercher=True,
+            searchValue=value,
+            total_pages=total_pages,
             idUser = idUser,
             idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
             categories = Domaine.Domaine.get_domaine(get_cnx()),
