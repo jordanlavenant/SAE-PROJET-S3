@@ -54,7 +54,7 @@
     <div class="header-container">
         <form method="POST" action="{{ url_for('recherche_materiel_demander') }}" role="search">
             <div class="search-content">
-                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar") }}
+                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar", value=searchValue) }}
                 <button id="btn-search" type="submit">RECHERCHER</button>
             </div>
         </form>
@@ -131,9 +131,6 @@
                     <button class="lien-recherche-demande">{{ item+1 }}</button>
                 {% endif %}
                 </div>
-                <script>
-                    var pageNEXT = "{{ item+1 }}";
-                </script>
             {% endfor %}
         </div>
         {% endif %}

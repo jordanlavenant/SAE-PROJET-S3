@@ -1294,7 +1294,7 @@ def recherche_materiel_demander():
     value = rechercher.get_value()
     if value == None:
         value = request.args.get('value')
-    if value != None:
+    if value != None and value != "":
         liste = Recherche.recherche_all_in_materiel_demande_with_search(get_cnx(), idDemande, value)
         liste_materiel = paginate_list(liste, page, per_page)
         total_items = len(liste)
@@ -1305,6 +1305,7 @@ def recherche_materiel_demander():
             "demander.html",
             title="demander",
             pageRechercher=True,
+            searchValue=value,
             total_pages=total_pages,
             idUser = idUser,
             idDemande = Demande.Get.get_id_demande_actuel(cnx, Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
