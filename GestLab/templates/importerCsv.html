@@ -11,7 +11,6 @@
         <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('importer_csv') }}">
             {{ ImporterCsvForm.hidden_tag() }}                        
             <div class="main-container">
-                <!-- add the RadioField bd_option-->
                 <div class="user-box">
                     <div>
                         {{ ImporterCsvForm.bd_option.label(class_="form-check-label") }}
@@ -37,7 +36,13 @@
         var uploadedFile = document.getElementById('uploadedFile');
 
         if (fileInput.files.length > 0) {
-            uploadedFile.textContent = 'Fichier déposé : ' + fileInput.files[0].name;
+            if (fileInput.files[0].name.toLowerCase().endsWith('.csv')) {
+                uploadedFile.textContent = 'Fichier déposé : ' + fileInput.files[0].name;
+            } else {
+                alert('Veuillez sélectionner uniquement des fichiers CSV.');
+                fileInput.value = '';
+                uploadedFile.textContent = '';
+            }
         } else {
             uploadedFile.textContent = '';
         }
@@ -63,11 +68,17 @@
         dropZone.addEventListener('drop', function (e) {
             e.preventDefault();
             dropZone.classList.remove('drag-over');
+            
             var files = e.dataTransfer.files;
-            fileInput.files = files;
-            displayFileName();
+
+            if (files.length > 0 && files[0].name.toLowerCase().endsWith('.csv')) {
+                fileInput.files = files;
+                displayFileName();
+            } else {
+                alert('Veuillez déposer un fichier CSV.');
+            }
         });
-        });
+    });
 
     document.addEventListener("DOMContentLoaded", function() {
         const endroitSelect = document.getElementById("emplacement");
