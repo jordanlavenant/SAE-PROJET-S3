@@ -1,3 +1,7 @@
+.utilisateur-container-overall {
+    margin: 0 5vw;
+}
+
 .header-container {
     margin: 50px 10vw;
 }
@@ -91,7 +95,7 @@
     margin-right: 10vw;
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: space-between;
 }
 
@@ -99,13 +103,12 @@
     flex-basis: 40%;
     margin-bottom: 5vh;
     display: flex;
+    flex-direction: column;
     flex-wrap: nowrap;
-    gap: 50px;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid var(--background);
+    /* border: 1px solid var(--background); */
     padding: 10px;
-    border-radius: 10px;
 }
 
 .sous-container-info-utilisateur p {
@@ -131,6 +134,24 @@
     box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     cursor: pointer;
+}
+
+.scroll_info_utilisateur {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.professeur, .laborantin, .gestionnaire {
+    flex-grow: 1;
+    border: 1px solid var(--background);
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.container-info-utilisateur h1 {
+    text-align: center;
+    padding: 0;
+    margin: 0;
 }
 
 @media screen and (max-width: 1800px) {

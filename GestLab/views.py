@@ -1796,6 +1796,9 @@ def consulter_utilisateur():
 
     return render_template(
         "consulterUtilisateur.html",
+        professeurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 2)[0],
+        laborantins = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 3)[0],
+        gestionnaires = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 4)[0],
         utilisateurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[0],
         nbUser = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[1],
         categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
@@ -1821,7 +1824,10 @@ def recherche_utilisateur():
     if value != None:
         return render_template(
             "consulterUtilisateur.html",
-            utilisateurs = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[0],
+            # utilisateurs = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[0],
+            professeurs = Recherche.recherche_all_in_utilisateur_with_search_statut(get_cnx(), value, 2)[0],
+            laborantins = Recherche.recherche_all_in_utilisateur_with_search_statut(get_cnx(), value, 3)[0],
+            gestionnaires = Recherche.recherche_all_in_utilisateur_with_search_statut(get_cnx(), value, 4)[0],
             nbUser = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[1],
             categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
             title="consulter les utilisateurs",
