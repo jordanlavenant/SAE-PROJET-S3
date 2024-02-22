@@ -1,31 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static',filename='./css/base.css') }}">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans:wght@100;300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static',filename='./images/favicon/apple-touch-icon') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static',filename='./images/favicon/favicon-32x32') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='./images/favicon/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="{{ url_for('static',filename='./images/favicon/apple-touch-icon') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="{{ url_for('static',filename='./images/favicon/favicon-32x32') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="{{ url_for('static',filename='./images/favicon/favicon-16x16.png') }}">
     <link rel="manifest" href="{{ url_for('static',filename='./images/favicon/site.webmanifest') }}">
     {% block styles %}
     <!-- css -->
     {% endblock %}
     <title>{{ title }}</title>
 </head>
+
 <body>
     <header class="header">
         <nav class="nav">
-            <a href="{{ url_for('base') }}"><img class="icon-logo-gestlab" src="{{ url_for('static',filename='./images/logo-GestLab.png') }}" alt="logo GestLab"></a>
+            <a href="{{ url_for('base') }}"><img class="icon-logo-gestlab"
+                    src="{{ url_for('static',filename='./images/logo-GestLab.png') }}" alt="logo GestLab"></a>
             <ul class="nav-liste-elem">
                 <li><a href="{{ url_for('base') }}">accueil</a></li>
                 {% if 'utilisateur' in session %}
 
                 <!-- admin -->
-                {% if session['utilisateur'][1] == 1 %} 
+                {% if session['utilisateur'][1] == 1 %}
                 <li><a href="{{ url_for('consulter_utilisateur') }}">consulter utilisateurs</a></li>
                 <li><a href="{{ url_for('ajouter_utilisateur') }}">ajouter utilisateur</a></li>
                 {% endif %}
@@ -45,10 +52,10 @@
                 <li id="alertes-li">
                     <a href="{{ url_for('alertes') }}">alertes</a>
                     {% if alerte_tl|int == 0 %}
-                        <span class="tooltip-alerte void">{{ alerte_tl }} alerte</span>
+                    <span class="tooltip-alerte void">{{ alerte_tl }} alerte</span>
                     {% else %}
-                        <span class="tooltip-alerte">{{ alerte_tl }} alertes</span>
-                    {% endif %}                
+                    <span class="tooltip-alerte">{{ alerte_tl }} alertes</span>
+                    {% endif %}
                 </li>
                 {% endif %}
 
@@ -60,10 +67,10 @@
                 <li id="alertes-li">
                     <a href="{{ url_for('alertes') }}">alertes</a>
                     {% if alerte_tl|int == 0 %}
-                        <span class="tooltip-alerte void">{{ alerte_tl }} alerte</span>
+                    <span class="tooltip-alerte void">{{ alerte_tl }} alerte</span>
                     {% else %}
-                        <span class="tooltip-alerte">{{ alerte_tl }} alertes</span>
-                    {% endif %}                
+                    <span class="tooltip-alerte">{{ alerte_tl }} alertes</span>
+                    {% endif %}
                 </li>
                 <li id="demandes-li">
                     <a href="{{ url_for('demandes') }}">demandes</a>
@@ -77,33 +84,47 @@
 
 
                 {% endif %}
-                <li><a class="profil" href="{{ url_for('login') }}"><img class="img-compte" src="{{ url_for('static',filename='./images/compte.png') }}" alt="logo compte"></a></li>
-                
+                <li><a class="profil" href="{{ url_for('login') }}"><img class="img-compte"
+                            src="{{ url_for('static',filename='./images/compte.png') }}" alt="logo compte"></a></li>
+
             </ul>
         </nav>
-        <div class ="sous-header"> 
+        <div class="sous-header">
             <div id="fil-ariane">
                 {% for elem in chemin %}
-                    <li><a href="{{ url_for(elem[0]) }}">{{ elem[1] }}</a></li>
-                    <li><img src="{{ url_for('static',filename='./images/chevron.png') }}"></li>
+                <li><a href="{{ url_for(elem[0]) }}">{{ elem[1] }}</a></li>
+                <li><img src="{{ url_for('static',filename='./images/chevron.png') }}"></li>
                 {% endfor %}
             </div>
-
-            <div class="theme" onclick="toggleTheme()" >
+            {% if 'utilisateur' in session %}
+            <div class="theme" onclick="toggleTheme()" data-param="{{ session['utilisateur'][5] }}">
                 <div class=cercle></div>
                 <div class=logo>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" fill="#ff0000" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-
-                    
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0b0b0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        fill="#ff0000" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="#0b0b0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                        <line x1="2" y1="12" x2="6" y2="12"></line>
+                        <line x1="18" y1="12" x2="22" y2="12"></line>
+                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                    </svg>
                 </div>
             </div>
-	
+            {% endif %}
+
         </div>
-        
-        
+
+
         <h1 class="title">{{ title }}</h1>
-        
+
     </header>
     <main>
         {% block content %}
@@ -117,8 +138,10 @@
     <footer class="footer">
         <div class="footer-haut">
             <div class="images">
-                <img src="{{ url_for('static',filename='./images/republique_francaise.png') }}" alt="république française" id="republique_francaise_banner">
-                <img src="{{ url_for('static',filename='./images/Logo_Academie-Orleans-Tours.png') }}" alt="" id="academie_orleans_tours">
+                <img src="{{ url_for('static',filename='./images/republique_francaise.png') }}"
+                    alt="république française" id="republique_francaise_banner">
+                <img src="{{ url_for('static',filename='./images/Logo_Academie-Orleans-Tours.png') }}" alt=""
+                    id="academie_orleans_tours">
             </div>
             {% if 'utilisateur' in session %}
             <div class="plan-du-site">
@@ -130,7 +153,7 @@
                     <li><a href="{{ url_for('ajouter_utilisateur') }}">ajouter utilisateur</a></li>
                 </ul>
                 {% endif %}
-                
+
                 <!-- Professeur -->
                 {% if session['utilisateur'][1] == 2 %}
                 <ul>
@@ -163,21 +186,24 @@
             {% endif %}
             <div class="utilitaires">
                 <h4>utilitaires : </h3>
-                <ul>
-                    <li><a target="_blank" href="https://www.legtfrancoisvillon.fr/v3/">Lycée François Villon</a></li>                    
-                    <li><a target="_blank" href="https://ent.netocentre.fr/cas/login?service=https://lycees.netocentre.fr/portail/Login%3FrefUrl%3D%2Fportail%2Ff%2Faccueil%2Fnormal%2Frender.uP&token=020e78251cdefbdfe0365d73cad6a32e">ENT</a></li>                    
-                </ul>
+                    <ul>
+                        <li><a target="_blank" href="https://www.legtfrancoisvillon.fr/v3/">Lycée François Villon</a>
+                        </li>
+                        <li><a target="_blank"
+                                href="https://ent.netocentre.fr/cas/login?service=https://lycees.netocentre.fr/portail/Login%3FrefUrl%3D%2Fportail%2Ff%2Faccueil%2Fnormal%2Frender.uP&token=020e78251cdefbdfe0365d73cad6a32e">ENT</a>
+                        </li>
+                    </ul>
             </div>
 
             <div class="workers">
                 <h4>réalisé par : </h3>
-                <ul>
-                    <li>BLANDEAU ERWAN</li>
-                    <li>LALLIER ANNA</li>
-                    <li>LAVENANT JORDAN</li>
-                    <li>LUCIDOR LEO</li>
-                    <li>PILET COLIN</li>
-                </ul>
+                    <ul>
+                        <li>BLANDEAU ERWAN</li>
+                        <li>LALLIER ANNA</li>
+                        <li>LAVENANT JORDAN</li>
+                        <li>LUCIDOR LEO</li>
+                        <li>PILET COLIN</li>
+                    </ul>
             </div>
         </div>
         <div class="footer-bas">
@@ -188,8 +214,31 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{{ url_for('static',filename='./js/theme.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    {% if 'utilisateur' in session %}
+    <script>
+        if (parseInt("{{ session['utilisateur'][5] }}") == 0) {
+            console.log("dark");
+            document.querySelector("body").classList.remove("default");
+            document.querySelector("body").classList.add("dark");
+			localStorage.setItem("theme", "dark");
+
+        } else {
+            if (parseInt("{{ session['utilisateur'][5] }}") == 1) {
+                console.log("default");
+                document.querySelector("body").classList.remove("dark");
+                document.querySelector("body").classList.add("default");
+                localStorage.setItem("theme", "default");
+            }
+        } 
+       
+    </script>
+    {% endif %}
+
     {% block scripts %}
-        <!-- Optional JavaScript -->
+    <!-- Optional JavaScript -->
     {% endblock %}
+
 </body>
+
 </html>

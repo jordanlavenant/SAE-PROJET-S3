@@ -6,12 +6,18 @@ if (localStorage.getItem("theme")) {
 
 function toggleTheme() {
     const body = document.body;
+	const param = document.querySelector('.theme').dataset.param;
 
 	if (body.classList.toggle("dark")) {
-		applyTheme("dark");
-		localStorage.setItem("theme", "dark");
-		url_redirection = "/update-theme/0";
-	} 
+
+		if (param == 1) {
+			applyTheme("dark");
+			localStorage.setItem("theme", "dark");
+			url_redirection = "/update-theme/0";
+		}
+		
+	}
+
 	else {
 		applyTheme("default");
 		localStorage.setItem("theme", "default");
@@ -34,3 +40,4 @@ function applyTheme(theme) {
     const body = document.body;
     body.className = theme;
 }
+

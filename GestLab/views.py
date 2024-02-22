@@ -1,5 +1,4 @@
 from sqlalchemy import text
-
 from GestLab.Classe_python.Alerte import Alert
 import GestLab.Classe_python.Authentification as Authentification
 import GestLab.Classe_python.BonCommande as Bon_commande 
@@ -24,7 +23,7 @@ from GestLab.Classe_python.Utilisateurs import Utilisateur
 from GestLab.initialisation import get_cnx
 
 from .app import app, csrf #, db
-from flask import render_template, url_for, redirect, request, session, jsonify, send_file
+from flask import render_template, url_for, redirect, request, session, jsonify, send_file, g
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
@@ -1108,11 +1107,6 @@ def a2f(mail, id):
     newMail = request.args.get('newMail')
     oldMail = request.args.get('oldMail')
     mdp = request.args.get('mdp')
-    print(oldMdp)
-    print(newMdp)
-    print(newMail)
-    print(oldMail)
-    print(mdp)
     f = A2FForm()
     if f.validate_on_submit():
         code = f.get_code()
@@ -1586,6 +1580,11 @@ def valider_bon_demande(id):
 def update_theme(id):
     try:
         Utilisateur.Update.update_theme_utilisateur(cnx, session['utilisateur'][4], id)
+        theme = Utilisateur.Get.get_font(cnx, session['utilisateur'][4])
+        print(theme)
+        print(theme)
+        print(theme)
+        print(theme)
         return redirect(url_for('base'))
     except Exception as e:
         print("An error occurred:", e)
@@ -2270,7 +2269,21 @@ def login():
             if user != None:
                 #login_user(user)
                 idUt = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, user[2])
-                session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+                font = Bon_commande.Utilisateur.Utilisateur.Get.get_font(cnx, idUt)
+                session['utilisateur'] = (nom, idStatut, mail, prenom, idUt, font)
+                # met a jour le theme en utilisant setTheme en js
+                set_theme_script = """
+                <script>
+                    function setTheme(theme) {
+                        // Mettez ici votre logique pour définir le thème en fonction de la session
+                        console.log("Thème défini sur " + theme);
+                    }
+                    setTheme({{ session['utilisateur'][5] }});
+                </script>
+                """
+                # Insérer le script JavaScript directement dans le modèle HTML
+                g.theme_script = set_theme_script
+
                 RELOAD.reload_alert(cnx)
                 print("login : "+str(session['utilisateur']))
                 next = f.next.data or url_for("base")
@@ -2336,6 +2349,7 @@ def logout():
     """
     Déconnecte l'utilisateur en supprimant sa session et redirige vers la page de base.
     """
+    Utilisateur.Update.update_theme_utilisateur(cnx, session['utilisateur'][4], 1)
     session.pop('utilisateur', None)
     return redirect(url_for('base'))
 
