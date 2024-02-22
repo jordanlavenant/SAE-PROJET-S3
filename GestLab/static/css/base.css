@@ -235,23 +235,23 @@ header {
     list-style: none;
     display: flex;
     flex-wrap: nowrap;
-    align-items: center;
 }
 
-#fil-ariane img  {
-    margin-top: 5px;
-    max-width: 13px;
-    max-height: 13px;
+#fil-ariane p {
+    padding: 0;
+    margin: 5px 5px 0 5px;
+    color: var(--secondary);
+    user-select: none;
 }
 
 #fil-ariane a {
-    color: var(--background);
-    transition: 0.2s;
+    color: var(--secondary);
+    transition: .2s;
 }
 
 #fil-ariane a:hover {
     color: var(--secondary);
-    transition: all 0.2s;
+    transition: .2s;
     text-decoration: underline;
 }
 
