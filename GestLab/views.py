@@ -2093,7 +2093,7 @@ def paginate_list(data, page, per_page):
     paginated_data = data[start_index:end_index]
     return paginated_data
 
-@app.route("/demander/")
+@app.route("/demander")
 @csrf.exempt
 def demander():
     """
@@ -2103,26 +2103,35 @@ def demander():
     et les informations de l'utilisateur connecté.
     """
     page = request.args.get('page', 1, type=int)
-    per_page = 2
+    per_page = 4
     recherche = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     liste = Demande.Get.afficher_demande(cnx, idUser)
     liste_materiel = paginate_list(liste, page, per_page)
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
-    print(liste_materiel)
-    print(len(liste_materiel))
+    # print(liste_materiel)
+    # print(len(liste_materiel))
+    total_items = len(liste)
+    total_pages = total_items // per_page
+    if total_items % per_page > 0:
+        total_pages += 1
+    # print("total_pages : "+str(total_pages))
+    # print("page choisit : "+str(page))
     return render_template(
         "demander.html",
         page=page,
         title="demander",
         idDemande = idDemande,
         liste_materiel = liste_materiel,
+        total_pages=total_pages,
         nbMateriel = len(liste_materiel),
         RechercherForm=recherche,
         categories = Domaine.Domaine.get_domaine(get_cnx()),
         idUser = idUser,
         chemin = [("base", "accueil"), ("demander", "demander")]
     )
+
+
 
 @app.route("/ajouter-demande/<int:id>", methods=("GET","POST",))
 def ajouter_demande(id):

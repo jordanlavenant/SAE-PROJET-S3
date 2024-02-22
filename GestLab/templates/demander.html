@@ -110,10 +110,12 @@
                 </script>
             </section>
         {% endfor %}
-        {% if page > 1 %}
-            <a href="?page={{ page - 1 }}">Précédent</a>
-        {% endif %}
-            <a href="?page={{ page + 1 }}">Suivant</a>
+       
+        <div class="container-pagination">
+            {% for item in range(total_pages) %}
+                <a href='/demander?page={{ item+1 }}'>{{ item+1 }}</button>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
