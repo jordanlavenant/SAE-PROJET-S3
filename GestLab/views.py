@@ -2084,6 +2084,15 @@ def recherche_inventaire():
         )
     return redirect(url_for('inventaire'))
   
+def paginate_list(data, page, per_page):
+    """
+    Fonction qui permet de paginer une liste.
+    """
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+    paginated_data = data[start_index:end_index]
+    return paginated_data
+
 @app.route("/demander/")
 @csrf.exempt
 def demander():
@@ -2093,14 +2102,18 @@ def demander():
     telles que la liste du matériel disponible, l'identifiant de la demande actuelle,
     et les informations de l'utilisateur connecté.
     """
+    page = request.args.get('page', 1, type=int)
+    per_page = 2
     recherche = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
-    liste_materiel = Demande.Get.afficher_demande(cnx, idUser)
+    liste = Demande.Get.afficher_demande(cnx, idUser)
+    liste_materiel = paginate_list(liste, page, per_page)
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
     print(liste_materiel)
     print(len(liste_materiel))
     return render_template(
         "demander.html",
+        page=page,
         title="demander",
         idDemande = idDemande,
         liste_materiel = liste_materiel,

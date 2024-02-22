@@ -110,6 +110,10 @@
                 </script>
             </section>
         {% endfor %}
+        {% if page > 1 %}
+            <a href="?page={{ page - 1 }}">Précédent</a>
+        {% endif %}
+            <a href="?page={{ page + 1 }}">Suivant</a>
     </div>
 </div>
 {% endblock %}
