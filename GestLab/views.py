@@ -1546,7 +1546,7 @@ def historique_bon_commande():
         infoUser = liste_info_user,
         listeetat = liste_etat_bon_commande,
         statutsCommande = Commande.Commande.Get.get_statut_from_commande(cnx),
-        # chemin = [("base", "accueil"), ("consulter_bon_commande, consulter bon commande"), ("historique_bon_commande", "historique des bon de commande")],
+        chemin = [("base", "accueil"), ("consulter_bon_commande", "consulter bon commande"), ("historique_bon_commande", "historique des bon de commande")],
         alerte_tl = Alert.get_nb_alert(cnx),
         demande_tl = Demande.Get.get_nb_demande(cnx)
     )
@@ -1727,7 +1727,7 @@ def ajouter_utilisateur():
         "ajouterUtilisateur.html",
         title="ajouter un utilisateur",
         AjouterUtilisateurForm=f,
-        chemin=[("base", "accueil"), ("ajouter_utilisateur", "ajouter un Utilisateur")],
+        chemin=[("base", "accueil"), ("ajouter_utilisateur", "ajouter un utilisateur")],
         alerte_tl = Alert.get_nb_alert(cnx),
         demande_tl = Demande.Get.get_nb_demande(cnx)
     )
@@ -1844,7 +1844,7 @@ def recherche_utilisateur():
         categories = ["Tous", "Professeur", "Gestionnaire"],
         title="consulter les utilisateurs",
         RechercherForm=f,
-        chemin = [("base", "accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "consulter les utilisateurs")],
+        chemin = [("base", "accueil"), ("utilisateurs", "utilisateurs"), ("consulter_utilisateur", "consulter les utilisateurs")],
         alerte_tl = Alert.get_nb_alert(cnx),
         demande_tl = Demande.Get.get_nb_demande(cnx)
     )
