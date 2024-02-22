@@ -45,6 +45,7 @@ header {
 
 :root {
     --text: white;
+    --text-inverse : black;
     --main-background: #e0e0e0;
     --background: #384274;
     --background-hover: #0e1b60;
@@ -60,16 +61,18 @@ header {
     --theme-button-box-shadow: inset 0 2px 2px #444;
     --theme-button-cercle-background: radial-gradient(farthest-corner at 6px 0px, #b8ebfc, #09c);
     --theme-button-cercle-box-shadow: 0 2px 2px #222;
+    --sous-texte: #384274;
 }
 
 .dark {
     --text: white;
+    --text-inverse : white;
     --main-background: #0d0d0d;
     --background: #2c2c2c;
     --background-hover: #1a1a1a;
     --dark-background: #111;
     --border: #2c2c2c;
-    --secondary: #009AF0;
+    --secondary: #0c1c8c;
     --shadow: #111;
     --secondary-button: rgb(100,100,100);
     --success: #008000;
@@ -79,6 +82,7 @@ header {
     --theme-button-box-shadow: inset 0 2px 2px #444;
     --theme-button-cercle-background: radial-gradient(farthest-corner at 6px 0px, #5b7ff3, rgb(19, 27, 134));
     --theme-button-cercle-box-shadow: 0 2px 2px #222;
+    --sous-texte: #7b7b7b;
 
 }
 
@@ -235,16 +239,17 @@ header {
     list-style: none;
     display: flex;
     flex-wrap: nowrap;
-    color: var(--secondary);
-    fill: var(--secondary);
 }
 
-#fil-ariane li svg {
-    fill: inherit;
+#fil-ariane p {
+    padding: 0;
+    margin: 5px 5px 0 5px;
+    color: var(--text-inverse);
+    user-select: none;
 }
 
 #fil-ariane a {
-    color: inherit;
+    color: var(--text-inverse);
     transition: .2s;
 }
 
