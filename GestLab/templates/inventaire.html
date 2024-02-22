@@ -63,6 +63,13 @@
                 </div>
             </section>
         {% endfor %}
+        {% for p in range(1, total_pages + 1) %}
+            {% if p == page %}
+                <span>{{ p }}</span>
+            {% else %}
+                <a href="?page={{ p }}">{{ p }}</a>
+            {% endif %}
+        {% endfor %}
     </div>
 </section>
 {% endblock %}
