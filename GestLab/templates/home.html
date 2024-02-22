@@ -51,11 +51,11 @@
                 {% if alertes|int > 0 %}
                     <img src="../static/images/attention-rouge.png" alt="logo alertes">
                     {% if alertes|int == 1 %}
-                    <p>{{ alertes }} Alerte</p>
+                    <p>{{ alertes }} alerte</p>
                     {% else %}
-                    <p>{{ alertes }} Alertes</p>
+                    <p>{{ alertes }} alertes</p>
                     {% endif %}
-                    <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
+                    <a href="{{ url_for('alertes') }}">consulter les alertes ></a>
                 {% endif %}
             </section>
         </div>
@@ -99,22 +99,22 @@
                 {% if alertes|int > 0 %}
                     <img src="../static/images/attention-rouge.png" alt="logo alertes">
                     {% if alertes|int == 1 %}
-                    <p>{{ alertes }} Alerte</p>
+                    <p>{{ alertes }} alerte</p>
                     {% else %}
-                    <p>{{ alertes }} Alertes</p>
+                    <p>{{ alertes }} alertes</p>
                     {% endif %}
-                    <a href="{{ url_for('alertes') }}">Consulter les alertes ></a>
+                    <a href="{{ url_for('alertes') }}">consulter les alertes ></a>
                 {% endif %}
             </section>
             <section class="section-demandes">
                 {% if demandes|int > 0 %}
                     <img src="../static/images/attention-orange.png" alt="logo demandes">
                     {% if demandes|int == 1 %}
-                    <p>{{ demandes }} Demande</p>
+                    <p>{{ demandes }} demande</p>
                     {% else %}
-                    <p>{{ demandes }} Demandes</p>
+                    <p>{{ demandes }} demandes</p>
                     {% endif %}
-                    <a href="{{ url_for('demandes') }}">Consulter les demandes ></a>
+                    <a href="{{ url_for('demandes') }}">consulter les demandes ></a>
                 {% endif %}
             </section>
         </div>
@@ -153,7 +153,11 @@
     
     <!-- si l'utilisateur n'est pas connecter -->
     {% else %}
-    <h2 class="sous-title">Bienvenue !</h2>
-    <a id="container-bouton-connexion" href="{{ url_for('login') }}"><button id="btn-connexion">se connecter</button></a>
+    <div id="welcome-board">
+        <h2 class="sous-title">bienvenue !</h2>
+        <div id="container-bouton-connexion">
+            <a href="{{ url_for('login') }}" id="btn-connexion">SE CONNECTER</a>
+        </div>
+    </div>
     {% endif %}
 {% endblock %}

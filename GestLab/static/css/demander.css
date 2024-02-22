@@ -195,7 +195,7 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 10px;
+    gap: 30px;
 }
 
 .section-contenu {
@@ -206,6 +206,7 @@ h2 {
     background-color: var(--background);
     border-radius: 5px;
     padding: 1%;
+    box-shadow: 5px 10px 10px var(--background);
 }
 
 .section-contenu .header-props {

@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/importerCSV.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('csv') }}">retour</a>
+<a id="btn-back" href="{{ url_for('csv') }}">RETOUR</a>
 
 <div class="ajouterMateriel-container">
     <div class="ajouterMateriel-content">
@@ -25,9 +25,9 @@
                     <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
                 </div>
             </div>
-            
-        </form>
-    </div>
+        </div>
+        <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
+    </form>
 </div>
 
 <script>
