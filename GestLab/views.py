@@ -1266,6 +1266,16 @@ def commander():
         chemin = [("base", "accueil"), ("commander", "commander")]
     )
 
+@app.route("/download-pdf-bon-commande", methods=("GET","POST",))
+def download_pdf_bon_commande():
+    """
+    Fonction qui permet de télécharger le bon de commande au format PDF.
+
+    Returns:
+        Response: Un objet de réponse contenant le fichier PDF.
+    """
+    return send_file("static/data/bonCommande.pdf", as_attachment=True)
+
 @app.route("/recherche-materiel-demander", methods=("GET","POST",))
 @csrf.exempt
 def recherche_materiel_demander():
