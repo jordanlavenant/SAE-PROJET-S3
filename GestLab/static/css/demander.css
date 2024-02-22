@@ -291,6 +291,22 @@ h2 {
     scale: 1.5;
 }
 
+.nb-choisit {
+    width: 100px;
+    text-align: center;
+    -moz-appearance: textfield;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: var(--text);
+}
+
+.nb-choisit::-webkit-outer-spin-button,
+.nb-choisit::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .section-contenu #tools {
     display: flex;
     flex-direction: row;
