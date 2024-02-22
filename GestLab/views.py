@@ -2119,15 +2119,16 @@ def demander():
     """
     valueSearch = request.args.get('value')
     page = request.args.get('page', 1, type=int)
-    per_page = 4
+    per_page = 2
     recherche = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
-    liste = Demande.Get.afficher_demande(cnx, idUser)
-    liste_materiel = paginate_list(liste, page, per_page)
+    start = (page - 1) * per_page
+    liste_materiel = Demande.Get.afficher_demande_pagination(cnx, idUser, start, per_page )
+    # liste_materiel = paginate_list(liste, page, per_page)
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
     # print(liste_materiel)
     # print(len(liste_materiel))
-    total_items = len(liste)
+    total_items = Demande.Get.get_nb_sugestions(cnx, idDemande)
     total_pages = total_items // per_page
     if total_items % per_page > 0:
         total_pages += 1
@@ -2141,8 +2142,7 @@ def demander():
         title="demander",
         idDemande = idDemande,
         liste_materiel = liste_materiel,
-        total_pages=total_pages,
-        nbMateriel = len(liste_materiel),
+        nbMateriel = total_items,
         RechercherForm=recherche,
         categories = Domaine.Domaine.get_domaine(get_cnx()),
         idUser = idUser,
