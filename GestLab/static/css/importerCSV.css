@@ -1,3 +1,103 @@
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .7);
+    z-index: 100;
+    display: none;
+}
+
+.popup #popup-content {
+    max-width: 600px;
+    width: 100%;
+    padding: 30px;
+    background-color: var(--background);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+}
+
+.header-popup {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--background);
+}
+
+.header-popup > p {
+    margin: 0;
+    font-size: 50px;
+    color: var(--text);
+}
+
+.popup #delete-confirm {
+    max-width: 400px;
+    width: 100%;
+    padding: 30px;
+    background-color: var(--background);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.popup #choices {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup #choices > a:first-child {
+    color: var(--text);
+    background-color: var(--secondary);
+    padding: 14px 40px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+    border-radius: 10px;
+}
+
+.popup #choices > a:first-child:hover {
+    box-shadow: 0 0 15px var(--secondary);
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.popup #choices > a:last-child {
+    color: var(--text);
+    background-color: var(--error);
+    padding: 14px 40px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+    border-radius: 10px;
+}
+
+.popup #choices > a:last-child:hover {
+    box-shadow: 0 0 15px var(--error);
+    transition: .2s;
+}
+
+.popup #popup-exit {
+    padding: 10px;
+}
+
+.popup #popup-exit:hover {
+    cursor: pointer;
+}
+
+.popup.open {
+    display: block;
+}
+
 #fichier{
     width: 700px;
     font-size: 25px;
@@ -59,7 +159,11 @@
     flex-basis: 100%;
     align-items: center;
     text-align: center;
+}
 
+.submit-container {
+    display: flex;
+    justify-content: flex-end;
 }
 
 p , label{
@@ -101,7 +205,7 @@ p , label{
     align-items: center;
     gap: 50px;
     background-color: var(--background);
-    margin: 50px 10vw;
+    margin: 50px 15vw;
     padding: 3%;
     border-radius: 10px;
 }
@@ -146,8 +250,8 @@ p , label{
 }
 
 #submit {
-    color: var(--text);
-    background-color: var(--secondary);
+    color: var(--background);
+    background-color: var(--text);
     padding: 14px 20px;
     border-radius: 10px;
     font-size: 25px;
@@ -158,9 +262,29 @@ p , label{
 }
 
 #submit:hover {
-    color: white;
-    background-color: #ff0000;
-    box-shadow: 0 0 15px #ff0000;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#submit-confirm {
+    color: var(--text);
+    background-color: var(--error);
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+    text-align: center;
+}
+
+#submit-confirm:hover {
+    color: var(--text);
+    background-color: var(--error);
+    box-shadow: 0 0 15px var(--error);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;

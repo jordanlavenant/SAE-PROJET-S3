@@ -4,11 +4,24 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/importerCSV.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('csv') }}">retour</a>
+<a id="btn-back" href="{{ url_for('csv') }}">RETOUR</a>
+
+<div class="popup">
+    <div id="popup-content">
+        <div class="header-popup">
+            <p>voulez-vous vraiment remplacer toutes les données existantes par celles du fichier importé ?</p>
+            <svg onclick='togglePopup()' id='popup-exit' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
+        </div>
+        <div id="choices">
+            <a onclick="togglePopup()">ANNULER</a>
+            <input type="submit" id="submit-confirm" form="form-importCsv" value="CONFIRMER">
+        </div>
+    </div>
+</div>
 
 <div class="ajouterMateriel-container">
     <div class="ajouterMateriel-content">
-        <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('importer_csv') }}">
+        <form class="form-importCsv" id="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('importer_csv') }}">
             {{ ImporterCsvForm.hidden_tag() }}                        
             <div class="main-container">
                 <div class="user-box">
@@ -18,11 +31,13 @@
                     </div>
                     
                     <div id="dropZone" class="drop-zone">
-                        <p id="fileDisplay">Glissez et déposez un fichier CSV ici ou cliquez pour télécharger</p>
+                        <p id="fileDisplay">glissez et déposez un fichier CSV ici ou cliquez pour télécharger</p>
                         <p id="uploadedFile"></p>
                         <input type="file" name="file" id="fileInput" style="display: none;" onchange="displayFileName()" />
                     </div>
-                    <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
+                    <div class="submit-container">
+                        <button type="button" id="submit" onclick="togglePopup()">IMPORTER</button>
+                    </div>
                 </div>
             </div>
             
@@ -121,5 +136,14 @@
                 .catch(error => console.error(error));
         });
     });
+
+
+
+    function togglePopup() {
+        document.querySelector('.popup').classList.toggle('open');
+        document.querySelector("html").classList.toggle("scroll-lock");
+    }
+
+
 </script>
 {% endblock %}
