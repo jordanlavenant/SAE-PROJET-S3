@@ -88,7 +88,7 @@
                 <div id="tools">
                     <div class="choisir-item">
                         <button class="bouton-moins">-</button>
-                        <p class="nb-choisit">{{ item[4] }}</p>
+                        <input type="number" class="nb-choisit" value="{{ item[4] }}" min="0">
                         <button class="bouton-plus">+</button>
                     </div>
                     <p id="ajouter-demande-content" style="display: none;" class="{{ item[0] }} {{ item[4] }}"><button class="ajouter-demande" id="ajouter-demande">ajouter à la demande</button></p>

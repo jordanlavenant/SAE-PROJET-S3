@@ -166,6 +166,25 @@ p , label{
     cursor: pointer;
 }
 
+.drop-zone {
+    border: 2px dashed var(--main-background);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .drop-zone p {
+    margin: 0;
+  }
+  
+  .drop-zone:hover {
+    background-color: var(--dark-background);
+  }
+
+  #uploadedFile {
+    display: block;
+}
+
 .container-submit {
     flex-basis: 100%;
     text-align: center;

@@ -4,26 +4,82 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/importerCSV.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('csv') }}">RETOUR</a>
+<a id="btn-back" href="{{ url_for('csv') }}">retour</a>
 
 <div class="ajouterMateriel-container">
-    <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('importer_csv') }}">
-        {{ ImporterCsvForm.hidden_tag() }}                        
-        <div class="user-box">
-            <div>
-                {{ ImporterCsvForm.bd_option.label(class_="form-check-label") }}
-                {{ ImporterCsvForm.bd_option(class_="form-check-input") }}
+    <div class="ajouterMateriel-content">
+        <form class="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('importer_csv') }}">
+            {{ ImporterCsvForm.hidden_tag() }}                        
+            <div class="main-container">
+                <div class="user-box">
+                    <div>
+                        {{ ImporterCsvForm.bd_option.label(class_="form-check-label") }}
+                        {{ ImporterCsvForm.bd_option(class_="form-check-input") }}
+                    </div>
+                    
+                    <div id="dropZone" class="drop-zone">
+                        <p id="fileDisplay">Glissez et déposez un fichier CSV ici ou cliquez pour télécharger</p>
+                        <p id="uploadedFile"></p>
+                        <input type="file" name="file" id="fileInput" style="display: none;" onchange="displayFileName()" />
+                    </div>
+                    <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
+                </div>
             </div>
-            <div>
-                <p>importer un fichier CSV</p>
-                {{ ImporterCsvForm.fichier(size=10, class_="form-control element", placeholder="Fichier CSV") }}
-            </div>
-        </div>
-        <div>{{ ImporterCsvForm.submit(class_="btn btn-primary") }}</div>
-    </form>
+            
+        </form>
+    </div>
 </div>
 
 <script>
+    function displayFileName() {
+        var fileInput = document.getElementById('fileInput');
+        var uploadedFile = document.getElementById('uploadedFile');
+
+        if (fileInput.files.length > 0) {
+            if (fileInput.files[0].name.toLowerCase().endsWith('.csv')) {
+                uploadedFile.textContent = 'Fichier déposé : ' + fileInput.files[0].name;
+            } else {
+                alert('Veuillez sélectionner uniquement des fichiers CSV.');
+                fileInput.value = '';
+                uploadedFile.textContent = '';
+            }
+        } else {
+            uploadedFile.textContent = '';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropZone = document.getElementById('dropZone');
+        var fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('click', function () {
+            fileInput.click();
+        });
+
+        dropZone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', function () {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            
+            var files = e.dataTransfer.files;
+
+            if (files.length > 0 && files[0].name.toLowerCase().endsWith('.csv')) {
+                fileInput.files = files;
+                displayFileName();
+            } else {
+                alert('Veuillez déposer un fichier CSV.');
+            }
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", function() {
         const endroitSelect = document.getElementById("emplacement");
         const positionSelect = document.getElementById("position");

@@ -10,6 +10,21 @@ class Utilisateur:
     
     class Get :
 
+        def get_font(cnx, email):
+            """
+            Récupère le thème de l'utilisateur.
+
+            Args:
+                cnx (object): Objet de connexion à la base de données.
+                email (str): Adresse e-mail de l'utilisateur.
+
+            Returns:
+                int: Le thème de l'utilisateur.
+            """
+            result = cnx.execute(text("select themeLight from UTILISATEUR where email = '" + email + "';"))
+            for row in result:
+                return row[0]
+
         def get_nom_whith_email(cnx, email):
             """
             Récupère le nom de l'utilisateur correspondant à l'adresse e-mail donnée.

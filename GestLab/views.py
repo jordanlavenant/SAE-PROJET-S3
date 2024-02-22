@@ -1068,6 +1068,7 @@ def base():
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
         title="GESTLAB",
+        chemin = [("base", "accueil")],
         alerte_tl = Alert.get_nb_alert(cnx),
         demande_tl = Demande.Get.get_nb_demande(cnx)
     )
