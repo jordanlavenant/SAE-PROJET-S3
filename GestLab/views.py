@@ -1546,7 +1546,7 @@ def historique_bon_commande():
         infoUser = liste_info_user,
         listeetat = liste_etat_bon_commande,
         statutsCommande = Commande.Commande.Get.get_statut_from_commande(cnx),
-        # chemin = [("base", "accueil"), ("consulter_bon_commande, consulter bon commande"), ("historique_bon_commande", "historique des bon de commande")],
+        chemin = [("base", "accueil"), ("consulter_bon_commande", "consulter bon commande"), ("historique_bon_commande", "historique des bon de commande")],
         alerte_tl = Alert.get_nb_alert(cnx),
         demande_tl = Demande.Get.get_nb_demande(cnx)
     )
@@ -1735,7 +1735,7 @@ def ajouter_utilisateur():
         "ajouterUtilisateur.html",
         title="ajouter un utilisateur",
         AjouterUtilisateurForm=f,
-        chemin=[("base", "accueil"), ("ajouter_utilisateur", "ajouter un Utilisateur")],
+        chemin=[("base", "accueil"), ("ajouter_utilisateur", "ajouter un utilisateur")],
         alerte_tl = Alert.get_nb_alert(cnx),
         demande_tl = Demande.Get.get_nb_demande(cnx)
     )
@@ -1804,6 +1804,9 @@ def consulter_utilisateur():
 
     return render_template(
         "consulterUtilisateur.html",
+        professeurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 2)[0],
+        laborantins = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 3)[0],
+        gestionnaires = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 4)[0],
         utilisateurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[0],
         nbUser = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[1],
         categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
@@ -1829,7 +1832,10 @@ def recherche_utilisateur():
     if value != None:
         return render_template(
             "consulterUtilisateur.html",
-            utilisateurs = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[0],
+            # utilisateurs = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[0],
+            professeurs = Recherche.recherche_all_in_utilisateur_with_search_statut(get_cnx(), value, 2)[0],
+            laborantins = Recherche.recherche_all_in_utilisateur_with_search_statut(get_cnx(), value, 3)[0],
+            gestionnaires = Recherche.recherche_all_in_utilisateur_with_search_statut(get_cnx(), value, 4)[0],
             nbUser = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[1],
             categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
             title="consulter les utilisateurs",
@@ -1846,7 +1852,7 @@ def recherche_utilisateur():
         categories = ["Tous", "Professeur", "Gestionnaire"],
         title="consulter les utilisateurs",
         RechercherForm=f,
-        chemin = [("base", "accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "consulter les utilisateurs")],
+        chemin = [("base", "accueil"), ("utilisateurs", "utilisateurs"), ("consulter_utilisateur", "consulter les utilisateurs")],
         alerte_tl = Alert.get_nb_alert(cnx),
         demande_tl = Demande.Get.get_nb_demande(cnx)
     )

@@ -244,12 +244,12 @@ header {
 #fil-ariane p {
     padding: 0;
     margin: 5px 5px 0 5px;
-    color: var(--text-inverse);
+    color: var(--secondary);
     user-select: none;
 }
 
 #fil-ariane a {
-    color: var(--text-inverse);
+    color: var(--secondary);
     transition: .2s;
 }
 
