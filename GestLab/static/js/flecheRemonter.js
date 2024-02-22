@@ -30,8 +30,16 @@ window.addEventListener("scroll", function () {
         navListe.style.margin = "0";
         imgLogo.style.height = "50px";
         imgCompte.style.height = "50px";
-        filAriane.style.transform = "translateY(-60px)";
+        filAriane.style.transform = "translateY(-55px)";
         filAriane.style.paddingLeft = "50px";
+        let pages = filAriane.querySelectorAll('a');
+        pages.forEach(page => {
+            page.style.color = "white";
+        });
+        let svgs = filAriane.querySelectorAll('svg');
+        svgs.forEach(svg => {
+            svg.style.fill = "white";
+        });
     } else {
         title.style.paddingTop = "0";
         divSousHeader.style.top = "0";
@@ -44,14 +52,13 @@ window.addEventListener("scroll", function () {
         imgCompte.style.height = "100px";
         filAriane.style.transform = "translateY(0)";
         filAriane.style.paddingLeft = "0";
+        let pages = filAriane.querySelectorAll('a');
+        pages.forEach(page => {
+            page.style.color = "#009AF0";
+        });
+        let svgs = filAriane.querySelectorAll('svg');
+        svgs.forEach(svg => {
+            svg.style.fill = "#009AF0";
+        });
     }
-});
-
-let docTitle = document.title;
-window.addEventListener("blur", function () {
-    document.title = "Come back 🙄";
-});
-
-window.addEventListener("focus", function () {
-    document.title = docTitle;
 });

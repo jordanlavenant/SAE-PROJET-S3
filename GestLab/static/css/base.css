@@ -235,17 +235,16 @@ header {
     list-style: none;
     display: flex;
     flex-wrap: nowrap;
+    color: var(--secondary);
+    fill: var(--secondary);
 }
 
-#fil-ariane p {
-    padding: 0;
-    margin: 5px 5px 0 5px;
-    color: var(--secondary);
-    user-select: none;
+#fil-ariane li svg {
+    fill: inherit;
 }
 
 #fil-ariane a {
-    color: var(--secondary);
+    color: inherit;
     transition: .2s;
 }
 
