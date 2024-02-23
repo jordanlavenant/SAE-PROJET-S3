@@ -114,48 +114,48 @@
         {% if pageRechercher != True %}
         <div class="container-pagination">
             {% if page == 1 and total_pages > 2 %}
-                <a href='/demander?page={{ page }}'>{{ page }}</button>
-                <a href='/demander?page={{ page+1 }}'>{{ page+1 }}</button>
+                <a href='/demander?page={{ page }}'>{{ page }}</a>
+                <a href='/demander?page={{ page+1 }}'>{{ page+1 }}</a>
                 <span>...</span>
-                <a href='/demander?page={{ total_pages }}'>{{ total_pages }}</button>
-                <a href='/demander?page={{ page+1 }}'>suivant</button>
+                <a href='/demander?page={{ total_pages }}'>{{ total_pages }}</a>
+                <a href='/demander?page={{ page+1 }}'>suivant</a>
             {% elif page != 1 %}
                 {% if page < total_pages - 2  %}
-                    <a href='/demander?page={{ page-1}}'>précédent</button>
-                    <a href='/demander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/demander?page={{ page }}'>{{ page }}</button>
-                    <a href='/demander?page={{ page+1 }}'>{{ page+1 }}</button>
+                    <a href='/demander?page={{ page-1}}'>précédent</a>
+                    <a href='/demander?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/demander?page={{ page }}'>{{ page }}</a>
+                    <a href='/demander?page={{ page+1 }}'>{{ page+1 }}</a>
                     <span>...</span>
-                    <a href='/demander?page={{ total_pages }}'>{{ total_pages }}</button>
-                    <a href='/demander?page={{ page+1 }}'>suivant</button>    
+                    <a href='/demander?page={{ total_pages }}'>{{ total_pages }}</a>
+                    <a href='/demander?page={{ page+1 }}'>suivant</a>    
                 {% elif page == total_pages and total_pages > 2 %}
-                    <a href='/demander?page={{ page-1}}'>précédent</button>
-                    <a href='/demander?page=1'>1</button>
+                    <a href='/demander?page={{ page-1}}'>précédent</a>
+                    <a href='/demander?page=1'>1</a>
                     <span>...</span>
-                    <a href='/demander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/demander?page={{ page }}'>{{ page }}</button>
+                    <a href='/demander?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/demander?page={{ page }}'>{{ page }}</a>
                 {% elif page == total_pages-1 %}
-                    <a href='/demander?page={{ page-1}}'>précédent</button>    
-                    <a href='/demander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/demander?page={{ page }}'>{{ page }}</button>
-                    <a href='/demander?page={{ page+1 }}'>{{ page+1 }}</button>
-                    <a href='/demander?page={{ page+1 }}'>suivant</button>
+                    <a href='/demander?page={{ page-1}}'>précédent</a>    
+                    <a href='/demander?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/demander?page={{ page }}'>{{ page }}</a>
+                    <a href='/demander?page={{ page+1 }}'>{{ page+1 }}</a>
+                    <a href='/demander?page={{ page+1 }}'>suivant</a>
                 {% elif page == total_pages %}
-                    <a href='/demander?page={{ page-1}}'>précédent</button>
-                    <a href='/demander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/demander?page={{ page }}'>{{ page }}</button>
+                    <a href='/demander?page={{ page-1}}'>précédent</a>
+                    <a href='/demander?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/demander?page={{ page }}'>{{ page }}</a>
                 {% else %}
-                    <a href='/demander?page={{ page-1}}'>précédent</button>    
-                    <a href='/demander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/demander?page={{ page }}'>{{ page }}</button>
-                    <a href='/demander?page={{ page+1 }}'>{{ page+1 }}</button>
-                    <a href='/demander?page={{ total_pages }}'>{{ total_pages }}</button>
-                    <a href='/demander?page={{ page+1 }}'>suivant</button>   
+                    <a href='/demander?page={{ page-1}}'>précédent</a>    
+                    <a href='/demander?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/demander?page={{ page }}'>{{ page }}</a>
+                    <a href='/demander?page={{ page+1 }}'>{{ page+1 }}</a>
+                    <a href='/demander?page={{ total_pages }}'>{{ total_pages }}</a>
+                    <a href='/demander?page={{ page+1 }}'>suivant</a>   
                 {% endif %}
             {% else %}
-                <a href='/demander?page={{ page }}'>{{ page }}</button>
-                <a href='/demander?page={{ page+1 }}'>{{ page+1 }}</button>
-                <a href='/demander?page={{ page+1 }}'>suivant</button>
+                <a href='/demander?page={{ page }}'>{{ page }}</a>
+                <a href='/demander?page={{ page+1 }}'>{{ page+1 }}</a>
+                <a href='/demander?page={{ page+1 }}'>suivant</a>
             {% endif %}
         </div>
         {% else %}

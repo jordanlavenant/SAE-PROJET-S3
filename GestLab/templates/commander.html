@@ -131,48 +131,48 @@
         {% if pageRechercher != True %}
         <div class="container-pagination">
             {% if page == 1 and total_pages > 2 %}
-                <a href='/commander?page={{ page }}'>{{ page }}</button>
-                <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</button>
+                <a href='/commander?page={{ page }}'>{{ page }}</a>
+                <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</a>
                 <span>...</span>
-                <a href='/commander?page={{ total_pages }}'>{{ total_pages }}</button>
-                <a href='/commander?page={{ page+1 }}'>suivant</button>
+                <a href='/commander?page={{ total_pages }}'>{{ total_pages }}</a>
+                <a href='/commander?page={{ page+1 }}'>suivant</a>
             {% elif page != 1 %}
                 {% if page < total_pages - 2  %}
-                    <a href='/commander?page={{ page-1}}'>précédent</button>
-                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/commander?page={{ page }}'>{{ page }}</button>
-                    <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</button>
+                    <a href='/commander?page={{ page-1}}'>précédent</a>
+                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/commander?page={{ page }}'>{{ page }}</a>
+                    <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</a>
                     <span>...</span>
-                    <a href='/commander?page={{ total_pages }}'>{{ total_pages }}</button>
-                    <a href='/commander?page={{ page+1 }}'>suivant</button>    
+                    <a href='/commander?page={{ total_pages }}'>{{ total_pages }}</a>
+                    <a href='/commander?page={{ page+1 }}'>suivant</a>    
                 {% elif page == total_pages and total_pages > 2 %}
-                    <a href='/commander?page={{ page-1}}'>précédent</button>
-                    <a href='/commander?page=1'>1</button>
+                    <a href='/commander?page={{ page-1}}'>précédent</a>
+                    <a href='/commander?page=1'>1</a>
                     <span>...</span>
-                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/commander?page={{ page }}'>{{ page }}</button>
+                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/commander?page={{ page }}'>{{ page }}</a>
                 {% elif page == total_pages-1 %}
-                    <a href='/commander?page={{ page-1}}'>précédent</button>    
-                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/commander?page={{ page }}'>{{ page }}</button>
-                    <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</button>
-                    <a href='/commander?page={{ page+1 }}'>suivant</button>
+                    <a href='/commander?page={{ page-1}}'>précédent</a>    
+                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/commander?page={{ page }}'>{{ page }}</a>
+                    <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</a>
+                    <a href='/commander?page={{ page+1 }}'>suivant</a>
                 {% elif page == total_pages %}
-                    <a href='/commander?page={{ page-1}}'>précédent</button>
-                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/commander?page={{ page }}'>{{ page }}</button> 
+                    <a href='/commander?page={{ page-1}}'>précédent</a>
+                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/commander?page={{ page }}'>{{ page }}</a> 
                 {% else %}
-                    <a href='/commander?page={{ page-1}}'>précédent</button>    
-                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/commander?page={{ page }}'>{{ page }}</button>
-                    <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</button>
-                    <a href='/commander?page={{ total_pages }}'>{{ total_pages }}</button>
-                    <a href='/commander?page={{ page+1 }}'>suivant</button>   
+                    <a href='/commander?page={{ page-1}}'>précédent</a>    
+                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/commander?page={{ page }}'>{{ page }}</a>
+                    <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</a>
+                    <a href='/commander?page={{ total_pages }}'>{{ total_pages }}</a>
+                    <a href='/commander?page={{ page+1 }}'>suivant</a>   
                 {% endif %}
             {% else %}
-                <a href='/commander?page={{ page }}'>{{ page }}</button>
-                <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</button>
-                <a href='/commander?page={{ page+1 }}'>suivant</button>
+                <a href='/commander?page={{ page }}'>{{ page }}</a>
+                <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</a>
+                <a href='/commander?page={{ page+1 }}'>suivant</a>
             {% endif %}
         </div>
         {% else %}
