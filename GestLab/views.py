@@ -1348,6 +1348,7 @@ def recherche_materiel():
         return render_template(
             "commander.html",
             title="commander",
+            page=page,
             pageRechercher=True,
             searchValue=value,
             total_pages=total_pages,
