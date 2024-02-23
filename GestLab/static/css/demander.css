@@ -487,3 +487,11 @@ h2 {
     padding: 20px;
     border: 1px solid var(--text);
 }
+
+.container-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    flex-basis: 100%;
+}

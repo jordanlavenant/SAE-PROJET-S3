@@ -9,7 +9,7 @@
     <div class="header-container">
         <form method="POST" action="{{ url_for('recherche_inventaire') }}" role="search">
             <div class="search-content">
-                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar") }}
+                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar", value=searchValue) }}
                 <button id="btn-search" type="submit">RECHERCHER</button>
             </div>
         </form>
@@ -63,10 +63,89 @@
                 </div>
             </section>
         {% endfor %}
+        
+        {% if pageRechercher != True %}
+        <div class="container-pagination">
+            {% if page == 1 and total_pages > 2 %}
+                <a href='/inventaire?page={{ page }}'>{{ page }}</a>
+                <a href='/inventaire?page={{ page+1 }}'>{{ page+1 }}</a>
+                <span>...</span>
+                <a href='/inventaire?page={{ total_pages }}'>{{ total_pages }}</a>
+                <a href='/inventaire?page={{ page+1 }}'>suivant</a>
+            {% elif page != 1 %}
+                {% if page < total_pages - 2  %}
+                    <a href='/inventaire?page={{ page-1}}'>précédent</a>
+                    <a href='/inventaire?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/inventaire?page={{ page }}'>{{ page }}</a>
+                    <a href='/inventaire?page={{ page+1 }}'>{{ page+1 }}</a>
+                    <span>...</span>
+                    <a href='/inventaire?page={{ total_pages }}'>{{ total_pages }}</a>
+                    <a href='/inventaire?page={{ page+1 }}'>suivant</a>    
+                {% elif page == total_pages and total_pages > 2 %}
+                    <a href='/inventaire?page={{ page-1}}'>précédent</a>
+                    <a href='/inventaire?page=1'>1</a>
+                    <span>...</span>
+                    <a href='/inventaire?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/inventaire?page={{ page }}'>{{ page }}</a>
+                {% elif page == total_pages-1 %}
+                    <a href='/inventaire?page={{ page-1}}'>précédent</a>    
+                    <a href='/inventaire?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/inventaire?page={{ page }}'>{{ page }}</a>
+                    <a href='/inventaire?page={{ page+1 }}'>{{ page+1 }}</a>
+                    <a href='/inventaire?page={{ page+1 }}'>suivant</a>
+                {% elif page == total_pages %}
+                    <a href='/inventaire?page={{ page-1}}'>précédent</a>
+                    <a href='/inventaire?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/inventaire?page={{ page }}'>{{ page }}</a>
+                {% else %}
+                    <a href='/inventaire?page={{ page-1}}'>précédent</a>    
+                    <a href='/inventaire?page={{ page-1 }}'>{{ page-1 }}</a>
+                    <a href='/inventaire?page={{ page }}'>{{ page }}</a>
+                    <a href='/inventaire?page={{ page+1 }}'>{{ page+1 }}</a>
+                    <a href='/inventaire?page={{ total_pages }}'>{{ total_pages }}</a>
+                    <a href='/inventaire?page={{ page+1 }}'>suivant</a>   
+                {% endif %}
+            {% else %}
+                <a href='/inventaire?page={{ page }}'>{{ page }}</a>
+                <a href='/inventaire?page={{ page+1 }}'>{{ page+1 }}</a>
+                <a href='/inventaire?page={{ page+1 }}'>suivant</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="container-pagination">
+            <div class="sous-container-pagination">
+                {% if page == 1 and total_pages > 2 %}
+                    <button class="lien-recherche-demande">{{ page }}</button>
+                    <button class="lien-recherche-demande">{{ page+1 }}</button>
+                    <span>...</span>
+                    <button class="lien-recherche-demande">{{ total_pages }}</button>
+                {% elif page != 1 %}
+                    {% if page < total_pages - 1  %}
+                        <button class="lien-recherche-demande">{{ page-1 }}</button>
+                        <button class="lien-recherche-demande">{{ page }}</button>
+                        <span>..!!.</span>
+                        <button class="lien-recherche-demande">{{ total_pages }}</button>
+                    {% elif page == total_pages %}
+                        <button class="lien-recherche-demande">{{ page-1 }}</button>
+                        <button class="lien-recherche-demande">{{ page }}</button>
+                    {% else %}
+                        <button class="lien-recherche-demande">{{ page-1 }}</button>
+                        <button class="lien-recherche-demande">{{ page }}</button>
+                        <button class="lien-recherche-demande">{{ page+1 }}</button>
+                    {% endif %}
+                {% else %}
+                    <button class="lien-recherche-demande">{{ page }}</button>
+                    <button class="lien-recherche-demande">{{ page+1 }}</button>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
     </div>
 </section>
 {% endblock %}
 {% block scripts %}
+<script src="{{ url_for('static', filename='./js/paginationInventaire.js') }}"></script>
 <script src="{{ url_for('static', filename='./js/inventaire.js') }}"></script>
 <script src="{{ url_for('static', filename='./js/trieDomaine.js') }}"></script>
 {% endblock %}
