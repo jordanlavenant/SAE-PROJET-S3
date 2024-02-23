@@ -128,4 +128,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    let sousContainerPaginations = document.querySelectorAll('.sous-container-pagination');
+
+    sousContainerPaginations.forEach(function(sousContainerPagination) {
+        let lienRechercheDemande = sousContainerPagination.querySelector('.lien-recherche-demande');
+        let searchValue = document.querySelector('#search-bar').value;
+        lienRechercheDemande.addEventListener('click', function() {
+            console.log(searchValue);
+            window.location.href = '/recherche-materiel?page='+lienRechercheDemande.textContent+'&value=' + searchValue;
+        });
+    });
 });

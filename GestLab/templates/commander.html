@@ -73,7 +73,7 @@
         </div>
         <form method="POST" action="{{ url_for('recherche_materiel') }}" role="search">
             <div class="search-content">
-                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar") }}
+                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un matériel", id="search-bar", value=searchValue) }}
                 <button id="btn-search" type="submit">RECHERCHER</button>
             </div>
         </form>
@@ -127,6 +127,31 @@
                 </script>
             </section>
         {% endfor %}
+
+        {% if pageRechercher != True %}
+        <div class="container-pagination">
+            {% for item in range(total_pages) %}
+                {% if valueSearch != None %}
+                    <a href='/commander?page={{ item+1 }}'>{{ item+1 }}</button>
+                {% else %}
+                    <a href='/commander?page={{ item+1 }}'>{{ item+1 }}</button>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="container-pagination">
+            {% for item in range(total_pages) %}
+                <div class="sous-container-pagination">
+                {% if valueSearch != None %}
+                    <button class="lien-recherche-demande">{{ item+1 }}</button>
+                {% else %}
+                    <button class="lien-recherche-demande">{{ item+1 }}</button>
+                {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
     </div>
     <div class="container-pagination">
         {% if total_pages == 1 %}
