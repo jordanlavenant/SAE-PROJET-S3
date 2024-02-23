@@ -35,6 +35,10 @@ a {
     /* font-size: 25px; */
 }
 
+span {
+    color:#0c1c8c;
+}
+
 ul {
     list-style-type: none;
 }
