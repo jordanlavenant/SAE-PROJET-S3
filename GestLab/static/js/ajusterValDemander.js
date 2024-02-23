@@ -1,3 +1,10 @@
+/**
+ * Ce code est responsable de la gestion de l'ajustement des valeurs dans un formulaire.
+ * Il écoute l'événement 'DOMContentLoaded' et effectue différentes actions en fonction des interactions de l'utilisateur.
+ * Le code utilise AJAX pour envoyer des requêtes au serveur et mettre à jour l'interface utilisateur en conséquence.
+ * Il inclut également des écouteurs d'événements pour les clics sur les boutons et les changements de saisie.
+ * @file Ce fichier est situé à /C:/Users/loulo/Desktop/guthub/SAE-PROJET-S3/GestLab/static/js/ajusterValDemander.js
+ */
 document.addEventListener('DOMContentLoaded', function() {
     const sections = document.querySelectorAll('.section-contenu');
 

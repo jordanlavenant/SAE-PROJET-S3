@@ -1,3 +1,13 @@
+/**
+ * Ce code écoute l'événement 'DOMContentLoaded' et effectue les actions suivantes :
+ * - Récupère les éléments HTML correspondant aux sections avec la classe 'section-contenu'
+ * - Pour chaque section, récupère les éléments HTML correspondant aux boutons, aux paragraphes et aux liens
+ * - Gère les événements de changement de valeur du paragraphe
+ * - Effectue une requête AJAX pour mettre à jour les données sur le serveur
+ * - Gère les événements de clic sur les boutons 'Moins' et 'Plus'
+ * - Effectue une requête AJAX pour mettre à jour les données sur le serveur
+ * - Gère les événements de clic sur les liens de recherche
+ */
 document.addEventListener('DOMContentLoaded', function() {
     const sections = document.querySelectorAll('.section-contenu');
 

@@ -205,7 +205,18 @@ class Utilisateur:
     class Update:
 
         def update_theme_utilisateur(cnx, id, theme):
-            try :
+            """
+            Mise à jour du thème de l'utilisateur dans la base de données.
+
+            Args:
+                cnx (object): Objet de connexion à la base de données.
+                id (int): Identifiant de l'utilisateur.
+                theme (int): Thème de l'utilisateur.
+
+            Returns:
+                None
+            """
+            try:
                 cnx.execute(text(("update UTILISATEUR set themeLight = " + str(theme) + " where idUtilisateur = " + str(id) + ";")))
                 cnx.commit()
             except Exception as e:

@@ -16,6 +16,9 @@ for (id in id_array) {
     }
 }
 
+/**
+ * Bascule la visibilité d'un élément popup et met à jour le style overflow de l'élément HTML en conséquence.
+ */
 function togglePopup() {
     document.querySelector('.popup').classList.toggle('open');
     html.style.overflow = html.style.overflow === 'hidden' ? 'auto' : 'hidden';
