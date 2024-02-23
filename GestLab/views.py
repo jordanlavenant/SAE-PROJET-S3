@@ -2104,17 +2104,27 @@ def recherche_inventaire():
     """
     rechercher = RechercherForm()
     value = rechercher.get_value()
-    items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(),value)
-    
-    final_items = list()
-    for (item,qt) in items[0]:
-        if qt > 0:
-            if (item,qt) not in final_items: # Eviter les doublons
-                final_items.append((item,qt))
+    if value == None:
+        value = request.args.get('value')
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
 
-    if value != None:
+    if value != None and value != "":
+        items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(),value)
+        medium_items = list()
+        for (item,qt) in items[0]:
+            if qt > 0:
+                if (item,qt) not in medium_items: # Eviter les doublons
+                    medium_items.append((item,qt))
+
+        final_items = paginate_list(medium_items, page, per_page)
+        total_pages = len(final_items) // per_page + (1 if len(final_items) % per_page > 0 else 0)
         return render_template(
             "inventaire.html",
+            page=page,
+            pageRechercher=True,
+            searchValue = value,
+            total_pages=total_pages,
             categories = Domaine.Domaine.get_domaine(get_cnx()),
             items = final_items,
             title="inventaire",
