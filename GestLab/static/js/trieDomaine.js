@@ -9,31 +9,33 @@ maCombo.addEventListener('change', function () {
 
     console.log(nbMateriel);
 
-    let sectionUser = document.getElementsByClassName("section-contenu");
+    let sectionUser = document.querySelectorAll(".section-contenu");
+    console.log(sectionUser);
 
-    for(let i=0; i<nbMateriel; i++){
-        sectionUser[i].style.display = "flex";
-    }
+    sectionUser.forEach(function(section) {
+        section.style.display = "flex";
+    });
 
-    for(let i=0; i<nbMateriel; i++){
-        let id = sectionUser[i].id;
+    sectionUser.forEach(function(section) {
+        let id = section.id;
         if(select_option == "Appareillage" && id != 1){
-            sectionUser[i].style.display = "none";
+            section.style.display = "none";
         }
         if(select_option == "Électricité" && id != 2){
-            sectionUser[i].style.display = "none";
+            section.style.display = "none";
         }
         if(select_option == "Matériel de laboratoire" && id != 3){
-            sectionUser[i].style.display = "none";
+            section.style.display = "none";
         }
         if(select_option == "Médias" && id != 4){
-            sectionUser[i].style.display = "none";
+            console.log("Médias et id = "+id);
+            section.style.display = "none";
         }
         if(select_option == "Produits chimiques" && id != 5){
-            sectionUser[i].style.display = "none";
+            section.style.display = "none";
         }
         if(select_option == "Verrerie et associés" && id != 6){
-            sectionUser[i].style.display = "none";
+            section.style.display = "none";
         }
-    }
+    });
 });
