@@ -13,7 +13,7 @@ class ExportCSV:
             for table in list_table_a_exporter:
 
                 print("Exportation de la table:" + table + ":en cours...")
-                with open("table/tout.csv", 'a', newline='', encoding='utf-8') as file:
+                with open("table/tout.csv", 'w', newline='', encoding='utf-8') as file:
                     writer = csv.writer(file)
                     writer.writerow([f"-{table}"])  # Écrire la ligne commençant par "-"
                     attribut = cnx.execute(text("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'"+ table +"'  AND TABLE_SCHEMA = 'blandeau_gestlab19';"))
