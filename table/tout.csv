@@ -1,76 +1,26 @@
--2FA
-*email
-*uri
-*idUtilisateur
+-UTILISATEUR,,,,,,
+1,1,Admin,Admin,admin@example.com,motdepasseadmin,0
+2,2,Utilisateur,Standard,user@example.com,motdepasseuser,1
+ ,,,,,,-2FA
  
 -AJOUTERMATERIEL
-*idDemande
-*idMateriel
-*quantite
-30,34,11
-30,35,1
-30,36,4
-30,38,2
-30,39,0
  
 -ALERTESENCOURS
-*idAlerte
-*idMaterielUnique
-1,276
-1,277
-1,278
-1,279
-1,280
-1,281
-1,282
-1,283
-1,284
-1,285
-1,286
-1,287
-1,288
+1,2
+1,5
+3,2
  
 -ARCHIVEBONCOMMANDE
-*idArchiveBonCommande
-*idBonCommande
-*idEtat
-*idUtilisateur
-*dateArchiveBonCommande
  
 -ARCHIVECOMMANDE
-*idArchiveBonCommande
-*idMateriel
-*quantite
  
 -ARCHIVECOMMANDEANCIEN
-*numColis
-*idFournisseur
-*nomFournisseur
-*adresseFournisseur
-*mailFournisseur
-*telFournisseur
-*facture
  
 -BONCOMMANDE
-*idBonCommande
-*idEtat
-*idUtilisateur
-*dateBonCommande
-8,4,2,2023-12-22
-9,4,2,2023-12-22
-18,4,2,2023-12-22
-21,4,9,2023-12-23
-22,1,9,2023-12-23
-26,1,10,2024-01-08
-27,2,2,2024-01-11
-31,1,11,2024-01-12
-32,2,2,2024-01-15
-33,1,2,2024-01-15
+1,1,1,
+2,2,1,
  
 -CATEGORIE
-*idCategorie
-*idDomaine
-*nomCategorie
 1,1,Observation
 2,1,Mesures
 3,1,ExAO
@@ -104,23 +54,10 @@
 31,2,Divers
  
 -COMMANDE
-*idBonCommande
-*idMateriel
-*quantite
  
 -DEMANDE
-*idDemande
-*idUtilisateur
-*descriptionDemande
-*idEtatD
-26,11,,2
-27,11,,2
-29,13,,1
-30,7,,1
  
 -DOMAINE
-*idDomaine
-*nomDomaine
 1,Appareillage
 2,Électricité
 3,Matériel de laboratoire
@@ -129,137 +66,62 @@
 6,Verrerie et associés
  
 -ENDROIT
-*idEndroit
-*endroit
-6,8
 3,Armoire 1
 1,Étagère 1
 2,Étagère 2
-4,Etagere 5
-5,Salle 207
-7,test
  
 -ENVOIFOURNISSEUR
-*idBonCommande
-*idFournisseur
-*facture
  
 -ETATCOMMANDE
-*idEtat
-*nomEtat
 1,En attente de la validation du Gestionnaire
 2,En cours de traitement
 3,Expédiée
 4,Livrée
  
 -ETATDEMANDE
-*idEtatD
-*nomEtatD
 1,En attente de validation
 2,Envoyée
  
 -FDS
-*idFDS
-*nomFDS
-29,Acide chloridrique
-25,Alimentation et Générateur de courant AC/DC
-28,Becher 500ml
-26,Becher 800ml
-30,clavier
-20,iPad
-8,iPhone
-11,JLK
-23,Microscope
-27,Pipette graduée
-24,Sulfate de cuivre anhydre
-21,test
-22,test2
+1,FDS 1
+2,FDS 2
+3,FDS 3
  
 -FOURNISSEUR
-*idFournisseur
-*nomFournisseur
-*adresseFournisseur
-*mailFournisseur
-*telFournisseur
+1,Fournisseur 1,Adresse 1,fournisseur1@example.com,1234567890
+2,Fournisseur 2,Adresse 2,fournisseur2@example.com,9876543210
  
 -MATERIEL
-*idMateriel
-*referenceMateriel
-*idFDS
-*nomMateriel
-*idCategorie
-*seuilAlerte
-*caracteristiquesComplementaires
-*informationsComplementairesEtSecurite
-34,REF123,24,Sulfate de cuivre anhydree,9,2,Sulfate de cuivre anhydre,Le sulfate de cuivre (II) anhydre est blanc et ne devient bleu que lorsqu'il est combiné avec des molécules d'eau
-35,ALR 3002M,25,Alimentation et Générateur de courant AC/DC,26,1,Puissance : 120 Watts,
-36,REF 4123,26,Becher 800ml,7,1,Becher 800ml,aehahahahhaha
-38,REF 4122,28,Becher 500ml,7,1,Becher 500ml,
-39,REF 1111,29,Acide chloridrique,13,1,,
-40,6546,30,clavier,26,2,ezrzet,rtert
+1,REF123,1,Microscope électronique,1,1,Microscope électronique haute résolution,Utilisé pour observer des échantillons à l'échelle microscopique.
+2,REF456,2,Acide chlorhydrique,5,10,Solution d'acide chlorhydrique à 37%,Utilisé comme réactif de laboratoire.
+3,REF789,,Oscilloscope Tektronix TBS1052B,1,1,Oscilloscope numérique à deux canaux,Utilisé pour l'analyse de signaux électriques.
+4,REF101,,Bécher en verre de 250 ml,6,1,Bécher en verre borosilicaté,Utilisé pour contenir des liquides en laboratoire.
+5,REF202,,Pipette graduée en plastique 10 ml,6,15,Pipette jetable à usage unique,Utilisée pour mesurer des volumes liquides avec précision.
+6,REF303,,DVD éducatif sur l'électricité,4,1,DVD interactif d'enseignement,Utilisé pour l'apprentissage des concepts électricité.
+7,REF404,,Multimètre Fluke 87V,2,1,Multimètre numérique professionnel,"Utilisé pour la mesure de tensions, courants, et résistances électriques."
+8,REF505,3,Sulfate de cuivre,3,30,Poudre cristalline bleue,Utilisé comme réactif chimique dans diverses expériences.
+9,REF606,,Générateur de signaux Rohde & Schwarz,2,1,Générateur de signaux RF haute fréquence,Utilisé pour la génération de signaux électriques complexes.
+10,REF707,,Burette automatique en verre 50 ml,6,1,Burette en verre avec système d'étalonnage automatique,Utilisée pour doser des solutions avec précision.
+11,REF808,,Pipette Pasteur en plastique 3 ml,6,5,Pipette jetable en plastique,Utilisée pour le transfert de petits volumes liquides.
+12,REF909,,Logiciel de modélisation moléculaire,4,1,Logiciel de simulation chimique avancé,Utilisé pour la modélisation moléculaire et la simulation de réactions chimiques.
+13,REF1010,,Pissette en verre 500 ml,6,1,Pissette en verre classique,Utilisée pour le transfert de liquides en laboratoire.
  
 -MATERIELUNIQUE
-*idMaterielUnique
-*idMateriel
-*idRangement
-*dateReception
-*commentaireMateriel
-*quantiteApproximative
-*datePeremption
-254,34,1,2024-01-14 00:00:00,,1.0,2024-07-26 00:00:00
-255,34,1,2024-01-14 00:00:00,,1.0,2024-07-26 00:00:00
-256,34,1,2024-01-14 00:00:00,,1.0,2024-07-26 00:00:00
-257,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-258,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-259,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-260,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-261,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-262,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-263,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-264,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-265,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-266,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-267,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-268,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-269,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-270,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-271,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-272,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-273,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-274,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-275,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-276,40,8,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-02-20 00:00:00
-277,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-278,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-279,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-280,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-281,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-282,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-283,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-284,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-285,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-286,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-287,35,6,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-288,35,6,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
+1,1,1,2023-10-26 10:00:00,Bon état,1.0,
+2,2,2,2023-10-26 11:00:00,Pipettes neuves,2.0,2023-10-26 00:00:00
+3,2,2,2023-10-26 11:00:00,Pipettes neuves,10.0,2024-10-26 00:00:00
+4,3,3,2023-10-26 12:00:00,,1.0,
+5,2,2,2023-10-26 11:00:00,Pipettes neuves,10.0,2023-10-30 00:00:00
  
 -RANGEMENT
-*idRangement
-*idEndroit
-*position
 1,1,haut
 2,2,bas
 3,3,gauche
 4,2,droite
 5,1,milieu
 6,3,milieu
-7,4,Rac 87
-8,5,Tiroir du bureau
-9,3,droite
-10,6,bocale
-11,7,test1
  
 -RECHERCHEMATERIELS
-*materielRecherche
 Agitateurs à hélice
 Agitateurs à plaques chauffantes
 Agitateurs à ultrasons
@@ -301,7 +163,7 @@ Flacons laveurs
 Microscope
 Mortiers et pilons
 Pinces de fixation
-Pinces supports et trépieds
+"Pinces, supports et trépieds"
 Pipettes graduées
 Pipettes Pasteur
 Pipettes volumétriques
@@ -325,484 +187,45 @@ Tubes de centrifugation
 Tubes Nessler
  
 -RESERVELABORATOIRE
-*idReserve
-*idMaterielUnique
  
 -RISQUE
-*idRisque
-*nomRisque
-29,Comburant
-30,Danger incendie
-31,Explosif
-32,Effets graves sur la senté
-33,Altération de la santé humaine
-34,Gaz sous pression
-35,Corrosion
-36,Toxicité aquatique
-37,Toxicité aiguë
+1,Comburant
+2,Danger incendie
+3,Explosif
+4,Effets graves sur la santé
+5,Altération de la santé humaine
+6,Gaz sous pression
+7,Corrosion
+8,Toxicité aquatique
+9,Toxicité aiguë
  
 -RISQUES
-*idrisques
-*idFDS
-*idRisque
-440,29,35
-442,24,29
-443,24,30
-444,24,33
-445,30,35
-455,26,33
-456,26,34
-457,26,35
-458,26,37
+1,1
+1,2
+2,2
+3,3
  
 -STATUT
-*idStatut
-*nomStatut
 1,Administrateur
 2,Professseur
 3,Laborantin
 4,Gestionnaire
  
 -STOCKLABORATOIRE
-*idStock
-*idMateriel
-*quantiteLaboratoire
-25,34,3
-26,40,20
-27,36,10
-28,35,2
+1,3,1
+2,1,0
  
 -SUIVICOMMANDE
-*idBonCommande
-*localisation
-*numColis
+1,Entrepôt 1,12345
+2,Entrepôt 2,67890
  
 -TYPESALERTES
-*idAlerte
-*descriptionAlerte
 1,Date de péremption dépassée
 2,Date de péremption dépassée dans 10 jours
 3,Quantité en dessous du seuil minimal
 4,Quantité de l'objet à 0
  
 -UTILISATEUR
-*idUtilisateur
-*idStatut
-*nom
-*prenom
-*email
-*motDePasse
-1,1,Admin,Admin,erwan.blandeau28@gmail.com,3e296ab5e8a9c95df44c8839a3c42e3fb4614f25eedcdd5211b621b8b9f9f198,1
-2,4,leo,lucidor,leo.lucidor@gmail.com,8535e86c8118bbbb0a18ac72d15d3a2b37b18d1bce1611fc60165f322cf57386,1
-7,3,pilet,colin,colin.pilet1@gmail.com,4c1001c251c1c923bca00789638afb17e908d526bf3e9975407c65d2b03f4b10,1
-8,2,lavenant,jordan,jordan.lavenant@laposte.net,136c67657614311f32238751044a0a3c0294f2a521e573afa8e496992d3786ba,1
-9,4,Francois,Romain,romain.2991@gmail.com,c759caf45d10f1d4ada42e37e770af9ea52b57a89db7bad4c22188b0de166a85,1
-10,4,noblesse,oscar,oscar.noblesse@gmail.com,66d30e3065861108fd19646d84d68acd238e002dbd49ee76edf0483cf638647e,1
-11,4,Erwan,Blandeau,erwan.blandeaujs@gmail.com,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08,1
-12,2,Maupou,Cassandra,cassandra.maupou@gmail.com,89d6df5b8d2f54531adc4fac2e73636c20cfe53eb286e267d49c6a35bbb6332f,1
-13,3,lavenant,jordan,kubikcube18@gmail.com,f99d0161bcc02c6f1d9667486965dad265e7640e3ab15844310f9972697cc7e5,1
- 
--2FA
-*email
-*uri
-*idUtilisateur
- 
--AJOUTERMATERIEL
-*idDemande
-*idMateriel
-*quantite
-30,34,11
-30,35,1
-30,36,4
-30,38,2
-30,39,0
- 
--ALERTESENCOURS
-*idAlerte
-*idMaterielUnique
-1,276
-1,277
-1,278
-1,279
-1,280
-1,281
-1,282
-1,283
-1,284
-1,285
-1,286
-1,287
-1,288
- 
--ARCHIVEBONCOMMANDE
-*idArchiveBonCommande
-*idBonCommande
-*idEtat
-*idUtilisateur
-*dateArchiveBonCommande
- 
--ARCHIVECOMMANDE
-*idArchiveBonCommande
-*idMateriel
-*quantite
- 
--ARCHIVECOMMANDEANCIEN
-*numColis
-*idFournisseur
-*nomFournisseur
-*adresseFournisseur
-*mailFournisseur
-*telFournisseur
-*facture
- 
--BONCOMMANDE
-*idBonCommande
-*idEtat
-*idUtilisateur
-*dateBonCommande
-8,4,2,2023-12-22
-9,4,2,2023-12-22
-18,4,2,2023-12-22
-21,4,9,2023-12-23
-22,1,9,2023-12-23
-26,1,10,2024-01-08
-27,2,2,2024-01-11
-31,1,11,2024-01-12
-32,2,2,2024-01-15
-33,1,2,2024-01-15
- 
--CATEGORIE
-*idCategorie
-*idDomaine
-*nomCategorie
-1,1,Observation
-2,1,Mesures
-3,1,ExAO
-4,1,Multimédia
-5,1,Expérimentation
-6,1,Divers
-7,6,Verrerie
-8,6,Associés
-9,5,Produits organiques
-10,5,Produits minéraux
-11,5,Enzymes
-12,5,Colorants
-13,5,Entretien
-14,5,Autres
-15,3,Appareils de labo
-16,3,Sécurité
-17,3,Fournitures
-18,3,Mobilier
-19,3,Divers
-20,4,Logiciels
-21,4,DVD/VHS
-22,4,Manuels scolaires
-23,4,Livres scientifiques
-24,4,Cartes/Posters
-25,4,Divers
-26,2,Générateurs
-27,2,Mesures
-28,2,Récepteurs
-29,2,Connectique
-30,2,Métaux
-31,2,Divers
- 
--COMMANDE
-*idBonCommande
-*idMateriel
-*quantite
- 
--DEMANDE
-*idDemande
-*idUtilisateur
-*descriptionDemande
-*idEtatD
-26,11,,2
-27,11,,2
-29,13,,1
-30,7,,1
- 
--DOMAINE
-*idDomaine
-*nomDomaine
-1,Appareillage
-2,Électricité
-3,Matériel de laboratoire
-4,Médias
-5,Produits chimiques
-6,Verrerie et associés
- 
--ENDROIT
-*idEndroit
-*endroit
-6,8
-3,Armoire 1
-1,Étagère 1
-2,Étagère 2
-4,Etagere 5
-5,Salle 207
-7,test
- 
--ENVOIFOURNISSEUR
-*idBonCommande
-*idFournisseur
-*facture
- 
--ETATCOMMANDE
-*idEtat
-*nomEtat
-1,En attente de la validation du Gestionnaire
-2,En cours de traitement
-3,Expédiée
-4,Livrée
- 
--ETATDEMANDE
-*idEtatD
-*nomEtatD
-1,En attente de validation
-2,Envoyée
- 
--FDS
-*idFDS
-*nomFDS
-29,Acide chloridrique
-25,Alimentation et Générateur de courant AC/DC
-28,Becher 500ml
-26,Becher 800ml
-30,clavier
-20,iPad
-8,iPhone
-11,JLK
-23,Microscope
-27,Pipette graduée
-24,Sulfate de cuivre anhydre
-21,test
-22,test2
- 
--FOURNISSEUR
-*idFournisseur
-*nomFournisseur
-*adresseFournisseur
-*mailFournisseur
-*telFournisseur
- 
--MATERIEL
-*idMateriel
-*referenceMateriel
-*idFDS
-*nomMateriel
-*idCategorie
-*seuilAlerte
-*caracteristiquesComplementaires
-*informationsComplementairesEtSecurite
-34,REF123,24,Sulfate de cuivre anhydree,9,2,Sulfate de cuivre anhydre,Le sulfate de cuivre (II) anhydre est blanc et ne devient bleu que lorsqu'il est combiné avec des molécules d'eau
-35,ALR 3002M,25,Alimentation et Générateur de courant AC/DC,26,1,Puissance : 120 Watts,
-36,REF 4123,26,Becher 800ml,7,1,Becher 800ml,aehahahahhaha
-38,REF 4122,28,Becher 500ml,7,1,Becher 500ml,
-39,REF 1111,29,Acide chloridrique,13,1,,
-40,6546,30,clavier,26,2,ezrzet,rtert
- 
--MATERIELUNIQUE
-*idMaterielUnique
-*idMateriel
-*idRangement
-*dateReception
-*commentaireMateriel
-*quantiteApproximative
-*datePeremption
-254,34,1,2024-01-14 00:00:00,,1.0,2024-07-26 00:00:00
-255,34,1,2024-01-14 00:00:00,,1.0,2024-07-26 00:00:00
-256,34,1,2024-01-14 00:00:00,,1.0,2024-07-26 00:00:00
-257,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-258,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-259,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-260,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-261,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-262,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-263,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-264,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-265,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-266,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-267,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-268,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-269,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-270,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-271,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-272,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-273,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-274,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-275,40,5,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-07-20 00:00:00
-276,40,8,2024-02-19 00:00:00,un clavier supersonique,2.0,2024-02-20 00:00:00
-277,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-278,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-279,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-280,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-281,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-282,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-283,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-284,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-285,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-286,36,3,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-287,35,6,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
-288,35,6,2024-02-19 00:00:00,,1.0,2024-02-20 00:00:00
- 
--RANGEMENT
-*idRangement
-*idEndroit
-*position
-1,1,haut
-2,2,bas
-3,3,gauche
-4,2,droite
-5,1,milieu
-6,3,milieu
-7,4,Rac 87
-8,5,Tiroir du bureau
-9,3,droite
-10,6,bocale
-11,7,test1
- 
--RECHERCHEMATERIELS
-*materielRecherche
-Agitateurs à hélice
-Agitateurs à plaques chauffantes
-Agitateurs à ultrasons
-Agitateurs magnétiques
-Agitateurs vortex
-Ampoules à décanter
-Autoclaves
-Bains-marie
-Ballons de réaction
-Béchers
-Béchers Griffin
-Boîtes cryogéniques
-Boîtes de Pétri
-Bouchons en caoutchouc
-Bouchons en liège
-Burettes
-Capsules de pesée
-Colonnes de chromatographie
-Colonnes de fractionnement
-Cuvettes de conductimètre
-Cuvettes de fluorimètre
-Cuvettes de polarimètre
-Cuvettes de spectrophotomètre
-Cuvettes de viscosimètre
-Cylindres gradués
-Deshydrateurs d'air
-Entonnoirs
-Éprouvettes
-Filtres Buchner
-Fioles à col large
-Fioles à col long
-Fioles à vide
-Fioles coniques
-Fioles de réaction
-Fioles Erlenmeyer
-Flacons compte-gouttes
-Flacons de stockage
-Flacons laveurs
-Microscope
-Mortiers et pilons
-Pinces de fixation
-Pinces supports et trépieds
-Pipettes graduées
-Pipettes Pasteur
-Pipettes volumétriques
-Plaques de Petri
-Réacteurs à micro-ondes
-Réacteurs à pression
-Réactif chimique
-Récipients pour stockage
-Réfrigérants à colonne
-Réfrigérants à condenseur
-Réfrigérants à serpentin
-Seringues
-Support universel
-Thermomètres de laboratoire
-Tubes à essai
-Tubes à essai à col large
-Tubes à essai à fond plat
-Tubes à essai à fond rond
-Tubes capillaires
-Tubes de centrifugation
-Tubes Nessler
- 
--RESERVELABORATOIRE
-*idReserve
-*idMaterielUnique
- 
--RISQUE
-*idRisque
-*nomRisque
-29,Comburant
-30,Danger incendie
-31,Explosif
-32,Effets graves sur la senté
-33,Altération de la santé humaine
-34,Gaz sous pression
-35,Corrosion
-36,Toxicité aquatique
-37,Toxicité aiguë
- 
--RISQUES
-*idrisques
-*idFDS
-*idRisque
-440,29,35
-442,24,29
-443,24,30
-444,24,33
-445,30,35
-455,26,33
-456,26,34
-457,26,35
-458,26,37
- 
--STATUT
-*idStatut
-*nomStatut
-1,Administrateur
-2,Professseur
-3,Laborantin
-4,Gestionnaire
- 
--STOCKLABORATOIRE
-*idStock
-*idMateriel
-*quantiteLaboratoire
-25,34,3
-26,40,20
-27,36,10
-28,35,2
- 
--SUIVICOMMANDE
-*idBonCommande
-*localisation
-*numColis
- 
--TYPESALERTES
-*idAlerte
-*descriptionAlerte
-1,Date de péremption dépassée
-2,Date de péremption dépassée dans 10 jours
-3,Quantité en dessous du seuil minimal
-4,Quantité de l'objet à 0
- 
--UTILISATEUR
-*idUtilisateur
-*idStatut
-*nom
-*prenom
-*email
-*motDePasse
-1,1,Admin,Admin,erwan.blandeau28@gmail.com,3e296ab5e8a9c95df44c8839a3c42e3fb4614f25eedcdd5211b621b8b9f9f198,1
-2,4,leo,lucidor,leo.lucidor@gmail.com,8535e86c8118bbbb0a18ac72d15d3a2b37b18d1bce1611fc60165f322cf57386,1
-7,3,pilet,colin,colin.pilet1@gmail.com,4c1001c251c1c923bca00789638afb17e908d526bf3e9975407c65d2b03f4b10,1
-8,2,lavenant,jordan,jordan.lavenant@laposte.net,136c67657614311f32238751044a0a3c0294f2a521e573afa8e496992d3786ba,1
-9,4,Francois,Romain,romain.2991@gmail.com,c759caf45d10f1d4ada42e37e770af9ea52b57a89db7bad4c22188b0de166a85,1
-10,4,noblesse,oscar,oscar.noblesse@gmail.com,66d30e3065861108fd19646d84d68acd238e002dbd49ee76edf0483cf638647e,1
-11,4,Erwan,Blandeau,erwan.blandeaujs@gmail.com,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08,1
-12,2,Maupou,Cassandra,cassandra.maupou@gmail.com,89d6df5b8d2f54531adc4fac2e73636c20cfe53eb286e267d49c6a35bbb6332f,1
-13,3,lavenant,jordan,kubikcube18@gmail.com,f99d0161bcc02c6f1d9667486965dad265e7640e3ab15844310f9972697cc7e5,1
+1,1,Admin,Admin,admin@example.com,motdepasseadmin,0
+2,2,Utilisateur,Standard,user@example.com,motdepasseuser,1
  
