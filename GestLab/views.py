@@ -204,6 +204,18 @@ class AjouterSuggestionForm(FlaskForm):
             return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
     
     def get_full_materiel_requestform(self):
+        """
+        Récupère les informations complètes du formulaire de demande de matériel.
+
+        Returns:
+            tuple: Un tuple contenant les informations suivantes :
+                - categorie (str): La catégorie du matériel.
+                - nom (str): Le nom du matériel.
+                - reference (str): La référence du matériel.
+                - caracteristiques (str): Les caractéristiques du matériel.
+                - infossup (str): Les informations supplémentaires sur le matériel.
+                - seuilalerte (str): Le seuil d'alerte du matériel.
+        """
         categorie = request.form['categorie']
         nom = request.form['nom']
         reference = request.form['reference']
@@ -1619,6 +1631,18 @@ def valider_bon_demande(id):
 
 @app.route("/update-theme/<int:id>", methods=("GET","POST",))
 def update_theme(id):
+    """
+    Met à jour le thème de l'utilisateur avec l'identifiant spécifié.
+
+    Args:
+        id (int): L'identifiant du thème à mettre à jour.
+
+    Returns:
+        redirect: Une redirection vers la page de base.
+
+    Raises:
+        Exception: En cas d'erreur lors de la mise à jour du thème.
+    """
     try:
         Utilisateur.Update.update_theme_utilisateur(cnx, session['utilisateur'][4], id)
         print(session['theme'])
@@ -1631,7 +1655,7 @@ def update_theme(id):
 
         return redirect(url_for('base'))
     except Exception as e:
-        print("An error occurred:", e)
+        print("Une erreur s'est produite:", e)
         return redirect(url_for('base'))
 
 
@@ -2114,6 +2138,12 @@ def supprimer_materiels_uniques(id):
 
 @app.route("/demandes/")
 def demandes():
+    """
+    Rend le modèle demandes.html avec les données nécessaires.
+
+    Returns:
+        Le modèle rendu.
+    """
     return render_template(
         "demandes.html",
         title="demandes",
@@ -2126,6 +2156,15 @@ def demandes():
 
 @app.route("/demande/<int:idDemande>")
 def demande(idDemande):
+    """
+    Cette fonction renvoie le rendu du template "demande.html" avec les informations de la demande spécifiée.
+
+    Args:
+        idDemande (int): L'identifiant de la demande.
+
+    Returns:
+        render_template: Le rendu du template "demande.html" avec les informations de la demande.
+    """
     id_user = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     info_commande = Demande.Get.get_info_demande_with_id(get_cnx(), idDemande)
 
@@ -2144,6 +2183,18 @@ def demande(idDemande):
 @app.route("/inventaire/")
 @csrf.exempt
 def inventaire():
+    """
+    Affiche l'inventaire des matériels disponibles.
+
+    Cette fonction récupère les matériels disponibles dans l'inventaire,
+    les filtre pour n'afficher que ceux ayant des unités supérieures à 0,
+    puis les pagine pour afficher un nombre limité de matériels par page.
+    Elle renvoie ensuite le rendu du template 'inventaire.html' avec les
+    données nécessaires à l'affichage.
+
+    Returns:
+        Le rendu du template 'inventaire.html' avec les données nécessaires à l'affichage.
+    """
     rechercher = RechercherForm()
     page = request.args.get('page', 1, type=int)
     per_page = 4
