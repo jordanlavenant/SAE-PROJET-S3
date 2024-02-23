@@ -1244,17 +1244,25 @@ def commander():
     Returns:
         render_template: Le template HTML de la page commander.html avec les données nécessaires.
     """
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
     rechercher = RechercherForm()
     nb_alertes = Alert.get_nb_alert(cnx)
     nb_demandes = Demande.Get.get_nb_demande(cnx)
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
-    liste_materiel = Bon_commande.Bon_commande.Get.afficher_bon_commande(cnx, idUser)
-    nbMateriel = len(liste_materiel)
-    print(liste_materiel)
+    liste = Bon_commande.Bon_commande.Get.afficher_bon_commande(cnx, idUser)
+    liste_materiel = paginate_list(liste, page, per_page)
+    total_items = len(liste)
+    total_pages = total_items // per_page
+    nbMateriel = len(liste)
+    if total_items % per_page > 0:
+        total_pages += 1
     return render_template(
         "commander.html",
         title="commander du matériel",
+        page=page,
+        total_pages=total_pages,
         categories = Domaine.Domaine.get_domaine(get_cnx()),
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
@@ -1304,6 +1312,7 @@ def recherche_materiel_demander():
         return render_template(
             "demander.html",
             title="demander",
+            page=page,
             pageRechercher=True,
             searchValue=value,
             total_pages=total_pages,
