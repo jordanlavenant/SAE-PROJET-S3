@@ -86,6 +86,9 @@ Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée
 
 - Import et Export des données au format CSV
 - Thème sombre et préférences de l'utilisateur stockées dans la base de données
+- Paginations diverses
+- Harmonisation des templates HTML & CSS
+
 
 ## Problèmes rencontrés
 
