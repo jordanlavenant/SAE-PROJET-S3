@@ -133,15 +133,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    let sousContainerPaginations = document.querySelectorAll('.sous-container-pagination');
 
-    sousContainerPaginations.forEach(function(sousContainerPagination) {
-        let lienRechercheDemande = sousContainerPagination.querySelector('.lien-recherche-demande');
-        let searchValue = document.querySelector('#search-bar').value;
-        lienRechercheDemande.addEventListener('click', function() {
-            console.log(searchValue);
-            console.log(lienRechercheDemande);
-            window.location.href = '/recherche-materiel-demander?page='+lienRechercheDemande.textContent+'&value=' + searchValue;
+    let lienRechercheDemandes = document.querySelectorAll('.lien-recherche-demande');
+    let searchValue = document.querySelector('#search-bar').value;
+
+    for (let i = 0; i < lienRechercheDemandes.length; i++) {
+        lienRechercheDemandes[i].addEventListener('click', function() {
+            window.location.href = '/recherche-materiel-demander?page='+lienRechercheDemandes[i].textContent+'&value=' + searchValue;
         });
-    });
+    }
 });

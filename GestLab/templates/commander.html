@@ -130,31 +130,43 @@
 
         {% if pageRechercher != True %}
         <div class="container-pagination">
-            {% if total_pages == 1 %}
-                <a href='/commander?page={{ page }}'>{{ page }}</button>
-            {% elif page == 1 and total_pages > 2 %}
+            {% if page == 1 and total_pages > 2 %}
                 <a href='/commander?page={{ page }}'>{{ page }}</button>
                 <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</button>
                 <span>...</span>
                 <a href='/commander?page={{ total_pages }}'>{{ total_pages }}</button>
                 <a href='/commander?page={{ page+1 }}'>suivant</button>
             {% elif page != 1 %}
-                {% if page < total_pages - 1  %}
+                {% if page < total_pages - 2  %}
                     <a href='/commander?page={{ page-1}}'>précédent</button>
                     <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</button>
                     <a href='/commander?page={{ page }}'>{{ page }}</button>
-                    <span>..!!.</span>
+                    <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</button>
+                    <span>...</span>
                     <a href='/commander?page={{ total_pages }}'>{{ total_pages }}</button>
                     <a href='/commander?page={{ page+1 }}'>suivant</button>    
+                {% elif page == total_pages and total_pages > 2 %}
+                    <a href='/commander?page={{ page-1}}'>précédent</button>
+                    <a href='/commander?page=1'>1</button>
+                    <span>...</span>
+                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</button>
+                    <a href='/commander?page={{ page }}'>{{ page }}</button>
+                {% elif page == total_pages-1 %}
+                    <a href='/commander?page={{ page-1}}'>précédent</button>    
+                    <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</button>
+                    <a href='/commander?page={{ page }}'>{{ page }}</button>
+                    <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</button>
+                    <a href='/commander?page={{ page+1 }}'>suivant</button>
                 {% elif page == total_pages %}
                     <a href='/commander?page={{ page-1}}'>précédent</button>
                     <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</button>
-                    <a href='/commander?page={{ page }}'>{{ page }}</button>
+                    <a href='/commander?page={{ page }}'>{{ page }}</button> 
                 {% else %}
                     <a href='/commander?page={{ page-1}}'>précédent</button>    
                     <a href='/commander?page={{ page-1 }}'>{{ page-1 }}</button>
                     <a href='/commander?page={{ page }}'>{{ page }}</button>
                     <a href='/commander?page={{ page+1 }}'>{{ page+1 }}</button>
+                    <a href='/commander?page={{ total_pages }}'>{{ total_pages }}</button>
                     <a href='/commander?page={{ page+1 }}'>suivant</button>   
                 {% endif %}
             {% else %}

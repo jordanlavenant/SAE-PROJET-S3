@@ -64,20 +64,33 @@
             </section>
         {% endfor %}
         <div class="container-pagination">
-        {% if page == 1 and total_pages > 2 %}
+            {% if page == 1 and total_pages > 2 %}
                 <a href='/inventaire?page={{ page }}'>{{ page }}</button>
                 <a href='/inventaire?page={{ page+1 }}'>{{ page+1 }}</button>
                 <span>...</span>
                 <a href='/inventaire?page={{ total_pages }}'>{{ total_pages }}</button>
                 <a href='/inventaire?page={{ page+1 }}'>suivant</button>
             {% elif page != 1 %}
-                {% if page < total_pages - 1  %}
+                {% if page < total_pages - 2  %}
                     <a href='/inventaire?page={{ page-1}}'>précédent</button>
                     <a href='/inventaire?page={{ page-1 }}'>{{ page-1 }}</button>
                     <a href='/inventaire?page={{ page }}'>{{ page }}</button>
-                    <span>..!!.</span>
+                    <a href='/inventaire?page={{ page+1 }}'>{{ page+1 }}</button>
+                    <span>...</span>
                     <a href='/inventaire?page={{ total_pages }}'>{{ total_pages }}</button>
                     <a href='/inventaire?page={{ page+1 }}'>suivant</button>    
+                {% elif page == total_pages and total_pages > 2 %}
+                    <a href='/inventaire?page={{ page-1}}'>précédent</button>
+                    <a href='/inventaire?page=1'>1</button>
+                    <span>...</span>
+                    <a href='/inventaire?page={{ page-1 }}'>{{ page-1 }}</button>
+                    <a href='/inventaire?page={{ page }}'>{{ page }}</button>
+                {% elif page == total_pages-1 %}
+                    <a href='/inventaire?page={{ page-1}}'>précédent</button>    
+                    <a href='/inventaire?page={{ page-1 }}'>{{ page-1 }}</button>
+                    <a href='/inventaire?page={{ page }}'>{{ page }}</button>
+                    <a href='/inventaire?page={{ page+1 }}'>{{ page+1 }}</button>
+                    <a href='/inventaire?page={{ page+1 }}'>suivant</button>
                 {% elif page == total_pages %}
                     <a href='/inventaire?page={{ page-1}}'>précédent</button>
                     <a href='/inventaire?page={{ page-1 }}'>{{ page-1 }}</button>
@@ -87,6 +100,7 @@
                     <a href='/inventaire?page={{ page-1 }}'>{{ page-1 }}</button>
                     <a href='/inventaire?page={{ page }}'>{{ page }}</button>
                     <a href='/inventaire?page={{ page+1 }}'>{{ page+1 }}</button>
+                    <a href='/inventaire?page={{ total_pages }}'>{{ total_pages }}</button>
                     <a href='/inventaire?page={{ page+1 }}'>suivant</button>   
                 {% endif %}
             {% else %}
