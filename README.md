@@ -19,17 +19,7 @@ LAVENANT Jordan
     virtualenv -p python3 venv
     source venv/bin/activate
 
-    pip install flask
-    pip install python-dotenv
-    pip install PyYAML
-    pip install bootstrap-flask
-    pip install flask-sqlalchemy
-    pip install flask-wtf
-    pip install flask-login
-    pip install werkzeug
-    pip install fpdf
-    pip install qrcode
-    pip install pyotp
+    pip install -r requirements.txt
 
 ## Démarrage de l'application
 
@@ -85,6 +75,8 @@ Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée
 - Gestions des signalement sur des matériels
 - Gestion des commantaires 
 - Gestion de l'adresse mail de l'application
+- ## CONTINUER
+
 
 
 ## Problèmes rencontrés
@@ -93,6 +85,8 @@ Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée
 - Redirections entres les vues parfois très complexes, et peu rigoureux
 - Factorisation du modèles et des contrôleurs très imparfaites
 - Possibilités de modifier le mot de passe de tous les utilisateurs si on avait leur adresse-mail correspondante => Authentification à 2 facteurs
+- ## CONTINUER
+
 
 ## Identifiants pour se connecter
 
@@ -110,5 +104,5 @@ Compte professeur
 ``anna``  
 
 Compte laborantin  
-> ``jordan.lavenant@laposte.net``  
-``jordan``
+> ``colin.pilet1@gmail.com``  
+``colin``
