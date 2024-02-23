@@ -4,7 +4,9 @@
 
 ## Versions
 
-* Version actuelle : v2.0 le 10/11/2023
+* Version actuelle : v3.0 le 23/02/2024
+* v2.0 le 10/11/2023
+* v1.0 le 27/10/2023
 
 ## Membres 
 
@@ -75,6 +77,8 @@ Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée
 - Gestions des signalement sur des matériels
 - Gestion des commantaires 
 - Gestion de l'adresse mail de l'application
+- Import et Export des données au format CSV
+- Thème sombre et préférences de l'utilisateur stockées dans la base de données
 - ## CONTINUER
 
 
