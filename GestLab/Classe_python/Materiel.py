@@ -331,7 +331,7 @@ class Materiel:
                 print("Erreur lors de la suppression du matériel dans la commande")
                 raise
 
-        def delete_materiel_in_AjouterMateriel_whith_id(cnx, idMateriel, idDemande):
+        def delete_materiel_in_AjouterMateriel_whith_id(cnx, idMateriel, idDemande, statutUser=3):
             """
             Supprime un matériel de la table AJOUTERMATERIEL en fonction de son identifiant (idMateriel) et de l'identifiant de la demande (idDemande).
 
@@ -351,7 +351,7 @@ class Materiel:
                 result = cnx.execute(text("SELECT COUNT(*) FROM AJOUTERMATERIEL WHERE idDemande = " + str(idDemande) +  ";"))
                 for row in result:
                     nbmat_in_demande = row[0]
-                if nbmat_in_demande == 0 and Utilisateur.Utilisateur.Get.get_statut_with_idDemande(cnx, idDemande) == 4:
+                if nbmat_in_demande == 0 and statutUser == 4:  
                     Demande.Demande.Delete.delete_demande(cnx,idDemande)
                     print("Materiel & Demande supprimée")
                     cnx.commit()

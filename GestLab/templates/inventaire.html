@@ -23,10 +23,12 @@
                     {% endfor %}
                 </select>
             </form>
-            <div class="btns-container">
-                <a class="btns" href="{{ url_for('ajouter_endroit') }}">AJOUTER UN ENDROIT</a>
-                <a class="btns" href="{{ url_for('ajouter_rangement') }}">AJOUTER UN RANGEMENT</a>
-            </div>
+            {% if session['utilisateur'][1] != 2 %}
+                <div class="btns-container">
+                    <a class="btns" href="{{ url_for('ajouter_endroit') }}">AJOUTER UN ENDROIT</a>
+                    <a class="btns" href="{{ url_for('ajouter_rangement') }}">AJOUTER UN RANGEMENT</a>
+                </div>
+            {% endif %}
             <p>{{ nbMateriel }} résultats</p>
         </div>
     </div>
