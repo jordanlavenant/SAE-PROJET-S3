@@ -112,3 +112,7 @@ Compte professeur
 Compte laborantin  
 > ``colin.pilet1@gmail.com``  
 ``colin``
+
+## Crédits
+
+* Toggle dark mode inspiré par [Scodoc Notes](https://github.com/SebL68/Scodoc_Notes)
