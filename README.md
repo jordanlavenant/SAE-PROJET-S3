@@ -60,28 +60,32 @@ Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée
 
 ## Tâches réalisées
 
-- Différents diagrammes réalisés à partir du 23/10/2023
-- MCD et base de données commencée le 23/10/2023 et actualisée chaque jour
-- Creation des fonctions pour se connecter à partir du 23/10/2023
-- Création des fonctions pour hash les mots de passe 24/10/2023
-- Creation des procedures et triggers à partir du 24/10/2023
-- Création des maquettes à partir du 24/10/2023
+### Semaine du 23/10/2023
+- Différents diagrammes réalisés
+- MCD et base de données commencée et actualisée chaque jour
+- Creation des fonctions pour se connecter
+- Création des fonctions pour hash les mots de passe
+- Creation des procedures et triggers
+- Création des maquettes
 - Création des fonctions requêtes afin de rendre l'implémentation du site fonctionnelle (tout au long des semaines)
-- Début de l'implémentation des maquettes à partir du 24/10/2023
+- Début de l'implémentation des maquettes
+
+### Semaine du 06/11/2023
+
 - Harmonisation des maquettes et de l'implémentation des vues (tout au long de la deuxieme semaine)
-- Authentification à 2 facteurs via l'api de Google (07/11/2023)
-- Génération d'un fichier PDF récapitulatif d'un bon de commande (09/11/2023)
+- Authentification à 2 facteurs via l'api de Google
+- Génération d'un fichier PDF récapitulatif d'un bon de commande
 - Gestions des stocks (insertions, modifications, suppresions)
 - Gestions des demandes, commandes et bons de commandes
 - Gestions des alertes
 - Gestions des signalement sur des matériels
-- Gestion des commantaires 
-- Gestion de l'adresse mail de l'application
+- Gestion des commentaires 
+- Gestion de l'adresse mail de l'application 
+
+### Semaine du 19/02/2024
+
 - Import et Export des données au format CSV
 - Thème sombre et préférences de l'utilisateur stockées dans la base de données
-- ## CONTINUER
-
-
 
 ## Problèmes rencontrés
 
@@ -89,8 +93,6 @@ Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée
 - Redirections entres les vues parfois très complexes, et peu rigoureux
 - Factorisation du modèles et des contrôleurs très imparfaites
 - Possibilités de modifier le mot de passe de tous les utilisateurs si on avait leur adresse-mail correspondante => Authentification à 2 facteurs
-- ## CONTINUER
-
 
 ## Identifiants pour se connecter
 
