@@ -1534,7 +1534,7 @@ def delete_materiel_demandes(idDemande, idMat):
     Returns:
         redirect: Redirige vers la page de base si la suppression est réussie, sinon redirige vers la page de la demande spécifique.
     """
-    res = Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande)
+    res = Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande, session['utilisateur'][1])
     if res:
         return redirect(url_for('base'))
     return redirect(url_for('demande', idDemande=idDemande))
