@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let searchValue = document.querySelector('#search-bar').value;
         lienRechercheDemande.addEventListener('click', function() {
             console.log(searchValue);
+            console.log(lienRechercheDemande);
             window.location.href = '/recherche-materiel-demander?page='+lienRechercheDemande.textContent+'&value=' + searchValue;
         });
     });

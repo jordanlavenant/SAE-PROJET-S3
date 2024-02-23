@@ -1288,7 +1288,7 @@ def recherche_materiel_demander():
         - Sinon, redirige vers la page "demander.html".
     """
     page = request.args.get('page', 1, type=int)
-    per_page = 4
+    per_page = 1
     rechercher = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
@@ -2157,9 +2157,10 @@ def demander():
         total_pages += 1
     return render_template(
         "demander.html",
+        title="demander",
         valueSearch = valueSearch,
         page=page,
-        title="demander",
+        pageRechecher=False,
         idDemande = idDemande,
         liste_materiel = liste_materiel,
         total_pages=total_pages,
