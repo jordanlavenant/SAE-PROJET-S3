@@ -89,6 +89,8 @@
                 {% endfor %}
             </div>
 
+            {% if 'utilisateur' in session %}
+
             <div class="theme" onclick="toggleTheme()" >
                 <div class=cercle></div>
                 <div class=logo>
@@ -99,6 +101,7 @@
                 </div>
             </div>
 	
+            {% endif %}
         </div>
         
         
