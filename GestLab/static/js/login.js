@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     
     // Définir la fonction pour masquer l'élément
+    /**
+     * Masque le formulaire de changement de mot de passe et les éléments associés.
+     */
     function masquerMDP() {
         if(!estAfficher) {
             lienDeco.style.display = "none";
@@ -26,6 +29,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Définir la fonction pour masquer l'élément
+    /**
+     * Masque certains éléments et affiche un formulaire pour changer l'e-mail.
+     */
     function masquerMail() {
             if(!estAfficher) {
                 lienDeco.style.display = "none";
@@ -39,6 +45,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Définir la fonction pour masquer l'élément
+    /**
+     * Masque tous les éléments liés au changement de mot de passe et d'email,
+     * et affiche les éléments liés à la déconnexion, à la page d'accueil, et aux boutons de changement de mot de passe et d'email.
+     */
     function masquerTout() {
         formChangerMDP.style.display = "none";
         formChangerMail.style.display = "none";

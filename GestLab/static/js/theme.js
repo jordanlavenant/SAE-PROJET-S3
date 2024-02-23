@@ -4,6 +4,10 @@ if (localStorage.getItem("theme")) {
     document.body.classList.add("dark");
 }
 
+/**
+ * Bascule le thème de la page web entre "dark" et "default".
+ * Met à jour le thème dans le stockage local et envoie une requête AJAX pour mettre à jour le thème sur le serveur.
+ */
 function toggleTheme() {
     const body = document.body;
 
@@ -30,6 +34,10 @@ function toggleTheme() {
 }
 
 
+/**
+ * Applique le thème spécifié au corps du document.
+ * @param {string} theme - Le thème à appliquer.
+ */
 function applyTheme(theme) {
     const body = document.body;
     body.className = theme;

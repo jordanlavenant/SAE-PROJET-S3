@@ -1,3 +1,4 @@
+
 const form = document.getElementById('formulaire-comboBox');
 const maCombo = document.getElementById('categorie-select');
 maCombo.addEventListener('change', function () {
