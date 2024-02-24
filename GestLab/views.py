@@ -1327,7 +1327,7 @@ def recherche_materiel_demander():
         - Sinon, redirige vers la page "demander.html".
     """
     page = request.args.get('page', 1, type=int)
-    per_page = 1
+    per_page = 4
     rechercher = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
@@ -2212,7 +2212,7 @@ def inventaire():
                 if (item,qt) not in final_items: # Eviter les doublons
                     final_items.append((item,qt))
         liste_items = paginate_list(final_items, page, per_page)
-        total_pages = len(final_items) // per_page + (1 if len(final_items) % per_page > 0 else 0)
+        total_pages = len(final_items) // per_page + (1 if len(final_items) % per_page > 0 else 0) # a modifier car ce n'est pas la bonne méthode
 
         return render_template(
             "inventaire.html",
