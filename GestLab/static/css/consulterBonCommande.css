@@ -1,135 +1,192 @@
 #btn-back {
-    color: white;
-    background-color: #384274;
-    padding: 14px 40px;
-    border-radius: 25px;
-    font-size: 25px;
+    color: var(--text);
+    background-color: var(--background);
+    padding: 10px 20px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 #btn-back:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
 }
 
-#btn-redirect-history {
-    margin-left: 10vw;
-    color: white;
-    background-color: #384274;
-    padding: 14px 40px;
-    border-radius: 25px;
-    font-size: 25px;
+.btn-generic {
+    color: var(--text);
+    background-color: var(--background);
+    padding: 10px 20px;
+    border-radius: 10px;
     border: none;
     transition: 0.2s;
+    display: flex;
+    align-items: center;
 }
 
-#btn-redirect-history:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+.btn-generic:hover {
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
 }
 
-#btn-fusion {
-    margin-left: 10vw;
-    color: white;
-    background-color: #384274;
-    padding: 14px 40px;
-    border-radius: 25px;
-    font-size: 25px;
-    border: none;
-    transition: 0.2s;
-}
-
-#btn-fusion:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
-    transition: 0.2s;
-    transform: scale(1.1);
-    cursor: pointer;
-}
-
-.btns-header {
+.container-top {
+    margin: 0 10vw;
     display: flex;
-    justify-content: space-around;
-}
-
-.info {
-    margin-left: 20vw;
-    margin-right: 20vw;
-    margin-bottom: 3%;
-    margin-top: 3%;
-    border-radius: 1em;
-    /* width: 50%; */
-    border: solid #384274 2px;
-    padding:  1%;
-}
-
-.info-bon {
-    display: flex;
-    margin: 1%;
-    flex-wrap: nowrap;
     justify-content: space-between;
+    align-items: center;
 }
 
-.info-user {
-    font-weight: bold;
-    width: 12vw;
+.btns-container {    
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
 }
 
-.btn-consulter {
-    color: #384274;
+#secondary-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid var(--secondary-button);
+    padding: 0 40px 0 20px;
+}
+
+#secondary-btn svg {
+    fill: var(--secondary-button);
     transition: .2s;
 }
 
-.btn-consulter:hover {
-    color: #384274;
-    transform: scale(1.1);
-    transition: .2s;
-}
-
-.btn-consulter {
-    color: #384274;
-}
-
-.para {
+#secondary-btn p {
+    color: var(--secondary-button);
     margin: 0;
-    color: #384274;
-    font-variant: small-caps;
+    padding: 0;
+    transition: .2s;
+}
+
+#secondary-btn:hover svg {
+    fill: var(--background);
+    transition: .2s;
+}
+
+#secondary-btn:hover p {
+    color: var(--background);
+    transition: .2s;
+}
+
+.bons-container {
+    border-radius: 10px;
+    margin: 50px 10vw;
+    min-height: 50dvh;
+}
+
+table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+thead tr {
+    color: var(--background);
+    font-size: 40px;
+    border-bottom: 1px solid var(--background);
+}
+
+tbody tr {
+    cursor: pointer;
+    transition: .2s;
+    z-index: 1;
+}
+
+tbody tr:hover {
+    background-color: rgba(0, 0, 0, .05);
+    transition: .2s;
+}
+
+tbody td:last-child {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    height: 55px;
 }
 
 #statut {
-    width: 15%;
-    color: white;
-    background-color: #384274;
-    border-radius: 1em;
+    color: var(--text);
+    background-color: var(--background);
+    font-family: 'Alumni Sans', sans-serif;
+    font-size: 25px;
+    padding: 10px 60px;
     border: none;
-    padding: 1% 3%;
-
+    z-index: 99;
 }
 
-#suppr-bon {
-    color: white;
-    background-color: #384274;
-    border-radius: 10px;
-    border: none;
-    padding: 1% 3%;
-    transition: .2s;
-    font-size: 24px;
-}
-
-#suppr-bon:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
-    transition: .2s;
+#statut {
     cursor: pointer;
+    padding: 10px 60px;
+}
+
+.bons-container p {
+    margin: 0;
+    padding: 0;
+}
+
+.suppr-bon-container {
+    display: flex;
+    align-items: center;
+}
+
+.suppr-bon-container p {
+    color: var(--secondary-button);
+    font-size: 25px;
+    margin: 0;
+    padding: 0;
+    transition: .2s;
+}
+
+.suppr-bon-container svg {
+    fill: var(--secondary-button);
+    transition: .2s;
+}
+
+.suppr-bon-container:hover p {
+    color: var(--error);
+    transition: .2s;
+}
+
+.suppr-bon-container:hover svg {
+    fill: var(--error);
+    transition: .2s;
+}
+
+.no-bon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-bon p {
+    font-size: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+.no-bon a {
+    color: var(--secondary);
+    font-size: 40px;
+    margin: 0;
+    padding: 0;
+    transition: .2s;
+}
+
+.no-bon a:hover {
+    text-decoration: underline;
+    transition: .2s;
 }

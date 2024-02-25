@@ -4,7 +4,9 @@
 
 ## Versions
 
-* Version actuelle : v2.0 le 10/11/2023
+* Version actuelle : v3.0 le 23/02/2024
+* v2.0 le 10/11/2023
+* v1.0 le 27/10/2023
 
 ## Membres 
 
@@ -19,17 +21,7 @@ LAVENANT Jordan
     virtualenv -p python3 venv
     source venv/bin/activate
 
-    pip install flask
-    pip install python-dotenv
-    pip install PyYAML
-    pip install bootstrap-flask
-    pip install flask-sqlalchemy
-    pip install flask-wtf
-    pip install flask-login
-    pip install werkzeug
-    pip install fpdf
-    pip install qrcode
-    pip install pyotp
+    pip install -r requirements.txt
 
 ## Démarrage de l'application
 
@@ -68,23 +60,37 @@ Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée
 
 ## Tâches réalisées
 
-- Différents diagrammes réalisés à partir du 23/10/2023
-- MCD et base de données commencée le 23/10/2023 et actualisée chaque jour
-- Creation des fonctions pour se connecter à partir du 23/10/2023
-- Création des fonctions pour hash les mots de passe 24/10/2023
-- Creation des procedures et triggers à partir du 24/10/2023
-- Création des maquettes à partir du 24/10/2023
+### Semaine du 23/10/2023
+- Différents diagrammes réalisés
+- MCD et base de données commencée et actualisée chaque jour
+- Creation des fonctions pour se connecter
+- Création des fonctions pour hash les mots de passe
+- Creation des procedures et triggers
+- Création des maquettes
 - Création des fonctions requêtes afin de rendre l'implémentation du site fonctionnelle (tout au long des semaines)
-- Début de l'implémentation des maquettes à partir du 24/10/2023
+- Début de l'implémentation des maquettes
+
+### Semaine du 06/11/2023
+
 - Harmonisation des maquettes et de l'implémentation des vues (tout au long de la deuxieme semaine)
-- Authentification à 2 facteurs via l'api de Google (07/11/2023)
-- Génération d'un fichier PDF récapitulatif d'un bon de commande (09/11/2023)
+- Authentification à 2 facteurs via l'api de Google
+- Génération d'un fichier PDF récapitulatif d'un bon de commande
 - Gestions des stocks (insertions, modifications, suppresions)
 - Gestions des demandes, commandes et bons de commandes
 - Gestions des alertes
 - Gestions des signalement sur des matériels
-- Gestion des commantaires 
-- Gestion de l'adresse mail de l'application
+- Gestion des commentaires 
+- Gestion de l'adresse mail de l'application 
+
+### Semaine du 19/02/2024
+
+- Ajout du booléen themeLight dans la table UTILISATEUR pour garder le thème choisi par l’utilisateur en mémoire
+- Harmonisation des templates pour une homogénéisation des pages entres-elles, et interface et expérience utilisateur renforcée
+- Fonctionnalité d’importation et d’exportation de fichiers .csv, avec possibilité de remplacer les données existantes ou non et possibilités de Drag & Drop.
+- Affichages des statuts des utilisateurs dans l’onglet “Consultation des statuts”
+- Popups de confirmation pour les actions jugées sensibles (suppressions, réinitialisation, valider…)
+- Pagination diverses
+
 
 
 ## Problèmes rencontrés
@@ -110,5 +116,9 @@ Compte professeur
 ``anna``  
 
 Compte laborantin  
-> ``jordan.lavenant@laposte.net``  
-``jordan``
+> ``colin.pilet1@gmail.com``  
+``colin``
+
+## Crédits
+
+* Toggle dark mode inspiré par [Scodoc Notes](https://github.com/SebL68/Scodoc_Notes)

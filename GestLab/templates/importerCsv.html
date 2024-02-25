@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/importerCSV.css') }}">
+{% endblock %}
+{% block content %}
+<a id="btn-back" href="{{ url_for('csv') }}">RETOUR</a>
+
+<div class="popup">
+    <div id="popup-content">
+        <div class="header-popup">
+            <p>voulez-vous vraiment remplacer toutes les données existantes par celles du fichier importé ?</p>
+            <svg onclick='togglePopup()' id='popup-exit' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
+        </div>
+        <div id="choices">
+            <a onclick="togglePopup()">ANNULER</a>
+            <input type="submit" id="submit-confirm" form="form-importCsv" value="CONFIRMER">
+        </div>
+    </div>
+</div>
+
+<div class="ajouterMateriel-container">
+    <div class="ajouterMateriel-content">
+        <form class="form-importCsv" id="form-importCsv" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('importer_csv') }}">
+            {{ ImporterCsvForm.hidden_tag() }}                        
+            <div class="main-container">
+                <div class="user-box">
+                    <div>
+                        {{ ImporterCsvForm.bd_option.label(class_="form-check-label") }}
+                        {{ ImporterCsvForm.bd_option(class_="form-check-input") }}
+                    </div>
+                    
+                    <div id="dropZone" class="drop-zone">
+                        <p id="fileDisplay">glissez et déposez un fichier CSV ici ou cliquez pour télécharger</p>
+                        <p id="uploadedFile"></p>
+                        <input type="file" name="file" id="fileInput" style="display: none;" onchange="displayFileName()" />
+                    </div>
+                    <div class="submit-container">
+                        <button type="button" id="submit" onclick="togglePopup()">IMPORTER</button>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+<script>
+    function displayFileName() {
+        var fileInput = document.getElementById('fileInput');
+        var uploadedFile = document.getElementById('uploadedFile');
+
+        if (fileInput.files.length > 0) {
+            if (fileInput.files[0].name.toLowerCase().endsWith('.csv')) {
+                uploadedFile.textContent = 'Fichier déposé : ' + fileInput.files[0].name;
+            } else {
+                alert('Veuillez sélectionner uniquement des fichiers CSV.');
+                fileInput.value = '';
+                uploadedFile.textContent = '';
+            }
+        } else {
+            uploadedFile.textContent = '';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropZone = document.getElementById('dropZone');
+        var fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('click', function () {
+            fileInput.click();
+        });
+
+        dropZone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', function () {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            
+            var files = e.dataTransfer.files;
+
+            if (files.length > 0 && files[0].name.toLowerCase().endsWith('.csv')) {
+                fileInput.files = files;
+                displayFileName();
+            } else {
+                alert('Veuillez déposer un fichier CSV.');
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const endroitSelect = document.getElementById("emplacement");
+        const positionSelect = document.getElementById("position");
+
+        endroitSelect.addEventListener("change", function() {
+            const selectedDomaine = endroitSelect.value;
+            fetch(`/get_position_choices?endroit_id=${selectedDomaine}`)
+                .then(response => response.json())
+                .then(data => {
+                    positionSelect.innerHTML = '';
+                    for (const [key, value] of Object.entries(data)) {
+                        const option = document.createElement("option");
+                        option.value = key;
+                        option.text = value;
+                        positionSelect.appendChild(option);
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const categorieSelect = document.getElementById("search_categorie");
+        const domaineSelect = document.getElementById("search_domaine");
+
+        domaineSelect.addEventListener("change", function() {
+            const selectedDomaine = domaineSelect.value;
+            fetch(`/get_categorie_choices?domaine_id=${selectedDomaine}`)
+                .then(response => response.json())
+                .then(data => {
+                    categorieSelect.innerHTML = '';
+                    for (const [key, value] of Object.entries(data)) {
+                        const option = document.createElement("option");
+                        option.value = key;
+                        option.text = value;
+                        categorieSelect.appendChild(option);
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+    });
+
+
+
+    function togglePopup() {
+        document.querySelector('.popup').classList.toggle('open');
+        document.querySelector("html").classList.toggle("scroll-lock");
+    }
+
+
+</script>
+{% endblock %}

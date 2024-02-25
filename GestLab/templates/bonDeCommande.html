@@ -29,13 +29,13 @@
         <p>Veuillez télécharger le pdf ci dessous</p>
         <div class="container-pdf">
             <a class="btn-retour-popup" href="{{ url_for('base') }}">Retour accueil</a>
-            <a href="{{ url_for('static',filename='./data/bonCommande.pdf') }}"><button id="btn-pdf">Télécharger PDF</button></a>
+            <a href="{{ url_for('download_pdf_bon_commande') }}"><button id="btn-pdf">Télécharger PDF</button></a>
         </div>
     </div>
 </div>
 {% else %}
-<a id="btn-retour-rien" href="{{ url_for('commander') }}">retour</a>
-<p class="p-rien">Vous n'avez aucun materiel a commander</p>
+<a id="btn-back" href="{{ url_for('commander') }}">RETOUR</a>
+<p class="p-rien">vous n'avez aucun materiel a commander</p>
 {% endif %}
 {% endblock %}
 {% block scripts %}

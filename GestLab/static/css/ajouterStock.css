@@ -1,6 +1,6 @@
 p,
 label {
-    color: white;
+    color: var(--text);
     font-size: 35px;
     margin: 15px 0;
 }
@@ -8,18 +8,18 @@ label {
 #btn-back {
     margin-left: 10vw;
     color: white;
-    background-color: #384274;
-    padding: 14px 40px;
-    border-radius: 25px;
-    font-size: 25px;
+    background-color: var(--background);
+    padding: 10px 20px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
 }
 
 #btn-back:hover {
     color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -45,7 +45,6 @@ label {
     flex-basis: 80%;
     width: calc(100% - 60px);
     height: 50px;
-    border-radius: 20px;
     border: none;
     padding: 10px 30px;
     font-size: 25px;
@@ -55,43 +54,112 @@ label {
 #btn-search {
     flex-basis: 20%;
     max-height: 50px;
-    color: #384274;
-    background-color: white;
+    color: var(--background);
+    background-color: var(--text);
     padding: 10px 0px;
-    border-radius: 20px;
     font-size: 25px;
     border: none;
     transition: 0.2s;
 }
 
 #btn-search:hover {
-    background-color: #009af0;
-    color: white;
-    box-shadow: 0 0 15px #009af0;
+    background-color: var(--secondary);
+    color: var(--text);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
 }
 
-.main-container {
-    padding: 5% 0 0;
+.ajouterMateriel-container {
+    margin: 2% 10vw;
+    box-shadow: 5px 10px 10px var(--background);
+    border-radius: 10px;
 }
 
-.ajouterMateriel-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 2% 0;
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .7);
+    z-index: 100;
+    display: none;
 }
+
+.popup #ez-search-form {
+    max-width: 800px;
+    width: 100%;
+    padding: 30px;
+    background-color: var(--background);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+}
+
+.header-popup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--background);
+}
+
+.header-popup > p {
+    margin: 0;
+    font-size: 50px;
+    color: var(--text);
+}
+
+.popup #popup-exit {
+    padding: 10px;
+}
+
+.popup #popup-exit:hover {
+    cursor: pointer;
+}
+
+.popup.open{
+    display: block;
+}
+
+.user-box > #ez-search {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#submit-ez-search {
+    color: var(--background);
+    background-color: var(--text);
+    padding: 14px 20px;
+    font-size: 25px;
+    border: none;
+    transition: 0.2s;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#submit-ez-search:hover {
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
+    transition: 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
 
 .ajouterMateriel-content {
-    background-color: #384274;
+    background-color: var(--background);
     min-width: 80%;
-    padding: 3%;
+    padding: 0 3%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    flex-grow: 0;
+    border-radius: 10px;
 }
 
 .main-container {
@@ -99,6 +167,7 @@ label {
     flex-direction: row;
     justify-content: space-between;
     gap: 10px;
+    margin-top: 3%;
 }
 
 .left-side-info {
@@ -121,9 +190,8 @@ label {
 
 .dom-select, 
 .cat-select {
-    color: #384274;
-    background-color: #fff;
-    border-radius: 10px;
+    color: var(--background);
+    background-color: var(--text);
     font-size: 25px;
     padding: 10px;
     border: none;
@@ -136,9 +204,8 @@ label {
 .element {
     border: 0;
     padding: 10px;
-    border-radius: 10px;
     font-size: 25px;
-    color: #384274;
+    color: var(--background);
     width: 175px;
 }
 
@@ -155,7 +222,6 @@ label {
 .text-area {
     width: calc(100% - 20px);
     height: 100%;
-    border-radius: 20px;
     padding: 10px;
     border: none;
     outline: none;
@@ -171,10 +237,9 @@ label {
 }
 
 .submit {
-    color: #384274;
-    background-color: white;
+    color: var(--background);
+    background-color: var(--text);
     padding: 14px 20px;
-    border-radius: 20px;
     font-size: 25px;
     border: none;
     transition: 0.2s;
@@ -183,9 +248,9 @@ label {
 }
 
 .submit:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;

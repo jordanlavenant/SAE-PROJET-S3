@@ -27,7 +27,6 @@ DROP TABLE IF EXISTS DEMANDE;
 DROP TABLE IF EXISTS ETATDEMANDE;
 DROP TABLE IF EXISTS ETATCOMMANDE;
 DROP TABLE IF EXISTS STATUT;
-DROP TABLE IF EXISTS UTILISATEUR;
 DROP TABLE IF EXISTS TYPESALERTES;
 DROP TABLE IF EXISTS 2FA;
 
@@ -37,13 +36,14 @@ create table STATUT(
     primary key(idStatut)
 );
 
-create table UTILISATEUR(
+create or replace table UTILISATEUR(
     idUtilisateur int not null auto_increment,
     idStatut int  not null references STATUT,
     nom varchar(50) not null,
     prenom varchar(50) not null,
     email varchar(50) not null,
     motDePasse varchar(100) not null,
+    themeLight boolean not null default true,
     primary key(idUtilisateur)
 );
 

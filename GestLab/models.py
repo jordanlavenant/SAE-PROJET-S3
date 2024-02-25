@@ -11,6 +11,16 @@ from email.message import EmailMessage
 
 @login_manager.user_loader
 def load_user(email):
+    """
+    Charge un utilisateur à partir de son adresse e-mail.
+
+    Args:
+        email (str): L'adresse e-mail de l'utilisateur.
+
+    Returns:
+        str: Le nom de l'utilisateur correspondant à l'adresse e-mail.
+
+    """
     cnx = get_cnx()
     return get_nom_whith_email(cnx, email)
 
@@ -76,6 +86,25 @@ def envoyer_mail_reset_2FA(mailreceveur,key):
         print("Mail envoyé")
 
 
+def envoyer_mail(mailreceveur, mdp, key):
+    """
+    Envoie un e-mail contenant les informations de création de compte.
+
+    Args:
+        mailreceveur (str): L'adresse e-mail du destinataire.
+        mdp (str): Le mot de passe temporaire du compte.
+        key (str): La clé d'authentification du compte.
+
+    Raises:
+        FileNotFoundError: Si le fichier de configuration 'configEmail.json' n'est pas trouvé.
+
+    Returns:
+        None
+    """
+    json_file = open('GestLab/static/data/configEmail.json')
+    gmail_config = json.load(json_file)
+
+    # Reste du code...
 def envoyer_mail(mailreceveur, mdp, key):
     json_file = open('GestLab/static/data/configEmail.json')
     gmail_config = json.load(json_file)
@@ -155,6 +184,20 @@ def envoyer_mail(mailreceveur, mdp, key):
 
 
 def envoyer_mail_commentaire(mailreceveur, mailenvoyeur, text):
+    """
+    Envoie un e-mail contenant un commentaire.
+
+    Args:
+        mailreceveur (str): L'adresse e-mail du destinataire.
+        mailenvoyeur (str): L'adresse e-mail de l'expéditeur.
+        text (str): Le texte du commentaire.
+
+    Raises:
+        FileNotFoundError: Si le fichier de configuration 'configEmail.json' n'est pas trouvé.
+
+    Returns:
+        None
+    """
     json_file = open('GestLab/static/data/configEmail.json')
     gmail_config = json.load(json_file)
 
@@ -206,6 +249,19 @@ def envoyer_mail_commentaire(mailreceveur, mailenvoyeur, text):
 
 
 def envoyer_mail_signalement(mailreceveur, mailenvoyeur, text, materiel):
+    """
+    Envoie un e-mail de signalement à l'adresse spécifiée.
+
+    Args:
+        mailreceveur (str): L'adresse e-mail du destinataire.
+        mailenvoyeur (str): L'adresse e-mail de l'expéditeur.
+        text (str): Le texte du message.
+        materiel (str): L'objet concerné par le signalement.
+
+    Raises:
+        FileNotFoundError: Si le fichier de configuration 'configEmail.json' n'est pas trouvé.
+
+    """
     json_file = open('GestLab/static/data/configEmail.json')
     gmail_config = json.load(json_file)
 
@@ -255,6 +311,19 @@ def envoyer_mail_signalement(mailreceveur, mailenvoyeur, text, materiel):
         print("Mail envoyé")
 
 def envoyer_mail_mdp_oublie(mailreceveur, mdp):
+    """
+    Envoie un e-mail contenant les informations de récupération de compte.
+
+    Args:
+        mailreceveur (str): L'adresse e-mail du destinataire.
+        mdp (str): Le mot de passe temporaire.
+
+    Raises:
+        FileNotFoundError: Si le fichier de configuration de l'e-mail n'est pas trouvé.
+
+    Returns:
+        None
+    """
     json_file = open('GestLab/static/data/configEmail.json')
     gmail_config = json.load(json_file)
 
@@ -315,7 +384,18 @@ def envoyer_mail_mdp_oublie(mailreceveur, mdp):
         print("Mail envoyé")
         
         
-def envoyer_mail_etat_demande(mailreceveur ,etat, liste_produit):
+def envoyer_mail_etat_demande(mailreceveur, etat, liste_produit):
+    """
+    Envoie un e-mail à l'adresse spécifiée avec l'état de la demande et la liste des produits demandés.
+
+    Args:
+        mailreceveur (str): L'adresse e-mail du destinataire.
+        etat (str): L'état de la demande.
+        liste_produit (list): La liste des produits demandés, chaque élément étant une paire (nom_produit, quantite).
+
+    Returns:
+        None
+    """
     json_file = open('GestLab/static/data/configEmail.json')
     gmail_config = json.load(json_file)
 
@@ -372,12 +452,12 @@ def envoyer_mail_etat_demande(mailreceveur ,etat, liste_produit):
         </style>
     </head>
     <body>
-        <p>Votre demande a été traité avec succès voici les informations correspondants :</p>
+        <p>Votre demande a été traitée avec succès, voici les informations correspondantes :</p>
         <ul>
-            <li>Voici l'état de votre demande:  <p class="etat-commande"> {etat}</p></li>
+            <li>Voici l'état de votre demande : <p class="etat-commande"> {etat}</p></li>
         </ul>
     
-        <p>Voici la liste des produits que vous avez demandé :</p>
+        <p>Voici la liste des produits que vous avez demandés :</p>
         {liste_de_produit}
     </body>
     <footer>
@@ -392,5 +472,3 @@ def envoyer_mail_etat_demande(mailreceveur ,etat, liste_produit):
         smtp.login(gmail_config["email"], gmail_config["password"])
         smtp.send_message(msg)
         print("Mail envoyé")
-        
-#envoyer_mail_etat_demande("erwan.blandeau28@gmail.com", "En cours de traitement", [("test", 2), ("test2", 3), ("test3", 4), ("test4", 5), ("test5", 6)])

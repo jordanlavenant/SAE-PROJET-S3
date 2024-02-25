@@ -4,38 +4,85 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/consulterUtilisateur.css') }}">
 {% endblock %}
 {% block content %}
-<div class="utilisateur-container-overall">
-    <div class="header-container">
-        <a href="{{ url_for('base') }}"><button id="btn-retour">retour</button></a>
-            <form method="POST" action="{{ url_for('recherche_utilisateur') }}" role="search">
-                <div class="search-content">
-                    {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un utilisateur") }}
-                    <button id="btn-search" type="submit">RECHERCHER</button>
-                </div>
-            </form>
-        <div class="filter-container">
-            <p>trier par : </p>
-            <form id="formulaire-comboBox" action="{{ url_for('consulter_utilisateur') }}" method="post">
-                <select name="cat" id="categorie-select" class="{{ nbUser }}">
-                    {% for categorie in categories %}
-                        <option value="{{ categorie }}" name="{{ categorie }}">{{ categorie }}</option>
-                    {% endfor %}
-                </select>
-            </form>
+
+<div class="popup">
+    <div id="delete-confirm">
+        <div class="header-popup">
+            <p>voulez-vous vraiment supprimer l'utilisateur <span id="user"></span> ?</p>
+            <svg onclick='togglePopup()' id='popup-exit' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
+        </div>
+        <div id="choices">
+            <a onclick="togglePopup()">ANNULER</a>
+            <a id="delete-user" href="">SUPPRIMER</a>
         </div>
     </div>
+</div>
+
+<div class="utilisateur-container-overall">
+    <div class="header-container">
+        <a href="{{ url_for('base') }}"><button id="btn-back">RETOUR</button></a>
+        <form method="POST" action="{{ url_for('recherche_utilisateur') }}" role="search">
+            <div class="search-content">
+                {{ RechercherForm.value(size=50, class_="form-control element", placeholder="Chercher un utilisateur") }}
+                <button id="btn-search" type="submit">RECHERCHER</button>
+            </div>
+        </form>
+    </div>
     <div class="container-info-utilisateur">
-        {% for utilisateur in utilisateurs %}
-            <section id="{{ utilisateur[0] }}" class="sous-container-info-utilisateur">
-                <p>{{ utilisateur[2] }} {{ utilisateur[3] }}</p>
-                <div class="container-modification">
-                    <a href="{{ url_for('modifier_utilisateur', id=utilisateur[1]) }}"><button>modifier</button></a>
-                    <a href="{{ url_for('supprimer_utilisateur', id=utilisateur[1]) }}"><button>supprimer</button></a>
-                </div>
-            </section>
-        {% endfor %}
+        <div class="professeur">
+            <h1>professeurs</h1>
+            <div class="scroll_info_utilisateur">
+                {% for professeur in professeurs %}
+                    <section id="{{ professeur[0] }}" class="sous-container-info-utilisateur">
+                        <p>{{ professeur[2] }} {{ professeur[3] }}</p>
+                        <div class="container-modification">
+                            <a href="{{ url_for('modifier_utilisateur', id=professeur[1]) }}"><button>MODIFIER</button></a>
+                            <a onclick="togglePopupDelete('{{ professeur[2] }}','{{ professeur[3] }}','{{ professeur[1] }}')"><button>SUPPRIMER</button></a>
+                        </div>
+                    </section>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="laborantin">
+            <h1>laborantins</h1>
+            <div class="scroll_info_utilisateur">
+                {% for laborantin in laborantins %}
+                    <section id="{{ laborantin[0] }}" class="sous-container-info-utilisateur">
+                        <p>{{ laborantin[2] }} {{ laborantin[3] }}</p>
+                        <div class="container-modification">
+                            <a href="{{ url_for('modifier_utilisateur', id=laborantin[1]) }}"><button>MODIFIER</button></a>
+                            <a onclick="togglePopupDelete('{{ laborantin[2] }}','{{ laborantin[3] }}','{{ laborantin[1] }}')"><button>SUPPRIMER</button></a>
+                        </div>
+                    </section>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="gestionnaire">
+            <h1>gestionnaires</h1>
+            <div class="scroll_info_utilisateur">
+                {% for gestionnaire in gestionnaires %}
+                    <section id="{{ gestionnaire[0] }}" class="sous-container-info-utilisateur">
+                        <p>{{ gestionnaire[2] }} {{ gestionnaire[3] }}</p>
+                        <div class="container-modification">
+                            <a href="{{ url_for('modifier_utilisateur', id=gestionnaire[1]) }}"><button>MODIFIER</button></a>
+                            <a onclick="togglePopupDelete('{{ gestionnaire[2] }}','{{ gestionnaire[3] }}','{{ gestionnaire[1] }}')"><button>SUPPRIMER</button></a>
+                        </div>
+                    </section>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+    function togglePopupDelete(nomUser, prenomUser, idU) {
+        document.querySelector(".popup").classList.toggle("open");
+        document.querySelector("#delete-user").href = `/supprimer-utilisateur/${idU}`;
+        document.querySelector("#user").textContent = nomUser + " " + prenomUser;
+        document.querySelector("html").classList.toggle("scroll-lock");
+    }
+</script>
+
 {% endblock %}
 {% block scripts %}
 {{ super() }}

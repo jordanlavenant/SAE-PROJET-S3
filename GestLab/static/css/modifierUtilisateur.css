@@ -11,15 +11,15 @@
     margin-bottom: 5em;
     width: 400px;
     padding: 40px;
-    background: #009af0;
-    box-shadow: 0 15px 25px #384274;
+    background: var(--secondary);
+    box-shadow: 0 15px 25px var(--background);
     border-radius: 10px;
     }
 
     #ajouterUtilisateur-bo h2 {
         margin: 0 0 30px;
         padding: 0;
-        color: #fff;
+        color: var(--text);
         text-align: center;
     }
     
@@ -31,10 +31,10 @@
       width: 100%;
       padding: 10px 0;
       font-size: 30px;
-      color: #fff;
+      color: var(--text);
       margin-bottom: 30px;
       border: none;
-      border-bottom: 1px solid #fff;
+      border-bottom: 1px solid var(--text);
       outline: none;
       background: transparent;
     }
@@ -48,26 +48,26 @@
   
     .valid-container input {
       padding: 10px 20px;  
-      color: #fff;
+      color: var(--text);
       font-size: 30px;
       text-decoration: none;
       transition: .5s;
-      background-color: #384274;
+      background-color: var(--background);
       border-radius: 5px;
       border: 0;
     }
     
     .valid-container input:hover {
-      box-shadow: 0 0 15px #384274;
+      box-shadow: 0 0 15px var(--background);
     }
   
     .valid-container a {
       text-decoration: none;
-      color: #fff;
+      color: var(--text);
     }
   
     .valid-container a:hover {
-      color: #384274;
+      color: var(--background);
       transition: 0.2s;
     }
 
@@ -75,37 +75,38 @@
         width: 100%;
         padding: 10px 0;
         font-size: 30px;
-        color: #fff;
+        color: var(--text);
         margin-bottom: 30px;
         border: none;
-        border-bottom: 1px solid #fff;
+        border-bottom: 1px solid var(--text);
         outline: none;
         background: transparent;
     }
 
     .comboBox option {
-        background-color: #384274;
-        color: #fff;
+        background-color: var(--background);
+        color: var(--text);
     } 
 
 
   /* bouton retour */
 
-  #btn-retour {
-    margin-right: 60%;
-    border: none;
-    cursor: pointer;
-    transition: 0.2s;
-    color: #fff;
-    background-color: #384274;
+  #btn-back {
+    margin-left: 10vw;
+    color: var(--text);
+    background-color: var(--background);
     padding: 10px 20px;
-    border-radius: 20px;
-  }
-  
-  #btn-retour:hover {
+    font-size: 35px;
+    border: none;
     transition: 0.2s;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    border-radius: 10px;
+}
+
+#btn-back:hover {
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
+    transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
-  }
+}

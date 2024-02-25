@@ -6,6 +6,17 @@ title = "GestLab"
 class PDF_BonCommande:
     class PDF(FPDF):
         def header(self):
+            """
+            Fonction pour générer l'en-tête du document PDF.
+
+            Cette fonction affiche le logo de GestLab, le titre du document et effectue des réglages de mise en forme.
+
+            Paramètres:
+            - self: L'instance de la classe PDF dans laquelle la fonction est appelée.
+
+            Retour:
+            Aucun retour.
+            """
             #logo
             try:
                 self.image('./GestLab/static/images/logo-GestLab.png', 10, 8, 33)
@@ -30,24 +41,54 @@ class PDF_BonCommande:
             self.ln(20)
 
         def footer(self):
-            #set position of the footer
+            """
+            Définit le pied de page du document PDF.
+
+            Positionne le pied de page en bas de la page.
+            Utilise la police Arial avec un style italique et une taille de 10.
+            Affiche le numéro de la page actuelle et le nombre total de pages.
+
+            """
             self.set_y(-15)
             self.set_font('Arial', 'I', 10)
-            self.cell(0,10, 'Page '+ str(self.page_no()) + '/{nb}', align="C")
+            self.cell(0, 10, 'Page ' + str(self.page_no()) + '/{nb}', align="C")
         
 
         def afficher_numero_commande(self, numero_commande, date):
+            """
+            Affiche le numéro de commande et la date sur le bon de commande.
+
+            Args:
+                numero_commande (str): Le numéro de commande.
+                date (str): La date du bon de commande.
+            """
             self.set_font('Arial', 'B', 15)
             self.cell(0, 10, "Bon de commande n°"+numero_commande + " - " + date, ln=1, align="C")
             self.ln(10)
 
         def cree_par(self, nom, prenom):
+            """
+            Ajoute une ligne dans le PDF indiquant le nom et le prénom du gestionnaire qui a créé le document.
+
+            Args:
+                nom (str): Le nom du gestionnaire.
+                prenom (str): Le prénom du gestionnaire.
+            """
             self.set_font('Arial', 'I', 12)
             self.cell(0, 10, "Crée par le gestionnaire: " + nom + " " + prenom, ln=1, align="C")
             self.ln(10)
             
             
         def affiche_materiel(self, liste_materiel):
+            """
+            Affiche les détails du matériel dans le document PDF.
+
+            Args:
+                liste_materiel (list): Une liste contenant les détails du matériel.
+
+            Returns:
+                None
+            """
             self.set_font('Arial', 'B', 10)
             self.cell(38, 10, "Nom", border=True, align="C")
             self.cell(38, 10, "Quantité", border=True, align="C")
@@ -65,6 +106,25 @@ class PDF_BonCommande:
                 self.cell(38, 10, materiel[2], border=True, align="C")
                 self.ln(10)
         
+        def affiche_FDS(self, referenceMateriel, nomMateriel, estToxique, estInflamable, estExplosif, est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant, est_corrosif):
+            """
+            Affiche la fiche de données de sécurité avec les informations fournies.
+
+            Args:
+                referenceMateriel (str): La référence du matériel.
+                nomMateriel (str): Le nom du matériel.
+                estToxique (bool): Indique si le matériel est toxique.
+                estInflamable (bool): Indique si le matériel est inflammable.
+                estExplosif (bool): Indique si le matériel est explosif.
+                est_gaz_sous_pression (bool): Indique si le matériel est un gaz sous pression.
+                est_CMR (bool): Indique si le matériel est cancérigène, mutagène ou reprotoxique.
+                est_chimique_environement (bool): Indique si le matériel est toxique pour l'environnement.
+                est_dangereux (bool): Indique si le matériel est dangereux pour la santé humaine.
+                est_comburant (bool): Indique si le matériel est comburant.
+                est_corrosif (bool): Indique si le matériel est corrosif.
+            """
+            # Code de la fonction affiche_FDS
+            # ...
         def affiche_FDS(self,referenceMateriel, nomMateriel, estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif ):
             #image
             lien = "./GestLab/static/images/FDS/"
@@ -185,6 +245,21 @@ class PDF_BonCommande:
             #     self.ln(6)
 
         def affiche_FDS_picatogramme(self):
+            """
+            Affiche la fiche de données de sécurité des pictogrammes.
+
+            Cette méthode affiche les pictogrammes chimiques et leurs explications associées
+            dans un fichier PDF. Les images des pictogrammes et les explications sont récupérées
+            à partir des liens spécifiés dans le code.
+
+            Args:
+                self: L'instance de la classe.
+
+            Returns:
+                None
+            """
+            # Reste du code...
+        def affiche_FDS_picatogramme(self):
         #image
             lien = "./GestLab/static/images/FDS/"
             lienImageLogo = "./GestLab/static/images/logo-Gestlab.png"
@@ -255,7 +330,20 @@ class PDF_BonCommande:
                 y_position += 70  # Aller à l'image suivante
                 
                 
-    def genererpdfBonCommande(nom,prenom,liste_materiel, numero_commande):
+    def genererpdfBonCommande(nom, prenom, liste_materiel, numero_commande):
+        """
+        Génère un fichier PDF contenant les informations d'une commande.
+
+        Args:
+            nom (str): Le nom de la personne qui génère le bon de commande.
+            prenom (str): Le prénom de la personne qui génère le bon de commande.
+            liste_materiel (list): La liste du matériel à afficher dans le bon de commande.
+            numero_commande (str): Le numéro de commande à afficher dans le bon de commande.
+
+        Raises:
+            Exception: Si une erreur se produit lors de la génération du fichier PDF.
+
+        """
         my_pdf = PDF_BonCommande.PDF()
         my_pdf.add_page()
         my_pdf.afficher_numero_commande(numero_commande, datetime.datetime.now().strftime("%d/%m/%Y"))
@@ -267,13 +355,34 @@ class PDF_BonCommande:
             my_pdf.output("./static/data/bonCommande.pdf")
 
 
-    def genererpdfFDS(nom, prenom,referenceMateriel, nomMateriel,estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif):
+    def genererpdfFDS(nom, prenom, referenceMateriel, nomMateriel, estToxique, estInflamable, estExplosif, est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant, est_corrosif):
+        """
+        Génère un fichier PDF contenant les informations de la fiche de données de sécurité (FDS).
+
+        Args:
+            nom (str): Le nom de la personne générant le PDF.
+            prenom (str): Le prénom de la personne générant le PDF.
+            referenceMateriel (str): La référence du matériel.
+            nomMateriel (str): Le nom du matériel.
+            estToxique (bool): Indique si le matériel est toxique.
+            estInflamable (bool): Indique si le matériel est inflammable.
+            estExplosif (bool): Indique si le matériel est explosif.
+            est_gaz_sous_pression (bool): Indique si le matériel est un gaz sous pression.
+            est_CMR (bool): Indique si le matériel est cancérigène, mutagène ou toxique pour la reproduction.
+            est_chimique_environement (bool): Indique si le matériel est dangereux pour l'environnement.
+            est_dangereux (bool): Indique si le matériel est dangereux.
+            est_comburant (bool): Indique si le matériel est comburant.
+            est_corrosif (bool): Indique si le matériel est corrosif.
+
+        Returns:
+            None
+        """
         my_pdf = PDF_BonCommande.PDF()
         my_pdf.add_page()
         my_pdf.cree_par(nom, prenom)
-        my_pdf.affiche_FDS(referenceMateriel, nomMateriel, estToxique, estInflamable, estExplosif,est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant,est_corrosif)
+        my_pdf.affiche_FDS(referenceMateriel, nomMateriel, estToxique, estInflamable, estExplosif, est_gaz_sous_pression, est_CMR, est_chimique_environement, est_dangereux, est_comburant, est_corrosif)
         my_pdf.output("./GestLab/static/data/FDS.pdf")
-
+    
 
     def genererpdfFDSPicatogramme():
         my_pdf = PDF_BonCommande.PDF()

@@ -1,42 +1,44 @@
 p,
 label {
-    color: white;
+    color: var(--text);
     font-size: 35px;
     cursor: pointer;
 }
 
 #btn-back {
-    margin-left: 10vw;
-    color: white;
-    background-color: #384274;
-    padding: 14px 40px;
-    border-radius: 25px;
-    font-size: 25px;
+    color: var(--text);
+    background-color: var(--background);
+    padding: 10px 20px;
+    font-size: 35px;
     border: none;
     transition: 0.2s;
+    border-radius: 10px;
+    margin: 50px 10vw;
 }
 
 #btn-back:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
 }
 
 .modifierMateriel-container {
-    background-color: #384274;
+    background-color: var(--background);
     display: flex;
     justify-content: center;
     align-items: center;    
-    margin: 5% 5%;
-    padding: 5% 5%;
+    padding: 5%;
     gap: 5vw;
+    margin: 50px 10vw;
+    border-radius: 10px;
+    box-shadow: 5px 10px 10px var(--background);
 }
 
 .form-modifMateriel {
-    background-color: #384274;
+    background-color: var(--background);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -63,8 +65,8 @@ label {
 
 .dom-select, 
 .cat-select {
-    color: #384274;
-    background-color: #fff;
+    color: var(--background);
+    background-color: var(--text);
     border-radius: 10px;
     font-size: 25px;
     padding: 10px;
@@ -80,7 +82,7 @@ label {
     padding: 10px;
     border-radius: 10px;
     font-size: 25px;
-    color: #384274;
+    color: var(--background);
 }
 
 .pair-info {
@@ -93,7 +95,7 @@ label {
 .text-area {
     width: calc(100% - 20px);
     height: 150px;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 10px;
     border: none;
     outline: none;
@@ -109,10 +111,10 @@ label {
 }
 
 .submit {
-    color: #384274;
+    color: var(--background);
     background-color: white;
     padding: 14px 20px;
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 25px;
     border: none;
     margin-top: 30px;
@@ -120,9 +122,9 @@ label {
 }
 
 .submit:hover {
-    color: white;
-    background-color: #009af0;
-    box-shadow: 0 0 15px #009af0;
+    color: var(--text);
+    background-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
     transition: 0.2s;
     transform: scale(1.1);
     cursor: pointer;
@@ -173,7 +175,7 @@ label {
 }
 
 .fds-text {
-    color: white;
+    color: var(--text);
     font-size: 25px;
     margin: 2vh 0;
     cursor: pointer;
@@ -188,12 +190,33 @@ label {
 .checkmark label {
     margin: 0;
     padding: 0;
+    user-select: none;
+    transition: .2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+}
+
+.checkmark label p {
+    margin: 0;
+    padding: 0;
 }
 
 .checkmark input {
     height: 30px;
     width: 30px;
-    accent-color: #d35252;
+    accent-color: var(--error);
+    display: none;
+}
+
+.checkmark label:hover {
+    background-color: var(--error);
+}
+
+.checkmark input:checked ~ label{
+    background-color: var(--error);
+    transition: .2s;
 }
 
 .checkmark div {

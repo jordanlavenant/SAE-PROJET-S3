@@ -56,6 +56,30 @@ class Recherche:
             print("erreur de recherche")
             raise
 
+    def recherche_all_in_utilisateur_with_search_statut(cnx, search, idStatut=None):
+        """
+        Recherche tous les utilisateurs dont le nom ou le prénom correspond à la recherche donnée.
+
+        Args:
+            cnx (object): L'objet de connexion à la base de données.
+            search (str): La chaîne de recherche.
+
+        Returns:
+            tuple: Un tuple contenant une liste des utilisateurs correspondants à la recherche et le nombre total de résultats.
+        """
+        try:
+            list = []
+            print(idStatut)
+            if idStatut is not None:
+                result = cnx.execute(text("select * from UTILISATEUR where idStatut = '" + str(idStatut) + "' and (nom like '%" + search + "%' or prenom like '%" + search + "%') ;"))
+            for row in result:
+                print(row)
+                list.append(row)
+            return (list, len(list))
+        except:
+            print("erreur de recherche")
+            raise
+
     
     def recherche_all_in_materiel_with_search(cnx, idbc, search):
         """

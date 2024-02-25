@@ -28,3 +28,19 @@ class Table:
             except:
                 print("Erreur lors de l'affichage de la table")
                 raise
+        
+        def get_AllTable(cnx):
+            """
+            Récupère une liste de toutes les tables dans la base de données.
+
+            Paramètres:
+                - cnx: L'objet de connexion à la base de données.
+            Returns:
+                - res: A list of table names.
+            """
+            
+            AllTable = cnx.execute(text("SHOW TABLES;"))
+            res = []
+            for table in AllTable:
+                res.append(table[0])
+            return res

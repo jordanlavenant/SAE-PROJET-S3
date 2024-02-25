@@ -4,31 +4,61 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/consulterBonCommande.css') }}">
 {% endblock %}
 {% block content %}
-<div class="btns-header">
-    <a id="btn-back" href="{{ url_for('base') }}">Retour</a>
-    {% if nb_bon_commande_attente > 1 %}
-    <a id="btn-fusion" href="{{ url_for('fusion_bon_commande') }}">Fusionner les commandes</a>
-    {% endif %}
-    <a id="btn-redirect-history" href="{{ url_for('historique_bon_commande') }}">Historique des bons</a>
-</div>
-<section class="info">
-    {% for i in range(0, len) %}
-    <div class="info-bon">
-        <p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p>
-        <p class="info-date para">Date : {{bonCommande[i][3]}}</p>
-        <a id="suppr-bon" href="{{ url_for('delete_bon_commande', id=bonCommande[i][0]) }}">Supprimer</a>
-        <select name="" id="statut" class="statut {{ bonCommande[i][0] }}">
-            {% for statut in statutsCommande %}
-                {% if listeEtat[i][0] == statut[0] %}
-                    <option selected="selected" value="{{ statut[0] }}">{{ statut[1] }}</option>
-                {% elif statut[0] != 1 %}
-                    <option value="{{ statut[0] }}">{{ statut[1] }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-        <a class="btn-consulter" href="/bon-commande-unique?idbc={{ bonCommande[i][0] }}">Consulter le bon></a>
+<div class="container-top">
+    <a id="btn-back" href="{{ url_for('base') }}">RETOUR</a>
+    <div class="btns-container">
+        {% if nb_bon_commande_attente > 1 %}
+        <a id="secondary-btn" href="{{ url_for('fusion_bon_commande') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: ;transform: ;msFilter:;"><path d="M12 8v5h5v-2h-3V8z"></path><path d="M21.292 8.497a8.957 8.957 0 0 0-1.928-2.862 9.004 9.004 0 0 0-4.55-2.452 9.09 9.09 0 0 0-3.626 0 8.965 8.965 0 0 0-4.552 2.453 9.048 9.048 0 0 0-1.928 2.86A8.963 8.963 0 0 0 4 12l.001.025H2L5 16l3-3.975H6.001L6 12a6.957 6.957 0 0 1 1.195-3.913 7.066 7.066 0 0 1 1.891-1.892 7.034 7.034 0 0 1 2.503-1.054 7.003 7.003 0 0 1 8.269 5.445 7.117 7.117 0 0 1 0 2.824 6.936 6.936 0 0 1-1.054 2.503c-.25.371-.537.72-.854 1.036a7.058 7.058 0 0 1-2.225 1.501 6.98 6.98 0 0 1-1.313.408 7.117 7.117 0 0 1-2.823 0 6.957 6.957 0 0 1-2.501-1.053 7.066 7.066 0 0 1-1.037-.855l-1.414 1.414A8.985 8.985 0 0 0 13 21a9.05 9.05 0 0 0 3.503-.707 9.009 9.009 0 0 0 3.959-3.26A8.968 8.968 0 0 0 22 12a8.928 8.928 0 0 0-.708-3.503z"></path></svg>
+            <p>FUSIONNER LES COMMANDES</p>
+        </a>
+        {% endif %}
+        <a class="btn-generic" href="{{ url_for('historique_bon_commande') }}">HISTORIQUE</a>
     </div>
-    {% endfor %}
+</div>
+<section class="bons-container">
+    {% if len > 0 %}
+    <table>
+        <thead>
+            <tr>
+                <th>auteur</th>
+                <th>date</th>
+                <th>statut</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(0, len) %}
+            <tr onclick="document.location='/bon-commande-unique?idbc={{ bonCommande[i][0] }}'" class="info-bon">
+                <td><p class="info-user para">{{infoUser[i][0]}} {{infoUser[i][1]}}</p></td>
+                <td><p class="info-date para">{{bonCommande[i][3]}}</p></td>
+                <td>
+                    <select name="" id="statut" class="statut {{ bonCommande[i][0] }}" onclick="event.stopPropagation()">
+                    {% for statut in statutsCommande %}
+                        {% if listeEtat[i][0] == statut[0] %}
+                            <option selected="selected" value="{{ statut[0] }}">{{ statut[1] }}</option>
+                        {% elif statut[0] != 1 %}
+                            <option value="{{ statut[0] }}">{{ statut[1] }}</option>
+                        {% endif %}
+                    {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <div class="suppr-bon-container" onclick="deleteBonCommande('{{ bonCommande[i][0] }}')">
+                        <p>SUPPRIMER</p>
+                        <svg onclick="" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: ;transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-bon">
+        <p>il n'y a pas de bon de commande en attente</p>
+        <p>voulez-vous consulter les <a href="{{ url_for('historique_bon_commande') }}">bon de commande archivés</a> ?</p>
+    </div>
+    {% endif %}
 </section>
 {% endblock %}
 

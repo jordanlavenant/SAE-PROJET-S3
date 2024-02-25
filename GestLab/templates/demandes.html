@@ -4,29 +4,28 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='./css/demandes.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('base') }}">Retour</a>
+<a id="btn-back" href="{{ url_for('base') }}">RETOUR</a>
 {% if info_demande != [] %}
 <section>
-        <div id="info">
-            <img id="attention-orange" src="../static/images/attention-orange.png" alt="attention-orange">
-            {% if nb_demande|int < 2 %}
-                <p class="texte_orange">{{nb_demande}} Demande</p>
-            {% else %}
-                <p class="texte_orange">{{nb_demande}} Demandes</p>
-            {% endif %}
-        </div>
-        {% for i in range(nb_demande) %}
-        <div class="container-demande">
-            <p class="texte_bleu">{{info_demande[i][1]}} {{info_demande[i][2]}}</p>
-            <a id="btn-consulter" href="{{ url_for('demande',idDemande=info_demande[i][0] ) }}">Consulter la demande ></a>
-        </div>
-        {%endfor%}
+    <div id="info">
+        <img id="attention-orange" src="../static/images/attention-orange.png" alt="attention-orange">
+        {% if nb_demande|int < 2 %}
+            <p class="texte_orange">{{nb_demande}} demande</p>
+        {% else %}
+            <p class="texte_orange">{{nb_demande}} demandes</p>
+        {% endif %}
+    </div>
+    {% for i in range(nb_demande) %}
+    <div class="container-demande" onclick="document.location=`{{ url_for('demande',idDemande=info_demande[i][0]) }}`">
+        <p class="texte_bleu">{{info_demande[i][1]}} {{info_demande[i][2]}}</p>
+    </div>
+    {%endfor%}
 </section>
 {% else %}
 <section>
     <div id="info">
         <img id="attention-orange" src="../static/images/attention-orange.png" alt="attention-orange">
-        <p class="texte_orange">Aucune demande</p>
+        <p class="texte_orange">aucune demande</p>
     </div>
 </section>
 {% endif %}

@@ -1,0 +1,231 @@
+-UTILISATEUR,,,,,,
+1,1,Admin,Admin,admin@example.com,motdepasseadmin,0
+2,2,Utilisateur,Standard,user@example.com,motdepasseuser,1
+ ,,,,,,-2FA
+ 
+-AJOUTERMATERIEL
+ 
+-ALERTESENCOURS
+1,2
+1,5
+3,2
+ 
+-ARCHIVEBONCOMMANDE
+ 
+-ARCHIVECOMMANDE
+ 
+-ARCHIVECOMMANDEANCIEN
+ 
+-BONCOMMANDE
+1,1,1,
+2,2,1,
+ 
+-CATEGORIE
+1,1,Observation
+2,1,Mesures
+3,1,ExAO
+4,1,Multimédia
+5,1,Expérimentation
+6,1,Divers
+7,6,Verrerie
+8,6,Associés
+9,5,Produits organiques
+10,5,Produits minéraux
+11,5,Enzymes
+12,5,Colorants
+13,5,Entretien
+14,5,Autres
+15,3,Appareils de labo
+16,3,Sécurité
+17,3,Fournitures
+18,3,Mobilier
+19,3,Divers
+20,4,Logiciels
+21,4,DVD/VHS
+22,4,Manuels scolaires
+23,4,Livres scientifiques
+24,4,Cartes/Posters
+25,4,Divers
+26,2,Générateurs
+27,2,Mesures
+28,2,Récepteurs
+29,2,Connectique
+30,2,Métaux
+31,2,Divers
+ 
+-COMMANDE
+ 
+-DEMANDE
+ 
+-DOMAINE
+1,Appareillage
+2,Électricité
+3,Matériel de laboratoire
+4,Médias
+5,Produits chimiques
+6,Verrerie et associés
+ 
+-ENDROIT
+3,Armoire 1
+1,Étagère 1
+2,Étagère 2
+ 
+-ENVOIFOURNISSEUR
+ 
+-ETATCOMMANDE
+1,En attente de la validation du Gestionnaire
+2,En cours de traitement
+3,Expédiée
+4,Livrée
+ 
+-ETATDEMANDE
+1,En attente de validation
+2,Envoyée
+ 
+-FDS
+1,FDS 1
+2,FDS 2
+3,FDS 3
+ 
+-FOURNISSEUR
+1,Fournisseur 1,Adresse 1,fournisseur1@example.com,1234567890
+2,Fournisseur 2,Adresse 2,fournisseur2@example.com,9876543210
+ 
+-MATERIEL
+1,REF123,1,Microscope électronique,1,1,Microscope électronique haute résolution,Utilisé pour observer des échantillons à l'échelle microscopique.
+2,REF456,2,Acide chlorhydrique,5,10,Solution d'acide chlorhydrique à 37%,Utilisé comme réactif de laboratoire.
+3,REF789,,Oscilloscope Tektronix TBS1052B,1,1,Oscilloscope numérique à deux canaux,Utilisé pour l'analyse de signaux électriques.
+4,REF101,,Bécher en verre de 250 ml,6,1,Bécher en verre borosilicaté,Utilisé pour contenir des liquides en laboratoire.
+5,REF202,,Pipette graduée en plastique 10 ml,6,15,Pipette jetable à usage unique,Utilisée pour mesurer des volumes liquides avec précision.
+6,REF303,,DVD éducatif sur l'électricité,4,1,DVD interactif d'enseignement,Utilisé pour l'apprentissage des concepts électricité.
+7,REF404,,Multimètre Fluke 87V,2,1,Multimètre numérique professionnel,"Utilisé pour la mesure de tensions, courants, et résistances électriques."
+8,REF505,3,Sulfate de cuivre,3,30,Poudre cristalline bleue,Utilisé comme réactif chimique dans diverses expériences.
+9,REF606,,Générateur de signaux Rohde & Schwarz,2,1,Générateur de signaux RF haute fréquence,Utilisé pour la génération de signaux électriques complexes.
+10,REF707,,Burette automatique en verre 50 ml,6,1,Burette en verre avec système d'étalonnage automatique,Utilisée pour doser des solutions avec précision.
+11,REF808,,Pipette Pasteur en plastique 3 ml,6,5,Pipette jetable en plastique,Utilisée pour le transfert de petits volumes liquides.
+12,REF909,,Logiciel de modélisation moléculaire,4,1,Logiciel de simulation chimique avancé,Utilisé pour la modélisation moléculaire et la simulation de réactions chimiques.
+13,REF1010,,Pissette en verre 500 ml,6,1,Pissette en verre classique,Utilisée pour le transfert de liquides en laboratoire.
+ 
+-MATERIELUNIQUE
+1,1,1,2023-10-26 10:00:00,Bon état,1.0,
+2,2,2,2023-10-26 11:00:00,Pipettes neuves,2.0,2023-10-26 00:00:00
+3,2,2,2023-10-26 11:00:00,Pipettes neuves,10.0,2024-10-26 00:00:00
+4,3,3,2023-10-26 12:00:00,,1.0,
+5,2,2,2023-10-26 11:00:00,Pipettes neuves,10.0,2023-10-30 00:00:00
+ 
+-RANGEMENT
+1,1,haut
+2,2,bas
+3,3,gauche
+4,2,droite
+5,1,milieu
+6,3,milieu
+ 
+-RECHERCHEMATERIELS
+Agitateurs à hélice
+Agitateurs à plaques chauffantes
+Agitateurs à ultrasons
+Agitateurs magnétiques
+Agitateurs vortex
+Ampoules à décanter
+Autoclaves
+Bains-marie
+Ballons de réaction
+Béchers
+Béchers Griffin
+Boîtes cryogéniques
+Boîtes de Pétri
+Bouchons en caoutchouc
+Bouchons en liège
+Burettes
+Capsules de pesée
+Colonnes de chromatographie
+Colonnes de fractionnement
+Cuvettes de conductimètre
+Cuvettes de fluorimètre
+Cuvettes de polarimètre
+Cuvettes de spectrophotomètre
+Cuvettes de viscosimètre
+Cylindres gradués
+Deshydrateurs d'air
+Entonnoirs
+Éprouvettes
+Filtres Buchner
+Fioles à col large
+Fioles à col long
+Fioles à vide
+Fioles coniques
+Fioles de réaction
+Fioles Erlenmeyer
+Flacons compte-gouttes
+Flacons de stockage
+Flacons laveurs
+Microscope
+Mortiers et pilons
+Pinces de fixation
+"Pinces, supports et trépieds"
+Pipettes graduées
+Pipettes Pasteur
+Pipettes volumétriques
+Plaques de Petri
+Réacteurs à micro-ondes
+Réacteurs à pression
+Réactif chimique
+Récipients pour stockage
+Réfrigérants à colonne
+Réfrigérants à condenseur
+Réfrigérants à serpentin
+Seringues
+Support universel
+Thermomètres de laboratoire
+Tubes à essai
+Tubes à essai à col large
+Tubes à essai à fond plat
+Tubes à essai à fond rond
+Tubes capillaires
+Tubes de centrifugation
+Tubes Nessler
+ 
+-RESERVELABORATOIRE
+ 
+-RISQUE
+1,Comburant
+2,Danger incendie
+3,Explosif
+4,Effets graves sur la santé
+5,Altération de la santé humaine
+6,Gaz sous pression
+7,Corrosion
+8,Toxicité aquatique
+9,Toxicité aiguë
+ 
+-RISQUES
+1,1
+1,2
+2,2
+3,3
+ 
+-STATUT
+1,Administrateur
+2,Professseur
+3,Laborantin
+4,Gestionnaire
+ 
+-STOCKLABORATOIRE
+1,3,1
+2,1,0
+ 
+-SUIVICOMMANDE
+1,Entrepôt 1,12345
+2,Entrepôt 2,67890
+ 
+-TYPESALERTES
+1,Date de péremption dépassée
+2,Date de péremption dépassée dans 10 jours
+3,Quantité en dessous du seuil minimal
+4,Quantité de l'objet à 0
+ 
+-UTILISATEUR
+1,1,Admin,Admin,admin@example.com,motdepasseadmin,0
+2,2,Utilisateur,Standard,user@example.com,motdepasseuser,1
+ 

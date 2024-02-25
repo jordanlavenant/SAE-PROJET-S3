@@ -4,36 +4,43 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/ajouterStock.css') }}">
 {% endblock %}
 {% block content %}
-<a id="btn-back" href="{{ url_for('base') }}">retour</a>
+<a id="btn-back" href="{{ url_for('base') }}">RETOUR</a>
+
+<div class="popup">
+    <form id='ez-search-form' method="POST" action="{{ url_for('ajouter_stock') }}" role="search">
+        <div class="header-popup">
+            <p>recherche assistée</p>
+            <svg onclick='togglePopup()' id='popup-exit' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
+        </div>
+        <div class="search-content">
+            {{ RechercherFormWithAssets.value(size=50, class_="form-control element", placeholder="chercher un matériel", id="search-bar") }}
+            <div class="filters-container">
+                <div class="user-box domaine-container">
+                    <label for="search_domaine">domaine : </label>
+                    <div>{{ RechercherFormWithAssets.domaine(size=auto, id="search_domaine", class_="comboBox dom-select") }}</div>
+                </div>
+                <div class="user-box categorie-container">
+                    <label for="search_categorie">catégorie : </label>
+                    <div>{{ RechercherFormWithAssets.categorie(size=auto, id="search_categorie", class_="comboBox cat-select") }}</div>
+                </div>
+                {{ RechercherFormWithAssets.submit(value="RECHERCHER", class_="element submit", id="btn-search") }}
+            </div>
+        </div>
+    </form>
+</div>
 
 <div class="ajouterMateriel-container">
     <div class="ajouterMateriel-content">
-        <form method="POST" action="{{ url_for('ajouter_stock') }}" role="search">
-            <div class="search-content">
-                {{ RechercherFormWithAssets.value(size=50, class_="form-control element", placeholder="chercher un matériel", id="search-bar") }}
-                <div class="filters-container">
-                    <div class="user-box domaine-container">
-                        <label for="search_domaine">domaine : </label>
-                        <div>{{ RechercherFormWithAssets.domaine(size=auto, id="search_domaine", class_="comboBox dom-select") }}</div>
-                    </div>
-                    <div class="user-box categorie-container">
-                        <label for="search_categorie">catégorie : </label>
-                        <div>{{ RechercherFormWithAssets.categorie(size=auto, id="search_categorie", class_="comboBox cat-select") }}</div>
-                    </div>
-                    {{ RechercherFormWithAssets.submit(value="RECHERCHER", class_="element submit", id="btn-search") }}
-                </div>
-            </div>
-        </form>
-
-
         <form class="form-ajoutMateriel" role="form" method="POST" action="{{ url_for('ajouter_stock') }}">
             {{ AjouterStockForm.hidden_tag() }}                        
             <div class="main-container">
-
                 <div class="left-side-info">
+                    <button id='submit-ez-search' onclick='togglePopup()'>RECHERCHE ASSISTÉE</button>
                     <div class="user-box materiel-container">
                         <label for="materiel">materiel : </label>
-                        <div>{{ AjouterStockForm.materiel(size=auto, class_="comboBox dom-select", id="materiel") }}</div>
+                        <div id="ez-search">
+                            <div>{{ AjouterStockForm.materiel(size=auto, class_="comboBox dom-select", id="materiel") }}</div>
+                        </div>
                     </div>
 
                     <div class="user-box domaine-container">
@@ -86,6 +93,12 @@
 </div>
 
 <script>
+
+    function togglePopup() {
+        document.querySelector('.popup').classList.toggle('open');
+        const html = document.querySelector('html').classList.toggle('scroll-lock');
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         const endroitSelect = document.getElementById("emplacement");
         const positionSelect = document.getElementById("position");

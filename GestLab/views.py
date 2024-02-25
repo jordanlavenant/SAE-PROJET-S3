@@ -17,6 +17,10 @@ from GestLab.Classe_python.Reload import RELOAD
 from GestLab.Classe_python.ReserveLaboratoire import ReserveLaboratoire
 from GestLab.Classe_python.Risque import Risques
 from GestLab.Classe_python.StockLaboratoire import STOCKLABORATOIRE
+from GestLab.Classe_python.ImportCSV import ImportCSV
+from GestLab.Classe_python.ExportCSV import ExportCSV
+from GestLab.Classe_python.Table import Table
+from GestLab.Classe_python.Utilisateurs import Utilisateur
 from GestLab.initialisation import get_cnx
 
 from .app import app, csrf #, db
@@ -24,15 +28,20 @@ from flask import render_template, url_for, redirect, request, session, jsonify,
 from flask_login import login_user, current_user, logout_user, login_required
 #from .models import User
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField, BooleanField
+from wtforms import IntegerField, StringField, HiddenField, FileField, SubmitField, SelectField, TextAreaField, DateField, BooleanField, RadioField
 from wtforms.validators import DataRequired, Optional
+from flask_wtf.file import FileRequired, FileAllowed
 from wtforms import PasswordField
 from hashlib import sha256
 from .connexionPythonSQL import *
 from .models import *
+from .genererpdf import *
+
 import time
 import datetime
-from .genererpdf import *
+import os
+from werkzeug.utils import secure_filename
+
 
 cnx = get_cnx()
 
@@ -195,6 +204,18 @@ class AjouterSuggestionForm(FlaskForm):
             return (categorie, nom, reference, caracteristiques, infossup, seuilalerte)
     
     def get_full_materiel_requestform(self):
+        """
+        Récupère les informations complètes du formulaire de demande de matériel.
+
+        Returns:
+            tuple: Un tuple contenant les informations suivantes :
+                - categorie (str): La catégorie du matériel.
+                - nom (str): Le nom du matériel.
+                - reference (str): La référence du matériel.
+                - caracteristiques (str): Les caractéristiques du matériel.
+                - infossup (str): Les informations supplémentaires sur le matériel.
+                - seuilalerte (str): Le seuil d'alerte du matériel.
+        """
         categorie = request.form['categorie']
         nom = request.form['nom']
         reference = request.form['reference']
@@ -345,7 +366,140 @@ class AjouterStockForm(FlaskForm):
         Returns the value of the 'endroit' data attribute.
         """
         return self.endroit.data
+
+
+class ImporterCsvForm(FlaskForm):
     
+    fichier = FileField('fichier', validators=[])
+    submit = SubmitField('IMPORTER')
+    next = HiddenField()
+    bd_option = RadioField('voulez-vous remplacer les données existantes ?', choices=[('oui','oui'),('non','non')], default='non')
+
+    def get_fichier(self):
+        """
+        Récupère le fichier associé à l'objet.
+
+        Returns:
+            Le fichier associé à l'objet.
+        """
+        fichier = self.fichier.data
+        return fichier
+    
+    def get_bd_option(self):
+        """
+        Récupère l'option de base de données associée à l'objet.
+
+        Returns:
+            L'option de base de données associée à l'objet.
+        """
+        bd_option = self.bd_option.data
+        return bd_option
+    
+
+class ExporterCsvForm(FlaskForm):
+    liste_tables = Table.Get.get_AllTable(cnx) 
+
+    # Créer des champs de formulaire pour chaque table
+    for table in liste_tables:
+        locals()[table] = BooleanField(table, default=False)
+
+    submit = SubmitField('EXPORTER')
+    next = HiddenField()
+
+    def get_tables(self):
+        """
+        Récupère les tables sélectionnées.
+
+        Returns:
+            list: Une liste contenant les tables sélectionnées.
+        """
+        tables = []
+        for table in self.liste_tables:
+            if getattr(self, table).data is True:
+                tables.append(table)
+        return tables
+
+
+@app.route("/csv")
+def csv():
+    return render_template(
+        "csv.html",
+        title="CSV",
+        chemin = [("base", "accueil"), ("csv", "csv")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )
+
+@app.route("/exporter-csv/", methods=("GET","POST",))
+def exporter_csv():
+    """
+    Cette fonction gère l'exportation des données de la base de données dans un fichier CSV.
+    Elle affiche un formulaire permettant de sélectionner les tables à exporter, valide le formulaire,
+    effectue l'exportation des données dans un fichier CSV et renvoie le fichier CSV à l'utilisateur.
+    """
+    f = ExporterCsvForm()
+    if f.validate_on_submit():
+        tables = f.get_tables()
+        print(tables)
+        ExportCSV.Get.exporter_csv(cnx, tables)
+        return send_file("../table/tout.csv", as_attachment=True)
+    return render_template(
+        "exporterCsv.html",
+        title="exporter un fichier csv",
+        ExporterCsvForm=f,
+        liste_tables = f.liste_tables,
+        longueurListe = len(f.liste_tables),    
+        chemin = [("base", "accueil"), ("csv", "csv"), ("exporter_csv", "exporter un fichier csv")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )        
+
+@app.route("/importer-csv/", methods=("GET","POST",))
+@csrf.exempt
+def importer_csv():
+    def os_choice(filename):
+        if os.name == 'posix':  
+            filepath = os.path.join('./temp', filename)
+        elif os.name == 'nt':  
+            filepath = os.path.join('..\\temp', filename)
+        else:
+            filepath = os.path.join('./temp', filename)
+        return filepath
+    
+    importerForm = ImporterCsvForm()
+
+    try:
+        if importerForm.validate_on_submit():
+            fichier = importerForm.fichier.data
+            bb_vide = importerForm.bd_option.data
+            if fichier:
+                filename = secure_filename(fichier.filename)
+                
+                filepath = os_choice(filename)
+
+                fichier.save(filepath)
+                if bb_vide == "oui":
+                    ImportCSV.Insert.importer_csv_bd_vide(cnx, filepath)
+                elif bb_vide == "non":
+                    ImportCSV.Insert.importer_csv_bd_plein(cnx, filepath)
+                return redirect(url_for('inventaire'))
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    return render_template(
+        "importerCsv.html",
+        title="importer un fichier csv",
+        ImporterCsvForm=importerForm,
+        chemin = [("base", "accueil"), ("csv", "csv"), ("importer_csv", "importer un fichier csv")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )
+
+@app.route("/manuel-csv")
+def manuel_csv():
+    return send_file('../data/module_csv.zip', as_attachment=True)
+
 class AjouterMaterielUniqueForm(FlaskForm):
     endroit = SelectField('ComboBox', choices=[], id="endroit", name="endroit", validators=[DataRequired()])
     position = SelectField('Position', choices=[], id="position", name="position", validate_choice=False, validators=[DataRequired()])
@@ -595,17 +749,21 @@ def ajouter_suggestion():
                 FDSForm=FDSFormulaire,
                 AjouterSuggestionForm=f,
                 erreur="Le nom du materiel ou la reference est deja existante",
-                chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")]
+                chemin = [("base", "accueil"), ("ajouter_suggestion", "ajouter une suggestion")],
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )
     else :
         print("Erreur lors de la validation du formulaire")
         print(f.errors)
     return render_template(
-    "ajouterSuggestion.html",
-    title="ajouter une suggestion",
-    FDSForm=FDSFormulaire,
-    AjouterSuggestionForm=f,
-    chemin = [("base", "accueil"), ("demander","demander"), ("ajouter_suggestion", "ajouter une suggestion")]
+        "ajouterSuggestion.html",
+        title="ajouter une suggestion",
+        FDSForm=FDSFormulaire,
+        AjouterSuggestionForm=f,
+        chemin = [("base", "accueil"), ("demander","demander"), ("ajouter_suggestion", "ajouter une suggestion")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/ajouter-endroit", methods=("GET","POST",))
@@ -635,7 +793,9 @@ def ajouter_endroit():
         "ajouterEndroit.html",
         title="ajouter un endroit",
         AjouterEndroitForm=f,
-        chemin = [("base", "accueil"),("inventaire", "inventaire"),("ajouter_endroit", "ajouter un endroit")]
+        chemin = [("base", "accueil"),("inventaire", "inventaire"),("ajouter_endroit", "ajouter un endroit")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/ajouter-rangement", methods=("GET","POST",))
@@ -666,7 +826,9 @@ def ajouter_rangement():
         "ajouterRangement.html",
         title="ajouter un rangement",
         AjouterRangementForm=f,
-        chemin = [("base", "accueil"),("inventaire", "inventaire"),("ajouter_rangement", "ajouter un rangement")]
+        chemin = [("base", "accueil"),("inventaire", "inventaire"),("ajouter_rangement", "ajouter un rangement")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 
@@ -768,7 +930,9 @@ def ajouter_stock():
         title="ajouter au stock",
         AjouterStockForm=ajouterForm,
         RechercherFormWithAssets=rechercherForm,
-        chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")]
+        chemin = [("base", "accueil"), ("ajouter_stock", "ajouter au stock")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 
@@ -888,7 +1052,9 @@ def ajouter_materiel_unique(id):
         AjouterMaterielUniqueForm=f,
         id = id,
         materiel = Materiel.Get.get_all_information_to_Materiel_with_id(get_cnx(), id)[1],
-        chemin = [("base", "accueil"),("inventaire", "inventaire")]
+        chemin = [("base", "accueil"),("inventaire", "inventaire")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 class A2FForm(FlaskForm):
@@ -913,7 +1079,10 @@ def base():
         "home.html",
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
-        title="GESTLAB"
+        title="GESTLAB",
+        chemin = [("base", "accueil")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/motdepasseoublie/", methods=("GET","POST",))
@@ -929,7 +1098,10 @@ def mot_de_passe_oublier():
         return redirect(url_for('a2f', mail=email, id=1))
     return render_template(
         "login.html",
-        MdpOublierForm=f)
+        MdpOublierForm=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )
 
 @app.route("/a2f/<string:mail>/<int:id>", methods=("GET","POST",))
 def a2f(mail, id):
@@ -990,6 +1162,8 @@ def a2f(mail, id):
         oldMail=oldMail,
         mdp=mdp,
         A2FForm=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/reinitialiser-bon-commande/<int:id>", methods=("GET","POST",))
@@ -1088,15 +1262,6 @@ def demander_materiel_unique(id):
     Materiel.Insert.ajout_materiel_in_AjouterMateriel(cnx, idMat, id, qte, False)
     return redirect(url_for('demander'))
 
-#Pour le bouton commander tout les materiels 
-
-# @app.route("/commander-all-materiel-unique/<int:id>", methods=("GET","POST",))
-# def commander_all_materiel_unique(id):
-#     idMat = request.args.get('idMat')
-#     qte = request.args.get('qte')
-#     ajout_materiel_in_commande(cnx, idMat, id, qte, False)
-#     set_all_quantite_from_ajouterMat_to_boncommande(cnx, idemande, id)  #---------------------------------------------------LEO-----AIDE--------------------------------------#  
-#     return redirect(url_for('commander'))
 
 @app.route("/commander/")
 @csrf.exempt
@@ -1107,17 +1272,27 @@ def commander():
     Returns:
         render_template: Le template HTML de la page commander.html avec les données nécessaires.
     """
+    valueSearch = request.args.get('value')
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
     rechercher = RechercherForm()
     nb_alertes = Alert.get_nb_alert(cnx)
     nb_demandes = Demande.Get.get_nb_demande(cnx)
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
-    liste_materiel = Bon_commande.Bon_commande.Get.afficher_bon_commande(cnx, idUser)
-    nbMateriel = len(liste_materiel)
-    print(liste_materiel)
+    liste = Bon_commande.Bon_commande.Get.afficher_bon_commande(cnx, idUser)
+    liste_materiel = paginate_list(liste, page, per_page)
+    total_items = len(liste)
+    total_pages = total_items // per_page
+    nbMateriel = len(liste)
+    if total_items % per_page > 0:
+        total_pages += 1
     return render_template(
         "commander.html",
         title="commander du matériel",
+        valueSearch = valueSearch,
+        page=page,
+        total_pages=total_pages,
         categories = Domaine.Domaine.get_domaine(get_cnx()),
         alertes=str(nb_alertes),
         demandes=str(nb_demandes),
@@ -1126,8 +1301,20 @@ def commander():
         liste_materiel = liste_materiel,
         nbMateriel = nbMateriel,
         RechercherForm=rechercher,
-        chemin = [("base", "accueil"), ("commander", "commander")]
+        chemin = [("base", "accueil"), ("commander", "commander")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
+
+@app.route("/download-pdf-bon-commande", methods=("GET","POST",))
+def download_pdf_bon_commande():
+    """
+    Fonction qui permet de télécharger le bon de commande au format PDF.
+
+    Returns:
+        Response: Un objet de réponse contenant le fichier PDF.
+    """
+    return send_file("static/data/bonCommande.pdf", as_attachment=True)
 
 @app.route("/recherche-materiel-demander", methods=("GET","POST",))
 @csrf.exempt
@@ -1139,16 +1326,28 @@ def recherche_materiel_demander():
         - Si une valeur de recherche est spécifiée, renvoie la page "demander.html" avec les résultats de la recherche.
         - Sinon, redirige vers la page "demander.html".
     """
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
     rechercher = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
     value = rechercher.get_value()
-    print("value : "+value)
-    if value != None:
-        liste_materiel = Recherche.recherche_all_in_materiel_demande_with_search(get_cnx(), idDemande, value)
+    if value == None:
+        value = request.args.get('value')
+    if value != None and value != "":
+        liste = Recherche.recherche_all_in_materiel_demande_with_search(get_cnx(), idDemande, value)
+        liste_materiel = paginate_list(liste, page, per_page)
+        total_items = len(liste)
+        total_pages = total_items // per_page
+        if total_items % per_page > 0:
+            total_pages += 1
         return render_template(
             "demander.html",
             title="demander",
+            page=page,
+            pageRechercher=True,
+            searchValue=value,
+            total_pages=total_pages,
             idUser = idUser,
             idDemande = Demande.Get.get_id_demande_actuel(cnx, Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
             categories = Domaine.Domaine.get_domaine(get_cnx()),
@@ -1157,7 +1356,9 @@ def recherche_materiel_demander():
             nbMateriel = len(liste_materiel),
             alertes = Alert.get_nb_alert(cnx),
             demandes = Demande.Get.get_nb_demande(cnx),
-            chemin = [("base", "accueil"), ("demander", "demander")]
+            chemin = [("base", "accueil"), ("demander", "demander")],
+            alerte_tl = Alert.get_nb_alert(cnx),
+            demande_tl = Demande.Get.get_nb_demande(cnx)
         )
     return redirect(url_for('demander'))
 
@@ -1170,16 +1371,28 @@ def recherche_materiel():
     et renvoie les résultats à la page commander.html.
     Si aucune valeur de recherche n'est fournie, la fonction redirige vers la page commander.
     """
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
     rechercher = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, idUser)
     value = rechercher.get_value()
-    print("value : "+value)
-    if value != None:
-        liste_materiel = Recherche.recherche_all_in_materiel_with_search(get_cnx(), idbc, value)
+    if value == None:
+        value = request.args.get('value')
+    if value != None and value != "":
+        liste = Recherche.recherche_all_in_materiel_with_search(get_cnx(), idbc, value)
+        liste_materiel = paginate_list(liste, page, per_page)
+        total_items = len(liste)
+        total_pages = total_items // per_page
+        if total_items % per_page > 0:
+            total_pages += 1
         return render_template(
             "commander.html",
             title="commander",
+            page=page,
+            pageRechercher=True,
+            searchValue=value,
+            total_pages=total_pages,
             idUser = idUser,
             idbc = Bon_commande.Bon_commande.Get.get_id_bonCommande_actuel(cnx, Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])),
             categories = Domaine.Domaine.get_domaine(get_cnx()),
@@ -1188,7 +1401,9 @@ def recherche_materiel():
             nbMateriel = len(liste_materiel),
             alertes = Alert.get_nb_alert(cnx),
             demandes = Demande.Get.get_nb_demande(cnx),
-            chemin = [("base", "accueil"), ("commander", "commander")]
+            chemin = [("base", "accueil"), ("commander", "commander")],
+            alerte_tl = Alert.get_nb_alert(cnx),
+            demande_tl = Demande.Get.get_nb_demande(cnx)
         )
     return redirect(url_for('commander'))
 
@@ -1213,7 +1428,9 @@ def bon_commande(id):
         title = "bon de commande",
         liste_materiel = liste_materiel,
         longueur = len(liste_materiel),
-        chemin = [("base", "accueil"), ("commander", "commander"), ('demandes', 'bon de commande')]
+        chemin = [("base", "accueil"), ("commander", "commander"), ('demandes', 'bon de commande')],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/bon-demande/<int:id>")
@@ -1237,7 +1454,9 @@ def bon_demande(id):
         title = "bon de demande",
         liste_materiel = liste_materiel,
         longueur = len(liste_materiel),
-        chemin = [("base", "accueil"), ("demander", "demander"), ("demander","bon de demande")]
+        chemin = [("base", "accueil"), ("demander", "demander"), ("demander","bon de demande")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/consulterBonCommande/")
@@ -1268,7 +1487,9 @@ def consulter_bon_commande():
         infoUser = liste_info_user,
         listeEtat = liste_etat_bon_commande,
         statutsCommande = Commande.Commande.Get.get_statut_from_commande(cnx),
-        chemin = [("base", "accueil"), ('consulter_bon_commande', 'consulter bon de commande')]
+        chemin = [("base", "accueil"), ('consulter_bon_commande', 'consulter bon de commande')],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/changer-statut-bon-commande", methods=("GET","POST",))
@@ -1325,7 +1546,7 @@ def delete_materiel_demandes(idDemande, idMat):
     Returns:
         redirect: Redirige vers la page de base si la suppression est réussie, sinon redirige vers la page de la demande spécifique.
     """
-    res = Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande)
+    res = Materiel.Delete.delete_materiel_in_AjouterMateriel_whith_id(cnx, idMat, idDemande, session['utilisateur'][1])
     if res:
         return redirect(url_for('base'))
     return redirect(url_for('demande', idDemande=idDemande))
@@ -1344,7 +1565,9 @@ def bon_commande_unique():
         liste_materiel = liste_materiel,
         title="bon de commande n°"+str(idbc),
         idbc = idbc,
-        chemin = [("base", "accueil"), ("consulter_bon_commande", "consulter bon de commande"), ("bon_commande_unique", "bon de commande")]
+        chemin = [("base", "accueil"), ("consulter_bon_commande", "consulter bon de commande"), ("bon_commande_unique", "bon de commande")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/historique-bon-commande")
@@ -1370,7 +1593,9 @@ def historique_bon_commande():
         infoUser = liste_info_user,
         listeetat = liste_etat_bon_commande,
         statutsCommande = Commande.Commande.Get.get_statut_from_commande(cnx),
-        # chemin = [("base", "accueil"), ("consulter_bon_commande, consulter bon commande"), ("historique_bon_commande", "historique des bon de commande")]
+        chemin = [("base", "accueil"), ("consulter_bon_commande", "consulter bon commande"), ("historique_bon_commande", "historique des bon de commande")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/delete-bon-commande/<int:id>", methods=("GET","POST",))
@@ -1403,6 +1628,38 @@ def valider_bon_demande(id):
     while True:
         pass
     return redirect(url_for('base'))
+
+@app.route("/update-theme/<int:id>", methods=("GET","POST",))
+def update_theme(id):
+    """
+    Met à jour le thème de l'utilisateur avec l'identifiant spécifié.
+
+    Args:
+        id (int): L'identifiant du thème à mettre à jour.
+
+    Returns:
+        redirect: Une redirection vers la page de base.
+
+    Raises:
+        Exception: En cas d'erreur lors de la mise à jour du thème.
+    """
+    try:
+        Utilisateur.Update.update_theme_utilisateur(cnx, session['utilisateur'][4], id)
+        print(session['theme'])
+        print(session['theme'])
+        print(session['theme'])
+        session['theme'] = id
+        print(session['theme'])
+        print(session['theme'])
+        print(session['theme'])
+
+        return redirect(url_for('base'))
+    except Exception as e:
+        print("Une erreur s'est produite:", e)
+        return redirect(url_for('base'))
+
+
+
 
 @app.route("/valider-bon-commande/<int:id>", methods=("GET","POST",))
 def valider_bon_commande(id):
@@ -1472,7 +1729,9 @@ def alertes():
         nb_alerte = nb_alertes,
         info_materiels = info_materiel,
         title="alertes",
-        chemin = [("base", "accueil"), ("alertes", "alertes")]
+        chemin = [("base", "accueil"), ("alertes", "alertes")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/etat/<int:id>")
@@ -1501,7 +1760,9 @@ def etat(id):
         item_properties = Materiel.Get.get_all_information_to_Materiel_with_id(cnx, id),
         items_unique = MaterielUnique.Get.get_all_information_to_MaterielUnique_with_id(cnx, id),
         alertes = Alert.nb_alert_par_materielUnique_dict(cnx),
-        chemin = [("base", "accueil"), ("inventaire", "inventaire"), ("inventaire", "etat")]
+        chemin = [("base", "accueil"), ("inventaire", "inventaire"), ("inventaire", "etat")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/generer-fds/<int:idMat>")
@@ -1533,7 +1794,9 @@ def ajouter_utilisateur():
         "ajouterUtilisateur.html",
         title="ajouter un utilisateur",
         AjouterUtilisateurForm=f,
-        chemin=[("base", "accueil"), ("ajouter_utilisateur", "ajouter un Utilisateur")]
+        chemin=[("base", "accueil"), ("ajouter_utilisateur", "ajouter un utilisateur")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/consulter-utilisateur/", methods=("GET","POST",))
@@ -1557,7 +1820,9 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )
         elif selected_value == "Professeur":
             return render_template(
@@ -1567,7 +1832,9 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )
         elif selected_value == "Gestionnaire":
             return render_template(
@@ -1577,7 +1844,9 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )
         elif selected_value == "Laborantin":
             return render_template(
@@ -1587,17 +1856,24 @@ def consulter_utilisateur():
                 categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
                 title="consulter les utilisateurs",
                 RechercherForm=f,
-                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+                chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )
 
     return render_template(
         "consulterUtilisateur.html",
+        professeurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 2)[0],
+        laborantins = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 3)[0],
+        gestionnaires = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx(), 4)[0],
         utilisateurs = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[0],
         nbUser = Bon_commande.Utilisateur.Utilisateur.Get.get_all_user(get_cnx())[1],
         categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
         title="consulter les utilisateurs",
         RechercherForm=f,
-        chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+        chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/recherche-utilisateur/", methods=("GET","POST",))
@@ -1615,12 +1891,17 @@ def recherche_utilisateur():
     if value != None:
         return render_template(
             "consulterUtilisateur.html",
-            utilisateurs = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[0],
+            # utilisateurs = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[0],
+            professeurs = Recherche.recherche_all_in_utilisateur_with_search_statut(get_cnx(), value, 2)[0],
+            laborantins = Recherche.recherche_all_in_utilisateur_with_search_statut(get_cnx(), value, 3)[0],
+            gestionnaires = Recherche.recherche_all_in_utilisateur_with_search_statut(get_cnx(), value, 4)[0],
             nbUser = Recherche.recherche_all_in_utilisateur_with_search(get_cnx(), value)[1],
             categories = ["Tous", "Professeur", "Gestionnaire", "Laborantin"],
             title="consulter les utilisateurs",
             RechercherForm=f,
-            chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")]
+            chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs")],
+            alerte_tl = Alert.get_nb_alert(cnx),
+            demande_tl = Demande.Get.get_nb_demande(cnx)
         )
 
     return render_template(
@@ -1630,7 +1911,9 @@ def recherche_utilisateur():
         categories = ["Tous", "Professeur", "Gestionnaire"],
         title="consulter les utilisateurs",
         RechercherForm=f,
-        chemin = [("base", "accueil"), ("utilisateurs", "Utilisateurs"), ("consulter_utilisateur", "consulter les utilisateurs")]
+        chemin = [("base", "accueil"), ("utilisateurs", "utilisateurs"), ("consulter_utilisateur", "consulter les utilisateurs")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/supprimer-utilisateur/<int:id>", methods=("GET","POST",))
@@ -1696,7 +1979,9 @@ def modifier_utilisateur(id):
         email=email,
         statut=statut,
         id=id,
-        chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs"), ("consulter_utilisateur", "modifier un utilisateur")] 
+        chemin = [("base", "accueil"), ("consulter_utilisateur", "consulter les utilisateurs"), ("consulter_utilisateur", "modifier un utilisateur")], 
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/modifier-materiel/<int:id>", methods=("GET","POST",))
@@ -1763,7 +2048,9 @@ def modifier_materiel(id):
         est_dangereux = est_dangereux,
         est_comburant = est_comburant,
         est_corrosif = est_corrosif,
-        chemin = [("base", "accueil"),("inventaire","inventaire"), ("inventaire", "modifier un matériel")]
+        chemin = [("base", "accueil"),("inventaire","inventaire"), ("inventaire", "modifier un matériel")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/modifier-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -1809,7 +2096,9 @@ def modifier_materiel_unique(id):
         title="modifier les informations d'un matériel en stock",
         ModifierMaterielUniqueForm=f,
         id=id,
-        chemin=[("base", "accueil"),("inventaire","inventaire"),("inventaire","modifier un matériel unique")]
+        chemin=[("base", "accueil"),("inventaire","inventaire"),("inventaire","modifier un matériel unique")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/supprimer-materiel-unique/<int:id>", methods=("GET","POST",))
@@ -1849,16 +2138,33 @@ def supprimer_materiels_uniques(id):
 
 @app.route("/demandes/")
 def demandes():
+    """
+    Rend le modèle demandes.html avec les données nécessaires.
+
+    Returns:
+        Le modèle rendu.
+    """
     return render_template(
         "demandes.html",
         title="demandes",
         nb_demande = int(Demande.Get.get_nb_demande(cnx)),
         info_demande = Demande.Get.get_info_demande(cnx),
-        chemin = [("base", "accueil"), ("demandes", "demandes")]
+        chemin = [("base", "accueil"), ("demandes", "demandes")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/demande/<int:idDemande>")
 def demande(idDemande):
+    """
+    Cette fonction renvoie le rendu du template "demande.html" avec les informations de la demande spécifiée.
+
+    Args:
+        idDemande (int): L'identifiant de la demande.
+
+    Returns:
+        render_template: Le rendu du template "demande.html" avec les informations de la demande.
+    """
     id_user = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
     info_commande = Demande.Get.get_info_demande_with_id(get_cnx(), idDemande)
 
@@ -1869,13 +2175,29 @@ def demande(idDemande):
         longeur = len(info_commande),
         idUser = id_user,
         title = "demande de "+ info_commande[0][0] + " " + info_commande[0][1],
-        chemin = [("base", "accueil"), ("demandes", "demandes"), ('demandes', 'demandes')]
+        chemin = [("base", "accueil"), ("demandes", "demandes"), ('demandes', 'demandes')],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 @app.route("/inventaire/")
 @csrf.exempt
 def inventaire():
+    """
+    Affiche l'inventaire des matériels disponibles.
+
+    Cette fonction récupère les matériels disponibles dans l'inventaire,
+    les filtre pour n'afficher que ceux ayant des unités supérieures à 0,
+    puis les pagine pour afficher un nombre limité de matériels par page.
+    Elle renvoie ensuite le rendu du template 'inventaire.html' avec les
+    données nécessaires à l'affichage.
+
+    Returns:
+        Le rendu du template 'inventaire.html' avec les données nécessaires à l'affichage.
+    """
     rechercher = RechercherForm()
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
     items = Recherche.recherche_all_in_inventaire(get_cnx())
 
     print("items : ",items)
@@ -1889,16 +2211,22 @@ def inventaire():
             if qt > 0:
                 if (item,qt) not in final_items: # Eviter les doublons
                     final_items.append((item,qt))
+        liste_items = paginate_list(final_items, page, per_page)
+        total_pages = len(final_items) // per_page + (1 if len(final_items) % per_page > 0 else 0) # a modifier car ce n'est pas la bonne méthode
 
         return render_template(
             "inventaire.html",
+            page=page,
+            total_pages=total_pages,
             RechercherForm=rechercher,
             categories = Domaine.Domaine.get_domaine(get_cnx()),
-            items = final_items,
+            items = liste_items,
             nbMateriel = items[1],
             alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
             title="inventaire",
-            chemin = [("base", "accueil"), ("inventaire", "inventaire")]
+            chemin = [("base", "accueil"), ("inventaire", "inventaire")],
+            alerte_tl = Alert.get_nb_alert(cnx),
+            demande_tl = Demande.Get.get_nb_demande(cnx)
         )
     else:
         return redirect(url_for('base'))
@@ -1914,28 +2242,49 @@ def recherche_inventaire():
     """
     rechercher = RechercherForm()
     value = rechercher.get_value()
-    items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(),value)
-    
-    final_items = list()
-    for (item,qt) in items[0]:
-        if qt > 0:
-            if (item,qt) not in final_items: # Eviter les doublons
-                final_items.append((item,qt))
+    if value == None:
+        value = request.args.get('value')
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
 
-    if value != None:
+    if value != None and value != "":
+        items = Recherche.recherche_all_in_inventaire_with_search(get_cnx(),value)
+        medium_items = list()
+        for (item,qt) in items[0]:
+            if qt > 0:
+                if (item,qt) not in medium_items: # Eviter les doublons
+                    medium_items.append((item,qt))
+
+        final_items = paginate_list(medium_items, page, per_page)
+        total_pages = len(final_items) // per_page + (1 if len(final_items) % per_page > 0 else 0)
         return render_template(
             "inventaire.html",
+            page=page,
+            pageRechercher=True,
+            searchValue = value,
+            total_pages=total_pages,
             categories = Domaine.Domaine.get_domaine(get_cnx()),
             items = final_items,
             title="inventaire",
             alertes = Alert.nb_alert_par_materiel_dict(get_cnx()),
             nbMateriel = items[1],
             RechercherForm=rechercher,
-            chemin = [("base", "Accueil"), ("inventaire", "inventaire")]
+            chemin = [("base", "Accueil"), ("inventaire", "inventaire")],
+            alerte_tl = Alert.get_nb_alert(cnx),
+            demande_tl = Demande.Get.get_nb_demande(cnx)
         )
     return redirect(url_for('inventaire'))
   
-@app.route("/demander/")
+def paginate_list(data, page, per_page):
+    """
+    Fonction qui permet de paginer une liste.
+    """
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+    paginated_data = data[start_index:end_index]
+    return paginated_data
+
+@app.route("/demander")
 @csrf.exempt
 def demander():
     """
@@ -1944,23 +2293,37 @@ def demander():
     telles que la liste du matériel disponible, l'identifiant de la demande actuelle,
     et les informations de l'utilisateur connecté.
     """
+    valueSearch = request.args.get('value')
+    page = request.args.get('page', 1, type=int)
+    per_page = 4
     recherche = RechercherForm()
     idUser = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, session['utilisateur'][2])
-    liste_materiel = Demande.Get.afficher_demande(cnx, idUser)
+    liste = Demande.Get.afficher_demande(cnx, idUser)
+    liste_materiel = paginate_list(liste, page, per_page)
     idDemande = Demande.Get.get_id_demande_actuel(cnx, idUser)
-    print(liste_materiel)
-    print(len(liste_materiel))
+    total_items = len(liste)
+    total_pages = total_items // per_page
+    if total_items % per_page > 0:
+        total_pages += 1
     return render_template(
         "demander.html",
         title="demander",
+        valueSearch = valueSearch,
+        page=page,
+        pageRechecher=False,
         idDemande = idDemande,
         liste_materiel = liste_materiel,
+        total_pages=total_pages,
         nbMateriel = len(liste_materiel),
         RechercherForm=recherche,
         categories = Domaine.Domaine.get_domaine(get_cnx()),
         idUser = idUser,
-        chemin = [("base", "accueil"), ("demander", "demander")]
+        chemin = [("base", "accueil"), ("demander", "demander")],
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
+
+
 
 @app.route("/ajouter-demande/<int:id>", methods=("GET","POST",))
 def ajouter_demande(id):
@@ -2017,7 +2380,9 @@ def commentaire():
         title ="envoyer un commentaire",
         materiel = materiel,
         chemin = [("base", "accueil"), ("commentaire", "envoyer un commentaire")],
-        CommentaireForm=f
+        CommentaireForm=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
 
@@ -2042,7 +2407,9 @@ def login():
             if user != None:
                 #login_user(user)
                 idUt = Bon_commande.Utilisateur.Utilisateur.Get.get_id_with_email(cnx, user[2])
+                theme = Bon_commande.Utilisateur.Utilisateur.Get.get_font(cnx, idUt)
                 session['utilisateur'] = (nom, idStatut, mail, prenom, idUt)
+                session['theme'] = (theme)
                 RELOAD.reload_alert(cnx)
                 print("login : "+str(session['utilisateur']))
                 next = f.next.data or url_for("base")
@@ -2056,7 +2423,9 @@ def login():
                 fromChangerMDP=changerMDP,
                 fromChangerMail=changerMail,
                 MdpOublierForm=mdpOublier,
-                erreur = "le mail ou le mot de passe est incorrect"
+                erreur = "le mail ou le mot de passe est incorrect",
+                alerte_tl = Alert.get_nb_alert(cnx),
+                demande_tl = Demande.Get.get_nb_demande(cnx)
             )        
         
     return render_template(
@@ -2065,46 +2434,48 @@ def login():
         form=f,
         fromChangerMDP=changerMDP,
         fromChangerMail=changerMail,
-        MdpOublierForm=mdpOublier
+        MdpOublierForm=mdpOublier,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
     )
 
-"""
 
-@app.route("/login/", methods=("GET","POST",))
-def login():
-    f = LoginForm ()
-    changerMDP = ChangerMDPForm()
-    changerMail = ChangerMailForm()
-    mdpOublier = MdpOublierForm()
-    if not f.is_submitted():
-        f.next.data = request.args.get("next")
-    elif f.validate_on_submit():
-        #nom, idStatut, mail, prenom = f.get_authenticated_user()
-        #user = nom, idStatut, mail, prenom
-        #if user != None:
-            #login_user(user)
-            #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
-            session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
-            print("login : "+str(session['utilisateur']))
-            RELOAD.reload_alert(cnx)
-            next = f.next.data or url_for("base")
-            return redirect(next)
-    return render_template(
-        "login.html",
-        title="profil",
-        form=f,
-        fromChangerMDP=changerMDP,
-        fromChangerMail=changerMail,
-        MdpOublierForm=mdpOublier
-    )
 
-    """
+# @app.route("/login/", methods=("GET","POST",))
+# def login():
+#     f = LoginForm ()
+#     changerMDP = ChangerMDPForm()
+#     changerMail = ChangerMailForm()
+#     mdpOublier = MdpOublierForm()
+#     if not f.is_submitted():
+#         f.next.data = request.args.get("next")
+#     elif f.validate_on_submit():
+#         #nom, idStatut, mail, prenom = f.get_authenticated_user()
+#         #user = nom, idStatut, mail, prenom
+#         #if user != None:
+#             #login_user(user)
+#             #idUt = Utilisateur.Get.get_id_with_email(cnx, user[2])
+#             session['utilisateur'] = ("Lallier", 3, "mail", "Anna", 1)
+#             print("login : "+str(session['utilisateur']))
+#             RELOAD.reload_alert(cnx)
+#             next = f.next.data or url_for("base")
+#             return redirect(next)
+#     return render_template(
+#         "login.html",
+#         title="profil",
+#         form=f,
+#         fromChangerMDP=changerMDP,
+#         fromChangerMail=changerMail,
+#         MdpOublierForm=mdpOublier
+#     )
+
 
 @app.route("/logout/")
 def logout():
     """
     Déconnecte l'utilisateur en supprimant sa session et redirige vers la page de base.
     """
+    
     session.pop('utilisateur', None)
     return redirect(url_for('base'))
 
@@ -2125,7 +2496,10 @@ def changerMDP():
                 return redirect('/a2f/'+session['utilisateur'][2]+'/2?oldMdp='+ancienMDP+'&newMdp='+nouveauMDP)
     return render_template(
         "login.html",
-        fromChangerMDP=f)
+        fromChangerMDP=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )
 
 @app.route("/changerMail/", methods=("GET","POST",))
 def changerMail():
@@ -2144,7 +2518,10 @@ def changerMail():
                 return redirect('/a2f/'+session['utilisateur'][2]+'/3?newMail='+nouveauMail+'&oldMail='+ancienMail+'&mdp='+mdp)
     return render_template(
         "login.html",
-        fromChangerMail=f)
+        fromChangerMail=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )
 
 @app.route("/ajouterUtilisateur/", methods=("GET","POST",))
 def ajouterUtilisateur():
@@ -2182,7 +2559,10 @@ def ajouterUtilisateur():
                     return redirect(url_for('consulter_utilisateur'))
     return render_template(
         "ajouterUtilisateur.html",
-        fromAjouterUtilisateur=f)
+        fromAjouterUtilisateur=f,
+        alerte_tl = Alert.get_nb_alert(cnx),
+        demande_tl = Demande.Get.get_nb_demande(cnx)
+    )
 
 def get_domaine_choices():
     """

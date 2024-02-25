@@ -35,6 +35,17 @@ class Bon_commande:
             except:
                 print("Erreur lors de l'affichage de la table")
                 raise
+
+        def get_nb_bon_commande(cnx, idbc):
+            try:
+                nb = cnx.execute(text("SELECT COUNT(*) FROM COMMANDE NATURAL JOIN MATERIEL WHERE idBonCommande = " + str(idbc) + ";"))
+                for row in nb:
+                    return row[0]
+                return 0
+            except:
+                print("Erreur lors de la récupération du nombre de suggestions")
+                raise
+
             
         def get_id_bonCommande_actuel(cnx, idut):
             """

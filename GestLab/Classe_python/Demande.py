@@ -164,6 +164,50 @@ class Demande :
                 print("Erreur lors de l'affichage de la table")
                 raise
 
+        def afficher_demande_pagination(cnx, idut, start, limite):
+            """
+            Affiche les demandes de matériel pour un utilisateur donné.
+
+            Args:
+                cnx (object): Objet de connexion à la base de données.
+                idut (int): Identifiant de l'utilisateur.
+
+            Returns:
+                list: Liste des demandes de matériel, contenant les informations suivantes pour chaque demande:
+                    - idMateriel (int): Identifiant du matériel.
+                    - nomMateriel (str): Nom du matériel.
+                    - caracteristiquesComplementaires (str): Caractéristiques complémentaires du matériel.
+                    - referenceMateriel (str): Référence du matériel.
+                    - quantite (int): Quantité demandée.
+                    - informationsComplementairesEtSecurite (str): Informations complémentaires et de sécurité du matériel.
+                    - idDomaine (int): Identifiant du domaine du matériel.
+            """
+            try:
+                idD = Demande.Get.get_id_demande_actuel(cnx, idut)
+                result = cnx.execute(text("SELECT idMateriel, nomMateriel, caracteristiquesComplementaires, referenceMateriel, quantite, informationsComplementairesEtSecurite, idCategorie FROM AJOUTERMATERIEL NATURAL JOIN MATERIEL WHERE idDemande = " + str(idD) + " LIMIT " + str(limite) + " OFFSET " + str(start) + ";"))
+                result2 = cnx.execute(text("SELECT idMateriel, nomMateriel,caracteristiquesComplementaires, referenceMateriel, 0, informationsComplementairesEtSecurite, idCategorie FROM MATERIEL WHERE idMateriel NOT IN (SELECT idMateriel FROM AJOUTERMATERIEL NATURAL JOIN MATERIEL WHERE idDemande = " + str(idD) + ")" + " LIMIT " + str(limite) + " OFFSET " + str(start) + ";"))
+                liste = []
+
+                for row in result:
+                    idDomaine = Bon_commande.Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
+                for row in result2:
+                    idDomaine = Bon_commande.Domaine.get_id_domaine_from_categorie(cnx, row[6])
+                    liste.append((row[0], row[1], row[2], row[3], row[4], row[5], idDomaine))
+                return liste
+            except:
+                print("Erreur lors de l'affichage de la table")
+                raise
+        def get_nb_sugestions(cnx, idD):
+            try:
+                nb = cnx.execute(text("SELECT COUNT(*) FROM AJOUTERMATERIEL NATURAL JOIN MATERIEL WHERE idDemande = " + str(idD) + ";"))
+                for row in nb:
+                    return row[0]
+                return 0
+            except:
+                print("Erreur lors de la récupération du nombre de suggestions")
+                raise
+                
     class Update:
         def tout_commander_with_idDemmande_and_idUt(cnx, idDemande, idUt):
             """
