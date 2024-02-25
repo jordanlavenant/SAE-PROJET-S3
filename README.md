@@ -84,10 +84,13 @@ Dans le cadre de leur activité, les professeurs de Sciences Physiques du Lycée
 
 ### Semaine du 19/02/2024
 
-- Import et Export des données au format CSV
-- Thème sombre et préférences de l'utilisateur stockées dans la base de données
-- Paginations diverses
-- Harmonisation des templates HTML & CSS
+- Ajout du booléen themeLight dans la table UTILISATEUR pour garder le thème choisi par l’utilisateur en mémoire
+- Harmonisation des templates pour une homogénéisation des pages entres-elles, et interface et expérience utilisateur renforcée
+- Fonctionnalité d’importation et d’exportation de fichiers .csv, avec possibilité de remplacer les données existantes ou non et possibilités de Drag & Drop.
+- Affichages des statuts des utilisateurs dans l’onglet “Consultation des statuts”
+- Popups de confirmation pour les actions jugées sensibles (suppressions, réinitialisation, valider…)
+- Pagination diverses
+
 
 
 ## Problèmes rencontrés
